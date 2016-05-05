@@ -1,31 +1,37 @@
-@*
- * This template takes a single argument, a String containing a
- * message to display.
- *@
-@(message: String)
+@(form: Form[Member])(implicit messages: Messages)
 
 @*
- * Call the `main` template with two arguments. The first
- * argument is a `String` with the title of the page, the second
- * argument is an `Html` object containing the body of the page.
+ * Shows the main intro page with sign-up form.
  *@
-@main("Welcome to Play") {
+@main("Sign-up") {
   <div class="jumbotron">
     <h1>Freshers Sign-up</h1>
     <p class="lead">Hey!</p>
 
+    @if(form.hasGlobalErrors) {
+      <ul>
+        @for(error <- form.globalErrors) {
+          <li>@error.message</li>
+        }
+      </ul>
+    }
+
     <p>
-      <form action="#" method="post">
+      @helper.form(action = routes.MembershipController.signup()) {
         <div class="form-group">
-          <label for="lsd-name">Name</label>
-          <input type="text" class="form-control" id="lsd-name" placeholder="Name">
+          @helper.input(form("name")) { (id, name, value, args) =>
+            <label for="@id">Name</label>
+            <input type="text" class="form-control" id="@id" name="@name" placeholder="Name" @toHtmlArgs(args)>
+          }
         </div>
         <div class="form-group">
-          <label for="lsd-mobile-number">Mobile number</label>
-          <input type="text" class="form-control" id="lsd-mobile-number" placeholder="Mobile number, e.g. 07123123123">
+          @helper.input(form("phoneNumber")) { (id, name, value, args) =>
+            <label for="@id">Mobile number</label>
+            <input type="text" class="form-control" id="@id" name="@name" placeholder="Mobile number, e.g. 07123123123" @toHtmlArgs(args)>
+          }
         </div>
         <button type="submit" class="btn btn-lg btn-success">Sign me up!</button>
-      </form>
+      }
     </p>
   </div>
 }

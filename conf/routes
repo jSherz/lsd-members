@@ -2,8 +2,10 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET     /                           controllers.HomeController.index
-GET     /sign-up                    controllers.MembershipController.signup
+GET     /                           controllers.MembershipController.index
+GET     /alt                        controllers.MembershipController.alt
+POST    /sign-up                    controllers.MembershipController.signup
+POST    /sign-up-alt                controllers.MembershipController.signupAlt
 
 # An example controller showing how to use dependency injection
 GET     /count                      controllers.CountController.count

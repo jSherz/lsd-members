@@ -11,7 +11,8 @@ libraryDependencies ++= Seq(
   cache,
   ws,
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test,
-  "com.twilio.sdk" % "twilio-java-sdk" % "3.4.5"
+  "com.twilio.sdk" % "twilio-java-sdk" % "3.4.5",
+  "net.greghaines" % "jesque" % "2.1.1"
 )
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"

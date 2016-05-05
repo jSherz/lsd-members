@@ -1,0 +1,25 @@
+@(form: Form[Member])
+
+@*
+* Shows the main intro page with alternative sign-up form (e-mail rather than phone number).
+*@
+@main("Sign-up") {
+<div class="jumbotron">
+    <h1>Freshers Sign-up</h1>
+    <p class="lead">Hey!</p>
+
+    <p>
+    <form action="@routes.MembershipController.signupAlt" method="post">
+        <div class="form-group">
+            <label for="lsd-name">Name</label>
+            <input type="text" class="form-control" id="lsd-name" placeholder="Name">
+        </div>
+        <div class="form-group">
+            <label for="lsd-email-address">E-mail address</label>
+            <input type="text" class="form-control" id="lsd-email-address" placeholder="Your main e-mail address, not the uni one please!">
+        </div>
+        <button type="submit" class="btn btn-lg btn-success">Sign me up!</button>
+    </form>
+    </p>
+</div>
+}

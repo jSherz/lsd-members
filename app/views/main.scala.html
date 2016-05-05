@@ -1,11 +1,7 @@
 @*
- * This template is called from the `index` template. This template
- * handles the rendering of the page header and body tags. It takes
- * two arguments, a `String` for the title of the page and an `Html`
- * object to insert into the body of the page.
+ * Primary layout.
  *@
 @(title: String)(content: Html)
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -37,8 +33,8 @@
       <div class="header clearfix">
         <nav>
           <ul class="nav nav-pills pull-right">
-            <li role="presentation" class="active"><a href="#">Main</a></li>
-            <li role="presentation"><a href="#">Alt</a></li>
+            <li role="presentation" class="active"><a href="@routes.MembershipController.index">Main</a></li>
+            <li role="presentation"><a href="@routes.MembershipController.alt">Alt</a></li>
           </ul>
         </nav>
         <h3 class="text-muted">Leeds University Skydivers</h3>
@@ -51,9 +47,6 @@
       </footer>
     </div>
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="@routes.Assets.versioned("javascripts/jquery.min.js")"><\/script>')</script>
     <script src="@routes.Assets.versioned("javascripts/bootstrap.min.js")"></script>
