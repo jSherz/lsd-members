@@ -21,19 +21,19 @@
       @helper.form(action = (if (altForm) routes.MembershipController.signupAlt() else routes.MembershipController.signup())) {
         <div>
           @helper.input(form("name"), '_label -> "Name") { (id, name, value, args) =>
-            <input type="text" id="@id" name="@name" placeholder="My name is ________ and I love skydiving!" @toHtmlArgs(args)>
+            <input type="text" id="@id" name="@name" placeholder="My name is ________ and I love skydiving!" value="@value" @toHtmlArgs(args)>
           }
         </div>
         @if(altForm) {
           <div>
             @helper.input(form("email"), '_label -> "E-mail address") { (id, name, value, args) =>
-            <input type="text" id="@id" name="@name" placeholder="Your main e-mail address, not the uni one please." @toHtmlArgs(args)>
+            <input type="text" id="@id" name="@name" placeholder="Your main e-mail address, not the uni one please." value="@value" @toHtmlArgs(args)>
             }
           </div>
         } else {
           <div>
             @helper.input(form("phoneNumber"), '_label -> "Phone number") { (id, name, value, args) =>
-              <input type="text" id="@id" name="@name" placeholder="Mobile number, e.g. 07123123123" @toHtmlArgs(args)>
+              <input type="text" id="@id" name="@name" placeholder="Mobile number, e.g. 07123123123" value="@value" @toHtmlArgs(args)>
             }
           </div>
         }
