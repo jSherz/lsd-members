@@ -10,11 +10,10 @@ class IntegrationSpec extends PlaySpec with OneServerPerTest with OneBrowserPerT
 
   "Application" should {
 
-    "work from within a browser" in {
-
+    "show the main sign-up form as the homepage" in {
       go to ("http://localhost:" + port)
-
-      pageSource must include ("Your new application is ready.")
+      pageSource must include ("Freshers Sign-up")
+      pageSource must include ("Phone number")
     }
   }
 }
