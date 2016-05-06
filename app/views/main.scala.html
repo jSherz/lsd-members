@@ -1,7 +1,7 @@
 @*
  * Primary layout.
  *@
-@(title: String)(content: Html)
+@(title: String, request: play.api.mvc.Request[Any])(content: Html)
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -33,8 +33,8 @@
       <div class="header clearfix">
         <nav>
           <ul class="nav nav-pills pull-right">
-            <li role="presentation" class="active"><a href="@routes.MembershipController.index">Main</a></li>
-            <li role="presentation"><a href="@routes.MembershipController.alt">Alt</a></li>
+            <li role="presentation" class="@("active".when(request.path == "/"))"><a href="@routes.MembershipController.index">Main</a></li>
+            <li role="presentation" class="@("active".when(request.path == "/alt"))"><a href="@routes.MembershipController.alt">Alt</a></li>
           </ul>
         </nav>
         <h3 class="text-muted">Leeds University Skydivers</h3>

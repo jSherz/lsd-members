@@ -1,6 +1,7 @@
 import org.scalatestplus.play._
 import play.api.test._
 import play.api.test.Helpers._
+import org.scalatest.Matchers._
 
 /**
  * add your integration spec here.
@@ -31,6 +32,14 @@ class IntegrationSpec extends PlaySpec with OneServerPerTest with OneBrowserPerT
       click on find(linkText("Main")).value
 
       eventually { pageSource must include ("Phone number") }
+    }
+
+    "highlight the correct menu button for each form" in {
+      go to ("http://localhost:" + port)
+      find(cssSelector("nav .active")).value.text must equal("Main")
+
+      go to (s"http://localhost:${port}/alt")
+      eventually { find(cssSelector("nav .active")).value.text must equal("Alt") }
     }
   }
 }

@@ -46,14 +46,14 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
   /**
     * Shows the main version of the sign-up form (name and phone number).
     */
-  def index = Action {
+  def index = Action { implicit request =>
     Ok(views.html.index(signupForm))
   }
 
   /**
     * Shows the alternative version of the sign-up form (name and e-mail address).
     */
-  def alt = Action {
+  def alt = Action { implicit request =>
     Ok(views.html.alt(signupAltForm))
   }
 
@@ -63,11 +63,11 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
     * @param member The member object with either a phone number or e-mail address
     * @return Result of attempting to create the member
     */
-  private def createMember(member: Member) = {
+  private def createMember(request: Request[Any], member: Member) = {
     val result = ms.signup(member)
 
     result match {
-      case Left(error) => BadRequest(views.html.membership_error(error))
+      case Left(error) => BadRequest(views.html.membership_error(error, request))
       case Right(member) => Redirect(routes.MembershipController.thankYou)
     }
   }
@@ -76,21 +76,21 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
    * Membership signup with a mobile phone number.
    */
   def signup = Action { implicit request =>
-    signupForm.bindFromRequest.fold(errors => { BadRequest(views.html.index(errors)) }, createMember)
+    signupForm.bindFromRequest.fold(errors => { BadRequest(views.html.index(errors)) }, createMember(request, _))
   }
 
   /**
     * Alternative signup form - with e-mail address.
     */
   def signupAlt = Action { implicit request =>
-    signupAltForm.bindFromRequest.fold(errors => { BadRequest(views.html.alt(errors)) }, createMember)
+    signupAltForm.bindFromRequest.fold(errors => { BadRequest(views.html.alt(errors)) }, createMember(request, _))
   }
 
   /**
     * Display a thank you message.
     * @return
     */
-  def thankYou = Action {
+  def thankYou = Action { implicit request =>
     Ok(views.html.membership_thank_you())
   }
 }

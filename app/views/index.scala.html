@@ -1,9 +1,9 @@
-@(form: Form[Member])(implicit messages: Messages)
+@(form: Form[Member])(implicit messages: Messages, request: play.api.mvc.Request[Any])
 
 @*
  * Shows the main intro page with sign-up form.
  *@
-@main("Sign-up") {
+@main("Sign-up", request) {
   <div class="jumbotron">
     <h1>Freshers Sign-up</h1>
     <p class="lead">Hey!</p>
