@@ -19,14 +19,12 @@
     <p>
       @helper.form(action = routes.MembershipController.signup()) {
         <div class="form-group">
-          @helper.input(form("name")) { (id, name, value, args) =>
-            <label for="@id">Name</label>
+          @helper.input(form("name"), '_label -> "Name") { (id, name, value, args) =>
             <input type="text" class="form-control" id="@id" name="@name" placeholder="Name" @toHtmlArgs(args)>
           }
         </div>
         <div class="form-group">
-          @helper.input(form("phoneNumber")) { (id, name, value, args) =>
-            <label for="@id">Mobile number</label>
+          @helper.input(form("phoneNumber"), '_label -> "Phone number") { (id, name, value, args) =>
             <input type="text" class="form-control" id="@id" name="@name" placeholder="Mobile number, e.g. 07123123123" @toHtmlArgs(args)>
           }
         </div>
