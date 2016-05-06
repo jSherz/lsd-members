@@ -20,20 +20,36 @@ class MembershipServiceSpec @Inject() (ms: MembershipService) extends PlaySpec w
     "7123123123", "01123123123", "4407123123123", "+4407123123123"
   )
 
+  val validEmails = Seq(
+    "goose@goat.org", "leeroy@jenkins.wow.amaze.org"
+  )
+
+  val invalidEmails = Seq(
+    "fake@localhost", "something@fishy-net"
+  )
+
   "MembershipService" should {
     "accept valid phone numbers" in {
       for (validNumber <- validNumbers) {
-        ms.validatePhoneNumber(validNumber) mustBe true
-
         ms.phoneNumberValidator.apply(validNumber) mustBe Valid
       }
     }
 
     "reject invalid phone numbers" in {
       for (invalidNumber <- invalidNumbers) {
-        ms.validatePhoneNumber(invalidNumber) mustBe false
-
         ms.phoneNumberValidator.apply(invalidNumber) mustBe Invalid
+      }
+    }
+
+    "accept valid e-mail addresses" in {
+      for (validEmail <- validEmails) {
+          ms.emailValidator.apply(validEmail) mustBe Valid
+      }
+    }
+
+    "reject invalid e-mail addresses" in {
+      for (invalidEmail <- invalidEmails) {
+        ms.emailValidator.apply(invalidEmail) mustBe Invalid
       }
     }
   }

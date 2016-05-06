@@ -127,7 +127,7 @@ class IntegrationSpec extends PlaySpec with OneServerPerTest with OneBrowserPerT
       click on find("name").value
       enter("Joe Bloggs")
       click on find("email").value
-      enter("bloggs@localhost")
+      enter("bloggs@localhost.com")
       click on find(cssSelector("button[type=submit]")).value
 
       eventually { pageSource should include ("Thank you!") }

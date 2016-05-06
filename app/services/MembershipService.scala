@@ -20,27 +20,35 @@ class MembershipService @Inject() (appLifecycle: ApplicationLifecycle) {
   private val phoneNumberRegex: Regex = "^(07[\\d]{8,12}|\\+?447[\\d]{7,11})$".r
 
   /**
-    * Test if the provided string is a valid UK mobile number in one of the following formats:
+    * Catch the worst e-mail mistakes and leave the rest to the mail server.
+    */
+  private val emailRegex: Regex = "^.+@.+\\..+$".r
+
+  /**
+    * A constraint validator to check that a form field value is a valid UK mobile number in one of the formats below.
     *
     * - 07123123123
     * - 447123123123
     * - +447123123123
     *
-    * @param phoneNumber Number to test
-    * @return true if it's valid
-    */
-  def validatePhoneNumber(phoneNumber: String) = {
-    (phoneNumberRegex findAllMatchIn phoneNumber).hasNext
-  }
-
-  /**
-    * A Play Framework compatible validator to check that a form field value is a valid phone number.
-    * @return
+    * @return Valid if a valid UK mobile number, Invalid if not
     */
   def phoneNumberValidator: Constraint[String] = Constraint[String]("constraint.required") { phoneNumber =>
     if (phoneNumber == null) Invalid(ValidationError("error.required"))
     else if (phoneNumber.trim.isEmpty) Invalid(ValidationError("error.required"))
-    else if (!validatePhoneNumber(phoneNumber)) Invalid(ValidationError("error.invalidPhoneNumber"))
+    else if (!(phoneNumberRegex findAllMatchIn phoneNumber).hasNext) Invalid(ValidationError("error.invalidPhoneNumber"))
+    else Valid
+  }
+
+  /**
+    * A constraint validator to do a very basic check if an e-mail is valid.
+    *
+    * @return Valid if the e-mail looks roughly valid, Invalid if not
+    */
+  def emailValidator: Constraint[String] = Constraint[String]("constraint.required") { email =>
+    if (email == null) Invalid(ValidationError("error.required"))
+    else if (email.trim.isEmpty) Invalid(ValidationError("error.required"))
+    else if (!(emailRegex findAllMatchIn email).hasNext) Invalid(ValidationError("error.invalidEmail"))
     else Valid
   }
 

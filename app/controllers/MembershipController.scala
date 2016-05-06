@@ -36,7 +36,7 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
   private val signupAltForm = Form(
     mapping(
       "name" -> nonEmptyText,
-      "email" -> nonEmptyText
+      "email" -> text.verifying(ms.emailValidator)
     )((name: String, email: String) => {
       Member(name, null, email)
     })((member: Member) => {
