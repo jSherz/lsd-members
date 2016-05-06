@@ -1,8 +1,8 @@
-@(error: String, request: play.api.mvc.Request[Any])(implicit messages: Messages)
+@(error: String)(implicit messages: Messages, request: play.api.mvc.Request[Any])
 
 @*
 * Membership error. Should be shown for internal server errors. Should not be shown for form validation issues.
 *@
-@main("Error", request) {
+@main("Error") {
 Uh-oh! Something went wrong :(
 }

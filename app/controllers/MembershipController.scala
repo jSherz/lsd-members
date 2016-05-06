@@ -63,11 +63,11 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
     * @param member The member object with either a phone number or e-mail address
     * @return Result of attempting to create the member
     */
-  private def createMember(request: Request[Any], member: Member) = {
+  private def createMember(implicit request: play.api.mvc.Request[Any], member: Member) = {
     val result = ms.signup(member)
 
     result match {
-      case Left(error) => BadRequest(views.html.membership_error(error, request))
+      case Left(error) => BadRequest(views.html.membership_error(error))
       case Right(member) => Redirect(routes.MembershipController.thankYou)
     }
   }
