@@ -5,8 +5,9 @@
  *@
 @main("Sign-up") {
   <div class="jumbotron">
-    <h1>Freshers Sign-up</h1>
-    <p class="lead">Hey!</p>
+    <div id="intro-header">
+      <img src="@routes.Assets.versioned("images/header.png")" title="Leeds University Skydivers" alt="Leeds University Skydivers logo">
+    </div>
 
     @if(form.hasGlobalErrors) {
       <ul>
@@ -16,7 +17,7 @@
       </ul>
     }
 
-    <p>
+    <div id="sign-up-form">
       @helper.form(action = (if (altForm) routes.MembershipController.signupAlt() else routes.MembershipController.signup())) {
         <div class="form-group">
           @helper.input(form("name"), '_label -> "Name") { (id, name, value, args) =>
@@ -38,6 +39,6 @@
         }
         <button type="submit" class="btn btn-lg btn-success">Sign me up!</button>
       }
-    </p>
+    </div>
   </div>
 }
