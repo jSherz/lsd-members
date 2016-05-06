@@ -1,8 +1,21 @@
 @()(implicit request: play.api.mvc.Request[Any])
 
 @*
- * Base off of main template. Show simple thank you message and return to main form button.
+ * Shows a simple thank you message and return to main form button.
  *@
 @main("Thanks") {
-Thank you!
+<div id="intro-hero">
+   <div id="intro-header">
+     <img src="@routes.Assets.versioned("images/header.png")" title="Leeds University Skydivers" alt="Leeds University Skydivers logo">
+   </div>
+
+   <h2>Thank you!</h2>
+
+   <p>Are you excited for skydiving? I AM :D</p>
+
+  <iframe src="//giphy.com/embed/dkGhBWE3SyzXW" width="480" height="360" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+  <p id="giphy-link"><a href="https://giphy.com/gifs/excited-dancing-dkGhBWE3SyzXW">via GIPHY</a></p>
+
+  <a id="go-back-btn" href="@routes.MembershipController.index()">Go back...</a>
+</div>
 }
