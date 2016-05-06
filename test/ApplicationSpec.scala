@@ -20,7 +20,7 @@ class ApplicationSpec extends PlaySpec with OneAppPerTest {
 
       status(home) mustBe OK
       contentType(home) mustBe Some("text/html")
-      contentAsString(home) must include ("Freshers Sign-up")
+      contentAsString(home) must include ("Leeds University Skydivers")
       contentAsString(home) must include ("Phone number")
     }
 
@@ -29,7 +29,7 @@ class ApplicationSpec extends PlaySpec with OneAppPerTest {
 
       status(alt) mustBe OK
       contentType(alt) mustBe Some("text/html")
-      contentAsString(alt) must include ("Freshers Sign-up")
+      contentAsString(alt) must include ("Leeds University Skydivers")
       contentAsString(alt) must include ("E-mail address")
     }
   }

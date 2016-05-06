@@ -31,8 +31,12 @@
       <div class="header clearfix">
         <nav>
           <ul class="nav nav-pills pull-right">
-            <li role="presentation" class="@("active".when(request.path == "/"))"><a href="@routes.MembershipController.index">Main</a></li>
-            <li role="presentation" class="@("active".when(request.path == "/alt"))"><a href="@routes.MembershipController.alt">Alt</a></li>
+            <li role="presentation" class="@("active".when(request.path == "/" || request.path == "/sign-up"))">
+              <a href="@routes.MembershipController.index">Main</a>
+            </li>
+            <li role="presentation" class="@("active".when(request.path == "/alt" || request.path == "/sign-up-alt"))">
+              <a href="@routes.MembershipController.alt">Alt</a>
+            </li>
           </ul>
         </nav>
         <h3 class="text-muted">Leeds University Skydivers</h3>

@@ -12,7 +12,7 @@ class IntegrationSpec extends PlaySpec with OneServerPerTest with OneBrowserPerT
   "Application" should {
     "show the main sign-up form as the homepage" in {
       go to ("http://localhost:" + port)
-      pageSource must include ("Freshers Sign-up")
+      pageSource must include ("Leeds University Skydivers")
       pageSource must include ("Phone number")
     }
 
@@ -39,6 +39,16 @@ class IntegrationSpec extends PlaySpec with OneServerPerTest with OneBrowserPerT
       find(cssSelector("nav .active")).value.text must equal("Main")
 
       go to (s"http://localhost:${port}/alt")
+      eventually { find(cssSelector("nav .active")).value.text must equal("Alt") }
+    }
+
+    "highlight the correct menu button for each form when submitted" in {
+      go to ("http://localhost:" + port)
+      click on find(cssSelector("button[type=submit]")).value
+      find(cssSelector("nav .active")).value.text must equal("Main")
+
+      go to (s"http://localhost:${port}/alt")
+      click on find(cssSelector("button[type=submit]")).value
       eventually { find(cssSelector("nav .active")).value.text must equal("Alt") }
     }
   }
