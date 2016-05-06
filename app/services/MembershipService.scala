@@ -2,10 +2,11 @@ package services
 
 import javax.inject._
 
-import net.greghaines.jesque.ConfigBuilder
+import net.greghaines.jesque.{ConfigBuilder, Job}
 import play.api.inject.ApplicationLifecycle
 import models.Member
-import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError, Constraints}
+import net.greghaines.jesque.client.ClientImpl
+import play.api.data.validation.{Constraint, Constraints, Invalid, Valid, ValidationError}
 
 import scala.util.matching.Regex
 
@@ -59,11 +60,21 @@ class MembershipService @Inject() (appLifecycle: ApplicationLifecycle) {
     * @return Either an error message or the same member record that was provided
     */
   def signup(member: Member): Either[String, Member] = {
-    Right(member)
+    if (member.valid()) {
+      val job = new Job("MemberSignup", member)
+
+      val client = new ClientImpl(config)
+      client.enqueue("membersignup", job)
+      client.end()
+
+      Right(member)
+    } else {
+      Left("Invalid member record.")
+    }
   }
 
   /**
     * The Jesque configuration.
     */
-  val config = new ConfigBuilder().build()
+  private val config = new ConfigBuilder().build()
 }
