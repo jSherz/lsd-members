@@ -5,21 +5,31 @@
 *@
 @main("Sign-up") {
 <div class="jumbotron">
-    <h1>Freshers Sign-up</h1>
-    <p class="lead">Hey!</p>
+  <h1>Freshers Sign-up</h1>
+  <p class="lead">Hey!</p>
 
-    <p>
-    <form action="@routes.MembershipController.signupAlt" method="post">
-        <div class="form-group">
-            <label for="lsd-name">Name</label>
-            <input type="text" class="form-control" id="lsd-name" placeholder="Name">
-        </div>
-        <div class="form-group">
-            <label for="lsd-email-address">E-mail address</label>
-            <input type="text" class="form-control" id="lsd-email-address" placeholder="Your main e-mail address, not the uni one please!">
-        </div>
-        <button type="submit" class="btn btn-lg btn-success">Sign me up!</button>
-    </form>
-    </p>
+  @if(form.hasGlobalErrors) {
+    <ul>
+        @for(error <- form.globalErrors) {
+        <li>@error.message</li>
+        }
+    </ul>
+  }
+
+  <p>
+    @helper.form(action = routes.MembershipController.signupAlt()) {
+      <div class="form-group">
+        @helper.input(form("name"), '_label -> "Name") { (id, name, value, args) =>
+        <input type="text" class="form-control" id="@id" name="@name" placeholder="Name" @toHtmlArgs(args)>
+        }
+      </div>
+      <div class="form-group">
+        @helper.input(form("email"), '_label -> "E-mail") { (id, name, value, args) =>
+        <input type="text" class="form-control" id="@id" name="@name" placeholder="Your main e-mail address, not the uni one please." @toHtmlArgs(args)>
+        }
+      </div>
+      <button type="submit" class="btn btn-lg btn-success">Sign me up!</button>
+    }
+  </p>
 </div>
 }
