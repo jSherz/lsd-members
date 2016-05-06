@@ -9,6 +9,7 @@ import services.MembershipService
 import models.Member
 import play.api.i18n.I18nSupport
 import play.api.i18n.MessagesApi
+import play.api.data.validation.Constraints._
 
 /**
  * Handles signing up new members.
@@ -21,7 +22,7 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
   private val signupForm = Form(
     mapping(
       "name" -> nonEmptyText,
-      "phoneNumber" -> nonEmptyText
+      "phoneNumber" -> text.verifying(ms.phoneNumberValidator)
     )((name: String, phoneNumber: String) => {
       Member(name, phoneNumber, null)
     })((member: Member) => {

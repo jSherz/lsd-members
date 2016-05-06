@@ -5,6 +5,8 @@ import javax.inject._
 import net.greghaines.jesque.ConfigBuilder
 import play.api.inject.ApplicationLifecycle
 import models.Member
+import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError, Constraints}
+
 import scala.util.matching.Regex
 
 /**
@@ -29,6 +31,17 @@ class MembershipService @Inject() (appLifecycle: ApplicationLifecycle) {
     */
   def validatePhoneNumber(phoneNumber: String) = {
     (phoneNumberRegex findAllMatchIn phoneNumber).hasNext
+  }
+
+  /**
+    * A Play Framework compatible validator to check that a form field value is a valid phone number.
+    * @return
+    */
+  def phoneNumberValidator: Constraint[String] = Constraint[String]("constraint.required") { phoneNumber =>
+    if (phoneNumber == null) Invalid(ValidationError("error.required"))
+    else if (phoneNumber.trim.isEmpty) Invalid(ValidationError("error.required"))
+    else if (!validatePhoneNumber(phoneNumber)) Invalid(ValidationError("error.invalidPhoneNumber"))
+    else Valid
   }
 
   /**
