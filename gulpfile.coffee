@@ -16,7 +16,7 @@ livereload  = require 'gulp-livereload'
 notify      = require 'gulp-notify'
 
 config = {
-  imagesPattern: 'src/images/**/*.{png,gif,jpg,jpeg}'
+  imagesPattern: './assets/images/**/*.{png,gif,jpg,jpeg}'
   fontsPattern: './assets/bower_components/bootstrap-sass/assets/fonts/**/*.{eot,svg,ttf,woff,woff2,otf}'
 }
 
