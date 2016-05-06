@@ -1,1 +1,0 @@
-{"version":3,"sources":["app.coffee","app.js"],"names":["call","this"],"mappings":"CAAA,cCGGA,KAAKC","file":"app.js","sourcesContent":["# Dummy file\n","(function() {\n\n\n}).call(this);\n"],"sourceRoot":"/source/"}
