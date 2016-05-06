@@ -14,7 +14,7 @@ class ApplicationSpec extends PlaySpec with OneAppPerTest {
     }
   }
 
-  "MembershipService" should {
+  "MembershipController" should {
     "render the main sign-up form on the homepage" in {
       val home = route(app, FakeRequest(GET, "/")).get
 
