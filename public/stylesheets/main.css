@@ -1,9 +1,0 @@
-body {
-  padding-top: 1.5em;
-}
-
-@media (min-width: 768px) {
-  .container {
-    max-width: 730px;
-  }
-}
