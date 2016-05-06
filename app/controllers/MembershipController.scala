@@ -2,7 +2,6 @@ package controllers
 
 import javax.inject._
 
-import play.api._
 import play.api.data._
 import play.api.data.Forms._
 import play.api.mvc._
@@ -65,10 +64,11 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
     * @return Result of attempting to create the member
     */
   private def createMember(member: Member) = {
-    if (ms.signup(member)) {
-      Ok(views.html.membership_thank_you())
-    } else {
-      InternalServerError(views.html.membership_error())
+    val result = ms.signup(member)
+
+    result match {
+      case Left(error) => BadRequest(views.html.membership_error(error))
+      case Right(member) => Redirect(routes.MembershipController.thankYou)
     }
   }
 
@@ -84,5 +84,13 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
     */
   def signupAlt = Action { implicit request =>
     signupAltForm.bindFromRequest.fold(errors => { BadRequest(views.html.alt(errors)) }, createMember)
+  }
+
+  /**
+    * Display a thank you message.
+    * @return
+    */
+  def thankYou = Action {
+    Ok(views.html.membership_thank_you())
   }
 }

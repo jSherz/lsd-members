@@ -6,6 +6,7 @@ GET     /                           controllers.MembershipController.index
 GET     /alt                        controllers.MembershipController.alt
 POST    /sign-up                    controllers.MembershipController.signup
 POST    /sign-up-alt                controllers.MembershipController.signupAlt
+GET     /thank-you                  controllers.MembershipController.thankYou
 
 # An example controller showing how to use dependency injection
 GET     /count                      controllers.CountController.count
