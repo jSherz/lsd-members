@@ -34,12 +34,24 @@ nav
 
   li
     display: inline-block
-    padding: 0.5em 1em
+
+    a
+      padding: 0.5em 1em
+      display: inline-block
+
+      &:hover
+        background-color: lighten($lsd-blue, 50%)
+        color: #000
 
     &.active
-      background-color: $lsd-blue
       a
+        background-color: $lsd-blue
         color: white
+
+        &:hover
+          background-color: $lsd-blue
+          color: white
+
 
   @media(max-width: 45em)
     ul
