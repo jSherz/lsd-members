@@ -51,5 +51,86 @@ class IntegrationSpec extends PlaySpec with OneServerPerTest with OneBrowserPerT
       click on find(cssSelector("button[type=submit]")).value
       eventually { find(cssSelector("nav .active")).value.text must equal("Alt") }
     }
+
+    "display errors for every field if nothing was entered" in {
+      go to ("http://localhost:" + port)
+      click on find(cssSelector("button[type=submit]")).value
+
+      eventually {
+        find(cssSelector("#name_field .error")).value.text must include ("This field is required")
+        find(cssSelector("#phoneNumber_field .error")).value.text must include ("This field is required")
+      }
+    }
+
+    "display an error if no name was entered" in {
+      go to ("http://localhost:" + port)
+      click on find("phoneNumber").value
+      enter("07123123123")
+      click on find(cssSelector("button[type=submit]")).value
+
+      eventually { find(cssSelector("#name_field .error")).value.text must include ("This field is required") }
+    }
+
+    "display an error if no mobile phone was entered" in {
+      go to ("http://localhost:" + port)
+      click on find("name").value
+      enter("Joe Bloggs")
+      click on find(cssSelector("button[type=submit]")).value
+
+      eventually { find(cssSelector("#phoneNumber_field .error")).value.text must include ("This field is required") }
+    }
+
+    "display an error if no e-mail address was entered (alternative form)" in {
+      go to (s"http://localhost:${port}/alt")
+      click on find("name").value
+      enter("Joe Bloggs")
+      click on find(cssSelector("button[type=submit]")).value
+
+      eventually { find(cssSelector("#email_field .error")).value.text must include ("This field is required") }
+    }
+
+    "display an error if an invalid mobile phone number was entered" in {
+      go to ("http://localhost:" + port)
+      click on find("name").value
+      enter("Joe Bloggs")
+      click on find("phoneNumber").value
+      enter("4407123123123")
+      click on find(cssSelector("button[type=submit]")).value
+
+      eventually { find(cssSelector("#phoneNumber_field .error")).value.text must include ("Invalid mobile number") }
+    }
+
+    "display an error if an invalid e-mail address was entered (alternative form)" in {
+      go to (s"http://localhost:${port}/alt")
+      click on find("name").value
+      enter("Joe Bloggs")
+      click on find("email").value
+      enter("bloggs@localhost")
+      click on find(cssSelector("button[type=submit]")).value
+
+      eventually { find(cssSelector("#email_field .error")).value.text must include ("Invalid e-mail address") }
+    }
+
+    "redirect the user to the thank you page if a valid name and phone number were entered" in {
+      go to ("http://localhost:" + port)
+      click on find("name").value
+      enter("Joe Bloggs")
+      click on find("phoneNumber").value
+      enter("07123123123")
+      click on find(cssSelector("button[type=submit]")).value
+
+      eventually { pageSource should include ("Thank you!") }
+    }
+
+    "redirect the user to the thank you page if a valid name and e-mail were entered (alternative form)" in {
+      go to (s"http://localhost:${port}/alt")
+      click on find("name").value
+      enter("Joe Bloggs")
+      click on find("email").value
+      enter("bloggs@localhost")
+      click on find(cssSelector("button[type=submit]")).value
+
+      eventually { pageSource should include ("Thank you!") }
+    }
   }
 }
