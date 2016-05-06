@@ -21,8 +21,8 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
     */
   private val signupForm = Form(
     mapping(
-      "lsd-name" -> nonEmptyText,
-      "lsd-phone-number" -> nonEmptyText
+      "name" -> nonEmptyText,
+      "phoneNumber" -> nonEmptyText
     )((name: String, phoneNumber: String) => {
       Member(name, phoneNumber, null)
     })((member: Member) => {
@@ -35,8 +35,8 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
     */
   private val signupAltForm = Form(
     mapping(
-      "lsd-name" -> nonEmptyText,
-      "lsd-email" -> nonEmptyText
+      "name" -> nonEmptyText,
+      "email" -> nonEmptyText
     )((name: String, email: String) => {
       Member(name, null, email)
     })((member: Member) => {
