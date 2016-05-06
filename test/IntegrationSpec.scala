@@ -9,11 +9,28 @@ import play.api.test.Helpers._
 class IntegrationSpec extends PlaySpec with OneServerPerTest with OneBrowserPerTest with HtmlUnitFactory {
 
   "Application" should {
-
     "show the main sign-up form as the homepage" in {
       go to ("http://localhost:" + port)
       pageSource must include ("Freshers Sign-up")
       pageSource must include ("Phone number")
+    }
+
+    "direct the user to the alternative form when the 'Alt' button is clicked" in {
+      go to ("http://localhost:" + port)
+      pageSource must include ("Phone number")
+
+      click on find(linkText("Alt")).value
+
+      eventually { pageSource must include ("E-mail address") }
+    }
+
+    "direct the user to the main form when the 'Main' button is clicked" in {
+      go to (s"http://localhost:${port}/alt")
+      pageSource must include ("E-mail address")
+
+      click on find(linkText("Main")).value
+
+      eventually { pageSource must include ("Phone number") }
     }
   }
 }
