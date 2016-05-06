@@ -1,5 +1,8 @@
 package models
 
+import java.util
+import java.util.Map
+
 import play.api.data.validation.Valid
 import services.MembershipService
 
@@ -21,4 +24,22 @@ case class Member (ms: MembershipService, name: String, phoneNumber: String, ema
 
     name != null && !name.trim().isEmpty && phoneOrEmailValid
   }
+
+  /**
+    * Turns the Member into a form that can be written to the Jesque job.
+    *
+    * @return Dictionary containing name, phone number & e-mail.
+    */
+  def getQueueJobVars(): util.HashMap[String, Object] = {
+    val data = new util.HashMap[String, Object]()
+
+    data.put("name", name)
+    data.put("phoneNumber", if (phoneNumber == null) "" else phoneNumber)
+    data.put("email", if (email == null) "" else email)
+
+    Console.println(s"name = ${name} // phoneNumber = ${phoneNumber} // email = ${email}")
+
+    data
+  }
 }
+
