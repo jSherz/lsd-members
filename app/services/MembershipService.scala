@@ -61,10 +61,10 @@ class MembershipService @Inject() (appLifecycle: ApplicationLifecycle) {
     */
   def signup(member: Member): Either[String, Member] = {
     if (member.valid()) {
-      val job = new Job("MemberSignup", member.getQueueJobVars())
+      val job = new Job(Queues.SIGNUP_ACTION, member.getQueueJobVars())
 
       val client = new ClientImpl(config)
-      client.enqueue("membersignup", job)
+      client.enqueue(Queues.SIGNUP, job)
       client.end()
 
       Right(member)
