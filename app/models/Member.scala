@@ -37,8 +37,6 @@ case class Member (ms: MembershipService, name: String, phoneNumber: String, ema
     data.put("phoneNumber", if (phoneNumber == null) "" else phoneNumber)
     data.put("email", if (email == null) "" else email)
 
-    Console.println(s"name = ${name} // phoneNumber = ${phoneNumber} // email = ${email}")
-
     data
   }
 }
