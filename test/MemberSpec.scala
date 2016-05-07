@@ -13,10 +13,10 @@ class MemberSpec @Inject() (ms: MembershipService) extends PlaySpec with OneAppP
   "Member" should {
     "not be valid if missing a name" in {
       val members = Seq(
-        Member(ms, null, "07123123123", null),
-        Member(ms, null, null, "joe@bloggs.com"),
-        Member(ms, "", "07123123123", null),
-        Member(ms, "", null, "joe@bloggs.com")
+        Member(null, "07123123123", null),
+        Member(null, null, "joe@bloggs.com"),
+        Member("", "07123123123", null),
+        Member("", null, "joe@bloggs.com")
       )
 
       for (member <- members) {
@@ -26,12 +26,12 @@ class MemberSpec @Inject() (ms: MembershipService) extends PlaySpec with OneAppP
 
     "not be valid if missing both a phone number and e-mail address" in {
       val members = Seq(
-        Member(ms, "Joe Bloggs", null, null),
-        Member(ms, "Joe Bloggs", "", ""),
-        Member(ms, "Joe Bloggs", "7123123123", ""),
-        Member(ms, "Joe Bloggs", "7123123123", null),
-        Member(ms, "Joe Bloggs", "", "joe@localhost"),
-        Member(ms, "Joe Bloggs", null, "joe@localhost")
+        Member("Joe Bloggs", null, null),
+        Member("Joe Bloggs", "", ""),
+        Member("Joe Bloggs", "7123123123", ""),
+        Member("Joe Bloggs", "7123123123", null),
+        Member("Joe Bloggs", "", "joe@localhost"),
+        Member("Joe Bloggs", null, "joe@localhost")
       )
 
       for (member <- members) {
@@ -41,8 +41,8 @@ class MemberSpec @Inject() (ms: MembershipService) extends PlaySpec with OneAppP
 
     "be valid if it has just a name and phone number" in {
       val members = Seq(
-        Member(ms, "Joe Bloggs", "07123123123", null),
-        Member(ms, "Joe Bloggs", "07123123123", "")
+        Member("Joe Bloggs", "07123123123", null),
+        Member("Joe Bloggs", "07123123123", "")
       )
 
       for (member <- members) {
@@ -52,8 +52,8 @@ class MemberSpec @Inject() (ms: MembershipService) extends PlaySpec with OneAppP
 
     "be valid if it hass just a name and e-mail address" in {
       val members = Seq(
-        Member(ms, "Joe Bloggs", null, "joe@bloggs.org"),
-        Member(ms, "Joe Bloggs", "", "joe@bloggs.org")
+        Member("Joe Bloggs", null, "joe@bloggs.org"),
+        Member("Joe Bloggs", "", "joe@bloggs.org")
       )
 
       for (member <- members) {
