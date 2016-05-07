@@ -6,7 +6,8 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.mvc._
 import services.MembershipService
-import models.{Member, Validators}
+import models.Validators
+import models.Tables._
 import play.api.i18n.I18nSupport
 import play.api.i18n.MessagesApi
 

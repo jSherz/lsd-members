@@ -12,10 +12,10 @@ object Queues extends Enumeration {
   /**
     * The queue for members entering their contact information.
     */
-  val SIGNUP = "membersignup";
+  val SIGNUP = "membersignup"
 
   /**
     * The action that the worker will process.
     */
-  val SIGNUP_ACTION = "MemberSignup";
+  val SIGNUP_ACTION = "MemberSignup"
 }

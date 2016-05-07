@@ -4,7 +4,7 @@ import javax.inject._
 
 import net.greghaines.jesque.{ConfigBuilder, Job}
 import play.api.inject.ApplicationLifecycle
-import models.Member
+import models.Tables._
 import net.greghaines.jesque.client.ClientImpl
 
 /**

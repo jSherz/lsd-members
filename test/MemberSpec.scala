@@ -1,9 +1,7 @@
 import javax.inject.Inject
 
-import models.Member
+import models.Tables._
 import org.scalatestplus.play._
-import play.api.test._
-import play.api.test.Helpers._
 import services.MembershipService
 
 /**
