@@ -5,10 +5,6 @@
  *@
 @main("Sign-up") {
   <div id="intro-hero">
-    <div id="intro-header">
-      <img src="@routes.Assets.versioned("images/header.png")" title="Leeds University Skydivers" alt="Leeds University Skydivers logo">
-    </div>
-
     @if(form.hasGlobalErrors) {
       <ul>
         @for(error <- form.globalErrors) {
