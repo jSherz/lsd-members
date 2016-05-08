@@ -1,2 +1,3 @@
 error.invalidPhoneNumber=Invalid mobile number, should be in the format 07123123123, 447123123123 or +44123123123.
 error.invalidEmail=Invalid e-mail address, please check it for typos.
+error.memberExists=A member exists with that phone number or e-mail address. Have you already signed up?

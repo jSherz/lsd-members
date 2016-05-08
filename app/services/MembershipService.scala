@@ -29,7 +29,7 @@ class MembershipService @Inject() (memberDao: MemberDAO) {
 
       memberExists.map {
         _ match {
-          case true => Left("Member exists with that phone number.")
+          case true => Left("error.memberExists")
           case false => {
             memberDao.insert(member)
 
