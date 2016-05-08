@@ -6,8 +6,7 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.mvc._
 import services.MembershipService
-import models.Validators
-import models.CaseClassMappings._
+import models.{Member, Validators}
 import play.api.i18n.I18nSupport
 import play.api.i18n.MessagesApi
 import play.api.libs.concurrent.Execution.Implicits._
@@ -27,7 +26,7 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
       "name" -> nonEmptyText,
       "phoneNumber" -> text.verifying(Validators.phoneNumberValidator)
     )((name: String, phoneNumber: String) => {
-      Member(name, phoneNumber, null)
+      Member(None, name, phoneNumber, null)
     })((member: Member) => {
       Some(member.name, member.phoneNumber)
     })
@@ -41,7 +40,7 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
       "name" -> nonEmptyText,
       "email" -> text.verifying(Validators.emailValidator)
     )((name: String, email: String) => {
-      Member(name, null, email)
+      Member(None, name, null, email)
     })((member: Member) => {
       Some(member.name, member.email)
     })

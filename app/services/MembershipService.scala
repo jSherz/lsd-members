@@ -2,25 +2,20 @@ package services
 
 import javax.inject._
 
+import dao.MemberDAO
+import models.Member
 import net.greghaines.jesque.{ConfigBuilder, Job}
-import play.api.inject.ApplicationLifecycle
-import models.CaseClassMappings._
 import net.greghaines.jesque.client.ClientImpl
-import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
-import slick.driver.PostgresDriver.api._
 
-import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 import play.api.libs.concurrent.Execution.Implicits._
 
 /**
   * Handles the creation of members.
   */
 @Singleton
-class MembershipService @Inject() (appLifecycle: ApplicationLifecycle, dbConfigProvider: DatabaseConfigProvider) {
-  val dbConfig = dbConfigProvider.get[JdbcProfile]
-
+class MembershipService @Inject() (memberDao: MemberDAO) {
   /**
     * Create a new member with the given information. Ensures that either a phone number or e-mail address was provided.
     *
@@ -30,40 +25,24 @@ class MembershipService @Inject() (appLifecycle: ApplicationLifecycle, dbConfigP
   def signup(member: Member): Future[Either[String, Member]] = {
     if (member.valid()) {
       // Attempt to find a member by the phone number or e-mail given
-      val memberByPhoneNumber = members.filter(_.phoneNumber === member.phoneNumber).length
+      val memberExists = memberDao.exists(member.phoneNumber, member.email)
 
-      dbConfig.db.run(memberByPhoneNumber.result).map { r =>
-        if (r >= 1) {
-          Left("Member exists with that phone number.")
-        } else {
-          val job = new Job(Queues.SIGNUP_ACTION, member.getQueueJobVars())
+      memberExists.map {
+        _ match {
+          case true => Left("Member exists with that phone number.")
+          case false => {
+            memberDao.insert(member)
 
-          val client = new ClientImpl(config)
-          client.enqueue(Queues.SIGNUP, job)
-          client.end()
+            val job = new Job(Queues.SIGNUP_ACTION, member.getQueueJobVars())
 
-          Right(member)
+            val client = new ClientImpl(config)
+            client.enqueue(Queues.SIGNUP, job)
+            client.end()
+
+            Right(member)
+          }
         }
       }
-
-      //val memberByEmail = members.filter(_.email === member.email).map(_.id).length
-//
-      //Await.result(dbConfig.db.run(
-      //  if (memberByPhoneNumber.result >= 1) {
-      //    Left("Member exists with that phone number.")
-      //  } else if (memberByEmail.result >= 1) {
-      //    Left("Member exists with that e-mail address.")
-      //  } else {
-      //    val job = new Job(Queues.SIGNUP_ACTION, member.getQueueJobVars())
-//
-      //    val client = new ClientImpl(config)
-      //    client.enqueue(Queues.SIGNUP, job)
-      //    client.end()
-//
-      //    Right(member)
-      //  }
-      //  memberByEmail.result
-      //), Duration.Inf)
     } else {
       Future(Left("Invalid member record."))
     }
