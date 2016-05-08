@@ -7,9 +7,12 @@ import play.api.data.Forms._
 import play.api.mvc._
 import services.MembershipService
 import models.Validators
-import models.Tables._
+import models.CaseClassMappings._
 import play.api.i18n.I18nSupport
 import play.api.i18n.MessagesApi
+import play.api.libs.concurrent.Execution.Implicits._
+
+import scala.concurrent.Future
 
 /**
  * Handles signing up new members.
@@ -64,31 +67,40 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
     * @param member The member object with either a phone number or e-mail address
     * @return Result of attempting to create the member
     */
-  private def createMember(implicit request: play.api.mvc.Request[Any], member: Member) = {
+  private def createMember(implicit request: Request[Any], member: Member): Future[Result] = {
     val result = ms.signup(member)
 
-    result match {
-      case Left(error) => BadRequest(views.html.membership_error(error))
-      case Right(member) => Redirect(routes.MembershipController.thankYou)
+    result.map { result =>
+      result match {
+        case Left(error) => BadRequest(views.html.membership_error(error))
+        case Right(member) => Redirect(routes.MembershipController.thankYou)
+      }
+    }
+  }
+
+  private def showErrors(implicit request: Request[Any], errors: Form[Member], altForm: Boolean): Future[Result] = {
+    Future[Result] {
+      BadRequest(views.html.index(errors, altForm))
     }
   }
 
   /**
    * Membership signup with a mobile phone number.
    */
-  def signup = Action { implicit request =>
-    signupForm.bindFromRequest.fold(errors => { BadRequest(views.html.index(errors, false)) }, createMember(request, _))
+  def signup = Action.async { implicit request =>
+   signupForm.bindFromRequest.fold(showErrors(request, _, false), createMember(request, _))
   }
 
   /**
     * Alternative signup form - with e-mail address.
     */
-  def signupAlt = Action { implicit request =>
-    signupAltForm.bindFromRequest.fold(errors => { BadRequest(views.html.index(errors, true)) }, createMember(request, _))
+  def signupAlt = Action.async { implicit request =>
+    signupAltForm.bindFromRequest.fold(showErrors(request, _, true), createMember(request, _))
   }
 
   /**
     * Display a thank you message.
+    *
     * @return
     */
   def thankYou = Action { implicit request =>
