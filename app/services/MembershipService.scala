@@ -43,7 +43,7 @@ class MembershipService @Inject() (memberDao: MemberDAO) {
         }
       }
     } else {
-      Future(Left("Invalid member record."))
+      Future(Left("error.generic"))
     }
   }
 
