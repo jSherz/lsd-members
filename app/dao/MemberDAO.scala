@@ -40,7 +40,13 @@ class MemberDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider
     * @return
     */
   def exists(phoneNumber: String, email: String): Future[Boolean] = {
-    db.run(Members.filter(m => m.phoneNumber === phoneNumber || m.email === email).exists.result)
+    if (email != null && phoneNumber == null) {
+      db.run(Members.filter(_.email === email).exists.result)
+    } else if (phoneNumber != null && email == null) {
+      db.run(Members.filter(_.phoneNumber === phoneNumber).exists.result)
+    } else {
+      db.run(Members.filter(m => m.phoneNumber === phoneNumber || m.email === email).exists.result)
+    }
   }
 
   /**
