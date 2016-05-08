@@ -27,20 +27,19 @@ class MembershipService @Inject() (memberDao: MemberDAO) {
       // Attempt to find a member by the phone number or e-mail given
       val memberExists = memberDao.exists(member.phoneNumber, member.email)
 
-      memberExists.map {
-        _ match {
-          case true => Left("error.memberExists")
-          case false => {
-            memberDao.insert(member)
+      memberExists.map { exists =>
+        if (exists) {
+          Left("error.memberExists")
+        } else {
+          memberDao.insert(member)
 
-            val job = new Job(Queues.SIGNUP_ACTION, member.getQueueJobVars())
+          val job = new Job(Queues.SIGNUP_ACTION, member.getQueueJobVars())
 
-            val client = new ClientImpl(config)
-            client.enqueue(Queues.SIGNUP, job)
-            client.end()
+          val client = new ClientImpl(config)
+          client.enqueue(Queues.SIGNUP, job)
+          client.end()
 
-            Right(member)
-          }
+          Right(member)
         }
       }
     } else {
