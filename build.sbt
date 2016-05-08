@@ -14,7 +14,8 @@ libraryDependencies ++= Seq(
   "net.greghaines" % "jesque" % "2.1.1",
   "com.typesafe.play" %% "play-slick" % "2.0.0",
   "com.typesafe.play" %% "play-slick-evolutions" % "2.0.0",
-  "org.postgresql" % "postgresql" % "9.4.1208"
+  "org.postgresql" % "postgresql" % "9.4.1208",
+  "com.h2database" % "h2" % "1.4.191"
 )
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
