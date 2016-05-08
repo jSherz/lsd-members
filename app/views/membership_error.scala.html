@@ -1,8 +1,20 @@
 @(error: String)(implicit messages: Messages, request: play.api.mvc.Request[Any])
 
 @*
-* Membership error. Should be shown for internal server errors. Should not be shown for form validation issues.
+* Membership error, shown in case of a member existing with the provided phone number or e-mail address.
 *@
 @main("Error") {
-Uh-oh! Something went wrong :(
+<div id="intro-hero">
+  <div id="intro-header">
+    <img src="@routes.Assets.versioned("images/header.png")" title="Leeds University Skydivers" alt="Leeds University Skydivers logo">
+  </div>
+
+  <h2>Uh-oh!</h2>
+
+  <p class="error-message">
+    @error
+  </p>
+
+  <a id="go-back-btn" href="javascript:history.go(-1)">Go back...</a>
+</div>
 }

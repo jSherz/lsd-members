@@ -6,6 +6,10 @@ $lsd-blue: #009dd9
 $lsd-yellow: #fdda00
 $lsd-red: #ea0005
 
+@mixin error-box
+  background: lighten($lsd-red, 40%)
+  border: solid 0.1em $lsd-red
+
 body, input
   font-size: 22px
   letter-spacing: 0.07em
@@ -85,10 +89,9 @@ h1
   dd.error
     padding: 0.2em 0.3em
     display: inline-block
-    background: lighten($lsd-red, 40%)
-    border: solid 0.1em $lsd-red
     margin-bottom: 0.5em
     border-radius: 0.25em
+    @include error-box
 
   label
     font-size: 2rem
@@ -101,6 +104,10 @@ h1
 
 #go-back-btn
   @extend button
+
+.error-message
+  @include error-box
+  padding: 0.3em 0.5em
 
 footer
   text-align: center
