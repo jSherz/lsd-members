@@ -1,0 +1,43 @@
+@import base
+
+#logo
+  width: 9.67rem
+  margin: -3.25em 0 1.2em 0
+
+nav
+  text-align: right
+
+  li
+    display: inline-block
+
+    a
+      padding: 0.5em 1em
+      display: inline-block
+
+      &:hover
+        background-color: lighten($lsd-blue, 50%)
+        color: #000
+
+    &.active
+      a
+        background-color: $lsd-blue
+        color: white
+
+        &:hover
+          background-color: $lsd-blue
+          color: white
+
+#admin-container
+  @include outer-container
+
+  & > div
+    @include span-columns(12)
+
+.content
+  background: white
+  padding: 0.5em
+
+footer
+  text-align: center
+  color: #666
+  font-size: 0.9em

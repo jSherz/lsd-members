@@ -1,22 +1,4 @@
-@import 'bourbon/bourbon'
-@import 'neat/neat'
-@import 'base/base'
-
-$lsd-blue: #009dd9
-$lsd-yellow: #fdda00
-$lsd-red: #ea0005
-
-@mixin error-box
-  background: lighten($lsd-red, 40%)
-  border: solid 0.1em $lsd-red
-
-body, input
-  font-size: 22px
-  letter-spacing: 0.07em
-
-body
-  background: url('/assets/images/bg-tile.png') repeat
-  padding-top: 1.5em
+@import base
 
 #signup-container
   @include outer-container

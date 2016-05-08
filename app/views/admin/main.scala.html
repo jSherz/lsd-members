@@ -1,0 +1,46 @@
+@*
+ * Primary layout.
+ *@
+@(title: String)(content: Html)(implicit request: play.api.mvc.Request[Any])
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="@routes.Assets.versioned("images/favicon.png")">
+
+    <title>@title - Leeds University Skydivers</title>
+
+    <link href="@routes.Assets.versioned("stylesheets/admin.css")" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Patrick+Hand+SC" rel="stylesheet" type="text/css">
+  </head>
+
+  <body role="document">
+    <div id="admin-container">
+      <div>
+        <nav>
+          <ul>
+            <li role="presentation" class="@("active".when(request.path == "/admin"))">
+              <a href="@routes.AdminController.index">Main</a>
+            </li>
+          </ul>
+        </nav>
+        <img id="logo" src="@routes.Assets.versioned("images/header.png")" title="Leeds University Skydivers" alt="Leeds University Skydivers logo">
+      </div>
+
+      @content
+
+      <footer class="footer">
+        <p>&copy; 2016 Leeds University Skydivers</p>
+      </footer>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="@routes.Assets.versioned("javascripts/jquery.min.js")"><\/script>')</script>
+    <script src="@routes.Assets.versioned("javascripts/application.js")"></script>
+  </body>
+</html>
