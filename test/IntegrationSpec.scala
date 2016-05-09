@@ -1,13 +1,17 @@
 import org.scalatestplus.play._
+import play.api.{Play, Application}
 import play.api.test._
 import play.api.test.Helpers._
 import org.scalatest.Matchers._
+import org.scalatest.TestData
+import Helpers._
 
 /**
- * add your integration spec here.
- * An integration test will fire up a whole play application in a real (or headless) browser
+ * Integration tests with a real (or headless) browser.
  */
-class IntegrationSpec extends PlaySpec with OneServerPerTest with OneBrowserPerTest with HtmlUnitFactory {
+class IntegrationSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuite with HtmlUnitFactory {
+
+  implicit override lazy val app = createTestApplication()
 
   "Application" should {
     "show the main sign-up form as the homepage" in {
