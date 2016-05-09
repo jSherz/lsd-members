@@ -29,6 +29,7 @@ import javax.inject.Inject
 import models.Member
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.driver.JdbcProfile
+import slick.lifted.ProvenShape
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -86,13 +87,13 @@ class MemberDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider
     */
   private class MembersTable(tag: Tag) extends Table[Member](tag, "members") {
 
-    def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
+    def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
 
-    def name = column[String]("name")
+    def name: Rep[String] = column[String]("name")
 
-    def phoneNumber = column[String]("phone_number")
+    def phoneNumber: Rep[String] = column[String]("phone_number")
 
-    def email = column[String]("email")
+    def email: Rep[String] = column[String]("email")
 
     def * = (id.?, name, phoneNumber, email) <> (Member.tupled, Member.unapply)
 

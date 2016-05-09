@@ -72,14 +72,14 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
   /**
     * Shows the main version of the sign-up form (name and phone number).
     */
-  def index = Action { implicit request =>
+  def index: Action[AnyContent] = Action { implicit request =>
     Ok(views.html.index(signupForm, false))
   }
 
   /**
     * Shows the alternative version of the sign-up form (name and e-mail address).
     */
-  def alt = Action { implicit request =>
+  def alt: Action[AnyContent] = Action { implicit request =>
     Ok(views.html.index(signupAltForm, true))
   }
 
@@ -109,14 +109,14 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
   /**
    * Membership signup with a mobile phone number.
    */
-  def signup = Action.async { implicit request =>
+  def signup: Action[AnyContent] = Action.async { implicit request =>
    signupForm.bindFromRequest.fold(showErrors(request, _, false), createMember(request, _))
   }
 
   /**
     * Alternative signup form - with e-mail address.
     */
-  def signupAlt = Action.async { implicit request =>
+  def signupAlt: Action[AnyContent] = Action.async { implicit request =>
     signupAltForm.bindFromRequest.fold(showErrors(request, _, true), createMember(request, _))
   }
 
@@ -125,7 +125,7 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
     *
     * @return
     */
-  def thankYou = Action { implicit request =>
+  def thankYou: Action[AnyContent] = Action { implicit request =>
     Ok(views.html.membership_thank_you())
   }
 }

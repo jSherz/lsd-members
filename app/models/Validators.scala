@@ -52,10 +52,13 @@ object Validators {
     * @return Valid if a valid UK mobile number, Invalid if not
     */
   def phoneNumberValidator: Constraint[String] = Constraint[String]("constraint.required") { phoneNumber =>
-    if (phoneNumber == null) Invalid(ValidationError("error.required"))
-    else if (phoneNumber.trim.isEmpty) Invalid(ValidationError("error.required"))
-    else if (!(phoneNumberRegex findAllMatchIn phoneNumber).hasNext) Invalid(ValidationError("error.invalidPhoneNumber"))
-    else Valid
+    if (phoneNumber == null || phoneNumber.trim.isEmpty) {
+      Invalid(ValidationError("error.required"))
+    } else if (!(phoneNumberRegex findAllMatchIn phoneNumber).hasNext) {
+      Invalid(ValidationError("error.invalidPhoneNumber"))
+    } else {
+      Valid
+    }
   }
 
   /**
@@ -64,9 +67,12 @@ object Validators {
     * @return Valid if the e-mail looks roughly valid, Invalid if not
     */
   def emailValidator: Constraint[String] = Constraint[String]("constraint.required") { email =>
-    if (email == null) Invalid(ValidationError("error.required"))
-    else if (email.trim.isEmpty) Invalid(ValidationError("error.required"))
-    else if (!(emailRegex findAllMatchIn email).hasNext) Invalid(ValidationError("error.invalidEmail"))
-    else Valid
+    if (email == null || email.trim.isEmpty) {
+      Invalid(ValidationError("error.required"))
+    } else if (!(emailRegex findAllMatchIn email).hasNext) {
+      Invalid(ValidationError("error.invalidEmail"))
+    } else {
+      Valid
+    }
   }
 }
