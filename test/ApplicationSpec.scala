@@ -32,5 +32,14 @@ class ApplicationSpec extends PlaySpec with OneAppPerTest {
       contentAsString(alt) must include ("Leeds University Skydivers")
       contentAsString(alt) must include ("E-mail address")
     }
+
+    "render the thank you page correctly" in {
+      val thanks = route(app, FakeRequest(GET, "/thank-you")).get
+
+      status(thanks) mustBe OK
+      contentType(thanks) mustBe Some("text/html")
+      contentAsString(thanks) must include ("Leeds University Skydivers")
+      contentAsString(thanks) must include ("Thank you")
+    }
   }
 }
