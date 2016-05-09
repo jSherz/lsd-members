@@ -1,17 +1,22 @@
+package com.jsherz.lsdintro
+
+import javax.inject.Inject
+
 import org.scalatestplus.play._
-import play.api.{Play, Application}
-import play.api.test._
-import play.api.test.Helpers._
+import play.api.{Application, Play}
 import org.scalatest.Matchers._
-import org.scalatest.TestData
-import Helpers._
+import org.scalatest.{BeforeAndAfterEach, TestData}
+import play.api.db.slick.DatabaseConfigProvider
+import com.jsherz.lsdintro.Helpers._
 
 /**
  * Integration tests with a real (or headless) browser.
  */
-class IntegrationSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuite with HtmlUnitFactory {
+class IntegrationSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuite with HtmlUnitFactory with BeforeAndAfterEach {
 
   implicit override lazy val app = createTestApplication()
+
+  override def beforeEach = cleanDatabase(app.injector.instanceOf[DatabaseConfigProvider])
 
   "Application" should {
     "show the main sign-up form as the homepage" in {

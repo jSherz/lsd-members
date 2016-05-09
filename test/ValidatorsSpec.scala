@@ -1,3 +1,5 @@
+package com.jsherz.lsdintro
+
 import models.Validators
 import org.scalatestplus.play._
 import play.api.data.validation.{Invalid, Valid, ValidationError}

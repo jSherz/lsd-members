@@ -1,3 +1,5 @@
+package com.jsherz.lsdintro
+
 import javax.inject.Inject
 
 import models.Member

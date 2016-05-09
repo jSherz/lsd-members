@@ -1,10 +1,14 @@
+package com.jsherz.lsdintro
+
+import dao.MemberDAO
 import play.api.db.slick.DatabaseConfigProvider
 
 import scala.io.Source
 import slick.driver.PostgresDriver.api._
-import play.api.{Application, Play}
+import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import slick.driver.JdbcProfile
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
@@ -51,24 +55,17 @@ object Helpers {
    * Ensure the database has been wiped first using the provided script.
    */
   def createTestApplication(configName: String = "test"): Application = {
-    val app = new GuiceApplicationBuilder().configure(withSlickDb(configName)).build()
+    new GuiceApplicationBuilder().configure(withSlickDb(configName)).build()
+  }
 
-    val dbConfig = DatabaseConfigProvider.get[JdbcProfile](app)
+  /**
+    * Empties the database ready for testing.
+    *
+    * @param dbConfigProvider Database configuration provider to use for the DAO(s)
+    */
+  def cleanDatabase(dbConfigProvider: DatabaseConfigProvider): Unit = {
+    val memberDao = new MemberDAO(dbConfigProvider)
 
-    val cleanScriptLookup = app.getExistingFile("conf/clean-db.sql")
-
-    cleanScriptLookup match {
-      case Some(cleanScriptPath) => {
-        val cleanScriptFile = Source.fromFile(cleanScriptPath)
-        val cleanScript = try cleanScriptFile.mkString finally cleanScriptFile.close()
-
-        println(cleanScript)
-
-        dbConfig.db.run(DBIO.seq(sqlu"TRUNCATE TABLE members;"))
-      }
-      case None => throw new IllegalArgumentException("No database cleaning script found at 'conf/clean-db.sql'!")
-    }
-
-    app
+    memberDao.empty
   }
 }

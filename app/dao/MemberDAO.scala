@@ -50,6 +50,13 @@ class MemberDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider
   }
 
   /**
+    * Delete all members.
+    *
+    * @return
+    */
+  def empty(): Future[Unit] = db.run(Members.delete).map { _ => () }
+
+  /**
     * The Slick mapping for the Member object.
     * @param tag
     */
