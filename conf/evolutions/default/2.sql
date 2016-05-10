@@ -3,7 +3,8 @@
 # --- !Ups
 
 CREATE TABLE settings (
-    welcome_text_message varchar(480)
+    key VARCHAR(50),
+    value VARCHAR(500)
 );
 
 # --- !Downs

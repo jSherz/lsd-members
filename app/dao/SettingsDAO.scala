@@ -22,11 +22,52 @@
   * SOFTWARE.
   */
 
-package models
+package dao
+
+import javax.inject.Inject
+
+import models.Setting
+import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
+import slick.driver.JdbcProfile
+
+import scala.concurrent.Future
 
 /**
-  * The main member class, representing a person that has provided us with a phone number or e-mail address.
-  *
-  * @param welcomeTextMessage
+  * Used to access settings stored in the database.
   */
-case class Settings(welcomeTextMessage: String)
+class SettingsDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
+  import driver.api._
+
+  private val Settings = TableQuery[SettingsTable]
+
+  /**
+    * Get all of the configured settings.
+    *
+    * @return
+    */
+  def all(): Future[Seq[Setting]] = db.run(Settings.result)
+
+  /**
+    * Get a setting from the database.
+    *
+    * @param key
+    * @return
+    */
+  def get(key: String): Future[Option[Setting]] = db.run(Settings.filter(_.key === key).result.headOption)
+
+  /**
+    * The Slick mapping for the settings table.
+    *
+    * @param tag
+    */
+  private class SettingsTable(tag: Tag) extends Table[Setting](tag, "settings") {
+
+    def key: Rep[String] = column[String]("key", O.PrimaryKey)
+
+    def value: Rep[String] = column[String]("value")
+
+    def * = (key, value) <> (Setting.tupled, Setting.unapply)
+
+  }
+
+}
