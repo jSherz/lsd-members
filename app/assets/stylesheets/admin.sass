@@ -30,8 +30,29 @@ nav
 #admin-container
   @include outer-container
 
-  & > div
-    @include span-columns(12)
+#nav-container
+  @include span-columns(12)
+
+#left-column
+  @include span-columns(4)
+  border: solid 0.15em $lsd-blue
+
+#middle-column
+  @include span-columns(4)
+  border: solid 0.15em $lsd-yellow
+
+#right-column
+  @include span-columns(4)
+  border: solid 0.15em $lsd-red
+  @include omega()
+
+#left-column, #middle-column, #right-column
+  background: white
+  padding: 0.8rem
+  border-radius: 0.4rem
+
+  h2
+    margin-bottom: 0.1em
 
 .content
   background: white
@@ -41,3 +62,32 @@ footer
   text-align: center
   color: #666
   font-size: 0.9em
+
+#stats
+  border: solid 0.05em #ccc
+
+  th, td
+    padding: 0.3em
+    border: solid 0.05em #ccc
+
+.stats-value
+  width: 25%
+
+#settings
+  li
+    display: inline-block
+
+    a
+      display: inline-block
+      padding: 0.5em
+      background-color: lighten($lsd-blue, 45%)
+      width: 100%
+      color: #000
+      margin-top: 0.4em
+
+      &:hover
+        background-color: lighten($lsd-blue, 30%)
+        color: #000
+
+    i
+      color: lighten(#000, 40%)

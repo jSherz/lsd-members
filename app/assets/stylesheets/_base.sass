@@ -1,6 +1,7 @@
 @import 'bourbon/bourbon'
 @import 'neat/neat'
 @import 'base/base'
+@import 'font-awesome/font-awesome'
 
 $lsd-blue: #009dd9
 $lsd-yellow: #fdda00
@@ -9,6 +10,9 @@ $lsd-red: #ea0005
 @mixin error-box
   background: lighten($lsd-red, 40%)
   border: solid 0.1em $lsd-red
+
+*
+  box-sizing: border-box
 
 body, input
   font-size: 22px
