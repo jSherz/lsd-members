@@ -31,11 +31,7 @@ import play.api.db.slick.DatabaseConfigProvider
 /**
  * Integration tests with a real (or headless) browser.
  */
-class IntegrationSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuite with HtmlUnitFactory with BeforeAndAfterEach {
-
-  implicit override lazy val app = createTestApplication()
-
-  override def beforeEach = cleanDatabase(app.injector.instanceOf[DatabaseConfigProvider])
+class IntegrationSpec extends BaseSpec {
 
   "Application" should {
     "show the main sign-up form as the homepage" in {

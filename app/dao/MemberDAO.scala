@@ -70,7 +70,7 @@ class MemberDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider
     } else if (phoneNumber != null && email == null) {
       db.run(Members.filter(_.phoneNumber === phoneNumber).exists.result)
     } else {
-      db.run(Members.filter(m => m.phoneNumber === phoneNumber || m.email === email).exists.result)
+      db.run(Members.filter(m => m.phoneNumber === phoneNumber && m.email === email).exists.result)
     }
   }
 
