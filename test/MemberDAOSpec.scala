@@ -44,10 +44,10 @@ class MemberDAOSpec extends BaseSpec {
 
     "returns all configured members" in {
       val members = Seq(
-        Member(None, "Bob", "07123123123", null),
-        Member(None, "Dave", "07123123123", null),
-        Member(None, "Mary", null, "mary@had-a-little-lamb.com"),
-        Member(None, "Stephanie", null, "steph@codes.world")
+        Member(None, "Bob", Some("07123123123"), None),
+        Member(None, "Dave", Some("07123123123"), None),
+        Member(None, "Mary", None, Some("mary@had-a-little-lamb.com")),
+        Member(None, "Stephanie", None, Some("steph@codes.world"))
       )
 
       members.map { memberDao.insert(_) }
@@ -56,7 +56,7 @@ class MemberDAOSpec extends BaseSpec {
     }
 
     "insert a new member correctly" in {
-      val sandy = Member(None, "Sandra", null, "sandra@ntlworld.com")
+      val sandy = Member(None, "Sandra", None, Some("sandra@ntlworld.com"))
 
       memberDao.all().map(_ shouldBe empty)
       memberDao.insert(sandy)
@@ -64,28 +64,28 @@ class MemberDAOSpec extends BaseSpec {
     }
 
     "detect if a member exists correctly (by e-mail)" in {
-      var mauriceMail = "maurice@madagascar.io"
-      val maurice = Member(None, "Maurice", null, mauriceMail)
+      var mauriceMail = Some("maurice@madagascar.io")
+      val maurice = Member(None, "Maurice", None, mauriceMail)
 
       memberDao.all().map(_ shouldBe empty)
-      memberDao.exists(null, mauriceMail).map(_ shouldBe false)
+      memberDao.exists(None, mauriceMail).map(_ shouldBe false)
       memberDao.insert(maurice)
-      memberDao.exists(null, mauriceMail).map(_ shouldBe true)
+      memberDao.exists(None, mauriceMail).map(_ shouldBe true)
     }
 
     "detect if a member exists correctly (by phone number)" in {
-      var mauriceMobile = "07000001337"
+      var mauriceMobile = Some("07000001337")
       val maurice = Member(None, "Maurice", mauriceMobile, null)
 
       memberDao.all().map(_ shouldBe empty)
-      memberDao.exists(mauriceMobile, null).map(_ shouldBe false)
+      memberDao.exists(mauriceMobile, None).map(_ shouldBe false)
       memberDao.insert(maurice)
-      memberDao.exists(mauriceMobile, null).map(_ shouldBe true)
+      memberDao.exists(mauriceMobile, None).map(_ shouldBe true)
     }
 
     "detect if a member exists correctly (by e-mail and phone number)" in {
-      var mauriceMobile = "07000001337"
-      var mauriceMail = "maurice@madagascar.io"
+      var mauriceMobile = Some("07000001337")
+      var mauriceMail = Some("maurice@madagascar.io")
       val maurice = Member(None, "Maurice", mauriceMobile, mauriceMail)
 
       memberDao.all().map(_ shouldBe empty)
@@ -93,8 +93,8 @@ class MemberDAOSpec extends BaseSpec {
       memberDao.insert(maurice)
       memberDao.exists(mauriceMobile, mauriceMail).map(_ shouldBe true)
 
-      val notMauriceMobile = "07123123123"
-      val notMauriceMail = "not@maurice.org"
+      val notMauriceMobile = Some("07123123123")
+      val notMauriceMail = Some("not@maurice.org")
       val notMaurice = Member(None, "Not Maurice", notMauriceMobile, notMauriceMail)
       memberDao.insert(notMaurice)
 
@@ -104,8 +104,8 @@ class MemberDAOSpec extends BaseSpec {
 
     "empty the members table correctly" in {
       val members = Seq(
-        Member(None, "Bob", "07123123123", null),
-        Member(None, "Dave", "07123123123", null)
+        Member(None, "Bob", Some("07123123123"), None),
+        Member(None, "Dave", Some("07123123123"), None)
       )
 
       members.map { memberDao.insert(_) }

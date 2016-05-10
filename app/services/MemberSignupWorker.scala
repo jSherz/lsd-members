@@ -155,9 +155,9 @@ object MemberSignupWorker {
     * @param name
     * @param phoneNumber
     */
-  def signupMember(name: String, phoneNumber: String) {
-    if (phoneNumber != null && phoneNumber != "") {
-      sendSMS(name, phoneNumber)
+  def signupMember(name: String, phoneNumber: Option[String]) {
+    if (phoneNumber != None && phoneNumber != "") {
+      phoneNumber.map { sendSMS(name, _) }
     } else {
       Logger.debug("Member doesn't have phone number - not sending message.")
     }
@@ -187,12 +187,12 @@ class MemberSignupAction extends Runnable {
   /**
     * The member's phone number.
     */
-  private var phoneNumber: String = null
+  private var phoneNumber: Option[String] = None
 
   /**
     * The member's e-mail address.
     */
-  private var email: String = null
+  private var email: Option[String] = None
 
   /**
     * Sets the member's name. Called (using reflection) by Jesque before the action is run.
@@ -206,7 +206,7 @@ class MemberSignupAction extends Runnable {
     * Sets the member's phone number. Called (using reflection) by Jesque before the action is run.
     * @param phoneNumber
     */
-  def setPhoneNumber(phoneNumber: String): Unit = {
+  def setPhoneNumber(phoneNumber: Option[String]): Unit = {
     this.phoneNumber = phoneNumber
   }
 
@@ -214,7 +214,7 @@ class MemberSignupAction extends Runnable {
     * Sets the member's e-mail address. Called (using reflection) by Jesque before the action is run.
     * @param email
     */
-  def setEmail(email: String): Unit = {
+  def setEmail(email: Option[String]): Unit = {
     this.email = email
   }
 

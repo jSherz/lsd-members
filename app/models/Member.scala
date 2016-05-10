@@ -36,7 +36,7 @@ import play.api.data.validation.Valid
   * @param phoneNumber UK mobile phone number
   * @param email E-mail address
   */
-case class Member(id: Option[Int], name: String, phoneNumber: String, email: String) {
+case class Member(id: Option[Int], name: String, phoneNumber: Option[String], email: Option[String]) {
   /**
     * Ensures that the record has at least:
     *
@@ -46,10 +46,10 @@ case class Member(id: Option[Int], name: String, phoneNumber: String, email: Str
     * @return true if above conditions are met
     */
   def valid(): Boolean = {
-    val phoneOrEmailValid = (phoneNumber != null && Validators.phoneNumberValidator(phoneNumber) == Valid) ||
-      (email != null && Validators.emailValidator(email) == Valid)
+    val phoneOrEmailValid = (phoneNumber != None && Validators.phoneNumberValidator(phoneNumber.get) == Valid) ||
+      (email != None && Validators.emailValidator(email.get) == Valid)
 
-    name != null && !name.trim().isEmpty && phoneOrEmailValid
+    name != None && !name.trim().isEmpty && phoneOrEmailValid
   }
 
   /**
@@ -61,8 +61,8 @@ case class Member(id: Option[Int], name: String, phoneNumber: String, email: Str
     val data = new HashMap[String, Object]()
 
     data.put("name", name)
-    data.put("phoneNumber", if (phoneNumber == null) "" else phoneNumber)
-    data.put("email", if (email == null) "" else email)
+    data.put("phoneNumber", if (phoneNumber == None) "" else phoneNumber)
+    data.put("email", if (email == None) "" else email)
 
     data
   }

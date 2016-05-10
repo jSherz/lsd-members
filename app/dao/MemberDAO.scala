@@ -29,7 +29,6 @@ import javax.inject.Inject
 import models.Member
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.driver.JdbcProfile
-import slick.lifted.ProvenShape
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -64,10 +63,10 @@ class MemberDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider
     * @param email E-mail address to lookup
     * @return
     */
-  def exists(phoneNumber: String, email: String): Future[Boolean] = {
-    if (email != null && phoneNumber == null) {
+  def exists(phoneNumber: Option[String], email: Option[String]): Future[Boolean] = {
+    if (email != None && phoneNumber == None) {
       db.run(Members.filter(_.email === email).exists.result)
-    } else if (phoneNumber != null && email == null) {
+    } else if (phoneNumber != None && email == None) {
       db.run(Members.filter(_.phoneNumber === phoneNumber).exists.result)
     } else {
       db.run(Members.filter(m => m.phoneNumber === phoneNumber && m.email === email).exists.result)
@@ -91,9 +90,9 @@ class MemberDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider
 
     def name: Rep[String] = column[String]("name")
 
-    def phoneNumber: Rep[String] = column[String]("phone_number")
+    def phoneNumber: Rep[Option[String]] = column[Option[String]]("phone_number")
 
-    def email: Rep[String] = column[String]("email")
+    def email: Rep[Option[String]] = column[Option[String]]("email")
 
     def * = (id.?, name, phoneNumber, email) <> (Member.tupled, Member.unapply)
 

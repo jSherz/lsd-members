@@ -49,9 +49,9 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
       "name" -> nonEmptyText,
       "phoneNumber" -> text.verifying(Validators.phoneNumberValidator)
     )((name: String, phoneNumber: String) => {
-      Member(None, name, phoneNumber, null)
+      Member(None, name, Some(phoneNumber), None)
     })((member: Member) => {
-      Some(member.name, member.phoneNumber)
+      Some(member.name, member.phoneNumber.get)
     })
   )
 
@@ -63,9 +63,9 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
       "name" -> nonEmptyText,
       "email" -> text.verifying(Validators.emailValidator)
     )((name: String, email: String) => {
-      Member(None, name, null, email)
+      Member(None, name, None, Some(email))
     })((member: Member) => {
-      Some(member.name, member.email)
+      Some(member.name, member.email.get)
     })
   )
 
