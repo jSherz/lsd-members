@@ -41,5 +41,13 @@ class AdminControllerSpec extends BaseSpec {
 
       eventually { pageSource must include ("Stats") }
     }
+
+    "clicking on the 'Welcome text' button takes the user to the relevant settings page" in {
+      go to (s"http://localhost:${port}/admin")
+
+      click on find(linkText("Welcome text")).value
+
+      eventually { pageSource must include ("welcome text can be up to 480 characters") }
+    }
   }
 }

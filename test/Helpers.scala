@@ -22,7 +22,7 @@
   * SOFTWARE.
   */
 
-import dao.MemberDAO
+import dao.{MemberDAO, SettingsDAO}
 import play.api.Application
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -81,7 +81,9 @@ object Helpers {
     */
   def cleanDatabase(dbConfigProvider: DatabaseConfigProvider): Unit = {
     val memberDao = new MemberDAO(dbConfigProvider)
+    val settingsDao = new SettingsDAO(dbConfigProvider)
 
     memberDao.empty
+    settingsDao.empty
   }
 }

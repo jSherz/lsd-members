@@ -30,6 +30,7 @@ import models.Setting
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.driver.JdbcProfile
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
@@ -41,19 +42,60 @@ class SettingsDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvid
   private val Settings = TableQuery[SettingsTable]
 
   /**
-    * Get all of the configured settings.
+    * Check if a setting exists in the database.
     *
+    * @param key Used to find the setting
     * @return
     */
-  def all(): Future[Seq[Setting]] = db.run(Settings.result)
+  def exists(key: String): Future[Boolean] = db.run(Settings.filter(_.key === key).exists.result)
 
   /**
     * Get a setting from the database.
     *
-    * @param key
+    * @param key Key to find a setting with
     * @return
     */
   def get(key: String): Future[Option[Setting]] = db.run(Settings.filter(_.key === key).result.headOption)
+
+  /**
+    * Get the value of the setting with the given key. If not found, return the specified default value.
+    *
+    * @param key Key to find a setting with
+    * @param defaultValue Value returned if the setting is not found
+    * @return
+    */
+  def getOrElse(key: String, defaultValue: String): Future[String] = {
+    get(key).map {
+      _ match {
+        case Some(setting) => setting.value
+        case None => defaultValue
+      }
+    }
+  }
+
+  /**
+    * Sets the value of a setting with the given key. If it does not exist, it will be created. Otherwise, the value
+    * will be updated.
+    *
+    * @param setting Setting to insert or update
+    * @return The number of settings that were updated (always one)
+    */
+  def put(setting: Setting): Future[Int] = db.run(Settings.insertOrUpdate(setting))
+
+  /**
+    * Remove a setting from the database.
+    *
+    * @param setting Setting to remove
+    * @return The number of settings that were removed (always one)
+    */
+  def delete(setting: Setting): Future[Int] = db.run(Settings.filter(_.key === setting.key).delete)
+
+  /**
+    * Remove all settings
+    *
+    * @return The number of settings that were removed
+    */
+  def empty(): Future[Int] = db.run(Settings.delete)
 
   /**
     * The Slick mapping for the settings table.
