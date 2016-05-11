@@ -51,7 +51,7 @@ object Validators {
     *
     * @return Valid if a valid UK mobile number, Invalid if not
     */
-  def phoneNumberValidator: Constraint[String] = Constraint[String]("constraint.required") { phoneNumber =>
+  def phoneNumberValidator: Constraint[String] = Constraint[String]("constraint.phoneNumber") { phoneNumber =>
     if (phoneNumber == None || phoneNumber.trim.isEmpty) {
       Invalid(ValidationError("error.required"))
     } else if (!(phoneNumberRegex findAllMatchIn phoneNumber).hasNext) {
@@ -66,11 +66,28 @@ object Validators {
     *
     * @return Valid if the e-mail looks roughly valid, Invalid if not
     */
-  def emailValidator: Constraint[String] = Constraint[String]("constraint.required") { email =>
+  def emailValidator: Constraint[String] = Constraint[String]("constraint.email") { email =>
     if (email == None || email.trim.isEmpty) {
       Invalid(ValidationError("error.required"))
     } else if (!(emailRegex findAllMatchIn email).hasNext) {
       Invalid(ValidationError("error.invalidEmail"))
+    } else {
+      Valid
+    }
+  }
+
+  /**
+    * Ensures the provided welcome text template is at least one character and is 480 characters or under.
+    *
+    * @return Valid if 1 <= length <= 480, otherwise Invalid
+    */
+  def welcomeTextValidator: Constraint[String] = Constraint[String]("constraints.welcomeText") { welcomeText =>
+    val welcomeTextLength = welcomeText.length()
+
+    if (welcomeTextLength == 0) {
+      Invalid(ValidationError("error.welcomeTextEmpty"))
+    } else if (welcomeTextLength > 480) {
+      Invalid(ValidationError("error.welcomeTextTooLong"))
     } else {
       Valid
     }

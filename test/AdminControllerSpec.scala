@@ -22,10 +22,20 @@
   * SOFTWARE.
   */
 
+import dao.SettingsDAO
+import models.{Setting, Settings}
+
+import scala.concurrent.ExecutionContext.Implicits.global
+
 /**
   * Very basic specs for the admin controller.
   */
 class AdminControllerSpec extends BaseSpec {
+  /**
+    * An instance of the DAO, used for testing.
+    */
+  private val settingsDao = app.injector.instanceOf[SettingsDAO]
+
   "AdminController" should {
     "show the dashboard as the homepage" in {
       go to (s"http://localhost:${port}/admin")
@@ -48,6 +58,57 @@ class AdminControllerSpec extends BaseSpec {
       click on find(linkText("Welcome text")).value
 
       eventually { pageSource must include ("welcome text can be up to 480 characters") }
+    }
+
+    "show the default welcome text template if one is not set" in {
+      settingsDao.empty().map { numRemoved =>
+        go to (s"http://localhost:${port}/settings")
+
+        eventually { pageSource must include ("Hello, @@name@@, this is an example text!") }
+      }
+    }
+
+    "show the configured welcome text template if one is set" in {
+      val exampleTemplate = "Hello, World! Your name is @@name@@ :O"
+
+      settingsDao.put(Setting(Settings.WelcomeText, exampleTemplate)).map { numAdded =>
+        go to (s"http://localhost:${port}/settings")
+
+        eventually { pageSource must include (exampleTemplate) }
+      }
+    }
+
+    "show an error if a user attempts to save a blank welcome text" in {
+      go to (s"http://localhost:${port}/settings")
+
+      click on find("welcomeText").value
+      enter("")
+      click on find(cssSelector("button[type=submit]")).value
+
+      eventually {
+        pageSource must include ("You must enter a value for the welcome message")
+      }
+    }
+
+    "show an error if a user attempts to save a welcome text template that's over 480 characters" in {
+      go to (s"http://localhost:${port}/settings")
+
+      click on find("welcomeText").value
+      enter((1 to 481).map(_ => " ").foldLeft("")((a, b) => a ++ b))
+      click on find(cssSelector("button[type=submit]")).value
+
+      eventually { pageSource must include ("must not exceed 480") }
+    }
+
+    "updates the welcome text template if a valid one was entered" in {
+      val myWelcome = "This is a test! Isn't that amazing, @@name@@?"
+      go to (s"http://localhost:${port}/settings")
+
+      click on find("welcomeText").value
+      enter(myWelcome)
+      click on find(cssSelector("button[type=submit]")).value
+
+      eventually { settingsDao.get(Settings.WelcomeText).map(_ mustEqual myWelcome) }
     }
   }
 }

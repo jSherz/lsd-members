@@ -74,5 +74,31 @@ class ValidatorsSpec extends PlaySpec with OneAppPerTest {
         Validators.emailValidator.apply(invalidEmail) mustBe Invalid(List(ValidationError(List("error.invalidEmail"))))
       }
     }
+
+    "allow any valid welcome message" in {
+      val exampleMessages = Seq(
+        "1", "Hello! :)", (1 to 480).map(_ => " ").foldLeft("")((a, b) => a ++ b)
+      )
+
+      exampleMessages.map { message =>
+        Validators.welcomeTextValidator.apply(message) mustBe Valid
+      }
+    }
+
+    "reject empty welcome messages" in {
+      Validators.welcomeTextValidator.apply("") mustBe Invalid(List(ValidationError(List("error.welcomeTextEmpty"))))
+    }
+
+    "reject overly long welcome messages" in {
+      val overlyLongMessages = Seq(
+        (1 to 481).map(_ => " ").foldLeft("")((a, b) => a ++ b),
+        (1 to 482).map(_ => " ").foldLeft("")((a, b) => a ++ b),
+        (1 to 1000).map(_ => " ").foldLeft("")((a, b) => a ++ b)
+      )
+
+      overlyLongMessages.map { message =>
+        Validators.welcomeTextValidator.apply(message) mustBe Invalid(List(ValidationError(List("error.welcomeTextTooLong"))))
+      }
+    }
   }
 }

@@ -26,14 +26,30 @@ package controllers
 
 import javax.inject._
 
+import dao.SettingsDAO
+import models.{Setting, Settings, Validators}
+import play.api.data.Forms._
+import play.api.data._
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc._
+
 
 /**
  * Handles the administration interface.
  */
 @Singleton
-class AdminController @Inject() (val messagesApi: MessagesApi) extends Controller with I18nSupport {
+class AdminController @Inject() (val messagesApi: MessagesApi, val settingsDao: SettingsDAO) extends Controller with I18nSupport {
+  private val settingsForm = Form(
+    mapping(
+      "welcomeText" -> text.verifying(Validators.welcomeTextValidator)
+    )((welcomeText: String) => {
+      (welcomeText)
+    })((welcomeText: String) => {
+      Some(welcomeText)
+    })
+  )
+
   /**
     * Shows the main admin screen.
     */
@@ -42,11 +58,30 @@ class AdminController @Inject() (val messagesApi: MessagesApi) extends Controlle
   }
 
   /**
+    * Update the saved settings.
+    *
+    * @return
+    */
+  def settings: Action[AnyContent] = Action.async { implicit request =>
+    settingsDao.getOrElse(Settings.WelcomeText, "Hello, @@name@@, this is an example text!").map { welcomeTextMessage =>
+      Ok(views.html.admin.settings(settingsForm.fill(welcomeTextMessage), welcomeTextMessage))
+    }
+  }
+
+  /**
     * Shows the settings edit form.
     *
     * @return
     */
-  def settings: Action[AnyContent] = Action { implicit request =>
-    Ok(views.html.admin.settings())
+  def updateSettings: Action[AnyContent] = Action.async { implicit request =>
+    settingsDao.getOrElse(Settings.WelcomeText, "Hello, @@name@@, this is an example text!").map { welcomeTextMessage =>
+      settingsForm.bindFromRequest.fold(formWithErrors => {
+        BadRequest(views.html.admin.settings(formWithErrors, welcomeTextMessage))
+      }, (welcomeText: String) => {
+        settingsDao.put(Setting(Settings.WelcomeText, welcomeText))
+
+        Redirect(routes.AdminController.index())
+      })
+    }
   }
 }

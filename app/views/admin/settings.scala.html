@@ -1,4 +1,4 @@
-@()(implicit messages: Messages, request: play.api.mvc.Request[Any])
+@(settingsForm: Form[String], savedWelcomeTextMessage: String)(implicit messages: Messages, request: play.api.mvc.Request[Any])
 
 @*
 * Shows the main admin overview screen.
@@ -7,10 +7,17 @@
 <div id="full-column">
   <h2>Settings</h2>
 
+  @if(settingsForm.hasGlobalErrors) {
+    <ul class="form-errors">
+      @for(error <- settingsForm.globalErrors) {
+        <li>@Messages(error.messages, error.args)</li>
+      }
+    </ul>
+  }
+
   <form action="#" method="post">
     <ul>
       <li>
-        <label for="welcome-text">Welcome text</label>
         <p>The welcome text can be up to 480 characters (3 standard text messages) and is designed to:
           <ul class="list list-disc">
             <li>Thank the person for coming to see us</li>
@@ -19,7 +26,9 @@
           </ul>
           The text <code>@@@@name@@@@</code> will be replaced with the person's name.
         </p>
-        <textarea id="welcome-text" name="welcome-text"></textarea>
+        @helper.input(settingsForm("welcomeText"), '_label -> "Welcome text") { (id, name, value, args) =>
+          <textarea id="@id" name="@name" @toHtmlArgs(args)>@value</textarea>
+        }
       </li>
 
       <li>

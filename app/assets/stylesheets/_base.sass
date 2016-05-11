@@ -22,6 +22,17 @@ body
   background: url('/assets/images/bg-tile.png') repeat
   padding-top: 1.5em
 
+form
+  dd.info
+    display: none
+
+  dd.error
+    padding: 0.2em 0.3em
+    display: inline-block
+    margin-bottom: 0.5em
+    border-radius: 0.25em
+    @include error-box
+
 // Source: http://refills.bourbon.io/components/
 .video-wrapper
   height: 0
