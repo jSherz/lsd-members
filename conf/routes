@@ -11,6 +11,7 @@ GET     /thank-you                  controllers.MembershipController.thankYou
 # Admin
 
 GET     /admin                      controllers.AdminController.index
+GET     /settings                   controllers.AdminController.settings
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

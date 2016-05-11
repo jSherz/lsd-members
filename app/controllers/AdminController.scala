@@ -40,4 +40,13 @@ class AdminController @Inject() (val messagesApi: MessagesApi) extends Controlle
   def index: Action[AnyContent] = Action { implicit request =>
     Ok(views.html.admin.index())
   }
+
+  /**
+    * Shows the settings edit form.
+    *
+    * @return
+    */
+  def settings: Action[AnyContent] = Action { implicit request =>
+    Ok(views.html.admin.settings())
+  }
 }

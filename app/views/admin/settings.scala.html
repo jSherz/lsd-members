@@ -1,0 +1,33 @@
+@()(implicit messages: Messages, request: play.api.mvc.Request[Any])
+
+@*
+* Shows the main admin overview screen.
+*@
+@admin.main("Settings - Admin") {
+<div id="full-column">
+  <h2>Settings</h2>
+
+  <form action="#" method="post">
+    <ul>
+      <li>
+        <label for="welcome-text">Welcome text</label>
+        <p>The welcome text can be up to 480 characters (3 standard text messages) and is designed to:
+          <ul class="list list-disc">
+            <li>Thank the person for coming to see us</li>
+            <li>Provide the date of the G.I.A.G. and tell the person what happens</li>
+            <li>Tell the person how to find us (e.g. on Facebook and our website)</li>
+          </ul>
+          The text <code>@@@@name@@@@</code> will be replaced with the person's name.
+        </p>
+        <textarea id="welcome-text" name="welcome-text"></textarea>
+      </li>
+
+      <li>
+        <button type="submit">
+          <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
+        </button>
+      </li>
+    </ul>
+  </form>
+</div>
+}

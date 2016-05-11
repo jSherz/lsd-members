@@ -27,6 +27,11 @@ nav
           background-color: $lsd-blue
           color: white
 
+code
+  font-size: 0.8em
+  background-color: #ccc
+  padding: 0.2em
+
 #admin-container
   @include outer-container
 
@@ -46,13 +51,16 @@ nav
   border: solid 0.15em $lsd-red
   @include omega()
 
-#left-column, #middle-column, #right-column
+#left-column, #middle-column, #right-column, #full-column
   background: white
   padding: 0.8rem
   border-radius: 0.4rem
 
   h2
     margin-bottom: 0.1em
+
+#full-column
+  @include span-columns(12)
 
 .content
   background: white
