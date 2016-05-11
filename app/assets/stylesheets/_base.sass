@@ -21,3 +21,18 @@ body, input
 body
   background: url('/assets/images/bg-tile.png') repeat
   padding-top: 1.5em
+
+// Source: http://refills.bourbon.io/components/
+.video-wrapper
+  height: 0
+  overflow: hidden
+  padding-bottom: 75% // For ratio 16:9. 75% if ratio is 4:3
+  position: relative
+  margin-bottom: 1rem
+
+  embed,
+  object,
+  iframe,
+  video
+    @include position(absolute, 0 null null 0)
+    @include size(100%)
