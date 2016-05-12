@@ -60,9 +60,25 @@ class AdminControllerSpec extends BaseSpec {
       eventually { pageSource must include ("welcome text can be up to 480 characters") }
     }
 
+    "clicking on the 'Settings' button takes the user to the relevant settings page" in {
+      go to (s"http://localhost:${port}/admin")
+
+      click on find(linkText("Settings")).value
+
+      eventually { pageSource must include ("welcome text can be up to 480 characters") }
+    }
+
+    "highlight the correct menu button for each page" in {
+      go to (s"http://localhost:${port}/admin")
+      find(cssSelector("nav .active")).value.text must equal("Main")
+
+      go to (s"http://localhost:${port}/admin/settings")
+      eventually { find(cssSelector("nav .active")).value.text must equal("Settings") }
+    }
+
     "show the default welcome text template if one is not set" in {
       settingsDao.empty().map { numRemoved =>
-        go to (s"http://localhost:${port}/settings")
+        go to (s"http://localhost:${port}/admin/settings")
 
         eventually { pageSource must include ("Hello, @@name@@, this is an example text!") }
       }
@@ -72,14 +88,14 @@ class AdminControllerSpec extends BaseSpec {
       val exampleTemplate = "Hello, World! Your name is @@name@@ :O"
 
       settingsDao.put(Setting(Settings.WelcomeText, exampleTemplate)).map { numAdded =>
-        go to (s"http://localhost:${port}/settings")
+        go to (s"http://localhost:${port}/admin/settings")
 
         eventually { pageSource must include (exampleTemplate) }
       }
     }
 
     "show an error if a user attempts to save a blank welcome text" in {
-      go to (s"http://localhost:${port}/settings")
+      go to (s"http://localhost:${port}/admin/settings")
 
       click on find("welcomeText").value
       enter("")
@@ -91,7 +107,7 @@ class AdminControllerSpec extends BaseSpec {
     }
 
     "show an error if a user attempts to save a welcome text template that's over 480 characters" in {
-      go to (s"http://localhost:${port}/settings")
+      go to (s"http://localhost:${port}/admin/settings")
 
       click on find("welcomeText").value
       enter((1 to 481).map(_ => " ").foldLeft("")((a, b) => a ++ b))
@@ -102,7 +118,7 @@ class AdminControllerSpec extends BaseSpec {
 
     "updates the welcome text template if a valid one was entered" in {
       val myWelcome = "This is a test! Isn't that amazing, @@name@@?"
-      go to (s"http://localhost:${port}/settings")
+      go to (s"http://localhost:${port}/admin/settings")
 
       click on find("welcomeText").value
       enter(myWelcome)

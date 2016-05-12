@@ -27,6 +27,10 @@
             <li role="presentation" class="@("active".when(request.path == "/admin"))">
               <a href="@routes.AdminController.index">Main</a>
             </li>
+
+            <li role="presentation" class="@("active".when(request.path == "/admin/settings"))">
+              <a href="@routes.AdminController.settings">Settings</a>
+            </li>
           </ul>
         </nav>
         <img id="logo" src="@routes.Assets.versioned("images/header.png")" title="Leeds University Skydivers" alt="Leeds University Skydivers logo">
