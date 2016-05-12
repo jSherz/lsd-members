@@ -27,8 +27,7 @@ package dao
 import javax.inject.Inject
 
 import models.Setting
-import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
-import slick.driver.JdbcProfile
+import play.api.db.slick.DatabaseConfigProvider
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -36,10 +35,8 @@ import scala.concurrent.Future
 /**
   * Used to access settings stored in the database.
   */
-class SettingsDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
+class SettingsDAO @Inject() (override protected val dbConfigProvider: DatabaseConfigProvider) extends Tables(dbConfigProvider) {
   import driver.api._
-
-  private val Settings = TableQuery[SettingsTable]
 
   /**
     * Check if a setting exists in the database.
@@ -96,20 +93,4 @@ class SettingsDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvid
     * @return The number of settings that were removed
     */
   def empty(): Future[Int] = db.run(Settings.delete)
-
-  /**
-    * The Slick mapping for the settings table.
-    *
-    * @param tag
-    */
-  private class SettingsTable(tag: Tag) extends Table[Setting](tag, "settings") {
-
-    def key: Rep[String] = column[String]("key", O.PrimaryKey)
-
-    def value: Rep[String] = column[String]("value")
-
-    def * = (key, value) <> (Setting.tupled, Setting.unapply)
-
-  }
-
 }

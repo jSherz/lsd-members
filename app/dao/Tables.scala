@@ -26,54 +26,54 @@ package dao
 
 import javax.inject.Inject
 
-import models.Member
-import play.api.db.slick.DatabaseConfigProvider
+import models.{Member, Setting}
+import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
+import slick.driver.JdbcProfile
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
-  * Used to access members stored in the database.
+  * All of the database tables, modelled as Slick objects.
   */
-class MemberDAO @Inject() (override protected val dbConfigProvider: DatabaseConfigProvider) extends Tables(dbConfigProvider) {
+class Tables (protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
   import driver.api._
 
-  /**
-    * Get all of the configured members.
-    *
-    * @return
-    */
-  def all(): Future[Seq[Member]] = db.run(Members.result)
+  protected val Settings = TableQuery[SettingsTable]
 
   /**
-    * Add a new member to the database.
+    * The Slick mapping for the settings table.
     *
-    * @param member
-    * @return
+    * @param tag
     */
-  def insert(member: Member): Future[Unit] = db.run(Members += member).map { _ => () }
+  protected class SettingsTable(tag: Tag) extends Table[Setting](tag, "settings") {
 
-  /**
-    * Check if a member exists with the given phone number OR e-mail address.
-    *
-    * @param phoneNumber Mobile number to lookup
-    * @param email E-mail address to lookup
-    * @return
-    */
-  def exists(phoneNumber: Option[String], email: Option[String]): Future[Boolean] = {
-    if (email != None && phoneNumber == None) {
-      db.run(Members.filter(_.email === email).exists.result)
-    } else if (phoneNumber != None && email == None) {
-      db.run(Members.filter(_.phoneNumber === phoneNumber).exists.result)
-    } else {
-      db.run(Members.filter(m => m.phoneNumber === phoneNumber && m.email === email).exists.result)
-    }
+    def key: Rep[String] = column[String]("key", O.PrimaryKey)
+
+    def value: Rep[String] = column[String]("value")
+
+    def * = (key, value) <> (Setting.tupled, Setting.unapply)
+
   }
 
+  protected val Members = TableQuery[MembersTable]
+
   /**
-    * Delete all members.
+    * The Slick mapping for the Member object.
     *
-    * @return
+    * @param tag
     */
-  def empty(): Future[Unit] = db.run(Members.delete).map { _ => () }
+  protected class MembersTable(tag: Tag) extends Table[Member](tag, "members") {
+
+    def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
+
+    def name: Rep[String] = column[String]("name")
+
+    def phoneNumber: Rep[Option[String]] = column[Option[String]]("phone_number")
+
+    def email: Rep[Option[String]] = column[Option[String]]("email")
+
+    def * = (id.?, name, phoneNumber, email) <> (Member.tupled, Member.unapply)
+
+  }
 }
