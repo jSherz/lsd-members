@@ -24,14 +24,12 @@
 
 package dao
 
-import javax.inject.Inject
+import java.sql.Timestamp
 
-import models.{Member, Setting}
+import models.{Member, Setting, TextMessage}
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.driver.JdbcProfile
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import slick.lifted.ForeignKeyQuery
 
 /**
   * All of the database tables, modelled as Slick objects.
@@ -39,7 +37,17 @@ import scala.concurrent.Future
 class Tables (protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
   import driver.api._
 
-  protected val Settings = TableQuery[SettingsTable]
+  /**
+    * A field length that can store mobile numbers in any of the allowed formats (see Validators).
+    */
+  private val MOBILE_NUMBER_FIELD_LENGTH: Int = 15
+
+  /**
+    * The most text that can be sent in a welcome text message (typically 3 standard text messages or 480).
+    */
+  private val TEXT_MESSAGE_LENGTH: Int = 480
+
+  protected val Settings: TableQuery[SettingsTable] = TableQuery[SettingsTable]
 
   /**
     * The Slick mapping for the settings table.
@@ -56,7 +64,7 @@ class Tables (protected val dbConfigProvider: DatabaseConfigProvider) extends Ha
 
   }
 
-  protected val Members = TableQuery[MembersTable]
+  protected val Members: TableQuery[MembersTable] = TableQuery[MembersTable]
 
   /**
     * The Slick mapping for the Member object.
@@ -74,6 +82,34 @@ class Tables (protected val dbConfigProvider: DatabaseConfigProvider) extends Ha
     def email: Rep[Option[String]] = column[Option[String]]("email")
 
     def * = (id.?, name, phoneNumber, email) <> (Member.tupled, Member.unapply)
+
+  }
+
+  protected val TextMessages: TableQuery[TextMessagesTable] = TableQuery[TextMessagesTable]
+
+  /**
+    * The Slick mapping for the TextMessage object.
+    * @param tag
+    */
+  protected class TextMessagesTable(tag: Tag) extends Table[TextMessage](tag, "text_messages") {
+
+    def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
+
+    def memberId: Rep[Int] = column[Int]("member_id")
+
+    def toNumber: Rep[String] = column[String]("to_number", O.Length(MOBILE_NUMBER_FIELD_LENGTH, varying = true))
+
+    def fromNumber: Rep[String] = column[String]("from_number", O.Length(MOBILE_NUMBER_FIELD_LENGTH, varying = true))
+
+    def sentDt: Rep[Timestamp] = column[Timestamp]("sent_dt")
+
+    def status: Rep[Short] = column[Short]("status")
+
+    def message: Rep[String] = column[String]("message", O.Length(TEXT_MESSAGE_LENGTH, varying = true))
+
+    def * = (id.?, memberId, toNumber, fromNumber, sentDt, status, message) <> (TextMessage.tupled, TextMessage.unapply)
+
+    def member: ForeignKeyQuery[MembersTable, Member] = foreignKey("text_messages_member_id_fkey", memberId, Members)(_.id)
 
   }
 }
