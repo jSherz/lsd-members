@@ -42,7 +42,7 @@ class MemberDAOSpec extends BaseSpec {
       memberDao.all().map(_ shouldBe empty)
     }
 
-    "returns all configured members" in {
+    "return all configured members" in {
       val members = Seq(
         Member(None, "Bob", Some("07123123123"), None),
         Member(None, "Dave", Some("07123123123"), None),
@@ -53,6 +53,18 @@ class MemberDAOSpec extends BaseSpec {
       members.map { memberDao.insert(_) }
 
       memberDao.all().map(_ shouldBe members)
+    }
+
+    "return Some(member) if one exists with the given ID" in {
+      val memberId = 55
+      val sandy = Member(Some(memberId), "Sandra", None, Some("sandra@ntlworld.com"))
+      memberDao.insert(sandy)
+
+      memberDao.get(memberId).map(_ shouldBe Some(sandy))
+    }
+
+    "return None if a member wasn't found with the given ID" in {
+      memberDao.get(0).map(_ shouldBe None)
     }
 
     "insert a new member correctly" in {

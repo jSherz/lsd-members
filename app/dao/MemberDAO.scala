@@ -46,6 +46,14 @@ class MemberDAO @Inject() (override protected val dbConfigProvider: DatabaseConf
   def all(): Future[Seq[Member]] = db.run(Members.result)
 
   /**
+    * Get the member with the given ID.
+    *
+    * @param id ID to search with
+    * @return Some(member) if found, otherwise None
+    */
+  def get(id: Int): Future[Option[Member]] = db.run(Members.filter(_.id === id).result.headOption)
+
+  /**
     * Add a new member to the database.
     *
     * @param member
