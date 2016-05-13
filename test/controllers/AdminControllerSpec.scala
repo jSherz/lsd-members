@@ -22,8 +22,10 @@
   * SOFTWARE.
   */
 
-import dao.SettingsDAO
-import models.{Setting, Settings}
+import dao.{MemberDAO, SettingsDAO}
+import models.{Member, Setting, Settings}
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -35,6 +37,11 @@ class AdminControllerSpec extends BaseSpec {
     * An instance of the DAO, used for testing.
     */
   private val settingsDao = app.injector.instanceOf[SettingsDAO]
+
+  /**
+    * An instance of the Member DAO, used for testing.
+    */
+  private val memberDao = app.injector.instanceOf[MemberDAO]
 
   "AdminController" should {
     "show the dashboard as the homepage" in {
@@ -125,6 +132,25 @@ class AdminControllerSpec extends BaseSpec {
       click on find(cssSelector("button[type=submit]")).value
 
       eventually { settingsDao.get(Settings.WelcomeText).map(_ mustEqual myWelcome) }
+    }
+
+    "show an error message when trying to view a user that doesn't exist" in {
+      val memberView = route(app, FakeRequest(GET, "/admin/members/0")).get
+
+      status(memberView) mustBe NOT_FOUND
+      contentAsString(memberView) must include ("Member not found")
+    }
+
+    "show the user's details when viewing a member that exists" in {
+      val member = Member(Some(1), "Joe Bloggs", Some("07123123123"), None)
+
+      memberDao.insert(member).map { x =>
+        val memberView = route(app, FakeRequest(GET, s"/admin/members/${member.id.get}")).get
+
+        status(memberView) mustBe OK
+        contentType(memberView) mustBe Some("text/html")
+        contentAsString(memberView) must include("Joe Bloggs")
+      }
     }
   }
 }

@@ -26,7 +26,7 @@ package controllers
 
 import javax.inject._
 
-import dao.SettingsDAO
+import dao.{MemberDAO, SettingsDAO}
 import models.{Setting, Settings, Validators}
 import play.api.data.Forms._
 import play.api.data._
@@ -39,7 +39,7 @@ import play.api.mvc._
  * Handles the administration interface.
  */
 @Singleton
-class AdminController @Inject() (val messagesApi: MessagesApi, val settingsDao: SettingsDAO) extends Controller with I18nSupport {
+class AdminController @Inject() (val messagesApi: MessagesApi, val settingsDao: SettingsDAO, val memberDao: MemberDAO) extends Controller with I18nSupport {
   private val settingsForm = Form(
     mapping(
       "welcomeText" -> text.verifying(Validators.welcomeTextValidator)
@@ -82,6 +82,15 @@ class AdminController @Inject() (val messagesApi: MessagesApi, val settingsDao: 
 
         Redirect(routes.AdminController.index())
       })
+    }
+  }
+
+  def member(id: Int): Action[AnyContent] = Action.async { implicit request =>
+    val maybeMember = memberDao.get(id)
+
+    maybeMember.map {
+      case Some(foundMember) => Ok(views.html.admin.member_view(foundMember))
+      case None => NotFound("Member not found.")
     }
   }
 }

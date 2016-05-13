@@ -1,0 +1,22 @@
+@import models.Member
+@(member: Member)(implicit messages: Messages, request: play.api.mvc.Request[Any])
+
+@*
+* Shows the main admin overview screen.
+*@
+@admin.main("Member view") {
+  <div id="full-column">
+    <h2>Member view</h2>
+
+    <dl>
+      <dt>Name</dt>
+      <dd>@member.name</dd>
+
+      <dt>Phone number</dt>
+      <dd>@member.phoneNumber</dd>
+
+      <dt>E-mail</dt>
+      <dd>@member.email</dd>
+    </dl>
+  </div>
+}
