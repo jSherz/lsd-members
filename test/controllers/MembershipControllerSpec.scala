@@ -31,9 +31,9 @@ import play.api.db.slick.DatabaseConfigProvider
 /**
  * Integration tests with a real (or headless) browser.
  */
-class IntegrationSpec extends BaseSpec {
+class MembershipControllerSpec extends BaseSpec {
 
-  "Application" should {
+  "MembershipController" should {
     "show the main sign-up form as the homepage" in {
       go to ("http://localhost:" + port)
       pageSource must include ("Leeds University Skydivers")
