@@ -30,9 +30,11 @@ import dao.MemberDAO
 import models.Member
 import net.greghaines.jesque.client.ClientImpl
 import net.greghaines.jesque.{ConfigBuilder, Job}
+import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits._
 
 import scala.concurrent.Future
+import scala.util.{Failure, Success}
 
 /**
   * Handles the creation of members.
@@ -54,13 +56,16 @@ class MembershipService @Inject() (memberDao: MemberDAO) {
         if (exists) {
           Left("error.memberExists")
         } else {
-          memberDao.insert(member)
+          memberDao.insert(member).map { memberId =>
+            val args = new java.util.ArrayList[Int]()
+            args.add(memberId)
 
-          val job = new Job(Queues.SIGNUP_ACTION, member.getQueueJobVars())
+            val job = new Job(Queues.SIGNUP_ACTION, args)
 
-          val client = new ClientImpl(config)
-          client.enqueue(Queues.SIGNUP, job)
-          client.end()
+            val client = new ClientImpl(config)
+            client.enqueue(Queues.SIGNUP, job)
+            client.end()
+          }
 
           Right(member)
         }

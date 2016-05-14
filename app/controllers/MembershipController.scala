@@ -100,6 +100,14 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
     }
   }
 
+  /**
+    * Show the relevant main form with any error(s).
+    *
+    * @param request The user's request
+    * @param errors A form, with errors
+    * @param altForm If the user was brought from the alternative form
+    * @return
+    */
   private def showErrors(implicit request: Request[Any], errors: Form[Member], altForm: Boolean): Future[Result] = {
     Future[Result] {
       BadRequest(views.html.index(errors, altForm))

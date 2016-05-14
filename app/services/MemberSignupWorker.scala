@@ -29,13 +29,19 @@ import java.util
 import com.twilio.sdk.TwilioRestClient
 import com.twilio.sdk.resource.factory.MessageFactory
 import com.twilio.sdk.resource.instance.Message
+import dao.{MemberDAO, SettingsDAO}
+import models.Settings
 import net.greghaines.jesque.ConfigBuilder
 import net.greghaines.jesque.worker.{MapBasedJobFactory, Worker, WorkerImpl}
 import org.apache.http.NameValuePair
 import org.apache.http.message.BasicNameValuePair
-import play.api.Logger
+import play.api.db.slick.DatabaseConfigProvider
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.{Logger, Play}
 
 import scala.collection.JavaConverters._
+import scala.util.{Failure, Success}
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   * Handles texting new members if they signed up with a phone number.
@@ -62,9 +68,19 @@ object MemberSignupWorker {
   private var twilioRestClient: TwilioRestClient = null
 
   /**
+    * Member DAO.
+    */
+  private var memberDao: MemberDAO = null
+
+  /**
+    * Settings DAO.
+    */
+  private var settingsDao: SettingsDAO = null
+
+  /**
     * The mapping of queue actions that are handled to the class that handles them.
     */
-  val queueJobFactory: MapBasedJobFactory = new MapBasedJobFactory(Map(
+  private val queueJobFactory: MapBasedJobFactory = new MapBasedJobFactory(Map(
     (Queues.SIGNUP_ACTION, classOf[MemberSignupAction])
   ).asJava)
 
@@ -84,13 +100,17 @@ object MemberSignupWorker {
     if (configIsValid()) {
       twilioRestClient = new TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
 
-      // Jesque configuration
+      // Play application
+      val playApp = GuiceApplicationBuilder().build()
+      val dbConfigProvider = playApp.injector.instanceOf[DatabaseConfigProvider]
+
+      // DAOs
+      memberDao = new MemberDAO(dbConfigProvider)
+      settingsDao = new SettingsDAO(dbConfigProvider)
+
+      // Jesque
       val config = new ConfigBuilder().build()
-
-      // Jesque worker
       val worker: Worker = new WorkerImpl(config, util.Arrays.asList(Queues.SIGNUP), queueJobFactory)
-
-      // Thread to run the worker
       val workerThread: Thread = new Thread(worker)
 
       workerThread.start()
@@ -110,6 +130,46 @@ object MemberSignupWorker {
     } else {
       throw new IllegalArgumentException("You must specify the TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN and FROM_NUMBER" +
         "environment variables.")
+    }
+  }
+
+  /**
+    * Called when the worker is started. Used to configure and run the queue worker.
+    *
+    * @param args
+    */
+  def main(args: Array[String]): Unit = {
+    val worker = MemberSignupWorker
+  }
+
+  /**
+    * Called by the queue worker listener. Sends a welcome text if the user specified their phone number.
+    *
+    * @param id
+    */
+  def signupMember(id: Int) {
+    // Lookup member & send a text if they have a number configured
+    memberDao.get(id) onComplete {
+      case Success(maybeMember) => maybeMember match {
+        case Some(member) => {
+          if (member.phoneNumber == None) {
+            Logger.debug("Member doesn't have a phone number - not sending message.")
+          } else {
+            Logger.info(s"Sending message for member ${member.id.get} - '${member.name}' / '${member.phoneNumber.get}")
+
+            val formattedNumber = formatPhoneNumber(member.phoneNumber.get)
+
+            sendSMS(member.name, formattedNumber)
+          }
+        }
+
+        case None => throw new RuntimeException(s"Member not found with ID ${id}")
+      }
+
+      case Failure(err) => {
+        Logger.error("Failed to lookup member!", err)
+        throw new RuntimeException("Unable to lookup member - see previous error.")
+      }
     }
   }
 
@@ -138,38 +198,25 @@ object MemberSignupWorker {
     * @param phoneNumber Member's UK mobile number
     */
   private def sendSMS(name: String, phoneNumber: String) {
-    val params = new util.ArrayList[NameValuePair]()
-    params.add(new BasicNameValuePair("Body", s"Hey, ${name}! Thanks for coming to see Leeds Skydivers!"))
-    params.add(new BasicNameValuePair("To", formatPhoneNumber(phoneNumber)))
-    params.add(new BasicNameValuePair("From", FROM))
+    settingsDao.get(Settings.WelcomeText) onComplete {
+      case Success(maybeWelcomeMessage) => maybeWelcomeMessage match {
+        case Some(welcomeMessage) => {
+          val params = new util.ArrayList[NameValuePair]()
+          params.add(new BasicNameValuePair("Body", welcomeMessage.value.replace("@@name@@", name)))
+          params.add(new BasicNameValuePair("To", formatPhoneNumber(phoneNumber)))
+          params.add(new BasicNameValuePair("From", FROM))
 
-    val messageFactory: MessageFactory = twilioRestClient.getAccount().getMessageFactory
-    val message: Message = messageFactory.create(params)
+          val messageFactory: MessageFactory = twilioRestClient.getAccount().getMessageFactory
+          val message: Message = messageFactory.create(params)
 
-    Logger.debug(s"Sent message sid '${message.getSid}' to '${name}' (${phoneNumber})")
-  }
+          Logger.debug(s"Sent message sid '${message.getSid}' to '${name}' (${phoneNumber})")
+        }
 
-  /**
-    * Called by the queue worker listener. Sends a welcome text if the user specified their phone number.
-    *
-    * @param name
-    * @param phoneNumber
-    */
-  def signupMember(name: String, phoneNumber: Option[String]) {
-    if (phoneNumber != None && phoneNumber != "") {
-      phoneNumber.map { sendSMS(name, _) }
-    } else {
-      Logger.debug("Member doesn't have phone number - not sending message.")
+        case None => throw new RuntimeException("Failed to lookup the welcome text message.")
+      }
+
+      case Failure(err) => throw new RuntimeException("Failed to lookup the welcome message.", err)
     }
-  }
-
-  /**
-    * Called when the worker is started. Used to configure and run the queue worker.
-    *
-    * @param args
-    */
-  def main(args: Array[String]): Unit = {
-    val worker = MemberSignupWorker
   }
 
   start()
@@ -178,50 +225,11 @@ object MemberSignupWorker {
 /**
   * An action that handles member sign-up queue messages.
   */
-class MemberSignupAction extends Runnable {
-  /**
-    * The member's name.
-    */
-  private var name: String = null
-
-  /**
-    * The member's phone number.
-    */
-  private var phoneNumber: Option[String] = None
-
-  /**
-    * The member's e-mail address.
-    */
-  private var email: Option[String] = None
-
-  /**
-    * Sets the member's name. Called (using reflection) by Jesque before the action is run.
-    * @param name
-    */
-  def setName(name: String): Unit = {
-    this.name = name
-  }
-
-  /**
-    * Sets the member's phone number. Called (using reflection) by Jesque before the action is run.
-    * @param phoneNumber
-    */
-  def setPhoneNumber(phoneNumber: Option[String]): Unit = {
-    this.phoneNumber = phoneNumber
-  }
-
-  /**
-    * Sets the member's e-mail address. Called (using reflection) by Jesque before the action is run.
-    * @param email
-    */
-  def setEmail(email: Option[String]): Unit = {
-    this.email = email
-  }
-
+class MemberSignupAction(memberId: Int) extends Runnable {
   /**
     * Called when a new queue item is received by this worker. Used to send the member a text message.
     */
   override def run(): Unit = {
-    MemberSignupWorker.signupMember(name, phoneNumber)
+    MemberSignupWorker.signupMember(memberId)
   }
 }
