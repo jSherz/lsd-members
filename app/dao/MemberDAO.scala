@@ -56,10 +56,10 @@ class MemberDAO @Inject() (override protected val dbConfigProvider: DatabaseConf
   /**
     * Add a new member to the database.
     *
-    * @param member
-    * @return
+    * @param member Member to add
+    * @return The member's ID
     */
-  def insert(member: Member): Future[Unit] = db.run(Members += member).map { _ => () }
+  def insert(member: Member): Future[Int] = db.run((Members returning Members.map(_.id)) += member)
 
   /**
     * Check if a member exists with the given phone number OR e-mail address.
