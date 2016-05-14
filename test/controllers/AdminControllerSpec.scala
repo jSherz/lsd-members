@@ -22,19 +22,25 @@
   * SOFTWARE.
   */
 
-import dao.{MemberDAO, SettingsDAO}
-import models.{Member, Setting, Settings}
+import java.sql.Timestamp
+
+import dao.{MemberDAO, SettingsDAO, TextMessageDAO}
+import models.{Member, Setting, Settings, TextMessage}
+import play.api.Logger
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import slick.dbio.DBIOAction
 
+import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
 
 /**
   * Very basic specs for the admin controller.
   */
 class AdminControllerSpec extends BaseSpec {
   /**
-    * An instance of the DAO, used for testing.
+    * An instance of the Settings DAO, used for testing.
     */
   private val settingsDao = app.injector.instanceOf[SettingsDAO]
 
@@ -42,6 +48,35 @@ class AdminControllerSpec extends BaseSpec {
     * An instance of the Member DAO, used for testing.
     */
   private val memberDao = app.injector.instanceOf[MemberDAO]
+
+  /**
+    * An instance of the Text Message DAO, used for testing.
+    */
+  private val textMessageDao = app.injector.instanceOf[TextMessageDAO]
+
+  trait membersAndMessages {
+    // A member and their texts
+    val member = Member(Some(1), "Joe Bloggs", Some("07123123123"), None)
+
+    val messageA = TextMessage(Some(2), 1, "07123123123", "LUU Skydive", new Timestamp(61423903920000L), 0, "Test message")
+    val messageB = TextMessage(Some(3), 1, "07123123123", "LUU Skydive", new Timestamp(61423903920000L), 0, "Further message")
+    val messageC = TextMessage(Some(4), 1, "07123123123", "LUU Skydive", new Timestamp(61423903920000L), 0, "Final info text")
+
+    val textMessagesForUser = Seq(messageA, messageB, messageC)
+
+    // Another member, used to ensure that messages are only associated with the correct person
+    val textMessageNotForUser =
+      TextMessage(Some(5), 2, "07123123123", "LUU Skydive", new Timestamp(61423903920000L), 0, "Private for another user")
+
+    val setup = for {
+      a <- memberDao.insert(member)
+      b <- memberDao.insert(Member(Some(2), "Some Person", Some("07010101010"), None))
+      c <- textMessageDao.insert(messageA)
+      d <- textMessageDao.insert(messageB)
+      e <- textMessageDao.insert(messageC)
+      f <- textMessageDao.insert(textMessageNotForUser)
+    } yield f
+  }
 
   "AdminController" should {
     "show the dashboard as the homepage" in {
@@ -150,6 +185,22 @@ class AdminControllerSpec extends BaseSpec {
         status(memberView) mustBe OK
         contentType(memberView) mustBe Some("text/html")
         contentAsString(memberView) must include("Joe Bloggs")
+      }
+    }
+
+    "show any text messages sent to a member when viewing their details" in {
+      new membersAndMessages {
+        setup.map { x =>
+          go to (s"http://localhost:${port}/admin/members/${member.id.get}")
+
+          eventually {
+            textMessagesForUser.map { message =>
+              pageSource must include (message.message)
+            }
+
+            pageSource mustNot include (textMessageNotForUser.message)
+          }
+        }
       }
     }
   }

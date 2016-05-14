@@ -1,5 +1,6 @@
 @import models.Member
-@(member: Member)(implicit messages: Messages, request: play.api.mvc.Request[Any])
+@import models.TextMessage
+@(member: Member, textMessages: Seq[TextMessage])(implicit messages: Messages, request: play.api.mvc.Request[Any])
 
 @*
 * Shows the main admin overview screen.
@@ -13,10 +14,43 @@
       <dd>@member.name</dd>
 
       <dt>Phone number</dt>
-      <dd>@member.phoneNumber</dd>
+      <dd>
+        @if(member.phoneNumber == None) {
+          <em>Not provided.</em>
+        } else {
+          @member.phoneNumber
+        }
+      </dd>
 
       <dt>E-mail</dt>
-      <dd>@member.email</dd>
+      <dd>
+        @if(member.email == None) {
+          <em>Not provided.</em>
+        } else {
+          @member.email
+        }
+      </dd>
     </dl>
+
+    <hr>
+
+    <h3>Text messages</h3>
+
+    <ul id="member-text-messages">
+      @for(message <- textMessages) {
+        <li>
+          <dl>
+            <dt>Sent</dt>
+            <dd>@message.sentDt</dd>
+            <dt>To</dt>
+            <dd>@message.toNumber</dd>
+            <dt>From</dt>
+            <dd>@message.fromNumber</dd>
+          </dl>
+
+          <p>@message.message</p>
+        </li>
+      }
+    </ul>
   </div>
 }
