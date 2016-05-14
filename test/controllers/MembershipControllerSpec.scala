@@ -135,6 +135,30 @@ class MembershipControllerSpec extends BaseSpec {
       eventually { find(cssSelector("#email_field .error")).value.text must include ("Invalid e-mail address") }
     }
 
+    "display an error if the name entered is longer than the database field length" in {
+      go to ("http://localhost:" + port)
+      click on find("name").value
+      enter("Tyler Freestyla, First of His Rap Game, The Best Ya")
+      click on find("phoneNumber").value
+      enter("4407123123123")
+      click on find(cssSelector("button[type=submit]")).value
+
+      eventually { find(cssSelector("#name_field .error")).value.text must include ("too long") }
+    }
+
+    "display an error if the e-mail entered is longer than the database field length" in {
+      go to (s"http://localhost:${port}/alt")
+      click on find("name").value
+      enter("Tyler Freestyla")
+      click on find("email").value
+      enter("tyler-the-freestyla@has-a-really-cool-website-full-of-exciting-and-interesting-things-mainly-his-really-" +
+        "cool-rap-lyrics-did-i-tell-you-its-all-free-to-download-including-step-by-step-guides-and-dance-moves-wow-this-" +
+        "email-field-is-laaaaaaarrrrggeeeeeeee.com")
+      click on find(cssSelector("button[type=submit]")).value
+
+      eventually { find(cssSelector("#email_field .error")).value.text must include ("too long") }
+    }
+
     "redirect the user to the thank you page if a valid name and phone number were entered" in {
       go to ("http://localhost:" + port)
       click on find("name").value

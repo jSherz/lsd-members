@@ -47,6 +47,16 @@ class Tables (protected val dbConfigProvider: DatabaseConfigProvider) extends Ha
     */
   private val TEXT_MESSAGE_LENGTH: Int = 480
 
+  /**
+    * Max length of a member's name.
+    */
+  private val NAME_FIELD_LENGTH: Int = 50
+
+  /**
+    * Max length of a member's e-mail.
+    */
+  private val EMAIL_FIELD_LENGTH: Int = 255
+
   protected val Settings: TableQuery[SettingsTable] = TableQuery[SettingsTable]
 
   /**
@@ -75,11 +85,11 @@ class Tables (protected val dbConfigProvider: DatabaseConfigProvider) extends Ha
 
     def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
 
-    def name: Rep[String] = column[String]("name")
+    def name: Rep[String] = column[String]("name", O.Length(NAME_FIELD_LENGTH, varying = true))
 
     def phoneNumber: Rep[Option[String]] = column[Option[String]]("phone_number")
 
-    def email: Rep[Option[String]] = column[Option[String]]("email")
+    def email: Rep[Option[String]] = column[Option[String]]("email", O.Length(EMAIL_FIELD_LENGTH, varying = true))
 
     def * = (id.?, name, phoneNumber, email) <> (Member.tupled, Member.unapply)
 

@@ -43,6 +43,16 @@ object Validators {
   private val emailRegex: Regex = "^.+@.+\\..+$".r
 
   /**
+    * The longest a member's name can be.
+    */
+  private val maxNameLength: Int = 50
+
+  /**
+    * The longest a member's e-mail address can be.
+    */
+  private val maxEmailLength: Int = 255
+
+  /**
     * A constraint validator to check that a form field value is a valid UK mobile number in one of the formats below.
     *
     * - 07123123123
@@ -71,6 +81,8 @@ object Validators {
       Invalid(ValidationError("error.required"))
     } else if (!(emailRegex findAllMatchIn email).hasNext) {
       Invalid(ValidationError("error.invalidEmail"))
+    } else if (email.length() > maxEmailLength) {
+      Invalid(ValidationError("error.emailTooLong"))
     } else {
       Valid
     }
@@ -88,6 +100,19 @@ object Validators {
       Invalid(ValidationError("error.welcomeTextEmpty"))
     } else if (welcomeTextLength > 480) {
       Invalid(ValidationError("error.welcomeTextTooLong"))
+    } else {
+      Valid
+    }
+  }
+
+  /**
+    * Ensures the provided member's name is shorter than the database field length.
+    *
+    * @return Valid if <= maxNameLength, otherwise Invalid
+    */
+  def nameValidator: Constraint[String] = Constraint[String]("constraints.name") { name =>
+    if (name.length() > maxNameLength) {
+      Invalid(ValidationError("error.nameTooLong"))
     } else {
       Valid
     }

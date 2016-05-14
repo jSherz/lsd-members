@@ -46,7 +46,7 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
     */
   private val signupForm = Form(
     mapping(
-      "name" -> nonEmptyText,
+      "name" -> nonEmptyText.verifying(Validators.nameValidator),
       "phoneNumber" -> text.verifying(Validators.phoneNumberValidator)
     )((name: String, phoneNumber: String) => {
       Member(None, name, Some(phoneNumber), None)
@@ -60,7 +60,7 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
     */
   private val signupAltForm = Form(
     mapping(
-      "name" -> nonEmptyText,
+      "name" -> nonEmptyText.verifying(Validators.nameValidator),
       "email" -> text.verifying(Validators.emailValidator)
     )((name: String, email: String) => {
       Member(None, name, None, Some(email))
