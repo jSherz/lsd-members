@@ -41,6 +41,8 @@ class TextMessageDAOSpec extends BaseSpec {
 
   private val testMember = Member(Some(1), "Billy No-bugs", Some("07123123123"), None)
 
+  private val anotherTestMember = Member(Some(2), "Another Member", Some("07000111000"), None)
+
   private val testMessageA = TextMessage(Some(1), testMember.id.get, "07123123123", "07123123123",
     new Timestamp(61423903920000L), 0, "Test message")
 
@@ -49,6 +51,9 @@ class TextMessageDAOSpec extends BaseSpec {
 
   private val testMessageC = TextMessage(Some(10101), testMember.id.get, "07123123123", "+447123123123",
     new Timestamp(61360745520000L), 0, "Are you still reading test messages?")
+
+  private val testMessageD = TextMessage(Some(5), anotherTestMember.id.get, "07123123123", "+447000111000",
+    new Timestamp(61360745520000L), 0, "Hello Another Member!")
 
   private val testMessages = Seq(testMessageA, testMessageB, testMessageC)
 
@@ -63,12 +68,6 @@ class TextMessageDAOSpec extends BaseSpec {
       textMessageDao.all().map(_ shouldEqual testMessages)
     }
 
-    "return all of the text messages for a member" in {
-      textMessageDao.forMember(testMember).map(_ shouldBe empty)
-      testMessages.map { textMessageDao.insert(_) }
-      textMessageDao.forMember(testMember).map(_ shouldEqual testMessages)
-    }
-
     "return None if a text message wasn't found" in {
       textMessageDao.get(testMessageA.id.get).map(_ shouldBe None)
     }
@@ -76,6 +75,23 @@ class TextMessageDAOSpec extends BaseSpec {
     "return Some(message) if a text was found with the provided ID" in {
       textMessageDao.insert(testMessageA)
       textMessageDao.get(testMessageA.id.get).map(_ shouldBe Some(testMessageA))
+    }
+
+    "insert a text message and return its ID" in {
+      testMessages.map { message =>
+        textMessageDao.insert(message).map { messageId =>
+          textMessageDao.get(messageId).map(_ shouldEqual message)
+        }
+      }
+    }
+
+    "return all of the text messages for a member" in {
+      textMessageDao.forMember(testMember).map(_ shouldBe empty)
+      testMessages.map { textMessageDao.insert(_) }
+      textMessageDao.insert(testMessageD) // For another member
+
+      textMessageDao.forMember(testMember).map(_ shouldEqual testMessages)
+      textMessageDao.forMember(testMember).map(_ shouldNot contain(testMessageD))
     }
 
     "update a text message correctly" in {

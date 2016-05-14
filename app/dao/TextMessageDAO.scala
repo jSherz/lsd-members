@@ -59,7 +59,8 @@ class TextMessageDAO @Inject() (override protected val dbConfigProvider: Databas
     * @param textMessage Text message to add
     * @return
     */
-  def insert(textMessage: TextMessage): Future[Unit] = db.run(TextMessages += textMessage).map { _ => () }
+  def insert(textMessage: TextMessage): Future[Int] =
+    db.run((TextMessages returning TextMessages.map(_.id)) += textMessage)
 
   /**
     * Get all text messages sent to a member.
