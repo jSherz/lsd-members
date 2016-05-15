@@ -33,6 +33,9 @@
   <logger name="com.avaje.ebeaninternal.server.lib.BackgroundThread" level="OFF" />
   <logger name="com.gargoylesoftware.htmlunit.javascript" level="OFF" />
 
+  <!-- Off until the next version of Slick (>3.1.1) -->
+  <logger name="com.zaxxer.hikari.HikariConfig" level="OFF" />
+
   <root level="WARN">
     <appender-ref ref="ASYNCFILE" />
     <appender-ref ref="ASYNCSTDOUT" />
