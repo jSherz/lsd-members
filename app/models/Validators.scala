@@ -93,7 +93,7 @@ object Validators {
     *
     * @return Valid if 1 <= length <= 480, otherwise Invalid
     */
-  def welcomeTextValidator: Constraint[String] = Constraint[String]("constraints.welcomeText") { welcomeText =>
+  def welcomeTextValidator: Constraint[String] = Constraint[String]("constraint.welcomeText") { welcomeText =>
     val welcomeTextLength = welcomeText.length()
 
     if (welcomeTextLength == 0) {
@@ -110,7 +110,7 @@ object Validators {
     *
     * @return Valid if <= maxNameLength, otherwise Invalid
     */
-  def nameValidator: Constraint[String] = Constraint[String]("constraints.name") { name =>
+  def nameValidator: Constraint[String] = Constraint[String]("constraint.name") { name =>
     if (name.length() > maxNameLength) {
       Invalid(ValidationError("error.nameTooLong"))
     } else {
