@@ -22,16 +22,18 @@
   * SOFTWARE.
   */
 
-import Helpers._
-import org.scalatest.BeforeAndAfterEach
+import dao.MemberDAO
+import models.Member
 import org.scalatest.Matchers._
-import org.scalatestplus.play._
-import play.api.db.slick.DatabaseConfigProvider
 
 /**
  * Integration tests with a real (or headless) browser.
  */
 class MembershipControllerSpec extends BaseSpec {
+  /**
+    * An instance of the Member DAO, used for testing.
+    */
+  private val memberDao = app.injector.instanceOf[MemberDAO]
 
   "MembershipController" should {
     "show the main sign-up form as the homepage" in {
@@ -179,6 +181,34 @@ class MembershipControllerSpec extends BaseSpec {
       click on find(cssSelector("button[type=submit]")).value
 
       eventually { pageSource should include ("Thank you!") }
+    }
+
+    "display an error if a member exists with the given phone number" in {
+      val member = Member(None, "Joe Bloggs", Some("07123123123"), None)
+      memberDao.insert(member).futureValue
+
+      go to (s"http://localhost:${port}")
+      click on find("name").value
+      enter(member.name)
+      click on find("phoneNumber").value
+      enter(member.phoneNumber.get)
+      click on find(cssSelector("button[type=submit]")).value
+
+      eventually { pageSource should include ("already signed up") }
+    }
+
+    "display an error if a member exists with the given e-mail" in {
+      val member = Member(None, "Joe Bloggs", None, Some("joe@bloggs.org"))
+      memberDao.insert(member).futureValue
+
+      go to (s"http://localhost:${port}/alt")
+      click on find("name").value
+      enter(member.name)
+      click on find("email").value
+      enter(member.email.get)
+      click on find(cssSelector("button[type=submit]")).value
+
+      eventually { pageSource should include ("already signed up") }
     }
   }
 }
