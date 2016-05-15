@@ -45,3 +45,5 @@ libraryDependencies ++= Seq(
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 
 coverageEnabled := true
+coverageExcludedPackages := "views.html.*;controllers.javascript.*;controllers.ReverseAdminController;" +
+  "controllers.ReverseAssets;controllers.ReverseMembershipController;router.*"
