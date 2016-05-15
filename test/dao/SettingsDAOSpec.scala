@@ -44,55 +44,55 @@ class SettingsDAOSpec extends BaseSpec {
 
   "SettingsDAO" should {
     "returns false if a setting does not exist" in {
-      settingsDao.exists("foo-bar").map(_ shouldBe false)
-      settingsDao.exists("test-123").map(_ shouldBe false)
+      settingsDao.exists("foo-bar").futureValue shouldBe false
+      settingsDao.exists("test-123").futureValue shouldBe false
     }
 
     "return true if a setting does exist" in {
-      settingsDao.exists(testSetting.key).map(_ shouldBe false)
-      settingsDao.put(testSetting)
-      settingsDao.exists(testSetting.key).map(_ shouldBe true)
+      settingsDao.exists(testSetting.key).futureValue shouldBe false
+      settingsDao.put(testSetting).futureValue
+      settingsDao.exists(testSetting.key).futureValue shouldBe true
     }
 
     "return the correct value for a setting" in {
-      settingsDao.put(testSetting)
-      settingsDao.exists(testSetting.key).map(_ shouldBe true)
+      settingsDao.put(testSetting).futureValue
+      settingsDao.exists(testSetting.key).futureValue shouldBe true
 
-      settingsDao.get(testSetting.key).map(_ shouldEqual testSetting.value)
+      settingsDao.get(testSetting.key).futureValue shouldEqual Some(testSetting)
     }
 
     "return None if the setting does not exist" in {
-      settingsDao.exists(testSetting.key).map(_ shouldBe false)
-      settingsDao.get(testSetting.key).map(_ shouldBe empty)
+      settingsDao.exists(testSetting.key).futureValue shouldBe false
+      settingsDao.get(testSetting.key).futureValue shouldBe empty
     }
 
     "return the current value for an existing setting, even if a default value is given" in {
-      settingsDao.put(testSetting)
-      settingsDao.exists(testSetting.key).map(_ shouldBe true)
+      settingsDao.put(testSetting).futureValue
+      settingsDao.exists(testSetting.key).futureValue shouldBe true
 
-      settingsDao.getOrElse(testSetting.key, "not-the-correct-value").map(_ shouldEqual testSetting.value)
+      settingsDao.getOrElse(testSetting.key, "not-the-correct-value").futureValue shouldEqual testSetting.value
     }
 
     "return the default value for a setting if one was specified and the setting does not exist" in {
-      settingsDao.exists(testSetting.key).map(_ shouldBe false)
+      settingsDao.exists(testSetting.key).futureValue shouldBe false
       val defaultValue = "a-default-value"
 
-      settingsDao.getOrElse(testSetting.key, defaultValue).map(_ shouldEqual defaultValue)
+      settingsDao.getOrElse(testSetting.key, defaultValue).futureValue shouldEqual defaultValue
     }
 
     "insert a new settings with the correct value" in {
-      settingsDao.exists(testSetting.key).map(_ shouldBe false)
-      settingsDao.put(testSetting)
+      settingsDao.exists(testSetting.key).futureValue shouldBe false
+      settingsDao.put(testSetting).futureValue
 
-      settingsDao.get(testSetting.key).map(_ shouldBe testSetting.value)
+      settingsDao.get(testSetting.key).futureValue shouldBe Some(testSetting)
     }
 
     "update a setting with a new value, even if it exists" in {
       val oldTestSetting = Setting(testSetting.key, "an-old-value")
-      settingsDao.put(oldTestSetting)
-      settingsDao.put(testSetting)
+      settingsDao.put(oldTestSetting).futureValue
+      settingsDao.put(testSetting).futureValue
 
-      settingsDao.get(testSetting.key).map(_ shouldBe testSetting.value)
+      settingsDao.get(testSetting.key).futureValue shouldBe Some(testSetting)
     }
 
     "erase all settings correctly" in {
@@ -104,12 +104,12 @@ class SettingsDAOSpec extends BaseSpec {
         Setting("test-key-5", "test-value-5")
       )
 
-      testSettings.map(settingsDao.put)
-      testSettings.map(setting => settingsDao.exists(setting.key).map(_ shouldBe true))
+      testSettings.map(settingsDao.put(_).futureValue)
+      testSettings.map(setting => settingsDao.exists(setting.key).futureValue shouldBe true)
 
-      settingsDao.empty()
+      settingsDao.empty().futureValue
 
-      testSettings.map(setting => settingsDao.exists(setting.key).map(_ shouldBe false))
+      testSettings.map(setting => settingsDao.exists(setting.key).futureValue shouldBe false)
     }
   }
 }
