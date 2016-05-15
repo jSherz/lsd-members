@@ -105,5 +105,14 @@ class TextMessageDAOSpec extends BaseSpec {
 
       textMessageDao.get(testMessageA.id.get).map(_ shouldBe Some(modifiedMessage))
     }
+
+    "delete all messages correctly" in {
+      textMessageDao.insert(testMessageA).futureValue
+      textMessageDao.all().futureValue shouldNot be(empty)
+
+      textMessageDao.empty()
+
+      textMessageDao.all().futureValue shouldBe empty
+    }
   }
 }

@@ -77,4 +77,11 @@ class TextMessageDAO @Inject() (override protected val dbConfigProvider: Databas
     * @return
     */
   def update(textMessage: TextMessage): Future[Int] = db.run(TextMessages.filter(_.id === textMessage.id).update(textMessage))
+
+  /**
+    * Deletes all messages. Only used for testing.
+    *
+    * @return
+    */
+  def empty(): Future[Int] = db.run(TextMessages.delete)
 }
