@@ -26,10 +26,8 @@ import dao.MemberDAO
 import models.Member
 import org.scalatest.Matchers._
 
-import scala.concurrent.ExecutionContext.Implicits.global
-
 /**
-  * Integration tests with a real (or headless) browser.
+  * Integration tests for the member data access object.
   */
 class MemberDAOSpec extends BaseSpec {
   /**
@@ -39,7 +37,7 @@ class MemberDAOSpec extends BaseSpec {
 
   "MemberDAO" should {
     "return no members if none are configured" in {
-      memberDao.all().map(_ shouldBe empty)
+      memberDao.all().futureValue shouldBe empty
     }
 
     "return all configured members" in {
@@ -50,68 +48,72 @@ class MemberDAOSpec extends BaseSpec {
         Member(None, "Stephanie", None, Some("steph@codes.world"))
       )
 
-      members.map { memberDao.insert(_) }
+      val membersWithIds: Seq[Member] = members.map { member =>
+        member.copy(id = Some(memberDao.insert(member).futureValue))
+      }
 
-      memberDao.all().map(_ shouldBe members)
+      memberDao.all().futureValue shouldBe membersWithIds
     }
 
     "return Some(member) if one exists with the given ID" in {
-      val memberId = 55
-      val sandy = Member(Some(memberId), "Sandra", None, Some("sandra@ntlworld.com"))
-      memberDao.insert(sandy)
+      val sandy = Member(None, "Sandra", None, Some("sandra@ntlworld.com"))
+      val memberId = memberDao.insert(sandy).futureValue
 
-      memberDao.get(memberId).map(_ shouldBe Some(sandy))
+      memberDao.get(memberId).futureValue shouldBe Some(sandy.copy(id = Some(memberId)))
     }
 
     "return None if a member wasn't found with the given ID" in {
-      memberDao.get(0).map(_ shouldBe None)
+      memberDao.get(0).futureValue shouldBe None
     }
 
     "insert a new member correctly" in {
       val sandy = Member(None, "Sandra", None, Some("sandra@ntlworld.com"))
 
-      memberDao.all().map(_ shouldBe empty)
-      memberDao.insert(sandy)
-      memberDao.all().map(_ shouldBe Seq(sandy))
+      memberDao.all().futureValue shouldBe empty
+      val memberId = memberDao.insert(sandy).futureValue
+      memberDao.all().futureValue should contain(sandy.copy(id = Some(memberId)))
     }
 
     "detect if a member exists correctly (by e-mail)" in {
-      var mauriceMail = Some("maurice@madagascar.io")
+      val mauriceMail = Some("maurice@madagascar.io")
       val maurice = Member(None, "Maurice", None, mauriceMail)
 
-      memberDao.all().map(_ shouldBe empty)
-      memberDao.exists(None, mauriceMail).map(_ shouldBe false)
-      memberDao.insert(maurice)
-      memberDao.exists(None, mauriceMail).map(_ shouldBe true)
+      memberDao.all().futureValue shouldBe empty
+      memberDao.exists(None, mauriceMail).futureValue shouldBe false
+      memberDao.insert(maurice).futureValue
+      memberDao.exists(None, mauriceMail).futureValue shouldBe true
     }
 
     "detect if a member exists correctly (by phone number)" in {
-      var mauriceMobile = Some("07000001337")
-      val maurice = Member(None, "Maurice", mauriceMobile, null)
+      val mauriceMobile = Some("07000001337")
+      val maurice = Member(None, "Maurice", mauriceMobile, None)
 
-      memberDao.all().map(_ shouldBe empty)
-      memberDao.exists(mauriceMobile, None).map(_ shouldBe false)
-      memberDao.insert(maurice)
-      memberDao.exists(mauriceMobile, None).map(_ shouldBe true)
+      memberDao.all().futureValue shouldBe empty
+      memberDao.exists(mauriceMobile, None).futureValue shouldBe false
+      memberDao.insert(maurice).futureValue
+      memberDao.exists(mauriceMobile, None).futureValue shouldBe true
     }
 
     "detect if a member exists correctly (by e-mail and phone number)" in {
-      var mauriceMobile = Some("07000001337")
-      var mauriceMail = Some("maurice@madagascar.io")
+      val mauriceMobile = Some("07000001337")
+      val mauriceMail = Some("maurice@madagascar.io")
       val maurice = Member(None, "Maurice", mauriceMobile, mauriceMail)
 
-      memberDao.all().map(_ shouldBe empty)
-      memberDao.exists(mauriceMobile, mauriceMail).map(_ shouldBe false)
-      memberDao.insert(maurice)
-      memberDao.exists(mauriceMobile, mauriceMail).map(_ shouldBe true)
+      memberDao.all().futureValue shouldBe empty
+      memberDao.exists(mauriceMobile, mauriceMail).futureValue shouldBe false
+      memberDao.insert(maurice).futureValue
+      memberDao.exists(mauriceMobile, mauriceMail).futureValue shouldBe true
 
       val notMauriceMobile = Some("07123123123")
       val notMauriceMail = Some("not@maurice.org")
       val notMaurice = Member(None, "Not Maurice", notMauriceMobile, notMauriceMail)
-      memberDao.insert(notMaurice)
 
-      memberDao.exists(mauriceMobile, notMauriceMail).map(_ shouldBe false)
-      memberDao.exists(notMauriceMobile, mauriceMail).map(_ shouldBe false)
+      memberDao.exists(notMauriceMobile, notMauriceMail).futureValue shouldBe false
+      memberDao.insert(notMaurice).futureValue
+      memberDao.exists(notMauriceMobile, notMauriceMail).futureValue shouldBe true
+
+      memberDao.exists(mauriceMobile, notMauriceMail).futureValue shouldBe false
+      memberDao.exists(notMauriceMobile, mauriceMail).futureValue shouldBe false
     }
 
     "empty the members table correctly" in {
@@ -120,11 +122,11 @@ class MemberDAOSpec extends BaseSpec {
         Member(None, "Dave", Some("07123123123"), None)
       )
 
-      members.map { memberDao.insert(_) }
+      members.map { memberDao.insert(_).futureValue }
 
-      memberDao.all().map(_ shouldNot be(empty))
-      memberDao.empty()
-      memberDao.all().map(_ shouldBe empty)
+      memberDao.all().futureValue shouldNot be(empty)
+      memberDao.empty().futureValue
+      memberDao.all().futureValue shouldBe empty
     }
   }
 }
