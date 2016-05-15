@@ -22,15 +22,32 @@
   * SOFTWARE.
   */
 
+import java.util.concurrent.TimeUnit
+
 import Helpers._
 import org.scalatest.BeforeAndAfterEach
+import org.scalatest.concurrent.{Futures, ScalaFutures}
 import org.scalatestplus.play.{HtmlUnitFactory, OneBrowserPerSuite, OneServerPerSuite, PlaySpec}
 import play.api.db.slick.DatabaseConfigProvider
+
+import scala.concurrent.{Await, Awaitable}
+import scala.concurrent.duration.Duration
 
 /**
   * A base class for running tests. Ensure the database is clean before every test.
   */
-class BaseSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuite with HtmlUnitFactory with BeforeAndAfterEach {
+class BaseSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuite with HtmlUnitFactory with BeforeAndAfterEach
+  with Futures with ScalaFutures {
+  /**
+    * The number of seconds that cleaning the database can take.
+    */
+  private val DB_CLEAN_TIMEOUT = 30
+
+  /**
+    * A duration that represents the maximum amount of time cleaning the database can take.
+    */
+  private val DB_CLEAN_MAX_DURATION =  Duration.create(DB_CLEAN_TIMEOUT, TimeUnit.SECONDS)
+
   /**
     * Override the default application so that we can customise it below.
     */
@@ -39,5 +56,6 @@ class BaseSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuite w
   /**
     * Clean the database before every spec / test.
     */
-  override def beforeEach: Unit = cleanDatabase(app.injector.instanceOf[DatabaseConfigProvider])
+  override def beforeEach: Unit =
+    Await.result(cleanDatabase(app.injector.instanceOf[DatabaseConfigProvider]), DB_CLEAN_MAX_DURATION)
 }
