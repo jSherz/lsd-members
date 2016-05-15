@@ -51,19 +51,4 @@ case class Member(id: Option[Int], name: String, phoneNumber: Option[String], em
 
     name != None && !name.trim().isEmpty && phoneOrEmailValid
   }
-
-  /**
-    * Turns the Member into a form that can be written to the Jesque job.
-    *
-    * @return Dictionary containing name, phone number & e-mail.
-    */
-  def getQueueJobVars(): HashMap[String, Object] = {
-    val data = new HashMap[String, Object]()
-
-    data.put("name", name)
-    data.put("phoneNumber", if (phoneNumber == None) "" else phoneNumber)
-    data.put("email", if (email == None) "" else email)
-
-    data
-  }
 }
