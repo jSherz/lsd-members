@@ -95,6 +95,15 @@ class SettingsDAOSpec extends BaseSpec {
       settingsDao.get(testSetting.key).futureValue shouldBe Some(testSetting)
     }
 
+    "delete a setting correctly" in {
+      settingsDao.put(testSetting).futureValue
+      settingsDao.get(testSetting.key).futureValue shouldBe Some(testSetting)
+
+      settingsDao.delete(testSetting).futureValue shouldEqual 1
+
+      settingsDao.get(testSetting.key).futureValue shouldBe None
+    }
+
     "erase all settings correctly" in {
       val testSettings = Seq(
         Setting("test-key-1", "test-value-1"),
