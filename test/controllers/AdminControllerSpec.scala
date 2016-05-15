@@ -168,7 +168,7 @@ class AdminControllerSpec extends BaseSpec {
       enter(myWelcome)
       click on find(cssSelector("button[type=submit]")).value
 
-      eventually { settingsDao.get(Settings.WelcomeText).map(_ mustEqual myWelcome) }
+      eventually { settingsDao.get(Settings.WelcomeText).futureValue.get.value mustEqual myWelcome }
     }
 
     "show an error message when trying to view a user that doesn't exist" in {
