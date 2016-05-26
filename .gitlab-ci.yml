@@ -1,4 +1,4 @@
-image: openjdk-8
+image: java:openjdk-8
 
 before_script:
   - echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
