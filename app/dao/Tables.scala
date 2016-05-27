@@ -121,7 +121,5 @@ class Tables (protected val dbConfigProvider: DatabaseConfigProvider) extends Ha
 
     def * = (id.?, memberId, toNumber, fromNumber, sentDt, sentMsid, status, message) <> (TextMessage.tupled, TextMessage.unapply)
 
-    def member: ForeignKeyQuery[MembersTable, Member] = foreignKey("text_messages_member_id_fkey", memberId, Members)(_.id)
-
   }
 }
