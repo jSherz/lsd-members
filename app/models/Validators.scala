@@ -24,6 +24,7 @@
 
 package models
 
+import com.google.i18n.phonenumbers.{NumberParseException, PhoneNumberUtil}
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 
 import scala.util.matching.Regex
@@ -32,11 +33,6 @@ import scala.util.matching.Regex
   * Created by james on 07/05/16.
   */
 object Validators {
-  /**
-    * A basic regex for UK mobile numbers. Source: http://stackoverflow.com/a/16405304/373230
-    */
-  private val phoneNumberRegex: Regex = "^(07[\\d]{9}|\\+?447[\\d]{9})$".r
-
   /**
     * Catch the worst e-mail mistakes and leave the rest to the mail server.
     */
@@ -53,21 +49,36 @@ object Validators {
   private val maxEmailLength: Int = 255
 
   /**
-    * A constraint validator to check that a form field value is a valid UK mobile number in one of the formats below.
+    * Assume phone numbers are from the given region if they're not prefixed with a country code.
+    */
+  private val defaultPhoneNumberRegion = "GB"
+
+  /**
+    * A constraint validator to check that a form field value is a valid phone number in one of the formats below.
     *
-    * - 07123123123
-    * - 447123123123
-    * - +447123123123
+    * - 07123123123 (UK numbers)
+    * - 447123123123 (Number with country code, no plus)
+    * - +447123123123 (Number with country code and plus)
     *
-    * @return Valid if a valid UK mobile number, Invalid if not
+    * @return Valid if a valid phone number, Invalid if not
     */
   def phoneNumberValidator: Constraint[String] = Constraint[String]("constraint.phoneNumber") { phoneNumber =>
     if (phoneNumber == None || phoneNumber.trim.isEmpty) {
       Invalid(ValidationError("error.required"))
-    } else if (!(phoneNumberRegex findAllMatchIn phoneNumber).hasNext) {
-      Invalid(ValidationError("error.invalidPhoneNumber"))
     } else {
-      Valid
+      val parser = PhoneNumberUtil.getInstance()
+
+      try {
+        val parsedNumber = parser.parse(phoneNumber, defaultPhoneNumberRegion)
+
+        if (parser.isValidNumber(parsedNumber)) {
+          Valid
+        } else {
+          Invalid(ValidationError("error.invalidPhoneNumber"))
+        }
+      } catch {
+        case NumberParseException => Invalid(ValidationError("error.invalidPhoneNumber"))
+      }
     }
   }
 

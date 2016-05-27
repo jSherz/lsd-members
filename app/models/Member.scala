@@ -33,7 +33,7 @@ import play.api.data.validation.Valid
   *
   * @param id Record ID
   * @param name Peron's (first) name
-  * @param phoneNumber UK mobile phone number
+  * @param phoneNumber Phone number
   * @param email E-mail address
   */
 case class Member(id: Option[Int], name: String, phoneNumber: Option[String], email: Option[String]) {

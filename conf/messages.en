@@ -1,4 +1,4 @@
-error.invalidPhoneNumber=Invalid mobile number, should be in the format 07123123123, 447123123123 or +44123123123.
+error.invalidPhoneNumber=Invalid mobile number, should be in the format 07123123123 (UK) or +XXNNNNNNNNN (e.g. +8613000111000 or +393101231231).
 error.invalidEmail=Invalid e-mail address, please check it for typos.
 error.memberExists=A member exists with that phone number or e-mail address. Have you already signed up?
 error.generic=Something went wrong! Please try again :(
@@ -6,7 +6,7 @@ error.welcomeTextEmpty=You must enter a value for the welcome message template.
 error.welcomeTextTooLong=The welcome text message must not exceed 480 characters.
 error.nameTooLong=The name you entered is too long.
 error.emailTooLong=The e-mail you entered is too long.
-constraint.phoneNumber=A UK mobile number in the form 07123123123 or 447123123123 or +447123123123
+constraint.phoneNumber=A mobile number in the form 07123123123 or 447123123123 or +447123123123
 constraint.email=An e-mail address, e.g. hello@leedsskydivers.co.uk
 constraint.welcomeText=A welcome message that's at most 480 characters long.
 constraint.name=Your full name (or first name, if you'd prefer).
