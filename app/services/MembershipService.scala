@@ -28,13 +28,9 @@ import javax.inject._
 
 import dao.MemberDAO
 import models.Member
-import net.greghaines.jesque.client.ClientImpl
-import net.greghaines.jesque.{ConfigBuilder, Job}
-import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits._
 
 import scala.concurrent.Future
-import scala.util.{Failure, Success}
 
 /**
   * Handles the creation of members.
@@ -49,34 +45,19 @@ class MembershipService @Inject() (memberDao: MemberDAO) {
     */
   def signup(member: Member): Future[Either[String, Member]] = {
     if (member.valid()) {
-      // Attempt to find a member by the phone number or e-mail given
-      val memberExists = memberDao.exists(member.phoneNumber, member.email)
+      // Insert the member into the DB if one was not found with the provided phone number / e-mail
+      val createMember = for {
+        exists <- memberDao.exists(member.phoneNumber, member.email)
+        if (!exists)
+        memberId <- memberDao.insert(member)
+      } yield Right(member.copy(id = Some(memberId)))
 
-      memberExists.map { exists =>
-        if (exists) {
-          Left("error.memberExists")
-        } else {
-          memberDao.insert(member).map { memberId =>
-            val args = new java.util.ArrayList[Int]()
-            args.add(memberId)
-
-            val job = new Job(Queues.SIGNUP_ACTION, args)
-
-            val client = new ClientImpl(config)
-            client.enqueue(Queues.SIGNUP, job)
-            client.end()
-          }
-
-          Right(member)
-        }
+      createMember.recover {
+        case _: NoSuchElementException => Left("error.memberExists")
+        case _: Exception => Left("error.generic")
       }
     } else {
       Future(Left("error.generic"))
     }
   }
-
-  /**
-    * The Jesque configuration.
-    */
-  private val config = new ConfigBuilder().build()
 }

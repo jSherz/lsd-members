@@ -34,6 +34,7 @@ libraryDependencies ++= Seq(
   cache,
   ws,
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test,
+  "org.mockito" % "mockito-core" % "1.10.19" % Test,
   "com.twilio.sdk" % "twilio-java-sdk" % "3.4.5",
   "net.greghaines" % "jesque" % "2.1.1",
   "com.typesafe.play" %% "play-slick" % "2.0.0",
