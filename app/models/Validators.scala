@@ -77,7 +77,7 @@ object Validators {
           Invalid(ValidationError("error.invalidPhoneNumber"))
         }
       } catch {
-        case NumberParseException => Invalid(ValidationError("error.invalidPhoneNumber"))
+        case _: NumberParseException => Invalid(ValidationError("error.invalidPhoneNumber"))
       }
     }
   }
