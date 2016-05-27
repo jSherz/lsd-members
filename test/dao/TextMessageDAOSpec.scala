@@ -49,16 +49,16 @@ class TextMessageDAOSpec extends BaseSpec {
   private val anotherTestMember = Member(None, "Another Member", Some("07000111000"), None)
 
   private val testMessageA = TextMessage(None, 0, "07123123123", "07123123123",
-    new Timestamp(61423903920000L), 0, "Test message")
+    Some(new Timestamp(61423903920000L)), Some("ms-123124781247"), 0, "Test message")
 
   private val testMessageB = TextMessage(None, 0, "07123123123", "447123123123",
-    new Timestamp(61392281520000L), 0, "Another test message")
+    Some(new Timestamp(61392281520000L)), Some("ms-123823985911"), 0, "Another test message")
 
   private val testMessageC = TextMessage(None, 0, "07123123123", "+447123123123",
-    new Timestamp(61360745520000L), 0, "Are you still reading test messages?")
+    Some(new Timestamp(61360745520000L)), Some("ms-578237421982"), 0, "Are you still reading test messages?")
 
   private val testMessageD = TextMessage(None, 0, "07123123123", "+447000111000",
-    new Timestamp(61360745520000L), 0, "Hello Another Member!")
+    Some(new Timestamp(61360745520000L)), Some("ms-124578118247"), 0, "Hello Another Member!")
 
   private val testMessages = Seq(testMessageA, testMessageB, testMessageC)
 
@@ -144,7 +144,7 @@ class TextMessageDAOSpec extends BaseSpec {
       textMessageDao.get(messageId).futureValue shouldBe Some(messageWithIds)
 
       val modifiedMessage = TextMessage(Some(messageId), memberId, "07000111000", "07000555000",
-        new Timestamp(0L), 99, "OMG! Test message")
+        Some(new Timestamp(0L)), Some("ms-12785891723"), 99, "OMG! Test message")
 
       textMessageDao.update(modifiedMessage).futureValue
 

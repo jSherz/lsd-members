@@ -29,4 +29,5 @@ import java.sql.Timestamp
 /**
   * A text message that will be or has been sent to a member.
   */
-case class TextMessage(id: Option[Int], memberId: Int, toNumber: String, fromNumber: String, sentDt: Timestamp, status: Short, message: String)
+case class TextMessage(id: Option[Int], memberId: Int, toNumber: String, fromNumber: String, sentDt: Option[Timestamp],
+                       sentMsid: Option[String], status: Short, message: String)

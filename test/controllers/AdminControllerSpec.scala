@@ -58,9 +58,12 @@ class AdminControllerSpec extends BaseSpec {
     // A member and their texts
     val member = Member(None, "Joe Bloggs", Some("07123123123"), None)
 
-    val messageA = TextMessage(None, 0, "07123123123", "LUU Skydive", new Timestamp(61423903920000L), 0, "Test message")
-    val messageB = TextMessage(None, 0, "07123123123", "LUU Skydive", new Timestamp(61423903920000L), 0, "Further message")
-    val messageC = TextMessage(None, 0, "07123123123", "LUU Skydive", new Timestamp(61423903920000L), 0, "Final info text")
+    val messageA = TextMessage(None, 0, "07123123123", "LUU Skydive", Some(new Timestamp(61423903920000L)),
+      Some("ms-1247812347192"), 0, "Test message")
+    val messageB = TextMessage(None, 0, "07123123123", "LUU Skydive", Some(new Timestamp(61423903920000L)),
+      Some("ms-1247812347192"), 0, "Further message")
+    val messageC = TextMessage(None, 0, "07123123123", "LUU Skydive", Some(new Timestamp(61423903920000L)),
+      Some("ms-1247812347192"), 0, "Final info text")
 
     val textMessagesForUser = Seq(messageA, messageB, messageC)
 
@@ -68,7 +71,8 @@ class AdminControllerSpec extends BaseSpec {
 
     // Another member, used to ensure that messages are only associated with the correct person
     val textMessageNotForUser =
-      TextMessage(None, 0, "07123123123", "LUU Skydive", new Timestamp(61423903920000L), 0, "Private for another user")
+      TextMessage(None, 0, "07123123123", "LUU Skydive", Some(new Timestamp(61423903920000L)),
+        Some("ms-192481892734"), 0, "Private for another user")
 
     val setup = for {
       memberId <- memberDao.insert(member)

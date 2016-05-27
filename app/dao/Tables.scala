@@ -40,7 +40,7 @@ class Tables (protected val dbConfigProvider: DatabaseConfigProvider) extends Ha
   /**
     * A field length that can store mobile numbers in any of the allowed formats (see Validators).
     */
-  private val MOBILE_NUMBER_FIELD_LENGTH: Int = 15
+  private val MOBILE_NUMBER_FIELD_LENGTH: Int = 20
 
   /**
     * The most text that can be sent in a welcome text message (typically 3 standard text messages or 480).
@@ -111,13 +111,15 @@ class Tables (protected val dbConfigProvider: DatabaseConfigProvider) extends Ha
 
     def fromNumber: Rep[String] = column[String]("from_number", O.Length(MOBILE_NUMBER_FIELD_LENGTH, varying = true))
 
-    def sentDt: Rep[Timestamp] = column[Timestamp]("sent_dt")
+    def sentDt: Rep[Option[Timestamp]] = column[Option[Timestamp]]("sent_dt")
+
+    def sentMsid: Rep[Option[String]] = column[Option[String]]("sent_msid")
 
     def status: Rep[Short] = column[Short]("status")
 
     def message: Rep[String] = column[String]("message", O.Length(TEXT_MESSAGE_LENGTH, varying = true))
 
-    def * = (id.?, memberId, toNumber, fromNumber, sentDt, status, message) <> (TextMessage.tupled, TextMessage.unapply)
+    def * = (id.?, memberId, toNumber, fromNumber, sentDt, sentMsid, status, message) <> (TextMessage.tupled, TextMessage.unapply)
 
     def member: ForeignKeyQuery[MembersTable, Member] = foreignKey("text_messages_member_id_fkey", memberId, Members)(_.id)
 
