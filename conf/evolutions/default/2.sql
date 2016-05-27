@@ -3,8 +3,8 @@
 # --- !Ups
 
 CREATE TABLE settings (
-    key VARCHAR(50),
-    value VARCHAR(500)
+  key VARCHAR(50),
+  value VARCHAR(500)
 );
 
 # --- !Downs
