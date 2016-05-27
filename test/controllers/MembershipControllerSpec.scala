@@ -120,7 +120,7 @@ class MembershipControllerSpec extends BaseSpec {
       click on find("name").value
       enter("Joe Bloggs")
       click on find("phoneNumber").value
-      enter("4407123123123")
+      enter("4457123123123")
       click on find(cssSelector("button[type=submit]")).value
 
       eventually { find(cssSelector("#phoneNumber_field .error")).value.text must include ("Invalid mobile number") }
