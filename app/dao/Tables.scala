@@ -26,7 +26,7 @@ package dao
 
 import java.sql.Timestamp
 
-import models.{Member, Setting, TextMessage}
+import models.{Member, Setting, TextMessage, TextMessageError}
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.driver.JdbcProfile
 import slick.lifted.ForeignKeyQuery
@@ -77,7 +77,7 @@ class Tables (protected val dbConfigProvider: DatabaseConfigProvider) extends Ha
   protected val Members: TableQuery[MembersTable] = TableQuery[MembersTable]
 
   /**
-    * The Slick mapping for the Member object.
+    * The Slick mapping for the members table.
     *
     * @param tag
     */
@@ -98,7 +98,8 @@ class Tables (protected val dbConfigProvider: DatabaseConfigProvider) extends Ha
   protected val TextMessages: TableQuery[TextMessagesTable] = TableQuery[TextMessagesTable]
 
   /**
-    * The Slick mapping for the TextMessage object.
+    * The Slick mapping for the text_messages table.
+    *
     * @param tag
     */
   protected class TextMessagesTable(tag: Tag) extends Table[TextMessage](tag, "text_messages") {
@@ -120,6 +121,27 @@ class Tables (protected val dbConfigProvider: DatabaseConfigProvider) extends Ha
     def message: Rep[String] = column[String]("message", O.Length(TEXT_MESSAGE_LENGTH, varying = true))
 
     def * = (id.?, memberId, toNumber, fromNumber, sentDt, sentMsid, status, message) <> (TextMessage.tupled, TextMessage.unapply)
+
+  }
+
+  protected val TextMessageErrors: TableQuery[TextMessageErrorsTable] = TableQuery[TextMessageErrorsTable]
+
+  /**
+    * The Slick mapping for the text_message_errors object.
+    *
+    * @param tag
+    */
+  protected class TextMessageErrorsTable(tag: Tag) extends Table[TextMessageError](tag, "text_message_errors") {
+
+    def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
+
+    def textMessageId: Rep[Int] = column[Int]("text_message_id")
+
+    def timestamp: Rep[Timestamp] = column[Timestamp]("timestamp")
+
+    def message: Rep[String] = column[String]("message")
+
+    def * = (id.?, textMessageId, timestamp, message) <> (TextMessageError.tupled, TextMessageError.unapply)
 
   }
 }

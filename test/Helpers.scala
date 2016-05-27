@@ -22,7 +22,7 @@
   * SOFTWARE.
   */
 
-import dao.{MemberDAO, SettingsDAO, TextMessageDAO}
+import dao.{MemberDAO, SettingsDAO, TextMessageDAO, TextMessageErrorDAO}
 import play.api.Application
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -83,11 +83,13 @@ object Helpers {
     * @param dbConfigProvider Database configuration provider to use for the DAO(s)
     */
   def cleanDatabase(dbConfigProvider: DatabaseConfigProvider): Future[Unit] = {
+    val textMessageErrorDao = new TextMessageErrorDAO(dbConfigProvider)
     val textMessageDao = new TextMessageDAO(dbConfigProvider)
     val memberDao = new MemberDAO(dbConfigProvider)
     val settingsDao = new SettingsDAO(dbConfigProvider)
 
     for {
+      e <- textMessageErrorDao.empty
       t <- textMessageDao.empty
       m <- memberDao.empty
       s <- settingsDao.empty
