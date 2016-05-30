@@ -31,6 +31,7 @@ import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
+import play.twirl.api.{BaseScalaTemplate, Format, Html}
 import services.MembershipService
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -44,7 +45,7 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
   /**
     * The primary sign up form (name and phone number).
     */
-  private val signupForm = Form(
+  protected val signupForm = Form(
     mapping(
       "name" -> nonEmptyText.verifying(Validators.nameValidator),
       "phoneNumber" -> text.verifying(Validators.phoneNumberValidator)
@@ -56,31 +57,10 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
   )
 
   /**
-    * The secondary sign up form (name and e-mail).
-    */
-  private val signupAltForm = Form(
-    mapping(
-      "name" -> nonEmptyText.verifying(Validators.nameValidator),
-      "email" -> text.verifying(Validators.emailValidator)
-    )((name: String, email: String) => {
-      Member(None, name, None, Some(email))
-    })((member: Member) => {
-      Some(member.name, member.email.get)
-    })
-  )
-
-  /**
     * Shows the main version of the sign-up form (name and phone number).
     */
   def index: Action[AnyContent] = Action { implicit request =>
-    Ok(views.html.index(signupForm, false))
-  }
-
-  /**
-    * Shows the alternative version of the sign-up form (name and e-mail address).
-    */
-  def alt: Action[AnyContent] = Action { implicit request =>
-    Ok(views.html.index(signupAltForm, true))
+    Ok(views.html.index(signupForm))
   }
 
   /**
@@ -101,37 +81,24 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
   }
 
   /**
-    * Show the relevant main form with any error(s).
+    * Show the relevant form with any error(s).
     *
     * @param request The user's request
     * @param errors A form, with errors
-    * @param altForm If the user was brought from the alternative form
     * @return
     */
-  private def showErrors(implicit request: Request[Any], errors: Form[Member], altForm: Boolean): Future[Result] = {
-    Future[Result] {
-      BadRequest(views.html.index(errors, altForm))
-    }
-  }
+  protected def showErrors(implicit request: Request[Any], errors: Form[Member]): Future[Result] =
+    Future { BadRequest(views.html.index(errors)) }
 
   /**
-   * Membership signup with a mobile phone number.
+   * Show either the membership form with errors or do the sign-up.
    */
   def signup: Action[AnyContent] = Action.async { implicit request =>
-   signupForm.bindFromRequest.fold(showErrors(request, _, false), createMember(request, _))
+   signupForm.bindFromRequest.fold(showErrors(request, _), createMember(request, _))
   }
 
   /**
-    * Alternative signup form - with e-mail address.
-    */
-  def signupAlt: Action[AnyContent] = Action.async { implicit request =>
-    signupAltForm.bindFromRequest.fold(showErrors(request, _, true), createMember(request, _))
-  }
-
-  /**
-    * Display a thank you message.
-    *
-    * @return
+    * Display a thank you message post sign-up.
     */
   def thankYou: Action[AnyContent] = Action { implicit request =>
     Ok(views.html.membership_thank_you())

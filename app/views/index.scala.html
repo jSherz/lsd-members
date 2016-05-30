@@ -1,4 +1,4 @@
-@(form: Form[models.Member], altForm: Boolean)(implicit messages: Messages, request: play.api.mvc.Request[Any])
+@(form: Form[models.Member])(implicit messages: Messages, request: play.api.mvc.Request[Any])
 
 @*
  * Shows the main intro page with sign-up form.
@@ -14,25 +14,17 @@
     }
 
     <div id="sign-up-form">
-      @helper.form(action = (if (altForm) routes.MembershipController.signupAlt() else routes.MembershipController.signup())) {
+      @helper.form(action = routes.MembershipController.signup()) {
         <div>
           @helper.input(form("name"), '_label -> "Name") { (id, name, value, args) =>
             <input type="text" id="@id" name="@name" placeholder="My name is ________ and I love skydiving!" value="@value" @toHtmlArgs(args)>
           }
         </div>
-        @if(altForm) {
-          <div>
-            @helper.input(form("email"), '_label -> "E-mail address") { (id, name, value, args) =>
-            <input type="text" id="@id" name="@name" placeholder="Your main e-mail address, not the uni one please." value="@value" @toHtmlArgs(args)>
-            }
-          </div>
-        } else {
-          <div>
-            @helper.input(form("phoneNumber"), '_label -> "Phone number") { (id, name, value, args) =>
-              <input type="text" id="@id" name="@name" placeholder="Mobile number, e.g. 07123123123" value="@value" @toHtmlArgs(args)>
-            }
-          </div>
-        }
+        <div>
+          @helper.input(form("phoneNumber"), '_label -> "Phone number") { (id, name, value, args) =>
+            <input type="text" id="@id" name="@name" placeholder="Mobile number, e.g. 07123123123" value="@value" @toHtmlArgs(args)>
+          }
+        </div>
         <button type="submit">Sign me up!</button>
       }
     </div>

@@ -3,9 +3,9 @@
 # ~~~~
 
 GET     /                           controllers.MembershipController.index
-GET     /alt                        controllers.MembershipController.alt
+GET     /alt                        controllers.MembershipAltController.index
 POST    /sign-up                    controllers.MembershipController.signup
-POST    /sign-up-alt                controllers.MembershipController.signupAlt
+POST    /sign-up-alt                controllers.MembershipAltController.signup
 GET     /thank-you                  controllers.MembershipController.thankYou
 
 # Admin
