@@ -64,23 +64,6 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
   }
 
   /**
-    * Create a member - called after validating the form.
-    *
-    * @param member The member object with either a phone number or e-mail address
-    * @return Result of attempting to create the member
-    */
-  private def createMember(implicit request: Request[Any], member: Member): Future[Result] = {
-    val result = ms.signup(member)
-
-    result.map { result =>
-      result match {
-        case Left(error) => BadRequest(views.html.membership_error(error))
-        case Right(member) => Redirect(routes.MembershipController.thankYou)
-      }
-    }
-  }
-
-  /**
     * Show the relevant form with any error(s).
     *
     * @param request The user's request
@@ -94,7 +77,14 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
    * Show either the membership form with errors or do the sign-up.
    */
   def signup: Action[AnyContent] = Action.async { implicit request =>
-   signupForm.bindFromRequest.fold(showErrors(request, _), createMember(request, _))
+   signupForm.bindFromRequest.fold(showErrors(request, _), (member) => {
+     for {
+       result <- ms.signup(member)
+     } yield result match {
+       case Left(error) => BadRequest(views.html.membership_error(error))
+       case Right(member) => Redirect(routes.MembershipController.thankYou)
+     }
+   })
   }
 
   /**
