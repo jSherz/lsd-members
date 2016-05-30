@@ -44,43 +44,43 @@ import scala.util.{Failure, Success}
 @Singleton
 class AdminController @Inject() (val messagesApi: MessagesApi, val settingsDao: SettingsDAO, val memberDao: MemberDAO,
                                  val textMessageDao: TextMessageDAO) extends Controller with I18nSupport {
+  /**
+    * The default welcome message (translated).
+    */
+  private val defaultWelcomeMessage = messagesApi.apply("settings.welcomeMessageDefault")
+
+  /**
+    * A form used to update global application settings stored in the database.
+    */
   private val settingsForm = Form(
     mapping(
       "welcomeText" -> text.verifying(Validators.welcomeTextValidator)
-    )((welcomeText: String) => {
-      (welcomeText)
-    })((welcomeText: String) => {
-      Some(welcomeText)
-    })
+    )(identity)(text => Some(text))
   )
 
   /**
-    * Shows the main admin screen.
+    * Shows the main admin dashboard.
     */
   def index: Action[AnyContent] = Action { implicit request =>
     Ok(views.html.admin.index())
   }
 
   /**
-    * Update the saved settings.
-    *
-    * @return
+    * Shows the settings edit form, with the saved (or default) values stored for each setting.
     */
   def settings: Action[AnyContent] = Action.async { implicit request =>
-    settingsDao.getOrElse(Settings.WelcomeText, "Hello, @@name@@, this is an example text!").map { welcomeTextMessage =>
-      Ok(views.html.admin.settings(settingsForm.fill(welcomeTextMessage), welcomeTextMessage))
+    settingsDao.getOrElse(Settings.WelcomeText, defaultWelcomeMessage).map { welcomeTextMessage =>
+      Ok(views.html.admin.settings(settingsForm.fill(welcomeTextMessage)))
     }
   }
 
   /**
-    * Shows the settings edit form.
-    *
-    * @return
+    * Update the saved settings.
     */
   def updateSettings: Action[AnyContent] = Action.async { implicit request =>
-    settingsDao.getOrElse(Settings.WelcomeText, "Hello, @@name@@, this is an example text!").map { welcomeTextMessage =>
+    settingsDao.getOrElse(Settings.WelcomeText, defaultWelcomeMessage).map { welcomeTextMessage =>
       settingsForm.bindFromRequest.fold(formWithErrors => {
-        BadRequest(views.html.admin.settings(formWithErrors, welcomeTextMessage))
+        BadRequest(views.html.admin.settings(formWithErrors))
       }, (welcomeText: String) => {
         settingsDao.put(Setting(Settings.WelcomeText, welcomeText))
 
@@ -89,6 +89,12 @@ class AdminController @Inject() (val messagesApi: MessagesApi, val settingsDao: 
     }
   }
 
+  /**
+    * Show the saved information for a member.
+    *
+    * @param id Member to show details for
+    * @return
+    */
   def member(id: Int): Action[AnyContent] = Action.async { implicit request =>
     val memberView = for {
       maybeMember <- memberDao.get(id)
@@ -96,6 +102,7 @@ class AdminController @Inject() (val messagesApi: MessagesApi, val settingsDao: 
     } yield {
       Ok(views.html.admin.member_view(maybeMember.get, textMessages))
     }
+
     memberView.recover { case _: NoSuchElementException => NotFound("Member not found.") }
   }
 }

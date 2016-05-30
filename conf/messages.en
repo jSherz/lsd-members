@@ -10,3 +10,4 @@ constraint.phoneNumber=A mobile number in the form 07123123123 or 447123123123 o
 constraint.email=An e-mail address, e.g. hello@leedsskydivers.co.uk
 constraint.welcomeText=A welcome message that's at most 480 characters long.
 constraint.name=Your full name (or first name, if you'd prefer).
+settings.welcomeMessageDefault=Hello, @@name@@, this is an example text!
