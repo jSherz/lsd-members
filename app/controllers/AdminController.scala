@@ -35,9 +35,6 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc._
 
-import scala.util.{Failure, Success}
-
-
 /**
  * Handles the administration interface.
  */
@@ -69,24 +66,22 @@ class AdminController @Inject() (val messagesApi: MessagesApi, val settingsDao: 
     * Shows the settings edit form, with the saved (or default) values stored for each setting.
     */
   def settings: Action[AnyContent] = Action.async { implicit request =>
-    settingsDao.getOrElse(Settings.WelcomeText, defaultWelcomeMessage).map { welcomeTextMessage =>
-      Ok(views.html.admin.settings(settingsForm.fill(welcomeTextMessage)))
+    settingsDao.getOrElse(Settings.WelcomeText, defaultWelcomeMessage).map { text =>
+      Ok(views.html.admin.settings(settingsForm.fill(text)))
     }
   }
 
   /**
     * Update the saved settings.
     */
-  def updateSettings: Action[AnyContent] = Action.async { implicit request =>
-    settingsDao.getOrElse(Settings.WelcomeText, defaultWelcomeMessage).map { welcomeTextMessage =>
-      settingsForm.bindFromRequest.fold(formWithErrors => {
-        BadRequest(views.html.admin.settings(formWithErrors))
-      }, (welcomeText: String) => {
-        settingsDao.put(Setting(Settings.WelcomeText, welcomeText))
+  def updateSettings: Action[AnyContent] = Action { implicit request =>
+    settingsForm.bindFromRequest.fold(formWithErrors => {
+      BadRequest(views.html.admin.settings(formWithErrors))
+    }, (welcomeText: String) => {
+      settingsDao.put(Setting(Settings.WelcomeText, welcomeText))
 
-        Redirect(routes.AdminController.index())
-      })
-    }
+      Redirect(routes.AdminController.index())
+    })
   }
 
   /**
