@@ -98,6 +98,6 @@ class AdminController @Inject() (val messagesApi: MessagesApi, val settingsDao: 
       Ok(views.html.admin.member_view(maybeMember.get, textMessages))
     }
 
-    memberView.recover { case _: NoSuchElementException => NotFound("Member not found.") }
+    memberView.recover { case _: NoSuchElementException => NotFound(messagesApi.apply("error.memberNotFound")) }
   }
 }
