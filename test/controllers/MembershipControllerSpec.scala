@@ -36,12 +36,6 @@ class MembershipControllerSpec extends BaseSpec {
   private val memberDao = app.injector.instanceOf[MemberDAO]
 
   "MembershipController" should {
-    "show the main sign-up form as the homepage" in {
-      go to ("http://localhost:" + port)
-      pageSource must include ("Leeds University Skydivers")
-      pageSource must include ("Phone number")
-    }
-
     "direct the user to the alternative form when the 'Alt' button is clicked" in {
       go to ("http://localhost:" + port)
       pageSource must include ("Phone number")
