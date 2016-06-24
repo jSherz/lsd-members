@@ -1,0 +1,53 @@
+$tile-width: 7
+$other-month-colour: #AAA
+$today-colour: #cae8ff
+
+.sl-course-calendar-tile
+  width: 96% / $tile-width
+  height: 5em
+  border: solid 0.1em #ccc
+  display: block
+  float: left
+  padding: 1em
+  margin: 0.15em 0
+  color: #000
+
+  &:hover
+    background-color: #fbffc6
+    color: #000
+
+  @include media(max-width 64em)
+    margin: 0.05em -0.1em
+    padding: 0.5em
+
+  @include media(max-width 50em)
+    width: 96% / $tile-width
+    border: solid 0.05em #ccc
+    height: 3em
+    padding: 0.3em
+
+  &.tile-other-month
+    background-color: $other-month-colour
+
+    &:hover
+      background-color: darken($other-month-colour, 15%)
+
+  &.tile-today
+    background-color: $today-colour
+
+    &:hover
+      background-color: darken($today-colour, 15%)
+
+
+.sl-course-calendar-tile-info
+  padding: 0.3em
+  border-radius: 0.5em
+  font-size: 0.8em
+  background-color: #eee
+  text-align: center
+
+  &.course-full
+    background-color: #ffaea7
+
+  &.course-spaces
+    background-color: #c6ffc1

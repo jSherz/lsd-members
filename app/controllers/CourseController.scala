@@ -25,6 +25,9 @@
 package controllers
 
 import javax.inject._
+
+import helpers.CalendarHelper
+import org.joda.time.DateTime
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
 
@@ -34,7 +37,10 @@ import play.api.mvc._
 @Singleton
 class CourseController @Inject() (val messagesApi: MessagesApi) extends Controller with I18nSupport {
   def index(): Action[AnyContent] = Action { implicit request =>
-    Ok(views.html.admin.course_calendar())
+    val selectedMonth = DateTime.now()
+    val tiles = CalendarHelper.getTiles(selectedMonth, selectedMonth)
+
+    Ok(views.html.admin.course_calendar(tiles))
   }
 
   def view(id: Int): Action[AnyContent] = Action { implicit request =>
