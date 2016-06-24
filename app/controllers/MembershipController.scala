@@ -83,7 +83,7 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
      } yield result match {
        case Right(member) => Redirect(routes.MembershipController.thankYou)
        case Left(error) => BadRequest(views.html.membership_error(error))
-       case _ => BadRequest("Error")
+       case _ => BadRequest(views.html.membership_error("error.generic"))
      }
    })
   }
