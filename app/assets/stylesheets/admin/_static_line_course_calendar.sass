@@ -21,9 +21,10 @@ $today-colour: #cae8ff
     padding: 0.5em
 
   @include media(max-width 50em)
-    width: 96% / $tile-width
+    width: 99% / $tile-width
+    margin: 0
     border: solid 0.05em #ccc
-    height: 3em
+    height: 4em
     padding: 0.3em
 
   &.tile-other-month
@@ -51,3 +52,7 @@ $today-colour: #cae8ff
 
   &.course-spaces
     background-color: #c6ffc1
+
+  @include media(max-width 50em)
+    .course-word-spaces
+      display: none
