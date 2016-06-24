@@ -24,8 +24,6 @@
 
 package models
 
-import java.util.HashMap
-
 import play.api.data.validation.Valid
 
 /**
@@ -46,9 +44,10 @@ case class Member(id: Option[Int], name: String, phoneNumber: Option[String], em
     * @return true if above conditions are met
     */
   def valid(): Boolean = {
-    val phoneOrEmailValid = (phoneNumber != None && Validators.phoneNumberValidator(phoneNumber.get) == Valid) ||
-      (email != None && Validators.emailValidator(email.get) == Valid)
+    val nameValid = !name.trim().isEmpty
+    val phoneNumberValid = phoneNumber.fold(false) { Validators.phoneNumberValidator(_) == Valid }
+    val emailValid = email.fold(false) { Validators.emailValidator(_) == Valid }
 
-    name != None && !name.trim().isEmpty && phoneOrEmailValid
+    nameValid && (phoneNumberValid || emailValid)
   }
 }
