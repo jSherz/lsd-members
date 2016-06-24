@@ -23,17 +23,14 @@
   */
 
 import java.io._
-import java.nio.file.{Files, Path, Paths}
 
 import helpers.CalendarHelper
 import helpers.CalendarHelper.CalendarTile
-import org.joda.time.{DateTime, DateTimeZone, Period}
 import org.joda.time.chrono.ISOChronology
-
-import scala.io.Source
+import org.joda.time.{DateTime, DateTimeZone, Period}
 
 /**
-  * Created by james on 24/06/16.
+  * Tests the helper used to create calendar tiles.
   */
 class CalendarHelperSpec extends BaseSpec {
   val tz = ISOChronology.getInstance(DateTimeZone.UTC)
