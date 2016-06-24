@@ -14,6 +14,7 @@ GET     /admin                      controllers.AdminController.index
 GET     /admin/settings             controllers.AdminController.settings
 POST    /admin/settings             controllers.AdminController.updateSettings
 GET     /admin/members/:id          controllers.AdminController.member(id: Int)
+GET     /admin/courses/calendar     controllers.CourseController.index
 GET     /admin/courses/:id          controllers.CourseController.view(id: Int)
 
 # Map static resources from the /public folder to the /assets URL path

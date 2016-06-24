@@ -30,7 +30,7 @@ import org.scalatest.concurrent.{Futures, ScalaFutures}
 import org.scalatestplus.play.{HtmlUnitFactory, OneBrowserPerSuite, OneServerPerSuite, PlaySpec}
 import play.api.db.slick.DatabaseConfigProvider
 
-import scala.concurrent.{Await, Awaitable}
+import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
 /**

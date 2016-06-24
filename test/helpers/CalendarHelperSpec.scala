@@ -22,22 +22,34 @@
   * SOFTWARE.
   */
 
-package controllers
+import java.io._
+import java.nio.file.{Files, Path, Paths}
 
-import javax.inject._
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc._
+import helpers.CalendarHelper
+import helpers.CalendarHelper.CalendarTile
+import org.joda.time.{DateTime, DateTimeZone, Period}
+import org.joda.time.chrono.ISOChronology
+
+import scala.io.Source
 
 /**
-  * Handles the management of static line courses.
+  * Created by james on 24/06/16.
   */
-@Singleton
-class CourseController @Inject() (val messagesApi: MessagesApi) extends Controller with I18nSupport {
-  def index(): Action[AnyContent] = Action { implicit request =>
-    Ok(views.html.admin.course_calendar())
-  }
+class CalendarHelperSpec extends BaseSpec {
+  val tz = ISOChronology.getInstance(DateTimeZone.UTC)
 
-  def view(id: Int): Action[AnyContent] = Action { implicit request =>
-    Ok(views.html.admin.course_view())
+  "CalendarHelper" should {
+    "return the correct tiles for months starting in each day of the week" in {
+      val fixtureReader = new ObjectInputStream(new FileInputStream("test/fixtures/calendar_tiles.dat"))
+      val fixtureTiles = fixtureReader.readObject().asInstanceOf[Map[DateTime, Seq[CalendarTile]]]
+      fixtureReader.close
+
+      for ((month, correctTiles) <- fixtureTiles) {
+        val testCurrentDay = month.plus(Period.days(3))
+        val generatedTiles = CalendarHelper.getTiles(month, testCurrentDay)
+
+        generatedTiles mustEqual correctTiles
+      }
+    }
   }
 }
