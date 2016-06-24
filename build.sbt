@@ -41,7 +41,8 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-slick-evolutions" % "2.0.0",
   "org.postgresql" % "postgresql" % "9.4.1208",
   "com.h2database" % "h2" % "1.4.191",
-  "com.googlecode.libphonenumber" % "libphonenumber" % "7.4.1"
+  "com.googlecode.libphonenumber" % "libphonenumber" % "7.4.1",
+  "org.scalaz" %% "scalaz-core" % "7.2.4"
 )
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
@@ -50,3 +51,5 @@ coverageEnabled.in(Test, test) := true
 coverageExcludedPackages := "views.html.*;controllers.javascript.*;controllers.ReverseAdminController;" +
   "controllers.ReverseAssets;controllers.ReverseMembershipController;router.*;" +
   "controllers.ReverseMembershipAltController;dao.Tables"
+
+wartremoverWarnings in (Compile, compile) ++= Warts.unsafe
