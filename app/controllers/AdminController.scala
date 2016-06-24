@@ -24,22 +24,22 @@
 
 package controllers
 
-import java.util.NoSuchElementException
-import javax.inject._
-
 import dao.{MemberDAO, SettingsDAO, TextMessageDAO}
-import models.{Setting, Settings, Validators}
+import models.{Member, Setting, Settings, Validators}
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc._
 
+import scala.concurrent.Future
+import scalaz.OptionT
+import scalaz.OptionT._
+
 /**
  * Handles the administration interface.
  */
-@Singleton
-class AdminController @Inject() (val messagesApi: MessagesApi, val settingsDao: SettingsDAO, val memberDao: MemberDAO,
+class AdminController @javax.inject.Inject() (val messagesApi: MessagesApi, val settingsDao: SettingsDAO, val memberDao: MemberDAO,
                                  val textMessageDao: TextMessageDAO) extends Controller with I18nSupport {
   /**
     * The default welcome message (translated).
@@ -91,13 +91,13 @@ class AdminController @Inject() (val messagesApi: MessagesApi, val settingsDao: 
     * @return
     */
   def member(id: Int): Action[AnyContent] = Action.async { implicit request =>
-    val memberView = for {
-      maybeMember <- memberDao.get(id)
-      textMessages <- textMessageDao.forMember(maybeMember.get)
-    } yield {
-      Ok(views.html.admin.member_view(maybeMember.get, textMessages))
+    memberDao.get(id).flatMap {
+      _ match {
+        case Some(member) => textMessageDao.forMember(member).map(messages =>
+          Ok(views.html.admin.member_view(member, messages))
+        )
+        case None => Future(NotFound(messagesApi.apply("error.memberNotFound")))
+      }
     }
-
-    memberView.recover { case _: NoSuchElementException => NotFound(messagesApi.apply("error.memberNotFound")) }
   }
 }
