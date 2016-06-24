@@ -1,0 +1,128 @@
+@()(implicit messages: Messages, request: play.api.mvc.Request[Any])
+
+@*
+* Shows one static line course.
+*@
+@admin.main("Static line course") {
+  <div id="full-column">
+    <h2>Static line course</h2>
+
+    <dl id="sl-course-info">
+      <dt>Date</dt>
+      <dd>31/09/16</dd>
+
+      <dt>Organiser</dt>
+      <dd>Jim Dickinson</dd>
+
+      <dt>Status</dt>
+      <dd>Pending</dd>
+
+      <dt># Spaces</dt>
+      <dd>8</dd>
+    </dl>
+
+    <div class="clear"></div>
+
+    <h3>Students</h3>
+
+    <table id="sl-course-students">
+      <thead>
+        <tr>
+          <th id="sl-course-students-id">#</th>
+          <th id="sl-course-students-name">Name</th>
+          <th id="sl-course-students-date-joined">Date joined</th>
+          <th id="sl-course-students-info-complete">Info complete</th>
+          <th id="sl-course-students-forms-complete">Forms complete</th>
+          <th id="sl-course-students-reg-langar">Reg. /w Langar</th>
+          <th id="sl-course-students-options">Options</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td class="sl-course-students-id">1</td>
+          <td class="sl-course-students-name">Danielle Chadwick</td>
+          <td class="sl-course-students-date-joined">08/09/16</td>
+          <td class="sl-course-students-info-complete"><i class="fa fa-times" aria-hidden="true" style="color: red;"></i></td>
+          <td class="sl-course-students-forms-complete"><i class="fa fa-check" aria-hidden="true" style="color: green;"></i></td>
+          <td class="sl-course-students-reg-langar"><i class="fa fa-times" aria-hidden="true" style="color: red;"></td>
+          <td class="sl-course-students-options">
+            <button type="button" title="Contact student" class="sl-course-students-contact"><i class="fa fa-phone" aria-hidden="true"></i></button>
+            <button type="button" title="Edit member information" class="sl-course-students-edit-member"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+            <button type="button" class="btn-warning sl-course-students-remove" title="Remove from course"><i class="fa fa-trash-o"></i></button>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="sl-course-students-id">2</td>
+          <td class="sl-course-students-name">Finley Bentley</td>
+          <td class="sl-course-students-date-joined">01/09/16</td>
+          <td class="sl-course-students-info-complete"><i class="fa fa-check" aria-hidden="true" style="color: green;"></i></td>
+          <td class="sl-course-students-forms-complete"><i class="fa fa-check" aria-hidden="true" style="color: green;"></i></td>
+          <td class="sl-course-students-reg-langar"><i class="fa fa-times" aria-hidden="true" style="color: red;"></td>
+          <td class="sl-course-students-options">
+            <button type="button" title="Contact student" class="sl-course-students-contact"><i class="fa fa-phone" aria-hidden="true"></i></button>
+            <button type="button" title="Edit member information" class="sl-course-students-edit-member"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+            <button type="button" class="btn-warning sl-course-students-remove" title="Remove from course"><i class="fa fa-trash-o"></i></button>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="sl-course-students-id">3</td>
+          <td class="sl-course-students-name">Cameron Tyler</td>
+          <td class="sl-course-students-date-joined">10/09/16</td>
+          <td class="sl-course-students-info-complete"><i class="fa fa-times" aria-hidden="true" style="color: red;"></i></td>
+          <td class="sl-course-students-forms-complete"><i class="fa fa-check" aria-hidden="true" style="color: green;"></i></td>
+          <td class="sl-course-students-reg-langar"><i class="fa fa-times" aria-hidden="true" style="color: red;"></td>
+          <td class="sl-course-students-options">
+            <button type="button" title="Contact student" class="sl-course-students-contact"><i class="fa fa-phone" aria-hidden="true"></i></button>
+            <button type="button" title="Edit member information" class="sl-course-students-edit-member"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+            <button type="button" class="btn-warning sl-course-students-remove" title="Remove from course"><i class="fa fa-trash-o"></i></button>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="sl-course-students-id">4</td>
+          <td class="sl-course-students-name">Joseph Briggs</td>
+          <td class="sl-course-students-date-joined">01/09/16</td>
+          <td class="sl-course-students-info-complete"><i class="fa fa-check" aria-hidden="true" style="color: green;"></i></td>
+          <td class="sl-course-students-forms-complete"><i class="fa fa-check" aria-hidden="true" style="color: green;"></i></td>
+          <td class="sl-course-students-reg-langar"><i class="fa fa-times" aria-hidden="true" style="color: red;"></td>
+          <td class="sl-course-students-options">
+            <button type="button" title="Contact student" class="sl-course-students-contact"><i class="fa fa-phone" aria-hidden="true"></i></button>
+            <button type="button" title="Edit member information" class="sl-course-students-edit-member"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+            <button type="button" class="btn-warning sl-course-students-remove" title="Remove from course"><i class="fa fa-trash-o"></i></button>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="sl-course-students-id">5</td>
+          <td colspan="6">
+            <button type="button" class="btn btn-primary">Add</button>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="sl-course-students-id">6</td>
+          <td colspan="6">
+            <button type="button" class="btn btn-primary">Add</button>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="sl-course-students-id">7</td>
+          <td colspan="6">
+            <button type="button" class="btn btn-primary">Add</button>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="sl-course-students-id">8</td>
+          <td colspan="6">
+            <button type="button" class="btn btn-primary">Add</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+}

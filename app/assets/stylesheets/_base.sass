@@ -47,3 +47,15 @@ form
   video
     @include position(absolute, 0 null null 0)
     @include size(100%)
+
+
+$warning-colour: #ffcf64
+
+.btn-warning
+  background-color: $warning-colour
+
+  &:hover
+    background-color: darken($warning-colour, 20%)
+
+.clear
+  clear: both
