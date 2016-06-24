@@ -81,8 +81,9 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
      for {
        result <- ms.signup(member)
      } yield result match {
-       case Left(error) => BadRequest(views.html.membership_error(error))
        case Right(member) => Redirect(routes.MembershipController.thankYou)
+       case Left(error) => BadRequest(views.html.membership_error(error))
+       case _ => BadRequest("Error")
      }
    })
   }

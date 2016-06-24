@@ -94,7 +94,7 @@ class AdminController @javax.inject.Inject() (val messagesApi: MessagesApi, val 
         case Some(member) => textMessageDao.forMember(member).map(messages =>
           Ok(views.html.admin.member_view(member, messages))
         )
-        case None => Future(NotFound(messagesApi.apply("error.memberNotFound")))
+        case _ => Future(NotFound(messagesApi.apply("error.memberNotFound")))
       }
     }
   }

@@ -63,10 +63,8 @@ class SettingsDAO @Inject() (override protected val dbConfigProvider: DatabaseCo
     */
   def getOrElse(key: String, defaultValue: String): Future[String] = {
     get(key).map {
-      _ match {
-        case Some(setting) => setting.value
-        case None => defaultValue
-      }
+      case Some(setting) => setting.value
+      case _ => defaultValue
     }
   }
 
