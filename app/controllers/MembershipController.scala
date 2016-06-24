@@ -52,7 +52,7 @@ class MembershipController @Inject() (ms: MembershipService, val messagesApi: Me
     )((name: String, phoneNumber: String) => {
       Member(None, name, Some(phoneNumber), None)
     })((member: Member) => {
-      Some(member.name, member.phoneNumber.get)
+      Some(member.name, member.phoneNumber.getOrElse(""))
     })
   )
 

@@ -52,7 +52,7 @@ class MembershipAltController @Inject() (ms: MembershipService, override val mes
     )((name: String, email: String) => {
       Member(None, name, None, Some(email))
     })((member: Member) => {
-      Some(member.name, member.email.get)
+      Some(member.name, member.email.getOrElse(""))
     })
   )
 
