@@ -46,37 +46,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 /**
   * Handles texting new members if they signed up with a phone number.
   */
-object MemberSignupWorker {
-  /**
-    * The main account identifier for Twilio. Found at https://www.twilio.com/user/account/settings
-    */
-  private val ACCOUNT_SID: String = sys.env.getOrElse("TWILIO_ACCOUNT_SID", null)
-
-  /**
-    * The Twilio API key (auth token). Found at https://www.twilio.com/user/account/settings
-    */
-  private val AUTH_TOKEN: String = sys.env.getOrElse("TWILIO_AUTH_TOKEN", null)
-
-  /**
-    * The number that messages are sent from. Acquire one at https://www.twilio.com/user/account/messaging/phone-numbers
-    */
-  private val FROM: String = sys.env.getOrElse("FROM_NUMBER", null)
-
-  /**
-    * The Twilio API client.
-    */
-  private var twilioRestClient: TwilioRestClient = null
-
-  /**
-    * Member DAO.
-    */
-  private var memberDao: MemberDAO = null
-
-  /**
-    * Settings DAO.
-    */
-  private var settingsDao: SettingsDAO = null
-
+class MemberSignupWorker(val twilioRestClient: TwilioRestClient, val memberDao: MemberDAO, val settingsDao: SettingsDAO) {
   /**
     * The mapping of queue actions that are handled to the class that handles them.
     */
@@ -85,61 +55,33 @@ object MemberSignupWorker {
   ).asJava)
 
   /**
-    * Ensure the required configuration has been entered by the user.
-    */
-  private def configIsValid() = {
-    ACCOUNT_SID != null && !"".equals(ACCOUNT_SID) &&
-      AUTH_TOKEN != null && !"".equals(AUTH_TOKEN) &&
-      FROM != null && !"".equals(FROM)
-  }
-
-  /**
-    * Starts the worker, registering it with the resque queue.
-    */
-  private def start(): Unit = {
-    if (configIsValid()) {
-      twilioRestClient = new TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
-
-      // Play application
-      val playApp = GuiceApplicationBuilder().build()
-      val dbConfigProvider = playApp.injector.instanceOf[DatabaseConfigProvider]
-
-      // DAOs
-      memberDao = new MemberDAO(dbConfigProvider)
-      settingsDao = new SettingsDAO(dbConfigProvider)
-
-      // Jesque
-      val config = new ConfigBuilder().build()
-      val worker: Worker = new WorkerImpl(config, util.Arrays.asList(Queues.SIGNUP), queueJobFactory)
-      val workerThread: Thread = new Thread(worker)
-
-      workerThread.start()
-
-      // Ensure that the worker is removed properly when shutdown
-      sys.addShutdownHook({
-        Logger.info("Shutting down...")
-
-        workerThread.interrupt()
-        worker.end(true)
-        workerThread.join()
-
-        Logger.info("Stopped.")
-      })
-
-      Logger.info("Started member sign-up queue worker.")
-    } else {
-      throw new IllegalArgumentException("You must specify the TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN and FROM_NUMBER" +
-        "environment variables.")
-    }
-  }
-
-  /**
     * Called when the worker is started. Used to configure and run the queue worker.
     *
     * @param args
     */
   def main(args: Array[String]): Unit = {
-    val worker = MemberSignupWorker
+    val result = for {
+      accountSid <- sys.env.get("TWILIO_ACCOUNT_SID") // Found at https://www.twilio.com/user/account/settings
+      authToken <- sys.env.get("TWILIO_AUTH_TOKEN")
+      from <- sys.env.get("FROM_NUMBER") // The number that messages are sent from.
+    } yield {
+      // Create Play application
+      val playApp = GuiceApplicationBuilder().build()
+      val dbConfigProvider = playApp.injector.instanceOf[DatabaseConfigProvider]
+
+      // Create DAOs
+      val memberDao = new MemberDAO(dbConfigProvider)
+      val settingsDao = new SettingsDAO(dbConfigProvider)
+
+      // Setup Twilio client & start worker
+      val twilioRestClient = new TwilioRestClient(accountSid, authToken)
+      val worker = new MemberSignupWorker(playApp, twilioRestClient, memberDao, settingsDao)
+    }
+
+    if (result.isEmpty) {
+      Console.println("You must specify the TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN and FROM_NUMBER environment " +
+        "variables.")
+    }
   }
 
   /**
@@ -196,15 +138,16 @@ object MemberSignupWorker {
     *
     * @param name Member's name
     * @param phoneNumber Member's UK mobile number
+    * @param from From number
     */
-  private def sendSMS(name: String, phoneNumber: String) {
+  private def sendSMS(name: String, phoneNumber: String, from: String) {
     settingsDao.get(Settings.WelcomeText) onComplete {
       case Success(maybeWelcomeMessage) => maybeWelcomeMessage match {
         case Some(welcomeMessage) => {
           val params = new util.ArrayList[NameValuePair]()
           params.add(new BasicNameValuePair("Body", welcomeMessage.value.replace("@@name@@", name)))
           params.add(new BasicNameValuePair("To", formatPhoneNumber(phoneNumber)))
-          params.add(new BasicNameValuePair("From", FROM))
+          params.add(new BasicNameValuePair("From", from))
 
           val messageFactory: MessageFactory = twilioRestClient.getAccount().getMessageFactory
           val message: Message = messageFactory.create(params)
@@ -219,7 +162,25 @@ object MemberSignupWorker {
     }
   }
 
-  start()
+  // Jesque
+  val config = new ConfigBuilder().build()
+  val worker: Worker = new WorkerImpl(config, util.Arrays.asList(Queues.SIGNUP), queueJobFactory)
+  val workerThread: Thread = new Thread(worker)
+
+  workerThread.start()
+
+  // Ensure that the worker is removed properly when shutdown
+  sys.addShutdownHook({
+    Logger.info("Shutting down...")
+
+    workerThread.interrupt()
+    worker.end(true)
+    workerThread.join()
+
+    Logger.info("Stopped.")
+  })
+
+  Logger.info("Started member sign-up queue worker.")
 }
 
 /**
