@@ -25,7 +25,7 @@
 package controllers
 
 import dao.{MemberDAO, SettingsDAO, TextMessageDAO}
-import models.{Member, Setting, Settings, Validators}
+import models.{Setting, Settings, Validators}
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.{I18nSupport, MessagesApi}
