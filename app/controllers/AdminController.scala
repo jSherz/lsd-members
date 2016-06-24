@@ -33,14 +33,12 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc._
 
 import scala.concurrent.Future
-import scalaz.OptionT
-import scalaz.OptionT._
 
 /**
  * Handles the administration interface.
  */
 class AdminController @javax.inject.Inject() (val messagesApi: MessagesApi, val settingsDao: SettingsDAO, val memberDao: MemberDAO,
-                                 val textMessageDao: TextMessageDAO) extends Controller with I18nSupport {
+                                              val textMessageDao: TextMessageDAO) extends Controller with I18nSupport {
   /**
     * The default welcome message (translated).
     */
