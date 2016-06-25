@@ -1,7 +1,9 @@
 @import helpers.CalendarHelper.CalendarTile
+@import org.joda.time.DateTime
+@import org.joda.time.Period
 @import org.joda.time.format.DateTimeFormat
 @import org.joda.time.format.DateTimeFormatter
-@(tiles: Seq[CalendarTile], dateFormatter: DateTimeFormatter = DateTimeFormat.forPattern("dd/MM/yyyy"))(implicit messages: Messages, request: play.api.mvc.Request[Any])
+@(tiles: Seq[CalendarTile], startDate: DateTime, dateFormatter: DateTimeFormatter = DateTimeFormat.forPattern("dd/MM/yyyy"))(implicit messages: Messages, request: play.api.mvc.Request[Any])
 
 @*
 * Shows one static line course.
@@ -10,6 +12,23 @@
 
   <div id="full-column">
     <h2>Static line course calendar</h2>
+
+    <div id="sl-course-calendar-filter">
+      <form action="@routes.CourseController.index()" method="get">
+        <dl>
+          <dt><label for="calendar-filter-month">Month</label></dt>
+          <dd>
+            <select id="calendar-filter-month" name="calendar-filter-month">
+              @for(offset <- 1 to 36) {
+                <option value="0">@{startDate.plus(Period.months(offset)).toString("yyyy - MMMM")}</option>
+              }
+            </select>
+          </dd>
+        </dl>
+
+        <button type="submit">View</button>
+      </form>
+    </div>
 
     <div id="sl-course-calendar">
       @for(tile <- tiles) {

@@ -27,7 +27,7 @@ package controllers
 import javax.inject._
 
 import helpers.CalendarHelper
-import org.joda.time.DateTime
+import org.joda.time.{DateTime, Period}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
 
@@ -39,8 +39,9 @@ class CourseController @Inject() (val messagesApi: MessagesApi) extends Controll
   def index(): Action[AnyContent] = Action { implicit request =>
     val selectedMonth = DateTime.now()
     val tiles = CalendarHelper.getTiles(selectedMonth, selectedMonth)
+    val startDate = new DateTime(DateTime.now().getYear, 1, 1, 0, 0).minus(Period.years(1))
 
-    Ok(views.html.admin.course_calendar(tiles))
+    Ok(views.html.admin.course_calendar(tiles, startDate))
   }
 
   def view(id: Int): Action[AnyContent] = Action { implicit request =>
