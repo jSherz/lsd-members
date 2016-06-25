@@ -54,22 +54,7 @@ object CalendarHelper {
     * @param isNextMonth Is this tile in the month shown after the primary month?
     * @param isToday Does this tile represent today?
     */
-  @SerialVersionUID(2474773603625492787L)
-  case class CalendarTile(date: DateTime, isPreviousMonth: Boolean, isCurrentMonth: Boolean, isNextMonth: Boolean, isToday: Boolean) {
-    /**
-      * Get any custom classes that should be used when displaying this tile.
-      * @return
-      */
-    def customClasses(): String = {
-      if(this.isPreviousMonth || this.isNextMonth) {
-        "tile-other-month"
-      } else if(this.isToday) {
-        "tile-today"
-      } else {
-        ""
-      }
-    }
-  }
+  case class CalendarTile(date: DateTime, isPreviousMonth: Boolean, isCurrentMonth: Boolean, isNextMonth: Boolean, isToday: Boolean)
 
   /**
     * Gets information about the calendar tile with the given month being displayed.

@@ -40,7 +40,7 @@
 
     <div id="sl-course-calendar">
       @for(tile <- tiles) {
-        <a href="#" class="sl-course-calendar-tile @{tile.customClasses()}" title="@tile.date.toString(dateFormatter)">
+        <a href="#" class="sl-course-calendar-tile @{if(tile.isPreviousMonth || tile.isNextMonth) "tile-other-month" else if(tile.isToday) "tile-today"}" title="@tile.date.toString(dateFormatter)">
           <span class="sl-course-calendar-tile-day">@tile.date.dayOfMonth().get()</span>
 
           @*
