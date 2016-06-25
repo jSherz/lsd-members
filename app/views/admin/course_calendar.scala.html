@@ -40,34 +40,24 @@
 
     <div id="sl-course-calendar">
       @for(tile <- tiles) {
-        @tile match {
-          case x if (tile.isPreviousMonth || tile.isNextMonth) => {
-            <a href="#" class="sl-course-calendar-tile tile-other-month" title="@tile.date.toString(dateFormatter)">
-            }
-          case x if(tile.isToday) => {
-            <a href="#" class="sl-course-calendar-tile tile-today" title="@tile.date.toString(dateFormatter)">
-            }
-          case _ => {
-            <a href="#" class="sl-course-calendar-tile" title="@tile.date.toString(dateFormatter)">
-            }
-        }
-        <span class="sl-course-calendar-tile-day">@tile.date.dayOfMonth().get()</span>
+        <a href="#" class="sl-course-calendar-tile @{tile.customClasses()}" title="@tile.date.toString(dateFormatter)">
+          <span class="sl-course-calendar-tile-day">@tile.date.dayOfMonth().get()</span>
 
-        @*
-        * You can chain calls to Math.random() together like this, right? Right????
-        *@
-        @if(Math.random() >= 0.2 && Math.random() <= 0.3) {
-          <div class="sl-course-calendar-tile-info course-full" title="0 Spaces left on this course">
-            0 <span class="course-word-spaces">Spaces</span>
-          </div>
-        } else {
-          @if(Math.random() >= 0.6 && Math.random() <= 0.7) {
-            <div class="sl-course-calendar-tile-info course-spaces" title="7 Spaces left on this course">
-              7 <span class="course-word-spaces">Spaces</span>
+          @*
+          * You can chain calls to Math.random() together like this, right? Right????
+          *@
+          @if(Math.random() >= 0.2 && Math.random() <= 0.3) {
+            <div class="sl-course-calendar-tile-info course-full" title="0 Spaces left on this course">
+              0 <span class="course-word-spaces">Spaces</span>
             </div>
+          } else {
+            @if(Math.random() >= 0.6 && Math.random() <= 0.7) {
+              <div class="sl-course-calendar-tile-info course-spaces" title="7 Spaces left on this course">
+                7 <span class="course-word-spaces">Spaces</span>
+              </div>
+            }
           }
-        }
-      </a>
+        </a>
       }
 
       <div class="clear"></div>

@@ -35,6 +35,21 @@ import org.joda.time.{DateTime, DateTimeZone, Period}
 class CalendarHelperSpec extends BaseSpec {
   val tz = ISOChronology.getInstance(DateTimeZone.UTC)
 
+  "CalendarTile" should {
+    "return the correct custom class based upon the tile's flags" in {
+      val testDT = new DateTime(2016, 6, 25, 17, 18)
+      val tileA = CalendarTile(testDT, isPreviousMonth = true, isCurrentMonth = false, isNextMonth = false, isToday = false)
+      val tileB = CalendarTile(testDT, isPreviousMonth = false, isCurrentMonth = true, isNextMonth = false, isToday = false)
+      val tileC = CalendarTile(testDT, isPreviousMonth = false, isCurrentMonth = false, isNextMonth = true, isToday = false)
+      val tileD = CalendarTile(testDT, isPreviousMonth = false, isCurrentMonth = true, isNextMonth = false, isToday = true)
+
+      tileA.customClasses() mustEqual "tile-other-month"
+      tileB.customClasses() mustEqual ""
+      tileC.customClasses() mustEqual "tile-other-month"
+      tileD.customClasses() mustEqual "tile-today"
+    }
+  }
+
   "CalendarHelper" should {
     "return the correct tiles for months starting in each day of the week" in {
       val fixtureReader = new ObjectInputStream(new FileInputStream("test/fixtures/calendar_tiles.dat"))

@@ -1,15 +1,20 @@
 $tile-width: 7
 $other-month-colour: #AAA
 $today-colour: #cae8ff
+$tile-borders: solid 0.05em #ccc
+
+#sl-course-calendar
+  margin-top: 0.7em
+  border: $tile-borders
 
 .sl-course-calendar-tile
-  width: 96% / $tile-width
+  width: 100% / $tile-width
   height: 5em
-  border: solid 0.1em #ccc
+  border: $tile-borders
   display: block
   float: left
   padding: 1em
-  margin: 0.15em 0
+  margin: 0
   color: #000
 
   &:hover
@@ -60,6 +65,7 @@ $today-colour: #cae8ff
 #sl-course-calendar-navigation
   text-align: center
   padding: 0.3em
+  margin-top: 0.5em
   background-color: lighten($lsd-yellow, 35%)
   
 #sl-course-calendar-nav-left, #sl-course-calendar-filter, #sl-course-calendar-nav-right
