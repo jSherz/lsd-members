@@ -57,12 +57,34 @@ $today-colour: #cae8ff
     .course-word-spaces
       display: none
 
-#sl-course-calendar-filter
-  padding: 0.2em
-  margin: 1em 0
+#sl-course-calendar-navigation
+  text-align: center
+  padding: 0.3em
+  background-color: lighten($lsd-yellow, 35%)
+  
+#sl-course-calendar-nav-left, #sl-course-calendar-filter, #sl-course-calendar-nav-right
+  display: inline-block
 
-  dl, dt, dd, button
+#sl-course-calendar-nav-left, #sl-course-calendar-nav-right
+  font-size: 2em
+
+#sl-course-calendar-nav-left
+  float: left
+  margin: 0.1em 0 0 0.4em
+
+#sl-course-calendar-nav-right
+  float: right
+  margin: 0.1em 0.4em 0 0
+
+#sl-course-calendar-filter
+  label, select, button
     display: inline-block
+    margin: 0 0.2em
+
+  label, select
+    margin-top: 1em
 
   button
     padding: 0.3em
+    font-size: 0.9em
+    margin-bottom: 0.3em
