@@ -28,6 +28,10 @@
               <a href="@routes.AdminController.index">Main</a>
             </li>
 
+            <li role="presentation" class="@("active".when(request.path.startsWith("/admin/courses")))">
+              <a href="@routes.CourseController.index()">Courses</a>
+            </li>
+
             <li role="presentation" class="@("active".when(request.path == "/admin/settings"))">
               <a href="@routes.AdminController.settings">Settings</a>
             </li>
