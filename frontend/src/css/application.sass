@@ -1,0 +1,82 @@
+@import base
+
+#signup-container
+  @include outer-container
+
+  #small-header, #intro-hero, footer
+    @include span-columns(6)
+    @include shift(3)
+
+    @media(max-width: 65em)
+      @include span-columns(8)
+      @include shift(2)
+
+    @media(max-width: 55em)
+      @include span-columns(12)
+      @include shift(0)
+
+nav
+  text-align: right
+
+  li
+    display: inline-block
+
+    a
+      padding: 0.5em 1em
+      display: inline-block
+
+      &:hover
+        background-color: lighten($lsd-blue, 50%)
+        color: #000
+
+    &.active
+      a
+        background-color: $lsd-blue
+        color: white
+
+        &:hover
+          background-color: $lsd-blue
+          color: white
+
+
+  @media(max-width: 45em)
+    ul
+       margin-bottom: 1em
+
+  @media(max-width: 45em)
+     display: none
+
+#intro-hero
+  padding: 2em
+  border: solid 0.2em $lsd-blue
+  border-radius: 0.5em
+  background: white
+
+  @media(max-width: 55em)
+    padding: 1em
+
+#logo
+  width: 25%
+  margin: -3.25em 0 1.2em 0
+
+#sign-up-form
+  label
+    font-size: 2rem
+
+  button
+    background-color: #69D47B
+
+#giphy-link
+  font-size: 0.5em
+
+#go-back-btn
+  @extend button
+
+.error-message
+  @include error-box
+  padding: 0.3em 0.5em
+
+footer
+  text-align: center
+  color: #666
+  font-size: 0.9em

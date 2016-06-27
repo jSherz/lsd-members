@@ -1,0 +1,108 @@
+$tile-width: 7
+$other-month-colour: #AAA
+$today-colour: #cae8ff
+$tile-borders: solid 0.05em #ccc
+
+#sl-course-calendar
+  margin-top: 0.7em
+  border: $tile-borders
+
+.sl-course-calendar-tile, #sl-course-calendar-header > div
+  width: 100% / $tile-width
+  height: 5em
+  border: $tile-borders
+  display: block
+  float: left
+  padding: 1em
+  margin: 0
+  color: #000
+
+  @include media(max-width 64em)
+    padding: 0.5em
+
+.sl-course-calendar-tile
+  &:hover
+    background-color: #fbffc6
+    color: #000
+
+  @include media(max-width 50em)
+    border: solid 0.05em #ccc
+    height: 4em
+    padding: 0.3em
+
+  &.tile-other-month
+    background-color: $other-month-colour
+
+    &:hover
+      background-color: darken($other-month-colour, 15%)
+
+  &.tile-today
+    background-color: $today-colour
+
+    &:hover
+      background-color: darken($today-colour, 15%)
+
+#sl-course-calendar-header > div
+  text-align: center
+  background-color: lighten($lsd-blue, 50%)
+  font-weight: bold
+  
+  .short-form
+    display: none
+
+  @include media(max-width 55em)
+    .full-form
+      display: none
+
+    .short-form
+      display: inline
+
+.sl-course-calendar-tile-info
+  padding: 0.3em
+  border-radius: 0.5em
+  font-size: 0.8em
+  background-color: #eee
+  text-align: center
+
+  &.course-full
+    background-color: #ffaea7
+
+  &.course-spaces
+    background-color: #c6ffc1
+
+  @include media(max-width 50em)
+    .course-word-spaces
+      display: none
+
+#sl-course-calendar-navigation
+  text-align: center
+  padding: 0.3em
+  margin-top: 0.5em
+  background-color: lighten($lsd-yellow, 35%)
+  
+#sl-course-calendar-nav-left, #sl-course-calendar-filter, #sl-course-calendar-nav-right
+  display: inline-block
+
+#sl-course-calendar-nav-left, #sl-course-calendar-nav-right
+  font-size: 2em
+
+#sl-course-calendar-nav-left
+  float: left
+  margin: 0.1em 0 0 0.4em
+
+#sl-course-calendar-nav-right
+  float: right
+  margin: 0.1em 0.4em 0 0
+
+#sl-course-calendar-filter
+  label, select, button
+    display: inline-block
+    margin: 0 0.2em
+
+  label, select
+    margin-top: 1em
+
+  button
+    padding: 0.3em
+    font-size: 0.9em
+    margin-bottom: 0.3em

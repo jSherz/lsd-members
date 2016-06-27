@@ -1,0 +1,96 @@
+// sl-course-students-id
+// sl-course-students-name
+// sl-course-students-date-joined
+// sl-course-students-info-complete
+// sl-course-students-forms-complete
+// sl-course-students-reg-langar
+// sl-course-students-options
+
+#sl-course-info
+  margin: 0.5em 0 1em 0
+
+  dt, dd
+    display: block
+    float: left
+    padding: 0.2em
+    margin-bottom: 0.5em
+
+  dt
+    clear: left
+    background-color: #eeeeee
+    border-radius: 0.5em
+    margin-right: 0.5em
+
+  dd
+    border-bottom: 0.1em dotted #ccc
+
+$sl-course-students-border: solid 0.08em #ccc
+
+#sl-course-students
+  border: $sl-course-students-border
+
+  thead
+    th
+      background-color: #eee
+      letter-spacing: 0.1em
+
+  td, th
+    padding: 0.5em
+    border: $sl-course-students-border
+
+#sl-course-students-id
+  width: 5%
+
+#sl-course-students-date-joined
+  width: 15%
+
+#sl-course-students-info-complete
+  width: 10%
+
+#sl-course-students-forms-complete
+  width: 10%
+
+#sl-course-students-reg-langar
+  width: 10%
+
+#sl-course-students-options
+  width: 15%
+
+.sl-course-students-remove, .sl-course-students-contact, .sl-course-students-edit-member
+  padding: 0.5em
+
+@include media(max-width 68em)
+  #sl-course-students
+    thead
+      display: none
+
+    td
+      display: block
+      width: 100%
+
+  .sl-course-students-id:before, .sl-course-students-name:before, .sl-course-students-date-joined:before,
+  .sl-course-students-info-complete:before, .sl-course-students-forms-complete:before, .sl-course-students-reg-langar:before,
+  .sl-course-students-options:before
+    font-weight: bold
+    margin-right: 0.5em
+
+  .sl-course-students-id
+    background-color: #eee
+
+    &:before
+      content: 'Space #:'
+
+  .sl-course-students-name:before
+    content: 'Name:'
+
+  .sl-course-students-date-joined:before
+    content: 'Date joined:'
+
+  .sl-course-students-info-complete:before
+    content: 'Info complete:'
+
+  .sl-course-students-forms-complete:before
+    content: 'Forms complete:'
+
+  .sl-course-students-reg-langar:before
+    content: 'Reg. /w Langar:'

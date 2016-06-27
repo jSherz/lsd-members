@@ -1,3 +1,21 @@
-<h1>
-  {{title}}
-</h1>
+<div id="signup-container">
+  <div id="small-header">
+    <nav>
+      <ul>
+        <li role="presentation" class="#">
+          <a href="#">Main</a>
+        </li>
+        <li role="presentation" class="#">
+          <a href="#">Alt</a>
+        </li>
+      </ul>
+    </nav>
+    <img id="logo" src="assets/images/header.png" title="Leeds University Skydivers" alt="Leeds University Skydivers logo">
+  </div>
+
+  <router-outlet></router-outlet>
+
+  <footer class="footer">
+    <p>&copy; 2016 Leeds University Skydivers</p>
+  </footer>
+</div>
