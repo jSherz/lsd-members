@@ -33,7 +33,10 @@
             </li>
           </ul>
         </nav>
-        <img id="logo" src="@routes.Assets.versioned("images/header.png")" title="Leeds University Skydivers" alt="Leeds University Skydivers logo">
+
+        <a href="@routes.AdminController.index()" title="Admin homepage">
+          <img id="logo" src="@routes.Assets.versioned("images/header.png")" title="Leeds University Skydivers" alt="Leeds University Skydivers logo">
+        </a>
       </div>
 
       @content
