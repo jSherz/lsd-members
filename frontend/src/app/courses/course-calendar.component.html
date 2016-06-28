@@ -1,0 +1,74 @@
+<div id="full-column">
+  <h2>Static line course calendar</h2>
+
+  <div id="sl-course-calendar-navigation">
+    <div id="sl-course-calendar-nav-left">
+      <a href="#"><i class="fa fa-arrow-circle-left"></i></a>
+    </div>
+
+    <div id="sl-course-calendar-filter">
+      <label for="calendar-filter-month">Month</label>
+      <select id="calendar-filter-month" name="calendar-filter-month">
+        <option *ngFor="" value="0"></option>
+      </select>
+
+      <button type="submit">View</button>
+    </div>
+
+    <div id="sl-course-calendar-nav-right">
+      <a href="#"><i class="fa fa-arrow-circle-right"></i></a>
+    </div>
+
+    <div class="clear"></div>
+  </div>
+
+  <div id="sl-course-calendar">
+    <div id="sl-course-calendar-header">
+      <div>
+        <span class="full-form">Monday</span>
+        <span class="short-form">Mon</span>
+      </div>
+      <div>
+        <span class="full-form">Tuesday</span>
+        <span class="short-form">Tue</span>
+      </div>
+      <div>
+        <span class="full-form">Wednesday</span>
+        <span class="short-form">Wed</span>
+      </div>
+      <div>
+        <span class="full-form">Thursday</span>
+        <span class="short-form">Thur</span>
+      </div>
+      <div>
+        <span class="full-form">Friday</span>
+        <span class="short-form">Fri</span>
+      </div>
+      <div>
+        <span class="full-form">Saturday</span>
+        <span class="short-form">Sat</span>
+      </div>
+      <div>
+        <span class="full-form">Sunday</span>
+        <span class="short-form">Sun</span>
+      </div>
+    </div>
+
+    <!-- @{if(tile.isPreviousMonth || tile.isNextMonth) "tile-other-month" else if(tile.isToday) "tile-today"}" -->
+    <!-- @tile.date.toString(dateFormatter) -->
+    <!-- @tile.date.dayOfMonth().get() -->
+    <a href="#" class="sl-course-calendar-tile" title="{{tile.date.format('dddd, MMMM Do YYYY')}}" *ngFor="let tile of tiles">
+      <span class="sl-course-calendar-tile-day">{{tile.date.date()}}</span>
+
+      <div class="sl-course-calendar-tile-info course-full" title="0 Spaces left on this course">
+        0 <span class="course-word-spaces">Spaces</span>
+      </div>
+
+      <div class="sl-course-calendar-tile-info course-spaces" title="7 Spaces left on this course">
+        7 <span class="course-word-spaces">Spaces</span>
+      </div>
+    </a>
+
+    <div class="clear"></div>
+  </div>
+</div>
