@@ -1,42 +1,41 @@
-@import 'base'
-
-#logo
-  width: 9.67rem
-  margin: -3.25em 0 1.2em 0
-
-nav
-  text-align: right
-
-  li
-    display: inline-block
-
-    a
-      padding: 0.5em 1em
-      display: inline-block
-
-      &:hover
-        background-color: lighten($lsd-blue, 50%)
-        color: #000
-
-    &.active
-      a
-        background-color: $lsd-blue
-        color: white
-
-        &:hover
-          background-color: $lsd-blue
-          color: white
-
 code
   font-size: 0.8em
   background-color: #ccc
   padding: 0.2em
 
+
 #admin-container
   @include outer-container
 
-#nav-container
-  @include span-columns(12)
+  #logo
+    width: 9.67rem
+    margin: -3.25em 0 1.2em 0
+
+  nav
+    text-align: right
+
+    li
+      display: inline-block
+
+      a
+        padding: 0.5em 1em
+        display: inline-block
+
+        &:hover
+          background-color: lighten($lsd-blue, 50%)
+          color: #000
+
+      &.active
+        a
+          background-color: $lsd-blue
+          color: white
+
+          &:hover
+            background-color: $lsd-blue
+            color: white
+
+  #nav-container
+    @include span-columns(12)
 
 #left-column
   @include span-columns(4)
@@ -49,7 +48,7 @@ code
 #right-column
   @include span-columns(4)
   border: solid 0.15em $lsd-red
-  @include omega()
+    @include omega()
 
 #left-column, #middle-column, #right-column, #full-column
   background: white
