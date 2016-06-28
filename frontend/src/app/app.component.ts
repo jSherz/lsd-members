@@ -12,6 +12,5 @@ import { NavComponent } from './utils/nav.component'
     NavComponent
   ]
 })
-export class AppComponent {
-  title = 'app works!';
-}
+
+export class AppComponent { }
