@@ -26,6 +26,7 @@
     "app/index.ts",
     "app/shared/index.ts",
     "app/signup/signup-alt.component.ts",
+    "app/signup/signup.component.spec.ts",
     "app/signup/signup.component.ts",
     "app/signup/signup.service.spec.ts",
     "app/signup/signup.service.ts",

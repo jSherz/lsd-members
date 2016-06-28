@@ -12,4 +12,9 @@ describe('luskydive App', function() {
     expect(page.getParagraphText()).toContain('Name');
     expect(page.getParagraphText()).toContain('Phone number');
   });
+
+  it('should have the correct title', () => {
+    page.navigateTo();
+    expect(page.getTitle()).toEqual('Sign-up - Leeds University Skydivers');
+  });
 });

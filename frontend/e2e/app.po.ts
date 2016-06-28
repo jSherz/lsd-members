@@ -6,4 +6,8 @@ export class LuskydivePage {
   getParagraphText() {
     return element(by.css('app-root')).getText();
   }
+
+  getTitle() {
+    return element(by.css('title')).getInnerHtml();
+  }
 }
