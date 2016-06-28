@@ -15,6 +15,9 @@
     "target": "es5",
     "inlineSources": true
   },
+  "filesGlob": [
+    "**/*.ts"
+  ],
   "files": [
     "app/app.component.spec.ts",
     "app/app.component.ts",
@@ -22,6 +25,7 @@
     "app/environment.ts",
     "app/index.ts",
     "app/shared/index.ts",
+    "app/signup/signup-alt.component.ts",
     "app/signup/signup.component.ts",
     "app/utils/nav.component.ts",
     "main.ts",
