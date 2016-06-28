@@ -1,0 +1,19 @@
+<div id="intro-hero">
+  <ul>
+    <li *ngFor="let error of errors">{{ error }}</li>
+  </ul>
+
+  <div id="sign-up-form">
+      <div>
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" placeholder="My name is ________ and I love skydiving!" value="">
+      </div>
+
+      <div>
+         <label for="email_address">E-mail address</label>
+         <input type="text" id="email_address" name="email_address" placeholder="Your main e-mail address, not the uni one please." value="">
+      </div>
+
+      <button type="submit">Sign me up!</button>
+  </div>
+</div>
