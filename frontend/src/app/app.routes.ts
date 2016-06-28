@@ -1,6 +1,5 @@
 import { provideRouter, RouterConfig } from '@angular/router';
 
-import { AppComponent } from './app.component';
 import { SignupComponent } from './signup/signup.component';
 
 export const routes: RouterConfig = [
