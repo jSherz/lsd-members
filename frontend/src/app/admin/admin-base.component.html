@@ -1,0 +1,21 @@
+<div id="admin-container">
+  <div id="nav-container">
+    <nav>
+      <ul>
+        <nav-item href="/admin" link-text="Home"></nav-item>
+        <nav-item href="/admin/courses/calendar" link-text="Courses"></nav-item>
+        <nav-item href="/admin/settings" link-text="Settings"></nav-item>
+      </ul>
+    </nav>
+
+    <a [routerLink]="['/admin']" title="Admin homepage">
+      <img id="logo" src="assets/images/header.png" title="Leeds University Skydivers" alt="Leeds University Skydivers logo">
+    </a>
+  </div>
+
+  <router-outlet></router-outlet>
+
+  <footer class="footer">
+    <p>&copy; 2016 Leeds University Skydivers</p>
+  </footer>
+</div>

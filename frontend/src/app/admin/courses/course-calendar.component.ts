@@ -3,7 +3,6 @@ import * as moment from 'moment';
 
 @Component({
   moduleId: module.id,
-  selector: 'app-course-calendar',
   templateUrl: 'course-calendar.component.html'
 })
 export class CourseCalendarComponent implements OnInit {
