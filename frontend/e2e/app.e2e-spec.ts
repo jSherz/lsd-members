@@ -7,8 +7,9 @@ describe('luskydive App', function() {
     page = new LuskydivePage();
   });
 
-  it('should display message saying app works', () => {
+  it('should display the main form by default', () => {
     page.navigateTo();
-    expect(page.getParagraphText()).toEqual('app works!');
+    expect(page.getParagraphText()).toContain('Name');
+    expect(page.getParagraphText()).toContain('Phone number');
   });
 });
