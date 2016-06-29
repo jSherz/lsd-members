@@ -8,6 +8,6 @@ import { AppComponent } from '../app.component';
 
 export class SignupComponent {
   constructor(private appComponent: AppComponent) {
-    appComponent.setTitle('Sign-up')
+    appComponent.setTitle('Sign-up');
   }
 }

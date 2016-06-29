@@ -1,4 +1,4 @@
-import { ROUTER_DIRECTIVES, provideRouter, RouterConfig } from '@angular/router';
+import { RouterConfig } from '@angular/router';
 
 import { AdminBaseComponent } from './admin-base.component';
 import { CourseCalendarComponent } from './courses/course-calendar.component';
@@ -12,4 +12,4 @@ export const AdminRoutes: RouterConfig = [
       // { path: 'courses/:id', component: SignupAltComponent }
     ]
   }
-]
+];

@@ -19,10 +19,10 @@ export class AppComponent {
   private titleService: Title = new Title();
 
   setTitle = function (newTitle: String) {
-    if (newTitle != undefined && newTitle != '') {
+    if (newTitle !== undefined && newTitle !== '') {
       this.titleService.setTitle(`${newTitle} - ${this.siteTitle}`);
     } else {
       this.titleService.setTitle(this.siteTitle);
     }
-  }
+  };
 }

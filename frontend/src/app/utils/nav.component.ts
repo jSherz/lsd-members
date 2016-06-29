@@ -11,5 +11,5 @@ import { ROUTER_DIRECTIVES } from '@angular/router';
 export class NavComponent {
   @Input() href: String;
 
-  @Input('link-text') linkText: String;
+  @Input() linkText: String;
 }
