@@ -9,7 +9,9 @@
     <div id="sl-course-calendar-filter">
       <label for="calendar-filter-month">Month</label>
       <select id="calendar-filter-month" name="calendar-filter-month">
-        <option *ngFor="" value="0"></option>
+        <option *ngFor="let month of months" [value]="month.toISOString()">
+          {{month.format('YYYY - MMMM')}}
+        </option>
       </select>
 
       <button type="submit">View</button>
