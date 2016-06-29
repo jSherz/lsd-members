@@ -25,6 +25,8 @@
     "app/admin/courses/course-calendar.component.spec.ts",
     "app/admin/courses/course-calendar.component.ts",
     "app/admin/courses/index.ts",
+    "app/admin/courses/month.service.spec.ts",
+    "app/admin/courses/month.service.ts",
     "app/admin/index.ts",
     "app/app.component.spec.ts",
     "app/app.component.ts",
