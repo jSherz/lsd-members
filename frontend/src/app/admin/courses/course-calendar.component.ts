@@ -11,9 +11,17 @@ export class CourseCalendarComponent implements OnInit {
 
   private startMonth = moment().subtract(1, 'years');
 
-  constructor(private monthService: MonthService) {}
+  private today = moment();
+
+  constructor(private monthService: MonthService) { }
 
   months = this.monthService.get(moment());
+
+  currentMonth = moment([this.today.year(), this.today.month(), 1])
+
+  previousMonth = this.currentMonth.clone().subtract(1, 'months')
+
+  nextMonth = this.currentMonth.clone().add(1, 'months')
 
   ngOnInit() { }
 
