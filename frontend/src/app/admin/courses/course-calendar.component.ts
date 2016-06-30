@@ -12,8 +12,6 @@ import { MonthService }                      from './month.service';
 })
 export class CourseCalendarComponent implements OnInit {
 
-  private startMonth = moment().subtract(1, 'years');
-
   private displayMonth = moment();
 
   private displayMonthSub: Subscription;
