@@ -8,6 +8,7 @@ export const AdminRoutes: RouterConfig = [
     path: 'admin',
     component: AdminBaseComponent,
     children: [
+      { path: 'courses/calendar/:year/:month', component: CourseCalendarComponent },
       { path: 'courses/calendar', component: CourseCalendarComponent }
       // { path: 'courses/:id', component: SignupAltComponent }
     ]

@@ -3,7 +3,9 @@
 
   <div id="sl-course-calendar-navigation">
     <div id="sl-course-calendar-nav-left">
-      <a href="#"><i class="fa fa-arrow-circle-left"></i></a>
+      <a [routerLink]="['/admin/courses/calendar', previousMonth.year(), previousMonth.month() + 1]">
+        <i class="fa fa-arrow-circle-left"></i>
+      </a>
     </div>
 
     <div id="sl-course-calendar-filter">
@@ -18,7 +20,9 @@
     </div>
 
     <div id="sl-course-calendar-nav-right">
-      <a href="#"><i class="fa fa-arrow-circle-right"></i></a>
+      <a [routerLink]="['/admin/courses/calendar', nextMonth.year(), nextMonth.month() + 1]">
+        <i class="fa fa-arrow-circle-right"></i>
+      </a>
     </div>
 
     <div class="clear"></div>
