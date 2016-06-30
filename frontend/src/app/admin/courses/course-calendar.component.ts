@@ -1,4 +1,4 @@
-import { Component, OnInit }                 from '@angular/core';
+import { Component, OnInit, OnDestroy }      from '@angular/core';
 import { ROUTER_DIRECTIVES, ActivatedRoute } from '@angular/router';
 import { Subscription }                      from 'rxjs/Subscription';
 import * as moment                           from 'moment';
@@ -10,7 +10,7 @@ import { MonthService }                      from './month.service';
   providers: [MonthService],
   directives: [ROUTER_DIRECTIVES]
 })
-export class CourseCalendarComponent implements OnInit {
+export class CourseCalendarComponent implements OnInit, OnDestroy {
 
   private displayMonth = moment();
 
@@ -26,10 +26,10 @@ export class CourseCalendarComponent implements OnInit {
   private updateCalendar() {
     this.months = this.monthService.get(this.displayMonth);
 
-    this.currentMonth = moment([this.displayMonth.year(), this.displayMonth.month(), 1])
+    this.currentMonth = moment([this.displayMonth.year(), this.displayMonth.month(), 1]);
 
-    this.previousMonth = this.currentMonth.clone().subtract(1, 'months')
-    this.nextMonth = this.currentMonth.clone().add(1, 'months')
+    this.previousMonth = this.currentMonth.clone().subtract(1, 'months');
+    this.nextMonth = this.currentMonth.clone().add(1, 'months');
   }
 
   ngOnInit() {

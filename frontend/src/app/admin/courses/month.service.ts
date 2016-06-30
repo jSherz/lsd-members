@@ -4,7 +4,7 @@ import * as moment    from 'moment';
 @Injectable()
 export class MonthService {
   private range(size: Number): Number[] {
-    return Array(size).fill(0).map((_, i) => i + 1)
+    return Array(size).fill(0).map((_, i) => i + 1);
   }
 
   get(currentMonth: moment.Moment): moment.Moment[] {
