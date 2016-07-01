@@ -3,11 +3,12 @@ import { ROUTER_DIRECTIVES, ActivatedRoute } from '@angular/router';
 import { Subscription }                      from 'rxjs/Subscription';
 import * as moment                           from 'moment';
 import { MonthService }                      from './month.service';
+import { Tile, TileService }                 from './tile.service';
 
 @Component({
   moduleId: module.id,
   templateUrl: 'course-calendar.component.html',
-  providers: [MonthService],
+  providers: [MonthService, TileService],
   directives: [ROUTER_DIRECTIVES]
 })
 export class CourseCalendarComponent implements OnInit, OnDestroy {
@@ -20,8 +21,12 @@ export class CourseCalendarComponent implements OnInit, OnDestroy {
   currentMonth: moment.Moment;
   previousMonth: moment.Moment;
   nextMonth: moment.Moment;
+  tiles: Tile[];
 
-  constructor(private monthService: MonthService, private route: ActivatedRoute) { }
+  constructor(
+    private monthService: MonthService,
+    private route: ActivatedRoute,
+    private tileService: TileService) { }
 
   private updateCalendar() {
     this.months = this.monthService.get(this.displayMonth);
@@ -30,6 +35,8 @@ export class CourseCalendarComponent implements OnInit, OnDestroy {
 
     this.previousMonth = this.currentMonth.clone().subtract(1, 'months');
     this.nextMonth = this.currentMonth.clone().add(1, 'months');
+
+    this.tiles = this.tileService.getTiles(this.currentMonth, moment());
   }
 
   ngOnInit() {

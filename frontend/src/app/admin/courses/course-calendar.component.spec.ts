@@ -15,6 +15,7 @@ import {
 } from '@angular/core/testing';
 
 import { MonthService }            from './month.service';
+import { TileService }             from './tile.service';
 import { CourseCalendarComponent } from './course-calendar.component';
 
 type UrlParams = { [key: string]: any; }
@@ -34,7 +35,9 @@ let mockComp = function(
 
   let monthService = new MonthService();
 
-  let component = new CourseCalendarComponent(monthService, activatedRoute);
+  let tileService = new TileService();
+
+  let component = new CourseCalendarComponent(monthService, activatedRoute, tileService);
   component.ngOnInit();
 
   return component;
