@@ -4,11 +4,21 @@ import * as moment from 'moment';
 export const TILES_PER_CALENDAR = 42;
 
 export class Tile {
+  date: moment.Moment;
+  isPreviousMonth: boolean;
+  isNextMonth: boolean;
+  isToday: boolean;
+
   constructor (
     date: moment.Moment,
     isPreviousMonth: boolean,
     isNextMonth: boolean,
-    isToday: boolean) {}
+    isToday: boolean) {
+      this.date = date;
+      this.isPreviousMonth = isPreviousMonth;
+      this.isNextMonth = isNextMonth;
+      this.isToday = isToday;
+    }
 }
 
 @Injectable()
@@ -19,29 +29,31 @@ export class TileService {
   getTiles(month: moment.Moment, currentDay: moment.Moment): Tile[] {
     let firstDay = this.firstDayOfMonth(month);
 
-    let daysOfPrevMonth = this.numDaysOfPreviousMonth(firstDay.date());
+    let daysOfPrevMonth = this.numDaysOfPreviousMonth(firstDay.day());
     let daysOfPrimaryMonth = firstDay.daysInMonth();
     let daysOfNextMonth = TILES_PER_CALENDAR - daysOfPrimaryMonth - daysOfPrevMonth;
 
-    let nextMonth = firstDay.add(1, 'months');
+    let nextMonth = firstDay.clone().add(1, 'months');
 
-    return this.rangeOfDates(firstDay.subtract(daysOfPrevMonth, 'days'), daysOfPrevMonth).
+    return this.rangeOfDates(firstDay.clone().subtract(daysOfPrevMonth, 'days'), daysOfPrevMonth).
       concat(this.rangeOfDates(firstDay, daysOfPrimaryMonth)).
       concat(this.rangeOfDates(nextMonth, daysOfNextMonth)).
       map(x => this.toTile(firstDay, nextMonth, currentDay, x));
   }
 
   private rangeOfDates(startingDate: moment.Moment, rangeSize: number): moment.Moment[] {
-    return Array(rangeSize).fill(0).map((_, offset) => startingDate.add(offset, 'days'));
+    return Array(rangeSize).fill(0).map((_, offset) => startingDate.clone().add(offset, 'days'));
   }
 
   private numDaysOfPreviousMonth(dayOfWeek: number): number {
-    // Show 7 days if it's a Monday
-    if (dayOfWeek === 1 /* Monday */) {
-      return 7;
-    } else {
-      // If not, show 1 for Tuesday, 2 for Wednesday, etc..
-      return dayOfWeek - 1;
+    switch (dayOfWeek) {
+      case 0: return 6; // Sunday
+      case 1: return 7; // Monday
+      case 2: return 1;
+      case 3: return 2;
+      case 4: return 3;
+      case 5: return 4;
+      case 6: return 5; // Saturday
     }
   }
 
