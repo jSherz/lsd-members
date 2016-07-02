@@ -68,4 +68,27 @@ describe('Tile Service', () => {
       expect(results[0].date).toBeSameAs(correctStartDate);
     });
   });
+
+  it('should highlight the current day correctly', () => {
+    // A day in a month and the index (of generated tiles) we'd expect to be the
+    // current today (_.isToday == true)
+    let examples: [moment.Moment, number][] = [
+      [moment([2016, 5, 15]), 16],
+      [moment([2016, 6, 1]),  4],
+      [moment([2016, 7, 18]), 24]
+    ]
+
+    examples.map(([dayInMonth, expectedTodayIndex]) => {
+      let startOfMonth = moment([dayInMonth.year(), dayInMonth.month(), 1]);
+      let tiles = service.getTiles(startOfMonth, dayInMonth);
+
+      for (var i = 0; i < tiles.length; i++) {
+        if (i == expectedTodayIndex) {
+          expect(tiles[i].isToday).toEqual(true);
+        } else {
+          expect(tiles[i].isToday).toEqual(false);
+        }
+      }
+    });
+  });
 });

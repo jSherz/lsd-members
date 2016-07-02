@@ -26,8 +26,9 @@ export class TileService {
 
   constructor() {}
 
-  getTiles(month: moment.Moment, currentDay: moment.Moment): Tile[] {
+  getTiles(month: moment.Moment, rawCurrentDay: moment.Moment): Tile[] {
     let firstDay = this.firstDayOfMonth(month);
+    let currentDay = this.stripTime(rawCurrentDay);
 
     let daysOfPrevMonth = this.numDaysOfPreviousMonth(firstDay.day());
     let daysOfPrimaryMonth = firstDay.daysInMonth();
@@ -61,12 +62,17 @@ export class TileService {
     return moment([day.year(), day.month(), 1]);
   }
 
+  private stripTime(input: moment.Moment): moment.Moment {
+    return moment([input.year(), input.month(), input.date()]);
+  }
+
   private toTile(month: moment.Moment, nextMonth: moment.Moment, today: moment.Moment,
     inputDate: moment.Moment): Tile {
-      let isPreviousMonth = inputDate.isBefore(month);
-      let isNextMonth = inputDate.isSame(nextMonth) || inputDate.isAfter(nextMonth);
-      let isToday = inputDate.isSame(today);
 
-      return new Tile(inputDate, isPreviousMonth, isNextMonth, isToday);
-    }
+    let isPreviousMonth = inputDate.isBefore(month);
+    let isNextMonth = inputDate.isSame(nextMonth) || inputDate.isAfter(nextMonth);
+    let isToday = inputDate.isSame(today);
+
+    return new Tile(inputDate, isPreviousMonth, isNextMonth, isToday);
+  }
 }
