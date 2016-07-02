@@ -1,8 +1,8 @@
 <div id="full-column">
   <h2>Static line course calendar</h2>
 
-  <div id="sl-course-calendar-navigation">
-    <div id="sl-course-calendar-nav-left">
+  <div class="sl-course-calendar-navigation">
+    <div class="sl-course-calendar-nav-left">
       <a [routerLink]="['/admin/courses/calendar', previousMonth.year(), previousMonth.month() + 1]">
         <i class="fa fa-arrow-circle-left"></i>
       </a>
@@ -19,7 +19,7 @@
       <button type="submit">View</button>
     </div>
 
-    <div id="sl-course-calendar-nav-right">
+    <div class="sl-course-calendar-nav-right">
       <a [routerLink]="['/admin/courses/calendar', nextMonth.year(), nextMonth.month() + 1]">
         <i class="fa fa-arrow-circle-right"></i>
       </a>
@@ -61,6 +61,22 @@
     </div>
 
     <calendar-tile *ngFor="let tile of tiles" [tile]="tile"></calendar-tile>
+
+    <div class="clear"></div>
+  </div>
+
+  <div class="sl-course-calendar-navigation">
+    <div class="sl-course-calendar-nav-left">
+      <a [routerLink]="['/admin/courses/calendar', previousMonth.year(), previousMonth.month() + 1]">
+        <i class="fa fa-arrow-circle-left"></i>
+      </a>
+    </div>
+
+    <div class="sl-course-calendar-nav-right">
+      <a [routerLink]="['/admin/courses/calendar', nextMonth.year(), nextMonth.month() + 1]">
+        <i class="fa fa-arrow-circle-right"></i>
+      </a>
+    </div>
 
     <div class="clear"></div>
   </div>
