@@ -29,6 +29,8 @@
     "app/admin/courses/index.ts",
     "app/admin/courses/month.service.spec.ts",
     "app/admin/courses/month.service.ts",
+    "app/admin/courses/tile.component.spec.ts",
+    "app/admin/courses/tile.component.ts",
     "app/admin/courses/tile.service.spec.ts",
     "app/admin/courses/tile.service.ts",
     "app/admin/index.ts",

@@ -4,12 +4,13 @@ import { Subscription }                      from 'rxjs/Subscription';
 import * as moment                           from 'moment';
 import { MonthService }                      from './month.service';
 import { Tile, TileService }                 from './tile.service';
+import { TileComponent }                     from './tile.component';
 
 @Component({
   moduleId: module.id,
   templateUrl: 'course-calendar.component.html',
   providers: [MonthService, TileService],
-  directives: [ROUTER_DIRECTIVES]
+  directives: [ROUTER_DIRECTIVES, TileComponent]
 })
 export class CourseCalendarComponent implements OnInit, OnDestroy {
 
