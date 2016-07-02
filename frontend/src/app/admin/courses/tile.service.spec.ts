@@ -7,6 +7,7 @@ import {
   async, inject
 } from '@angular/core/testing';
 import * as moment from 'moment';
+import { MOMENT_MATCHERS } from './../utils/moment-matchers';
 
 import { Tile, TileService } from './tile.service';
 
