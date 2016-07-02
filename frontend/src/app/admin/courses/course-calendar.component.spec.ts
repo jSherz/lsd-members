@@ -17,6 +17,7 @@ import {
 import { MonthService }            from './month.service';
 import { TileService }             from './tile.service';
 import { CourseCalendarComponent } from './course-calendar.component';
+import { MOMENT_MATCHER }          from '../../utils/moment-matcher';
 
 type UrlParams = { [key: string]: any; }
 
@@ -43,6 +44,8 @@ let mockComp = function(
   return component;
 };
 
+beforeEach(() => jasmine.addMatchers(MOMENT_MATCHER));
+
 describe('Component: CourseCalendar', () => {
   it('should create an instance', () => {
     let app = mockComp();
@@ -58,9 +61,9 @@ describe('Component: CourseCalendar', () => {
     let app = mockComp();
     let today = moment();
 
-    expect(app.previousMonth.isSame(moment([today.year(), today.month() - 1, 1]))).toEqual(true);
-    expect(app.currentMonth.isSame(moment([today.year(), today.month(), 1]))).toEqual(true);
-    expect(app.nextMonth.isSame(moment([today.year(), today.month() + 1, 1]))).toEqual(true);
+    expect(app.previousMonth).toBeSameAs(moment([today.year(), today.month() - 1, 1]));
+    expect(app.currentMonth).toBeSameAs(moment([today.year(), today.month(), 1]));
+    expect(app.nextMonth).toBeSameAs(moment([today.year(), today.month() + 1, 1]));
   });
 
   it('should show the specified year and month if provided', () => {
@@ -69,8 +72,8 @@ describe('Component: CourseCalendar', () => {
       {'year': '2017', 'month': '5'}
     );
 
-    expect(app.previousMonth.isSame(moment([2017, 3, 1]))).toEqual(true);
-    expect(app.currentMonth.isSame(moment([2017, 4, 1]))).toEqual(true);
-    expect(app.nextMonth.isSame(moment([2017, 5, 1]))).toEqual(true);
+    expect(app.previousMonth).toBeSameAs(moment([2017, 3, 1]));
+    expect(app.currentMonth).toBeSameAs(moment([2017, 4, 1]));
+    expect(app.nextMonth).toBeSameAs(moment([2017, 5, 1]));
   });
 });

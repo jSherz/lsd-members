@@ -7,9 +7,9 @@ import {
   async, inject
 } from '@angular/core/testing';
 import * as moment from 'moment';
-import { MOMENT_MATCHERS } from './../utils/moment-matchers';
 
 import { Tile, TileService } from './tile.service';
+import { MOMENT_MATCHER } from '../../utils/moment-matcher';
 
 describe('Tile Service', () => {
   beforeEachProviders(() => [TileService]);
@@ -27,6 +27,8 @@ describe('Tile Service', () => {
       service.getTiles(moment([2016, 6, 1]), moment([2016, 6, 1])),
       service.getTiles(moment([2016, 7, 1]), moment([2016, 7, 3]))
     ];
+
+    jasmine.addMatchers(MOMENT_MATCHER);
   });
 
   it('should always return 42 tiles', () => {
@@ -39,7 +41,7 @@ describe('Tile Service', () => {
 
       for (var i = 1; i < sample.length; i++) {
         expect(sample[i].date.isAfter(lastTile.date)).toEqual(true);
-        expect(sample[i].date.clone().subtract(1, 'days').isSame(lastTile.date)).toEqual(true);
+        expect(sample[i].date.clone().subtract(1, 'days')).toBeSameAs(lastTile.date);
 
         lastTile = sample[i];
       }
@@ -63,7 +65,7 @@ describe('Tile Service', () => {
       let results: Tile[] = service.getTiles(firstOfMonth, firstOfMonth);
       let correctStartDate = firstOfMonth.clone().subtract(expectedNumDays, 'days');
 
-      expect(results[0].date.isSame(correctStartDate)).toEqual(true);
+      expect(results[0].date).toBeSameAs(correctStartDate);
     });
   });
 });

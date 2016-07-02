@@ -6,12 +6,15 @@ import {
   expect, it, xit,
   async, inject
 } from '@angular/core/testing';
-import * as moment      from 'moment';
-import { Moment }       from 'moment';
-import { MonthService } from './month.service';
+import * as moment        from 'moment';
+import { Moment }         from 'moment';
+import { MonthService }   from './month.service';
+import { MOMENT_MATCHER } from '../../utils/moment-matcher';
 
 describe('Month Service', () => {
   beforeEachProviders(() => [MonthService]);
+
+  beforeEach(() => jasmine.addMatchers(MOMENT_MATCHER));
 
   let testDate = moment();
 
@@ -40,7 +43,7 @@ describe('Month Service', () => {
     let actual = service.get(startMonth);
 
     for (let i = 0; i < expected.length; i++) {
-      expect(expected[i].isSame(actual[i])).toEqual(true);
+      expect(expected[i]).toBeSameAs(actual[i]);
     }
   }));
 });
