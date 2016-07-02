@@ -8,6 +8,7 @@ import { TileComponent }                     from './tile.component';
 
 @Component({
   moduleId: module.id,
+  selector: 'div',
   templateUrl: 'course-calendar.component.html',
   providers: [MonthService, TileService],
   directives: [ROUTER_DIRECTIVES, TileComponent]

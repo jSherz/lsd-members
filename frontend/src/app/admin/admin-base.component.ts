@@ -5,6 +5,7 @@ import { NavComponent } from '../utils/nav.component';
 
 @Component({
   moduleId: module.id,
+  selector: 'div',
   templateUrl: 'admin-base.component.html',
   directives: [
     ROUTER_DIRECTIVES,
