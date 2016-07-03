@@ -1,4 +1,4 @@
-organization  := "com.example"
+organization  := "com.jsherz"
 
 version       := "0.1"
 
