@@ -26,15 +26,19 @@ package com.jsherz.luskydive.dao
 
 import java.sql.Timestamp
 
-import models.{Member, Setting, TextMessage, TextMessageError}
-import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
+import com.jsherz.luskydive.models._
+import slick.backend.DatabaseConfig
 import slick.driver.JdbcProfile
-import slick.lifted.ForeignKeyQuery
 
 /**
   * All of the database tables, modelled as Slick objects.
   */
-class Tables (protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
+class Tables (protected val dbConfig: DatabaseConfig[JdbcProfile]) {
+
+  protected final lazy val driver: JdbcProfile = dbConfig.driver
+
+  protected final def db: JdbcProfile#Backend#Database = dbConfig.db
+
   import driver.api._
 
   /**

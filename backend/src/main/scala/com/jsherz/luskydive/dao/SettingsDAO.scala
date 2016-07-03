@@ -24,10 +24,9 @@
 
 package com.jsherz.luskydive.dao
 
-import javax.inject.Inject
-
-import models.Setting
-import play.api.db.slick.DatabaseConfigProvider
+import com.jsherz.luskydive.models.Setting
+import slick.backend.DatabaseConfig
+import slick.driver.JdbcProfile
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -35,7 +34,7 @@ import scala.concurrent.Future
 /**
   * Used to access settings stored in the database.
   */
-class SettingsDAO @Inject() (override protected val dbConfigProvider: DatabaseConfigProvider) extends Tables(dbConfigProvider) {
+class SettingsDAO (override protected val dbConfig: DatabaseConfig[JdbcProfile]) extends Tables(dbConfig) {
   import driver.api._
 
   /**

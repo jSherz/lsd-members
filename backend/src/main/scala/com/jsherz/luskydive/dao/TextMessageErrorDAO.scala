@@ -24,19 +24,16 @@
 
 package com.jsherz.luskydive.dao
 
-import javax.inject.Inject
-
-import models.{TextMessage, TextMessageError}
-import play.api.db.slick.DatabaseConfigProvider
+import com.jsherz.luskydive.models.{TextMessage, TextMessageError}
+import slick.backend.DatabaseConfig
+import slick.driver.JdbcProfile
 
 import scala.concurrent.Future
 
 /**
   * Used to create and access text message errors stored in the database.
   */
-class TextMessageErrorDAO @Inject() (override protected val dbConfigProvider: DatabaseConfigProvider) extends Tables(dbConfigProvider) {
-  import driver.api._
-
+class TextMessageErrorDAO(override protected val dbConfig: DatabaseConfig[JdbcProfile]) extends Tables(dbConfig) {
   /**
     * Get all of the text message errors that have been recorded.
     *

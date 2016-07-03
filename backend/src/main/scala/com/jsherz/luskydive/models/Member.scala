@@ -24,8 +24,6 @@
 
 package com.jsherz.luskydive.models
 
-import play.api.data.validation.Valid
-
 /**
   * The main member class, representing a person that has provided us with a phone number or e-mail address.
   *

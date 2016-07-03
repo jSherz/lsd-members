@@ -24,10 +24,9 @@
 
 package com.jsherz.luskydive.dao
 
-import javax.inject.Inject
-
-import models.Member
-import play.api.db.slick.DatabaseConfigProvider
+import com.jsherz.luskydive.models.Member
+import slick.backend.DatabaseConfig
+import slick.driver.JdbcProfile
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -35,9 +34,7 @@ import scala.concurrent.Future
 /**
   * Used to access members stored in the database.
   */
-class MemberDAO @Inject() (override protected val dbConfigProvider: DatabaseConfigProvider) extends Tables(dbConfigProvider) {
-  import driver.api._
-
+class MemberDAO(override protected val dbConfig: DatabaseConfig[JdbcProfile]) extends Tables(dbConfig) {
   /**
     * Get all of the configured members.
     *
@@ -69,12 +66,13 @@ class MemberDAO @Inject() (override protected val dbConfigProvider: DatabaseConf
     * @return
     */
   def exists(phoneNumber: Option[String], email: Option[String]): Future[Boolean] = {
-    if (email != None && phoneNumber == None) {
+    if (email.isDefined && phoneNumber.isEmpty) {
       db.run(Members.filter(_.email === email).exists.result)
-    } else if (phoneNumber != None && email == None) {
+    } else if (phoneNumber.isDefined && email.isEmpty) {
       db.run(Members.filter(_.phoneNumber === phoneNumber).exists.result)
     } else {
-      db.run(Members.filter(m => m.phoneNumber === phoneNumber && m.email === email).exists.result)
+      db.run(Members.filter(m: Member =>
+        m.phoneNumber === phoneNumber && m.email === email).exists.result)
     }
   }
 

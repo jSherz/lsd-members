@@ -22,7 +22,7 @@
   * SOFTWARE.
   */
 
-package models
+package com.jsherz.luskydive.models
 
 import java.sql.Timestamp
 
