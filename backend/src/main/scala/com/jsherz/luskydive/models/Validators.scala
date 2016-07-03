@@ -24,8 +24,8 @@
 
 package com.jsherz.luskydive.models
 
-import com.google.i18n.phonenumbers.{NumberParseException, PhoneNumberUtil}
-import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
+import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber
+import com.google.i18n.phonenumbers.PhoneNumberUtil
 
 import scala.util.matching.Regex
 
@@ -54,78 +54,79 @@ object Validators {
   private val defaultPhoneNumberRegion = "GB"
 
   /**
-    * A constraint validator to check that a form field value is a valid phone number in one of the formats below.
+    * Ensures a valid phone number was provided and parses it into a <code>PhoneNumber</code>
+    * so that we can get the E164 formatted version.
     *
     * - 07123123123 (UK numbers)
     * - 447123123123 (Number with country code, no plus)
     * - +447123123123 (Number with country code and plus)
     *
-    * @return Valid if a valid phone number, Invalid if not
+    * @return Left(translationKey) if invalid or Right(number) if not
     */
-  def phoneNumberValidator: Constraint[String] = Constraint[String]("constraint.phoneNumber") { phoneNumber =>
-    if (phoneNumber == None || phoneNumber.trim.isEmpty) {
-      Invalid(ValidationError("error.required"))
-    } else {
-      val parser = PhoneNumberUtil.getInstance()
+  def parsePhoneNumber(maybePhoneNumber: Option[String]): Either[String, PhoneNumber] = {
+    maybePhoneNumber.fold(Left("error.required"): Either[String, PhoneNumber]) { phoneNumber =>
+      phoneNumber.trim.isEmpty match {
+        case true => Left("error.required")
+        case false =>
+          val parser = PhoneNumberUtil.getInstance()
+          val parsedNumber = parser.parse(phoneNumber, defaultPhoneNumberRegion)
 
-      try {
-        val parsedNumber = parser.parse(phoneNumber, defaultPhoneNumberRegion)
-
-        if (parser.isValidNumber(parsedNumber)) {
-          Valid
-        } else {
-          Invalid(ValidationError("error.invalidPhoneNumber"))
-        }
-      } catch {
-        case _: NumberParseException => Invalid(ValidationError("error.invalidPhoneNumber"))
+          parser.isValidNumber(parsedNumber) match {
+            case true => Right(parsedNumber)
+            case false => Left("error.invalidPhoneNumber")
+          }
       }
     }
   }
 
   /**
-    * A constraint validator to do a very basic check if an e-mail is valid.
+    * Performs a very basic check to see if an e-mail is valid.
     *
-    * @return Valid if the e-mail looks roughly valid, Invalid if not
+    * @return Valid() if the e-mail looks roughly valid, Invalid(translationKey) if not
     */
-  def emailValidator: Constraint[String] = Constraint[String]("constraint.email") { email =>
-    if (email == None || email.trim.isEmpty) {
-      Invalid(ValidationError("error.required"))
-    } else if (!(emailRegex findAllMatchIn email).hasNext) {
-      Invalid(ValidationError("error.invalidEmail"))
-    } else if (email.length() > maxEmailLength) {
-      Invalid(ValidationError("error.emailTooLong"))
-    } else {
-      Valid
+  def isEmailValid(maybeEmail: Option[String]): ValidationResult = {
+    maybeEmail.fold(Invalid("error.required"): ValidationResult) { email =>
+      val trimmed = email.trim
+
+      if (trimmed.isEmpty) {
+        Invalid("error.required")
+      } else if (!(emailRegex findAllMatchIn trimmed).hasNext) {
+        Invalid("error.invalidEmail")
+      } else if (trimmed.length() > maxEmailLength) {
+        Invalid("error.emailTooLong")
+      } else {
+        Valid()
+      }
     }
   }
 
   /**
     * Ensures the provided welcome text template is at least one character and is 480 characters or under.
     *
-    * @return Valid if 1 <= length <= 480, otherwise Invalid
+    * @return Valid() if 1 <= length <= 480, otherwise Invalid(translationKey)
     */
-  def welcomeTextValidator: Constraint[String] = Constraint[String]("constraint.welcomeText") { welcomeText =>
+  def isWelcomeTextValid(welcomeText: String): ValidationResult = {
     val welcomeTextLength = welcomeText.length()
 
     if (welcomeTextLength == 0) {
-      Invalid(ValidationError("error.welcomeTextEmpty"))
+      Invalid("error.welcomeTextEmpty")
     } else if (welcomeTextLength > 480) {
-      Invalid(ValidationError("error.welcomeTextTooLong"))
+      Invalid("error.welcomeTextTooLong")
     } else {
-      Valid
+      Valid()
     }
   }
 
   /**
     * Ensures the provided member's name is shorter than the database field length.
     *
-    * @return Valid if <= maxNameLength, otherwise Invalid
+    * @return Valid() if <= maxNameLength, otherwise Invalid(translationKey)
     */
-  def nameValidator: Constraint[String] = Constraint[String]("constraint.name") { name =>
+  def isNameValid(name: String): ValidationResult = {
     if (name.length() > maxNameLength) {
-      Invalid(ValidationError("error.nameTooLong"))
+      Invalid("error.nameTooLong")
     } else {
-      Valid
+      Valid()
     }
   }
 }
