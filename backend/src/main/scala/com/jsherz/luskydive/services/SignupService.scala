@@ -22,25 +22,39 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive
+package com.jsherz.luskydive.services
 
-import akka.actor.{ActorSystem, Props}
-import akka.io.IO
-import akka.pattern.ask
-import akka.util.Timeout
-import spray.can.Http
+import akka.actor.{Actor, ActorLogging}
+import akka.event.LoggingReceive
+import spray.routing.RequestContext
 
-import scala.concurrent.duration._
+object SignupService {
+  /**
+    * The primary method of signing up - with a name & phone number.
+    * @param name The user's name (first or full acceptable)
+    * @param phoneNumber The user's phone number, defaulting to local country
+    */
+  case class Signup(name: String, phoneNumber: String)
 
-object Boot extends App {
-  // we need an ActorSystem to host our application in
-  implicit val system = ActorSystem("on-spray-can")
+  /**
+    * Alternative method of signing up, used when a user's phone number isn't available.
+    * @param name The user's name (first or full acceptable)
+    * @param email The user's e-mail address
+    */
+  case class SignupAlt(name: String, email: String)
+}
 
-  // create and start our service actor
-  val service = system.actorOf(Props[AppHttpServiceActor], "demo-service")
+/**
+  * Handles new users.
+  */
+class SignupService(ctx: RequestContext) extends Actor with ActorLogging {
+  import SignupService._
 
-  implicit val timeout = Timeout(5.seconds)
+  override def receive: Actor.Receive = LoggingReceive {
+    case Signup(name, phoneNumber) =>
+      ctx.complete("Test")
 
-  // start a new HTTP server on port 8080 with our service actor as the handler
-  IO(Http) ? Http.Bind(service, interface = "localhost", port = 8080)
+    case SignupAlt(name, email) =>
+      ctx.complete("Test alt")
+  }
 }

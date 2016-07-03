@@ -22,25 +22,39 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive
+package com.jsherz.luskydive.routes
 
-import akka.actor.{ActorSystem, Props}
-import akka.io.IO
-import akka.pattern.ask
-import akka.util.Timeout
-import spray.can.Http
+import akka.actor.{ActorRef, Props}
+import com.jsherz.luskydive.services.SignupService
+import spray.http.MediaTypes._
+import spray.routing.{HttpService, RequestContext}
 
-import scala.concurrent.duration._
+/**
+  * Routes for user sign-up.
+  */
+trait SignupRoutes extends HttpService {
 
-object Boot extends App {
-  // we need an ActorSystem to host our application in
-  implicit val system = ActorSystem("on-spray-can")
+  import com.jsherz.luskydive.services.SignupService._
 
-  // create and start our service actor
-  val service = system.actorOf(Props[AppHttpServiceActor], "demo-service")
+  def signupService(ctx: RequestContext): ActorRef = {
+    actorRefFactory.actorOf(Props(classOf[SignupService], ctx))
+  }
 
-  implicit val timeout = Timeout(5.seconds)
-
-  // start a new HTTP server on port 8080 with our service actor as the handler
-  IO(Http) ? Http.Bind(service, interface = "localhost", port = 8080)
+  val signupRoutes =
+    pathPrefix("api" / "v1") {
+      path("sign-up") {
+        get {
+          respondWithMediaType(`application/json`) { ctx =>
+            signupService(ctx) ! Signup("Bobby", "07123123123")
+          }
+        }
+      } ~
+      path("sign-up" / "alt") {
+        get {
+          respondWithMediaType(`application/json`) { ctx =>
+            signupService(ctx) ! SignupAlt("Bobby", "bob@bloggs.org")
+          }
+        }
+      }
+    }
 }
