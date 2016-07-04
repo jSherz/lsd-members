@@ -24,11 +24,10 @@
 
 package com.jsherz.luskydive.dao
 
-import com.jsherz.luskydive.models.TextMessage
+import com.jsherz.luskydive.models.{Member, TextMessage}
 import slick.backend.DatabaseConfig
 import slick.driver.JdbcProfile
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
@@ -50,7 +49,8 @@ class TextMessageDAO(override protected val dbConfig: DatabaseConfig[JdbcProfile
     * @param id ID to search with
     * @return Some(message) if found, otherwise None
     */
-  def get(id: Int): Future[Option[TextMessage]] = db.run(TextMessages.filter(_.id === id).result.headOption)
+  def get(id: Int): Future[Option[TextMessage]] =
+    db.run(TextMessages.filter(_.id === id).result.headOption)
 
   /**
     * Insert a new text message into the database.
