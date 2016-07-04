@@ -24,7 +24,7 @@
 
 package com.jsherz.luskydive.models
 
-case class ValidationResult()
+class ValidationResult()
 
 /**
   * Represents validation succeeding.

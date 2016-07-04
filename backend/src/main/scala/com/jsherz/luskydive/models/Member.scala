@@ -42,9 +42,9 @@ case class Member(id: Option[Int], name: String, phoneNumber: Option[String], em
     * @return true if above conditions are met
     */
   def valid(): Boolean = {
-    val nameValid = !name.trim().isEmpty
-    val phoneNumberValid = phoneNumber.fold(false) { Validators.phoneNumberValidator(_) == Valid }
-    val emailValid = email.fold(false) { Validators.emailValidator(_) == Valid }
+    val nameValid = Validators.isNameValid(name) == Valid()
+    val phoneNumberValid = Validators.parsePhoneNumber(phoneNumber).isRight
+    val emailValid = Validators.isEmailValid(email) == Valid()
 
     nameValid && (phoneNumberValid || emailValid)
   }
