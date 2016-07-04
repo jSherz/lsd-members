@@ -34,6 +34,8 @@ import scala.concurrent.Future
   * Used to create and access text message errors stored in the database.
   */
 class TextMessageErrorDAO(override protected val dbConfig: DatabaseConfig[JdbcProfile]) extends Tables(dbConfig) {
+  import driver.api._
+
   /**
     * Get all of the text message errors that have been recorded.
     *
