@@ -24,6 +24,9 @@
 
 package com.jsherz.luskydive.models
 
+import spray.httpx.SprayJsonSupport
+import spray.json.DefaultJsonProtocol
+
 /**
   * The main member class, representing a person that has provided us with a phone number or e-mail address.
   *
@@ -48,4 +51,8 @@ case class Member(id: Option[Int], name: String, phoneNumber: Option[String], em
 
     nameValid && (phoneNumberValid || emailValid)
   }
+}
+
+object MemberJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
+  implicit val MemberFormats = jsonFormat4(Member)
 }

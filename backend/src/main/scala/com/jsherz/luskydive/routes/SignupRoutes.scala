@@ -25,6 +25,7 @@
 package com.jsherz.luskydive.routes
 
 import akka.actor.{ActorRef, Props}
+import com.jsherz.luskydive.models.Member
 import com.jsherz.luskydive.services.SignupService
 import spray.http.MediaTypes._
 import spray.routing.{HttpService, RequestContext}
@@ -35,6 +36,7 @@ import spray.routing.{HttpService, RequestContext}
 trait SignupRoutes extends HttpService {
 
   import com.jsherz.luskydive.services.SignupService._
+  import com.jsherz.luskydive.models.MemberJsonSupport._
 
   def signupService(ctx: RequestContext): ActorRef = {
     actorRefFactory.actorOf(Props(classOf[SignupService], ctx))
@@ -43,16 +45,20 @@ trait SignupRoutes extends HttpService {
   val signupRoutes =
     pathPrefix("api" / "v1") {
       path("sign-up") {
-        get {
-          respondWithMediaType(`application/json`) { ctx =>
-            signupService(ctx) ! Signup("Bobby", "07123123123")
+        post {
+          entity(as[Member]) { member =>
+            respondWithMediaType(`application/json`) { ctx =>
+              signupService(ctx) ! Signup(member.name, member.phoneNumber)
+            }
           }
         }
       } ~
       path("sign-up" / "alt") {
-        get {
-          respondWithMediaType(`application/json`) { ctx =>
-            signupService(ctx) ! SignupAlt("Bobby", "bob@bloggs.org")
+        post {
+          entity(as[Member]) { member =>
+            respondWithMediaType(`application/json`) { ctx =>
+              signupService(ctx) ! SignupAlt(member.name, member.email)
+            }
           }
         }
       }

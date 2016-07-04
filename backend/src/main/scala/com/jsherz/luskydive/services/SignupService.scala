@@ -34,14 +34,14 @@ object SignupService {
     * @param name The user's name (first or full acceptable)
     * @param phoneNumber The user's phone number, defaulting to local country
     */
-  case class Signup(name: String, phoneNumber: String)
+  case class Signup(name: String, phoneNumber: Option[String])
 
   /**
     * Alternative method of signing up, used when a user's phone number isn't available.
     * @param name The user's name (first or full acceptable)
     * @param email The user's e-mail address
     */
-  case class SignupAlt(name: String, email: String)
+  case class SignupAlt(name: String, email: Option[String])
 }
 
 /**
