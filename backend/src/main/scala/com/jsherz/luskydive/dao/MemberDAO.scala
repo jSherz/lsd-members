@@ -35,6 +35,8 @@ import scala.concurrent.Future
   * Used to access members stored in the database.
   */
 class MemberDAO(override protected val dbConfig: DatabaseConfig[JdbcProfile]) extends Tables(dbConfig) {
+  import driver.api._
+
   /**
     * Get all of the configured members.
     *
@@ -71,8 +73,9 @@ class MemberDAO(override protected val dbConfig: DatabaseConfig[JdbcProfile]) ex
     } else if (phoneNumber.isDefined && email.isEmpty) {
       db.run(Members.filter(_.phoneNumber === phoneNumber).exists.result)
     } else {
-      db.run(Members.filter(m: Member =>
-        m.phoneNumber === phoneNumber && m.email === email).exists.result)
+      db.run(Members.filter(m =>
+        m.phoneNumber === phoneNumber && m.email === email
+      ).exists.result)
     }
   }
 
