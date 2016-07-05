@@ -46,8 +46,8 @@ class SignupServiceSpec extends Specification with Specs2RouteTest with SignupRo
     val url = "/api/v1/sign-up"
     val missingFields: Seq[(String, String)] = Seq(
       (reqNothing, "The request content was malformed:\nObject is missing required member 'name'"),
-      (reqPhone, "The request content was malformed:\nObject is missing required member 'phoneNumber'"),
-      (reqName, "The request content was malformed:\nObject is missing required member 'name'")
+      (reqPhone, "The request content was malformed:\nObject is missing required member 'name'"),
+      (reqName, "The request content was malformed:\nObject is missing required member 'phoneNumber'")
     )
 
     "return a MethodNotAllowed error for GET requests" in {
