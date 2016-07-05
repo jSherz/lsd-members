@@ -30,37 +30,25 @@ import spray.http._
 import StatusCodes._
 import com.jsherz.luskydive.routes.SignupRoutes
 import MediaTypes._
-import org.specs2.specification.{Fragment, Fragments}
+import org.specs2.specification.Fragments
 
 class SignupServiceSpec extends Specification with Specs2RouteTest with SignupRoutes {
   def actorRefFactory = system
 
   val reqNothing = "{}"
-  val reqPhone = "{'phoneNumber': '07123123123'}"
-  val reqEmail = "{'email': 'joe@bloggs.org'}"
-  val reqName = "{'name': 'Joe Bloggs'}"
-  val reqComplete = "{'name': 'Joe Bloggs', 'phoneNumber': '07123123123'}"
-  val reqCompleteAlt = "{'name': 'Joe Bloggs', 'email': 'joe@bloggs.org'}"
+  val reqPhone = "{\"phoneNumber\": \"07123123123\"}"
+  val reqEmail = "{\"email\": \"joe@bloggs.org\"}"
+  val reqName = "{\"name\": \"Joe Bloggs\"}"
+  val reqComplete = "{\"name\": \"Joe Bloggs\", \"phoneNumber\": \"07123123123\"}"
+  val reqCompleteAlt = "{\"name\": \"Joe Bloggs\", \"email\": \"joe@bloggs.org\"}"
 
   "SignupService" should {
     val url = "/api/v1/sign-up"
-    val missingFields: Map[String, String] = Map(
-      reqNothing -> "The request content was malformed:\nObject is missing required member 'name'",
-      reqPhone -> "The request content was malformed:\nObject is missing required member 'phoneNumber'",
-      reqName -> "The request content was malformed:\nObject is missing required member 'name'"
+    val missingFields: Seq[(String, String)] = Seq(
+      (reqNothing, "The request content was malformed:\nObject is missing required member 'name'"),
+      (reqPhone, "The request content was malformed:\nObject is missing required member 'phoneNumber'"),
+      (reqName, "The request content was malformed:\nObject is missing required member 'name'")
     )
-
-    /*"return a greeting for GET requests to the root path" in {
-      Get() ~> myRoute ~> check {
-        responseAs[String] must contain("Say hello")
-      }
-    }
-
-    "leave GET requests to other paths unhandled" in {
-      Get("/kermit") ~> myRoute ~> check {
-        handled must beFalse
-      }
-    }*/
 
     "return a MethodNotAllowed error for GET requests" in {
       Get(url) ~> sealRoute(signupRoutes) ~> check {
@@ -77,13 +65,22 @@ class SignupServiceSpec extends Specification with Specs2RouteTest with SignupRo
     }
 
     "return a BadRequest error if the name or phone number is missing" in {
-      missingFields.foldLeft(Fragments.empty) { (frag, _) =>
-        case (data, expectedError) =>
-          Post(url, HttpEntity(`application/json`, data)) ~> sealRoute(signupRoutes) ~> check {
-            status === BadRequest
-            responseAs[String] === expectedError
+      missingFields.foldLeft(Fragments()) { (frag: Fragments, data: (String, String)) =>
+        frag.append(
+          (s"example ${data._1} ": ExampleDesc) ! {
+            Post(url, HttpEntity(`application/json`, data._1)) ~> sealRoute(signupRoutes) ~> check {
+              status === BadRequest
+              responseAs[String] === data._2
+            }
           }
-      })
+        )
+      }
+    }
+
+    "accept a complete request" in {
+      Post(url, HttpEntity(`application/json`, reqComplete)) ~> sealRoute(signupRoutes) ~> check {
+        status === OK
+      }
     }
   }
 
