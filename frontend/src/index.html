@@ -21,7 +21,20 @@
 </head>
 
 <body role="document">
-  <app-root>Loading...</app-root>
+  <app-root>
+    <div id="loading-container">
+      <div id="loading-spinner">
+        <div></div>
+      </div>
+
+      Loading...
+    </div>
+  </app-root>
+
+  <!-- Styles animated loading spinner and text -->
+  <style type="text/css">
+    @keyframes rotate{0%{transform:rotate(0deg);border:.2em solid #009dd9;border-bottom-color:transparent}25%{border:.2em solid #fdda00;border-bottom-color:transparent}50%{transform:rotate(180deg);border:.2em solid #ea0005;border-bottom-color:transparent}100%{transform:rotate(360deg);border:.2em solid #009dd9;border-bottom-color:transparent}}#loading-spinner>div{width:4em;height:4em;border-radius:100%;margin:0;animation-fill-mode:both;border:.2em solid #009dd9;border-bottom-color:transparent;background:transparent !important;display:inline-block;animation:rotate 1.2s 0s linear infinite}#loading-container{margin-top:3em;text-align:center;text-transform:uppercase}
+  </style>
 
   {{#each scripts.polyfills}}
   <script src="{{.}}"></script>
