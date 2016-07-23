@@ -11,6 +11,10 @@
 
   <title>Leeds University Skydivers</title>
   <base href="/">
+  
+  {{#unless environment.production}}
+  <script src="/ember-cli-live-reload.js" type="text/javascript"></script>
+  {{/unless}}
 
   <link href="css/application.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Patrick+Hand+SC" rel="stylesheet" type="text/css">
