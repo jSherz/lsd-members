@@ -1,10 +1,16 @@
 /* tslint:disable:no-unused-variable */
 
-import { By }                                from '@angular/platform-browser';
-import { DebugElement }                      from '@angular/core';
-import { ActivatedRoute, UrlPathWithParams } from '@angular/router';
-import * as moment                           from 'moment';
-import { Observable }                        from 'rxjs/Rx';
+import { By } from '@angular/platform-browser';
+import { DebugElement, Type } from '@angular/core';
+import {
+  ActivatedRoute,
+  ActivatedRouteSnapshot,
+  UrlPathWithParams,
+  Params,
+  Data
+} from '@angular/router';
+import * as moment from 'moment';
+import { Observable } from 'rxjs/Rx';
 
 import {
   beforeEach, beforeEachProviders,
@@ -19,20 +25,19 @@ import { TileService }             from './tile.service';
 import { CourseCalendarComponent } from './course-calendar.component';
 import { MOMENT_MATCHER }          from '../../utils/moment-matcher';
 
-type UrlParams = { [key: string]: any; }
-
 // Useful to mock a component with a given year & month
 let mockComp = function(
-  urlParts: [string, UrlParams][] = [['courses', {}], ['calendar', {}]],
-  params: UrlParams = {}
+  urlParts: [string, Params][] = [['courses', {}], ['calendar', {}]],
+  params: Params = {}
 ): CourseCalendarComponent {
   let urls = urlParts.map(([path, pathParams]) => new UrlPathWithParams(path, pathParams));
 
   let observableUrls = Observable.of(urls);
-  let observableParams = Observable.of(params);
+  let observableParams: Observable<Params> = Observable.of(params);
 
-  let activatedRoute =
-    new ActivatedRoute(observableUrls, observableParams, undefined, undefined, undefined);
+  let activatedRoute = new ActivatedRoute();
+  activatedRoute.url = observableUrls;
+  activatedRoute.params = observableParams;
 
   let monthService = new MonthService();
 
