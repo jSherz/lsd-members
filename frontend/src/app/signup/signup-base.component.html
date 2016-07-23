@@ -6,7 +6,10 @@
         <nav-item href="/sign-up/alt" linkText="Alt"></nav-item>
       </ul>
     </nav>
-    <img id="logo" src="assets/images/header.png" title="Leeds University Skydivers" alt="Leeds University Skydivers logo">
+
+    <a [routerLink]="['/']" title="Home">
+      <img id="logo" src="assets/images/header.png" title="Leeds University Skydivers" alt="Leeds University Skydivers logo">
+    </a>
   </div>
 
   <router-outlet></router-outlet>
