@@ -39,7 +39,9 @@
     "app/app.routes.ts",
     "app/environment.ts",
     "app/index.ts",
+    "app/signup/signup-alt.component.spec.ts",
     "app/signup/signup-alt.component.ts",
+    "app/signup/signup-alt.model.ts",
     "app/signup/signup-base.component.spec.ts",
     "app/signup/signup-base.component.ts",
     "app/signup/signup.component.spec.ts",
@@ -49,6 +51,7 @@
     "app/signup/signup.service.ts",
     "app/utils/moment-matcher.ts",
     "app/utils/nav.component.ts",
+    "app/utils/validation-error.ts",
     "main.ts",
     "system-config.ts",
     "typings.d.ts"
