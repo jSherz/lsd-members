@@ -67,24 +67,26 @@ describe('Alternative sign-up form', function() {
     expect(page.nameFieldError().isDisplayed()).toBeFalsy();
     expect(page.emailFieldError().isDisplayed()).toBeFalsy();
   });
-  /*a
-  it('clears validation errors after resolving the issue',
-    inject([SignupAltComponent], (app: SignupAltComponent) => {
 
-    app.signup();
+  it('clears validation errors (name) after resolving the issue', () => {
+    page.navigateTo();
 
-    expect(app.validationErrors['name']).toEqual('Please enter a name');
-    expect(app.validationErrors['email']).toEqual('Please enter an e-mail');
+    page.nameField().click();
+    page.emailField().click();
+    expect(page.nameFieldError().isDisplayed()).toBeTruthy();
 
-    app.user.name = 'Madison Booth'
-    app.user.email = 'MadisonBooth@teleworm.us'
+    page.nameField().sendKeys('Sofia O\'Connor');
+    expect(page.nameFieldError().isDisplayed()).toBeFalsy();
+  });
 
-    app.signup();
+  it('clears validation errors (e-mail) after resolving the issue', () => {
+    page.navigateTo();
 
-    expect(app.validationErrors['name']).toBeUndefined();
-    expect(app.validationErrors['email']).toBeUndefined();
-  }));
-*/
+    page.emailField().click();
+    page.nameField().click();
+    expect(page.emailFieldError().isDisplayed()).toBeTruthy();
+
+    page.emailField().sendKeys('SofiaOConnor@teleworm.us');
+    expect(page.emailFieldError().isDisplayed()).toBeFalsy();
+  });
 });
-
-
