@@ -7,7 +7,8 @@
  **********************************************************************************************/
 /** Map relative paths to URLs. */
 const map: any = {
-  'moment': 'vendor/moment/min/moment.min.js'
+  'moment': 'vendor/moment/min/moment.min.js',
+  'google-libphonenumber': 'vendor/google-libphonenumber/dist/browser/libphonenumber.min.js'
 };
 
 /** User packages configuration. */
