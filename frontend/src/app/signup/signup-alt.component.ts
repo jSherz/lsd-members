@@ -7,7 +7,6 @@ import {
   FORM_DIRECTIVES,
   REACTIVE_FORM_DIRECTIVES
 } from '@angular/forms';
-import { SignupAlt } from './signup-alt.model';
 import { CustomValidators } from '../utils';
 
 @Component({
