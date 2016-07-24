@@ -30,4 +30,16 @@ describe('CustomValidators', () => {
       expect(CustomValidators.email(new FormControl('foo@bar.com'))).toBeNull(null);
     });
   });
+
+  describe('phone number', () => {
+    it('should reject invalid phone numbers', () => {
+      expect(CustomValidators.phoneNumber(new FormControl('0712312312'))).toEqual({ phoneNumber: true });
+      expect(CustomValidators.phoneNumber(new FormControl('071231231231'))).toEqual({ phoneNumber: true });
+      expect(CustomValidators.phoneNumber(new FormControl('apple'))).toEqual({ phoneNumber: true });
+    });
+
+    it('should accept valid phone numbers', () => {
+      expect(CustomValidators.phoneNumber(new FormControl('+447123123123'))).toBeNull();
+    });
+  });
 });
