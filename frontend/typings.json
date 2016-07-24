@@ -1,11 +1,12 @@
 {
-  "ambientDevDependencies": {
+  "globalDevDependencies": {
     "angular-protractor": "registry:dt/angular-protractor#1.5.0+20160425143459",
     "jasmine": "registry:dt/jasmine#2.2.0+20160412134438",
     "selenium-webdriver": "registry:dt/selenium-webdriver#2.44.0+20160317120654"
   },
-  "ambientDependencies": {
-    "es6-shim": "registry:dt/es6-shim#0.31.2+20160317120654"
+  "globalDependencies": {
+    "es6-shim": "registry:dt/es6-shim#0.31.2+20160317120654",
+    "google-libphonenumber": "registry:global/google-libphonenumber#1.0.22+20160622193708"
   },
   "dependencies": {
     "moment": "github:typed-typings/npm-moment"
