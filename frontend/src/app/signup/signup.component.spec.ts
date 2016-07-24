@@ -6,9 +6,10 @@ import {
   expect, it, xit,
   async, inject
 } from '@angular/core/testing';
+import { FormBuilder } from '@angular/forms';
 import { SignupComponent } from './signup.component';
 
-beforeEachProviders(() => [SignupComponent]);
+beforeEachProviders(() => [FormBuilder, SignupComponent]);
 
 describe('LSD.SignupComponent', () => {
   it('should create the app', inject([SignupComponent], (app: SignupComponent) => {
