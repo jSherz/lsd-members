@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ROUTER_DIRECTIVES } from '@angular/router';
 
-import { NavComponent } from '../utils/nav.component';
+import { NavComponent } from '../utils';
 
 @Component({
   moduleId: module.id,

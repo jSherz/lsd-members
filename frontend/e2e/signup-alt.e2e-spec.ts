@@ -13,40 +13,61 @@ describe('Alternative sign-up form', function() {
     expect(page.submitButton().isEnabled()).toBeFalsy();
   });
 
-/*
-  it('should show an error when attempting to sign-up with no name or e-mail', () => {
+  it('not show validation failed messages when the user has not touched the fields', () => {
     page.navigateTo();
 
-    page.submitButton().click();
-
-    expect(app.user.name.valid).toBeFalse();
-    expect(app.user.email.valid).toBeFalse();
+    expect(page.nameFieldError().isDisplayed()).toBeFalsy();
+    expect(page.emailFieldError().isDisplayed()).toBeFalsy();
   });
 
-  it('should not show an error when attempting to sign-up with a valid name and e-mail',
-    inject([SignupAltComponent], (app: SignupAltComponent) => {
+  it('should show a validation error if no name is entered', () => {
+    page.navigateTo();
 
-      app.user.name = 'Kiera Barker'
-      app.user.email = 'KieraBarker@rhyta.com'
+    page.nameField().click();
+    page.emailField().click();
 
-      app.signup();
+    expect(page.submitButton().isEnabled()).toBeFalsy();
+    expect(page.nameFieldError().isDisplayed()).toBeTruthy();
+    expect(page.nameFieldError().getText()).toEqual('Please enter a name');
+  });
 
-      expect(app.validationErrors['name']).toBeUndefined();
-      expect(app.validationErrors['email']).toBeUndefined();
-  }));
+  it('should show a validation error if no e-mail is entered', () => {
+    page.navigateTo();
 
-  it('should not accept invalid e-mails',
-    inject([SignupAltComponent], (app: SignupAltComponent) => {
+    page.emailField().click();
+    page.nameField().click();
 
-    app.user.name = 'Robert Burgess'
-    app.user.email = 'RobertBurgess@localhost'
+    expect(page.submitButton().isEnabled()).toBeFalsy();
+    expect(page.emailFieldError().isDisplayed()).toBeTruthy();
+    expect(page.emailFieldError().getText()).toEqual('Please enter a valid e-mail address');
+  });
 
-    app.signup();
+  it('should show a validation error if an invalid e-mail is entered', () => {
+    page.navigateTo();
 
-    expect(app.validationErrors['name']).toBeUndefined();
-    expect(app.validationErrors['email']).toEqual('Please enter a valid e-mail');
-  }));
+    page.emailField().click();
+    page.emailField().sendKeys('bob.ntlworld.com');
+    page.nameField().click();
+    page.nameField().sendKeys('Bob');
 
+    expect(page.submitButton().isEnabled()).toBeFalsy();
+    expect(page.emailFieldError().isDisplayed()).toBeTruthy();
+    expect(page.emailFieldError().getText()).toEqual('Please enter a valid e-mail address');
+  });
+
+  it('should enable the submit button if a valid name and e-mail are entered', () => {
+    page.navigateTo();
+
+    page.nameField().click();
+    page.nameField().sendKeys('Jennifer Carey');
+    page.emailField().click();
+    page.emailField().sendKeys('JenniferCarey@dayrep.com');
+
+    expect(page.submitButton().isEnabled()).toBeTruthy();
+    expect(page.nameFieldError().isDisplayed()).toBeFalsy();
+    expect(page.emailFieldError().isDisplayed()).toBeFalsy();
+  });
+  /*a
   it('clears validation errors after resolving the issue',
     inject([SignupAltComponent], (app: SignupAltComponent) => {
 

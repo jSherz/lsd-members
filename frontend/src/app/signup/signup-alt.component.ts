@@ -1,17 +1,37 @@
 import { Component } from '@angular/core';
-import { NgForm }    from '@angular/forms';
+import {
+  FormControl,
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FORM_DIRECTIVES,
+  REACTIVE_FORM_DIRECTIVES
+} from '@angular/forms';
 import { SignupAlt } from './signup-alt.model';
+import { CustomValidators } from '../utils';
 
 @Component({
   moduleId: module.id,
   selector: 'app-root',
-  templateUrl: 'signup-alt.component.html'
+  templateUrl: 'signup-alt.component.html',
+  directives: [REACTIVE_FORM_DIRECTIVES]
 })
 export class SignupAltComponent {
 
-  private emailRegex = /.+\@.+\..+/
+  signupForm: FormGroup;
 
-  user: SignupAlt = new SignupAlt(undefined, undefined);
+  ctrlName: FormControl;
+  ctrlEmail: FormControl;
+
+  constructor(private builder: FormBuilder) {
+    this.ctrlName = new FormControl('', Validators.required);
+    this.ctrlEmail = new FormControl('', Validators.compose([Validators.required, CustomValidators.email]));
+
+    this.signupForm = builder.group({
+      name: this.ctrlName,
+      email: this.ctrlEmail
+    });
+  }
 
   signup() {
   }
