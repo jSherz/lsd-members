@@ -13,7 +13,6 @@ import './rxjs-operators';
     NavComponent
   ]
 })
-
 export class AppComponent {
   private siteTitle = 'Leeds University Skydivers';
 
