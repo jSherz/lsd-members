@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ROUTER_DIRECTIVES } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { NavComponent } from './utils/nav.component';
+import './rxjs-operators';
 
 @Component({
   moduleId: module.id,

@@ -10,8 +10,7 @@ import {
 import { CustomValidators } from '../utils';
 
 @Component({
-  moduleId: module.id,
-  templateUrl: 'signup.component.html'
+  templateUrl: 'app/signup/signup.component.html'
 })
 export class SignupComponent {
 

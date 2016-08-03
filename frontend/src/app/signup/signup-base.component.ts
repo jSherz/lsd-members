@@ -4,9 +4,8 @@ import { ROUTER_DIRECTIVES } from '@angular/router';
 import { NavComponent } from '../utils';
 
 @Component({
-  moduleId: module.id,
   selector: 'router-outlet',
-  templateUrl: 'signup-base.component.html',
+  templateUrl: 'app/signup/signup-base.component.html',
   directives: [
     ROUTER_DIRECTIVES,
     NavComponent
