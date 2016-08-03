@@ -30,10 +30,10 @@ export class CustomValidators {
 
     if (numToTest != undefined && numToTest != '') {
       try {
-        let parsed = this.phoneNumberUtil.parse(numToTest, this.defaultRegion);
+        let parsed = CustomValidators.phoneNumberUtil.parse(numToTest, CustomValidators.defaultRegion);
 
-        if (this.phoneNumberUtil.isPossibleNumber(parsed) &&
-            this.phoneNumberUtil.isValidNumber(parsed)) {
+        if (CustomValidators.phoneNumberUtil.isPossibleNumber(parsed) &&
+            CustomValidators.phoneNumberUtil.isValidNumber(parsed)) {
           return null;
         } else {
           return { 'phoneNumber': true };

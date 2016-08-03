@@ -10,8 +10,8 @@ import {
 import { CustomValidators } from '../utils';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: 'app/signup/signup-alt.component.html',
+  moduleId: module.id,
+  templateUrl: 'signup-alt.component.html',
   directives: [REACTIVE_FORM_DIRECTIVES]
 })
 export class SignupAltComponent {

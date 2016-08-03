@@ -4,16 +4,28 @@
   </ul>
 
   <div id="sign-up-form">
-    <div>
-      <label for="name">Name</label>
-      <input type="text" id="name" name="name" placeholder="My name is ________ and I love skydiving!" value="">
-    </div>
+    <form (ngSubmit)="signup()" [formGroup]="signupForm">
+      <div>
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" formControlName="name" required value=""
+          placeholder="My name is ________ and I love skydiving!">
 
-    <div>
-      <label for="phone_number">Phone number</label>
-      <input type="text" id="phone_number" name="phone_number" placeholder="Mobile number, e.g. 07123123123" value="">
-    </div>
+        <div [hidden]="ctrlName.valid || ctrlName.untouched" class="form-field-error" id="name-form-field-error">
+          Please enter a name
+        </div>
+      </div>
 
-    <button type="submit">Sign me up!</button>
+      <div>
+        <label for="phone-number">Phone number</label>
+        <input type="text" id="phone-number" name="phone-number" formControlName="phoneNumber" required value=""
+          placeholder="Mobile number, e.g. 07123123123">
+
+        <div [hidden]="ctrlPhoneNumber.valid || ctrlPhoneNumber.untouched" class="form-field-error" id="phone-number-form-field-error">
+          Please enter a valid phone number
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="!signupForm.valid">Sign me up!</button>
+    </form>
   </div>
 </div>

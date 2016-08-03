@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import { ISignupService, SignupResult } from '../src/app/signup';
-import '../src/app/rxjs-operators';
+import { ISignupService, SignupResult } from './index';
 
-@Injectable()
 export class SignupServiceStub implements ISignupService {
 
     static validName: string = "Abby North";

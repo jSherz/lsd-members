@@ -10,7 +10,9 @@ import {
 import { CustomValidators } from '../utils';
 
 @Component({
-  templateUrl: 'app/signup/signup.component.html'
+  moduleId: module.id,
+  templateUrl: 'signup.component.html',
+  directives: [REACTIVE_FORM_DIRECTIVES]
 })
 export class SignupComponent {
 
@@ -27,6 +29,9 @@ export class SignupComponent {
       name: this.ctrlName,
       phoneNumber: this.ctrlPhoneNumber
     });
+  }
+
+  signup() {
   }
 
 }

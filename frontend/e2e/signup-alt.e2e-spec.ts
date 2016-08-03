@@ -1,5 +1,4 @@
 import { SignupAltForm } from './signup-alt.po';
-import { SignupServiceStub } from './signup.service.stub';
 
 describe('Alternative sign-up form', function() {
   let page: SignupAltForm;
@@ -89,18 +88,5 @@ describe('Alternative sign-up form', function() {
 
     page.emailField().sendKeys('SofiaOConnor@teleworm.us');
     expect(page.emailFieldError().isDisplayed()).toBeFalsy();
-  });
-
-  it('should show the thank you page if a valid name & e-mail are entered', () => {
-    page.navigateTo();
-
-    page.nameField().click();
-    page.nameField().sendKeys(SignupServiceStub.validName);
-    page.emailField().click();
-    page.emailField().sendKeys(SignupServiceStub.validEmail);
-
-    page.submitButton().click();
-
-    expect(browser.getCurrentUrl()).toMatch("thank-you")
   });
 });
