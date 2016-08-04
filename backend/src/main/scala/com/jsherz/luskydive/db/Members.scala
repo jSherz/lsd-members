@@ -22,12 +22,28 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.models
+package com.jsherz.luskydive.db
+
+import com.jsherz.luskydive.api.Member
+import org.skife.jdbi.v2.sqlobject.{Bind, SqlQuery}
+import org.skife.jdbi.v2.sqlobject.customizers.SingleValueResult
 
 /**
-  * The settings class, a K -> V store of Strings, used in various parts of the application.
-  *
-  * @param key
-  * @param value
+  * JDBI wrapper for Members.
   */
-case class Setting(key: String, value: String)
+abstract class Members {
+
+  /**
+    * Attempt to find a member with the given email and phone number.
+    *
+    * @param email
+    * @param phoneNumber
+    * @return
+    */
+  @SqlQuery("SELECT * FROM members " +
+    "WHERE (:email IS NOT NULL AND members.email = :email) OR" +
+    "(:phoneNumber IS NOT NULL AND members.phone_number = :phoneNumber")
+  @SingleValueResult
+  def findMember(@Bind("email") email: Option[String], @Bind("phoneNumber") phoneNumber: Option[String]): Option[Member]
+
+}

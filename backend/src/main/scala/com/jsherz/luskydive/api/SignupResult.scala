@@ -22,22 +22,9 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.routes
-
-import spray.http.MediaTypes._
-import spray.routing
-import spray.routing.HttpService
+package com.jsherz.luskydive.api
 
 /**
-  * Created by james on 04/08/16.
+  * The result of attempting to sign-up a new member.
   */
-trait BaseRoute extends HttpService {
-
-  /**
-    * Send the response as JSON data.
-    *
-    * @return
-    */
-  def returnJson(): routing.Directive0 = respondWithMediaType(`application/json`)
-
-}
+case class SignupResult(success: Boolean, errors: Map[String, String])

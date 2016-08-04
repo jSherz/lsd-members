@@ -24,17 +24,11 @@
 
 package com.jsherz.luskydive.dao
 
-import java.sql.Timestamp
-
-import com.jsherz.luskydive.models._
-import slick.backend.DatabaseConfig
-import slick.driver.JdbcProfile
-
 /**
   * All of the database tables, modelled as Slick objects.
   */
-class Tables (protected val dbConfig: DatabaseConfig[JdbcProfile]) {
-
+class Tables() {
+/*
   protected final lazy val driver: JdbcProfile = dbConfig.driver
 
   protected final def db: JdbcProfile#Backend#Database = dbConfig.db
@@ -147,5 +141,6 @@ class Tables (protected val dbConfig: DatabaseConfig[JdbcProfile]) {
 
     def * = (id.?, textMessageId, timestamp, message) <> (TextMessageError.tupled, TextMessageError.unapply)
 
-  }
+  }*/
+
 }

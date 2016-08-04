@@ -24,65 +24,34 @@
 
 package com.jsherz.luskydive.dao
 
-import com.jsherz.luskydive.models.Member
-import slick.backend.DatabaseConfig
-import slick.driver.JdbcProfile
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import com.jsherz.luskydive.db.Members
 
 /**
-  * Used to access members stored in the database.
+  * Data Access Object to retrieve and store Member information.
   */
-class MemberDAO(override protected val dbConfig: DatabaseConfig[JdbcProfile]) extends Tables(dbConfig) {
-  import driver.api._
+trait MemberDAO {
 
   /**
-    * Get all of the configured members.
+    * Does a member exist in the DB with the given e-mail or phone number?
     *
+    * @param phoneNumber
+    * @param email
     * @return
     */
-  def all(): Future[Seq[Member]] = db.run(Members.result)
+  def memberExists(phoneNumber: Option[String], email: Option[String]): Boolean
+
+}
+
+case class MemberDAOImpl(private val members: Members) extends MemberDAO {
 
   /**
-    * Get the member with the given ID.
+    * Does a member exist in the DB with the given e-mail or phone number?
     *
-    * @param id ID to search with
-    * @return Some(member) if found, otherwise None
-    */
-  def get(id: Int): Future[Option[Member]] = db.run(Members.filter(_.id === id).result.headOption)
-
-  /**
-    * Add a new member to the database.
-    *
-    * @param member Member to add
-    * @return The member's ID
-    */
-  def insert(member: Member): Future[Int] = db.run((Members returning Members.map(_.id)) += member)
-
-  /**
-    * Check if a member exists with the given phone number OR e-mail address.
-    *
-    * @param phoneNumber Mobile number to lookup
-    * @param email E-mail address to lookup
+    * @param phoneNumber
+    * @param email
     * @return
     */
-  def exists(phoneNumber: Option[String], email: Option[String]): Future[Boolean] = {
-    if (email.isDefined && phoneNumber.isEmpty) {
-      db.run(Members.filter(_.email === email).exists.result)
-    } else if (phoneNumber.isDefined && email.isEmpty) {
-      db.run(Members.filter(_.phoneNumber === phoneNumber).exists.result)
-    } else {
-      db.run(Members.filter(m =>
-        m.phoneNumber === phoneNumber && m.email === email
-      ).exists.result)
-    }
-  }
+  override def memberExists(phoneNumber: Option[String], email: Option[String]): Boolean =
+    members.findMember(phoneNumber, email).isDefined
 
-  /**
-    * Delete all members.
-    *
-    * @return
-    */
-  def empty(): Future[Unit] = db.run(Members.delete).map { _ => () }
 }

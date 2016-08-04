@@ -22,35 +22,13 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive
+package com.jsherz.luskydive.api
 
-import akka.actor.{Actor, ActorContext}
-import com.jsherz.luskydive.routes.SignupRoutes
-import spray.routing._
+import java.sql.Timestamp
 
 /**
-  * The primary application service that routes all requests.
+  * An error that occurred while attempting to send a text message.
+  *
+  * Once the text message has been sent successfully, these errors can safely be removed.
   */
-trait AppHttpService extends HttpService with SignupRoutes {
-  /**
-    * All application routes.
-    */
-  val routes =
-    signupRoutes
-}
-
-/**
-  * The Actor that receives all HTTP requests and routes them with the above service.
-  */
-class AppHttpServiceActor extends Actor with AppHttpService {
-
-  /**
-    * Used to connect this service to other Actors.
-    */
-  def actorRefFactory: ActorContext = context
-
-  /**
-    * Handle each HTTP request with the routes defined above.
-    */
-  def receive: Actor.Receive = runRoute(routes)
-}
+case class TextMessageError(id: Option[Int], textMessageId: Int, timestamp: Timestamp, message: String)

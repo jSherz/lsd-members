@@ -24,8 +24,9 @@
 
 package com.jsherz.luskydive.models
 
-import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber
 import com.google.i18n.phonenumbers.PhoneNumberUtil
+import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber
+import com.jsherz.luskydive.api.{Invalid, Valid, ValidationResult}
 
 import scala.util.matching.Regex
 

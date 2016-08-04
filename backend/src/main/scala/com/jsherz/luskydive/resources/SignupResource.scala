@@ -22,17 +22,26 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.models
+package com.jsherz.luskydive.resources
 
-class ValidationResult()
+import javax.ws.rs.core.MediaType
+import javax.ws.rs.{POST, Path, Produces}
+
+import com.codahale.metrics.annotation.Timed
+import com.jsherz.luskydive.api.{Member, SignupResult}
+import com.jsherz.luskydive.dao.MemberDAO
 
 /**
-  * Represents validation succeeding.
+  * Created by james on 04/08/16.
   */
-case class Valid() extends ValidationResult
+@Path("sign-up")
+@Produces(Array[String](MediaType.APPLICATION_JSON))
+class SignupResource(private val memberDAO: MemberDAO) {
 
-/**
-  * Represents validation failing.
-  * @param reason The reason validation failed
-  */
-case class Invalid(reason: String) extends ValidationResult
+  @POST
+  @Timed
+  def signup(member: Member): SignupResult = {
+    SignupResult(false, Map.empty)
+  }
+
+}

@@ -22,13 +22,12 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.models
-
-import java.sql.Timestamp
+package com.jsherz.luskydive.api
 
 /**
-  * An error that occurred while attempting to send a text message.
+  * The settings class, a K -> V store of Strings, used in various parts of the application.
   *
-  * Once the text message has been sent successfully, these errors can safely be removed.
+  * @param key
+  * @param value
   */
-case class TextMessageError(id: Option[Int], textMessageId: Int, timestamp: Timestamp, message: String)
+case class Setting(key: String, value: String)

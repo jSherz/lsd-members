@@ -24,23 +24,47 @@
 
 package com.jsherz.luskydive
 
-import akka.actor.{ActorSystem, Props}
-import akka.io.IO
-import akka.pattern.ask
-import akka.util.Timeout
-import spray.can.Http
+import com.datasift.dropwizard.scala.ScalaApplication
+import com.datasift.dropwizard.scala.jdbi.JDBI
+import com.jsherz.luskydive.dao.MemberDAOImpl
+import com.jsherz.luskydive.db.Members
+import com.jsherz.luskydive.resources.SignupResource
+import io.dropwizard.setup.{Bootstrap, Environment}
 
-import scala.concurrent.duration._
+/**
+  * The main setup point for the whole application.
+  */
+object SkydiveApplication extends ScalaApplication[SkydiveConfiguration] {
 
-object Boot extends App {
-  // we need an ActorSystem to host our application in
-  implicit val system = ActorSystem("on-spray-can")
+  /**
+    * Called to bootstrap components & CLI commands.
+    *
+    * @param bootstrap
+    */
+  override def init(bootstrap: Bootstrap[SkydiveConfiguration]): Unit = super.init(bootstrap)
 
-  // create and start our service actor
-  val service = system.actorOf(Props[AppHttpServiceActor], "demo-service")
+  /**
+    * Sets up the database and adds all resources.
+    *
+    * @param configuration
+    * @param environment
+    */
+  override def run(configuration: SkydiveConfiguration, environment: Environment): Unit = {
+    // DB
 
-  implicit val timeout = Timeout(5.seconds)
+    val db = JDBI(environment, configuration.getDataSourceFactory(), "postgres")
 
-  // start a new HTTP server on port 8080 with our service actor as the handler
-  IO(Http) ? Http.Bind(service, interface = "localhost", port = 8080)
+    val members: Members = db.onDemand[Members](classOf[Members])
+
+    // DAOs
+
+    val memberDAO = MemberDAOImpl(members)
+
+    // Resources
+
+    val signupResource = new SignupResource(memberDAO)
+
+    environment.jersey().register(signupResource)
+  }
+
 }

@@ -22,37 +22,12 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.models
+package com.jsherz.luskydive.api
 
-import spray.httpx.SprayJsonSupport
-import spray.json.DefaultJsonProtocol
+import java.sql.Timestamp
 
 /**
-  * The main member class, representing a person that has provided us with a phone number or e-mail address.
-  *
-  * @param id          Record ID
-  * @param name        Peron's (first) name
-  * @param phoneNumber Phone number
-  * @param email       E-mail address
+  * A text message that will be or has been sent to a member.
   */
-case class Member(id: Option[Int], name: String, phoneNumber: Option[String], email: Option[String]) {
-  /**
-    * Ensures that the record has at least:
-    *
-    * - A non-empty name
-    * - A valid phone number OR e-mail address.
-    *
-    * @return true if above conditions are met
-    */
-  def valid(): Boolean = {
-    val nameValid = Validators.isNameValid(name) == Valid()
-    val phoneNumberValid = Validators.parsePhoneNumber(phoneNumber).isRight
-    val emailValid = Validators.isEmailValid(email) == Valid()
-
-    nameValid && (phoneNumberValid || emailValid)
-  }
-}
-
-object MemberJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
-  implicit val MemberFormats = jsonFormat4(Member)
-}
+case class TextMessage(id: Option[Int], memberId: Int, toNumber: String, fromNumber: String, sentDt: Option[Timestamp],
+                       sentMsid: Option[String], status: Short, message: String)

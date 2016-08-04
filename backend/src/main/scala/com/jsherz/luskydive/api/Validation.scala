@@ -22,14 +22,18 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.models
+package com.jsherz.luskydive.api
+
+class ValidationResult()
 
 /**
-  * A set of keys for the available settings.
+  * Represents validation succeeding.
   */
-object Settings {
-  /**
-    * The template for welcome text messages.
-    */
-  val WelcomeText = "welcome-text"
-}
+case class Valid() extends ValidationResult
+
+/**
+  * Represents validation failing.
+  *
+  * @param reason The reason validation failed
+  */
+case class Invalid(reason: String) extends ValidationResult

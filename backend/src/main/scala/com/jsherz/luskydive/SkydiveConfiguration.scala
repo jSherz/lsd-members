@@ -22,35 +22,35 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.services
+package com.jsherz.luskydive
 
-import akka.actor.{Actor, ActorLogging}
-import akka.event.LoggingReceive
-import com.jsherz.luskydive.models.{Member, SignupResult, SignupResultJsonSupport}
-import spray.routing.RequestContext
+import javax.validation.constraints.NotNull
 
-object SignupService {
-
-  /**
-    * Called when a new member attempts to register with either a phone number or e-mail address.
-    *
-    * @param member Partially complete member record
-    */
-  case class Signup(member: Member)
-
-}
+import com.datasift.dropwizard.scala.validation.constraints.Valid
+import com.fasterxml.jackson.annotation.JsonProperty
+import io.dropwizard.Configuration
+import io.dropwizard.db.DataSourceFactory
+import org.hibernate.validator.constraints.NotEmpty
 
 /**
-  * Handles new users.
+  * Created by james on 04/08/16.
   */
-class SignupService(ctx: RequestContext) extends Actor with ActorLogging {
+class SkydiveConfiguration extends Configuration {
 
-  import SignupService._
-  import SignupResultJsonSupport._
+  @NotEmpty val greeting: String = "Hello, %s!"
+  @NotNull val greeters: List[String] = Nil
 
-  override def receive: Actor.Receive = LoggingReceive {
-    case Signup(member) =>
-      ctx.complete(SignupResult(true, Map.empty))
+  @Valid
+  @NotNull var database = new DataSourceFactory()
+
+  @JsonProperty("database")
+  def setDataSourceFactory(factory: DataSourceFactory): Unit = {
+    this.database = factory
+  }
+
+  @JsonProperty("database")
+  def getDataSourceFactory(): DataSourceFactory = {
+    this.database
   }
 
 }

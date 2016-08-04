@@ -22,30 +22,34 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.routes
+package com.jsherz.luskydive.api
 
-import akka.actor.{ActorRef, Props}
-import com.jsherz.luskydive.models.Member
-import com.jsherz.luskydive.services.SignupService
-import spray.http.MediaTypes._
-import spray.routing.{HttpService, RequestContext}
+import com.jsherz.luskydive.models.Validators
 
 /**
-  * Routes for user sign-up.
+  * The main member class, representing a person that has provided us with a phone number or e-mail address.
+  *
+  * @param id          Record ID
+  * @param name        Peron's (first) name
+  * @param phoneNumber Phone number
+  * @param email       E-mail address
   */
-trait SignupRoutes extends BaseRoute {
+case class Member(id: Option[Int], name: String, phoneNumber: Option[String], email: Option[String]) {
 
-  import com.jsherz.luskydive.services.SignupService._
-  import com.jsherz.luskydive.models.MemberJsonSupport._
+  /**
+    * Ensures that the record has at least:
+    *
+    * - A non-empty name
+    * - A valid phone number OR e-mail address.
+    *
+    * @return true if above conditions are met
+    */
+  def valid(): Boolean = {
+    val nameValid = Validators.isNameValid(name) == Valid()
+    val phoneNumberValid = Validators.parsePhoneNumber(phoneNumber).isRight
+    val emailValid = Validators.isEmailValid(email) == Valid()
 
-  def signupService(ctx: RequestContext): ActorRef = {
-    actorRefFactory.actorOf(Props(classOf[SignupService], ctx))
+    nameValid && (phoneNumberValid || emailValid)
   }
 
-  val signupRoutes =
-    pathPrefix("api" / "v1") {
-      (path("sign-up") & post & entity(as[Member]) & returnJson) { member => ctx =>
-        signupService(ctx) ! Signup(member)
-      }
-    }
 }
