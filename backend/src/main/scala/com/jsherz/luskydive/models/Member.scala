@@ -30,10 +30,10 @@ import spray.json.DefaultJsonProtocol
 /**
   * The main member class, representing a person that has provided us with a phone number or e-mail address.
   *
-  * @param id Record ID
-  * @param name Peron's (first) name
+  * @param id          Record ID
+  * @param name        Peron's (first) name
   * @param phoneNumber Phone number
-  * @param email E-mail address
+  * @param email       E-mail address
   */
 case class Member(id: Option[Int], name: String, phoneNumber: Option[String], email: Option[String]) {
   /**

@@ -22,30 +22,18 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.routes
+package com.jsherz.luskydive.models
 
-import akka.actor.{ActorRef, Props}
-import com.jsherz.luskydive.models.Member
-import com.jsherz.luskydive.services.SignupService
-import spray.http.MediaTypes._
-import spray.routing.{HttpService, RequestContext}
+import spray.httpx.SprayJsonSupport
+import spray.json.DefaultJsonProtocol
 
 /**
-  * Routes for user sign-up.
+  * The result of attempting to sign-up a new member.
   */
-trait SignupRoutes extends BaseRoute {
+case class SignupResult(success: Boolean, errors: Map[String, String])
 
-  import com.jsherz.luskydive.services.SignupService._
-  import com.jsherz.luskydive.models.MemberJsonSupport._
+object SignupResultJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
 
-  def signupService(ctx: RequestContext): ActorRef = {
-    actorRefFactory.actorOf(Props(classOf[SignupService], ctx))
-  }
+  implicit val SignupResultFormat = jsonFormat2(SignupResult)
 
-  val signupRoutes =
-    pathPrefix("api" / "v1") {
-      (path("sign-up") & post & entity(as[Member]) & returnJson) { member => ctx =>
-        signupService(ctx) ! Signup(member)
-      }
-    }
 }

@@ -26,35 +26,31 @@ package com.jsherz.luskydive.services
 
 import akka.actor.{Actor, ActorLogging}
 import akka.event.LoggingReceive
+import com.jsherz.luskydive.models.{Member, SignupResult, SignupResultJsonSupport}
 import spray.routing.RequestContext
 
 object SignupService {
-  /**
-    * The primary method of signing up - with a name & phone number.
-    * @param name The user's name (first or full acceptable)
-    * @param phoneNumber The user's phone number, defaulting to local country
-    */
-  case class Signup(name: String, phoneNumber: Option[String])
 
   /**
-    * Alternative method of signing up, used when a user's phone number isn't available.
-    * @param name The user's name (first or full acceptable)
-    * @param email The user's e-mail address
+    * Called when a new member attempts to register with either a phone number or e-mail address.
+    *
+    * @param member Partially complete member record
     */
-  case class SignupAlt(name: String, email: Option[String])
+  case class Signup(member: Member)
+
 }
 
 /**
   * Handles new users.
   */
 class SignupService(ctx: RequestContext) extends Actor with ActorLogging {
+
   import SignupService._
+  import SignupResultJsonSupport._
 
   override def receive: Actor.Receive = LoggingReceive {
-    case Signup(name, phoneNumber) =>
-      ctx.complete("Test")
-
-    case SignupAlt(name, email) =>
-      ctx.complete("Test alt")
+    case Signup(member) =>
+      ctx.complete(SignupResult(true, Map.empty))
   }
+
 }

@@ -24,28 +24,20 @@
 
 package com.jsherz.luskydive.routes
 
-import akka.actor.{ActorRef, Props}
-import com.jsherz.luskydive.models.Member
-import com.jsherz.luskydive.services.SignupService
 import spray.http.MediaTypes._
-import spray.routing.{HttpService, RequestContext}
+import spray.routing
+import spray.routing.HttpService
 
 /**
-  * Routes for user sign-up.
+  * Created by james on 04/08/16.
   */
-trait SignupRoutes extends BaseRoute {
+trait BaseRoute extends HttpService {
 
-  import com.jsherz.luskydive.services.SignupService._
-  import com.jsherz.luskydive.models.MemberJsonSupport._
+  /**
+    * Send the response as JSON data.
+    *
+    * @return
+    */
+  def returnJson(): routing.Directive0 = respondWithMediaType(`application/json`)
 
-  def signupService(ctx: RequestContext): ActorRef = {
-    actorRefFactory.actorOf(Props(classOf[SignupService], ctx))
-  }
-
-  val signupRoutes =
-    pathPrefix("api" / "v1") {
-      (path("sign-up") & post & entity(as[Member]) & returnJson) { member => ctx =>
-        signupService(ctx) ! Signup(member)
-      }
-    }
 }
