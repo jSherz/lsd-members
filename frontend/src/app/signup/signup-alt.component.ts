@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   FormControl,
   FormBuilder,
@@ -21,7 +22,7 @@ export class SignupAltComponent {
   ctrlName: FormControl;
   ctrlEmail: FormControl;
 
-  constructor(private builder: FormBuilder) {
+  constructor(private builder: FormBuilder, private router: Router) {
     this.ctrlName = new FormControl('', Validators.required);
     this.ctrlEmail = new FormControl('', Validators.compose([Validators.required, CustomValidators.email]));
 
@@ -32,6 +33,7 @@ export class SignupAltComponent {
   }
 
   signup() {
+    this.router.navigate(['sign-up', 'thank-you']);
   }
 
 }

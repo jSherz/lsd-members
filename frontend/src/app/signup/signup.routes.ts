@@ -1,8 +1,11 @@
 import { RouterConfig } from '@angular/router';
 
-import { SignupBaseComponent } from './signup-base.component';
-import { SignupComponent }     from './signup.component';
-import { SignupAltComponent }  from './signup-alt.component';
+import {
+  SignupComponent,
+  SignupAltComponent,
+  SignupBaseComponent,
+  ThankYouComponent
+} from './index'
 
 export const SignupRoutes: RouterConfig = [
   {
@@ -10,7 +13,8 @@ export const SignupRoutes: RouterConfig = [
     component: SignupBaseComponent,
     children: [
       { path: '', component: SignupComponent },
-      { path: 'alt', component: SignupAltComponent }
+      { path: 'alt', component: SignupAltComponent },
+      { path: 'thank-you', component: ThankYouComponent }
     ]
   }
 ];
