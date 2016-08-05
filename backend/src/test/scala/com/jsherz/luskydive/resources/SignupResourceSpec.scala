@@ -108,6 +108,26 @@ class SignupResourceSpec extends FunSpec with Matchers {
       result.errors should contain("email")
       result.errors.get("email") shouldEqual "A member has already signed up with that e-mail address"
     }
+
+    it("should return failed with an appropriate error if the e-mail is invalid") {
+      val member = memberWith("Caitlin Chamberlain", None, Some("definitely-not-valid.com"))
+
+      val result = resource.signup(member)
+
+      result.success shouldEqual false
+      result.errors should contain("email")
+      result.errors.get("email") shouldEqual "Invalid e-mail address"
+    }
+
+    it("should return failed with an appropriate error if the phone number is invalid") {
+      val member = memberWith("Aidan Carter", Some("07123123"), None)
+
+      val result = resource.signup(member)
+
+      result.success shouldEqual false
+      result.errors should contain("phoneNumber")
+      result.errors.get("phoneNumber") shouldEqual "Invalid phone number"
+    }
   }
 
   private def memberWith(name: String, phoneNumber: Option[String], email: Option[String]): Member = {
