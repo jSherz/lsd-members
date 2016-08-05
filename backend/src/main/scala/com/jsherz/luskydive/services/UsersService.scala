@@ -22,34 +22,15 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.api
+package com.jsherz.luskydive.services
 
-import com.jsherz.luskydive.models.Validators
+import scala.concurrent.{ExecutionContext, Future}
 
 /**
-  * The main member class, representing a person that has provided us with a phone number or e-mail address.
-  *
-  * @param id          Record ID
-  * @param name        Peron's (first) name
-  * @param phoneNumber Phone number
-  * @param email       E-mail address
+  * Created by james on 05/08/16.
   */
-case class Member(id: Option[Int], name: String, phoneNumber: Option[String], email: Option[String]) {
+class UsersService(val databaseService: DatabaseService)(implicit ec: ExecutionContext) {
 
-  /**
-    * Ensures that the record has at least:
-    *
-    * - A non-empty name
-    * - A valid phone number OR e-mail address.
-    *
-    * @return true if above conditions are met
-    */
-  def valid(): Boolean = {
-    val nameValid = Validators.isNameValid(name) == Valid()
-    val phoneNumberValid = Validators.parsePhoneNumber(phoneNumber).isRight
-    val emailValid = Validators.isEmailValid(email) == Valid()
-
-    nameValid && (phoneNumberValid || emailValid)
-  }
+  def test(): Future[String] = Future("Hello, world!")
 
 }

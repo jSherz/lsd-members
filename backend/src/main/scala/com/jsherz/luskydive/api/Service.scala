@@ -24,12 +24,33 @@
 
 package com.jsherz.luskydive.api
 
+import akka.actor.ActorSystem
+import akka.event.LoggingAdapter
+import akka.http.scaladsl.model.HttpResponse
+import akka.stream.Materializer
+import com.typesafe.config.Config
+import akka.http.scaladsl.server.Directives._
+
+import scala.concurrent.ExecutionContextExecutor
+
 /**
-  * A set of keys for the available settings.
+  * Created by james on 05/08/16.
   */
-object Settings {
-  /**
-    * The template for welcome text messages.
-    */
-  val WelcomeText = "welcome-text"
+trait Service extends Protocols {
+  implicit val system: ActorSystem
+  implicit def executor: ExecutionContextExecutor
+  implicit val materializer: Materializer
+
+  def config: Config
+  val logger: LoggingAdapter
+
+  val routes = {
+    path("") {
+      get {
+        complete {
+          HttpResponse(entity = "Hello, world!")
+        }
+      }
+    }
+  }
 }

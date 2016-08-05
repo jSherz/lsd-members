@@ -22,9 +22,12 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.api
+package com.jsherz.luskydive.core
+
+import java.sql.Timestamp
 
 /**
-  * The result of attempting to sign-up a new member.
+  * A text message that will be or has been sent to a member.
   */
-case class SignupResult(success: Boolean, errors: Map[String, String])
+case class TextMessage(id: Option[Int], memberId: Int, toNumber: String, fromNumber: String, sentDt: Option[Timestamp],
+                       sentMsid: Option[String], status: Short, message: String)

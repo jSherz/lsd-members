@@ -22,28 +22,24 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.db
+package com.jsherz.luskydive.util
 
-import com.jsherz.luskydive.api.Member
-import org.skife.jdbi.v2.sqlobject.{Bind, SqlQuery}
-import org.skife.jdbi.v2.sqlobject.customizers.SingleValueResult
+import com.typesafe.config.ConfigFactory
 
 /**
-  * JDBI wrapper for Members.
+  * Created by james on 05/08/16.
   */
-abstract class Members {
+trait Config {
 
-  /**
-    * Attempt to find a member with the given email and phone number.
-    *
-    * @param email
-    * @param phoneNumber
-    * @return
-    */
-  @SqlQuery("SELECT * FROM members " +
-    "WHERE (:email IS NOT NULL AND members.email = :email) OR" +
-    "(:phoneNumber IS NOT NULL AND members.phone_number = :phoneNumber")
-  @SingleValueResult
-  def findMember(@Bind("email") email: Option[String], @Bind("phoneNumber") phoneNumber: Option[String]): Option[Member]
+  private val config = ConfigFactory.load()
+  private val configHttp = config.getConfig("http")
+  private val configDb = config.getConfig("database")
+
+  val interface = configHttp.getString("interface")
+  val port = configHttp.getInt("port")
+
+  val dbUrl = configDb.getString("url")
+  val dbUsername = configDb.getString("username")
+  val dbPassword = configDb.getString("password")
 
 }

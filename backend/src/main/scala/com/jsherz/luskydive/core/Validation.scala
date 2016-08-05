@@ -22,12 +22,18 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.api
+package com.jsherz.luskydive.core
+
+class ValidationResult()
 
 /**
-  * The settings class, a K -> V store of Strings, used in various parts of the application.
-  *
-  * @param key
-  * @param value
+  * Represents validation succeeding.
   */
-case class Setting(key: String, value: String)
+case class Valid() extends ValidationResult
+
+/**
+  * Represents validation failing.
+  *
+  * @param reason The reason validation failed
+  */
+case class Invalid(reason: String) extends ValidationResult

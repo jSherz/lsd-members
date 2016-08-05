@@ -22,33 +22,12 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.dao
+package com.jsherz.luskydive.core
 
 /**
-  * Data Access Object to retrieve and store Member information.
+  * The settings class, a K -> V store of Strings, used in various parts of the application.
+  *
+  * @param key
+  * @param value
   */
-trait MemberDAO {
-
-  /**
-    * Does a member exist in the DB with the given e-mail or phone number?
-    *
-    * @param phoneNumber
-    * @param email
-    * @return
-    */
-  def memberExists(phoneNumber: Option[String], email: Option[String]): Boolean
-
-}
-
-case class MemberDAOImpl() extends MemberDAO {
-
-  /**
-    * Does a member exist in the DB with the given e-mail or phone number?
-    *
-    * @param phoneNumber
-    * @param email
-    * @return
-    */
-  override def memberExists(phoneNumber: Option[String], email: Option[String]): Boolean = ???
-
-}
+case class Setting(key: String, value: String)

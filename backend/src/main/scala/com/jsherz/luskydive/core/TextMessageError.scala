@@ -22,26 +22,13 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.resources
+package com.jsherz.luskydive.core
 
-import javax.ws.rs.core.MediaType
-import javax.ws.rs.{POST, Path, Produces}
-
-import com.codahale.metrics.annotation.Timed
-import com.jsherz.luskydive.api.{Member, SignupResult}
-import com.jsherz.luskydive.dao.MemberDAO
+import java.sql.Timestamp
 
 /**
-  * Created by james on 04/08/16.
+  * An error that occurred while attempting to send a text message.
+  *
+  * Once the text message has been sent successfully, these errors can safely be removed.
   */
-@Path("sign-up")
-@Produces(Array[String](MediaType.APPLICATION_JSON))
-class SignupResource(private val memberDAO: MemberDAO) {
-
-  @POST
-  @Timed
-  def signup(member: Member): SignupResult = {
-    SignupResult(false, Map.empty)
-  }
-
-}
+case class TextMessageError(id: Option[Int], textMessageId: Int, timestamp: Timestamp, message: String)

@@ -22,33 +22,27 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.dao
+package com.jsherz.luskydive.api.routes
+
+import akka.http.scaladsl.model.HttpResponse
+import akka.http.scaladsl.server.Directives._
+import com.jsherz.luskydive.services.UsersService
+
+import scala.concurrent.ExecutionContext
 
 /**
-  * Data Access Object to retrieve and store Member information.
+  * Created by james on 05/08/16.
   */
-trait MemberDAO {
+class SignupRoutes(private val usersService: UsersService)(implicit ec: ExecutionContext) {
 
-  /**
-    * Does a member exist in the DB with the given e-mail or phone number?
-    *
-    * @param phoneNumber
-    * @param email
-    * @return
-    */
-  def memberExists(phoneNumber: Option[String], email: Option[String]): Boolean
-
-}
-
-case class MemberDAOImpl() extends MemberDAO {
-
-  /**
-    * Does a member exist in the DB with the given e-mail or phone number?
-    *
-    * @param phoneNumber
-    * @param email
-    * @return
-    */
-  override def memberExists(phoneNumber: Option[String], email: Option[String]): Boolean = ???
+  val route = pathPrefix("users") {
+    pathEndOrSingleSlash {
+      get {
+        complete {
+          HttpResponse(entity = "Hello, world!")
+        }
+      }
+    }
+  }
 
 }

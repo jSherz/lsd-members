@@ -22,33 +22,32 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.dao
+package com.jsherz.luskydive
+
+import akka.actor.ActorSystem
+import akka.event.{Logging, LoggingAdapter}
+import akka.http.scaladsl.Http
+import akka.stream.ActorMaterializer
+import com.jsherz.luskydive.api.HttpService
+import com.jsherz.luskydive.services.{DatabaseService, UsersService}
+import com.jsherz.luskydive.util.Config
 
 /**
-  * Data Access Object to retrieve and store Member information.
+  * The main application service that runs the API.
   */
-trait MemberDAO {
+object Main extends App with Config {
 
-  /**
-    * Does a member exist in the DB with the given e-mail or phone number?
-    *
-    * @param phoneNumber
-    * @param email
-    * @return
-    */
-  def memberExists(phoneNumber: Option[String], email: Option[String]): Boolean
+  implicit val actorSystem = ActorSystem()
+  implicit val executor = actorSystem.dispatcher
+  implicit val log: LoggingAdapter = Logging(actorSystem, getClass)
+  implicit val materializer = ActorMaterializer()
 
-}
+  val databaseService = new DatabaseService(dbUrl, dbUsername, dbPassword)
 
-case class MemberDAOImpl() extends MemberDAO {
+  val usersService = new UsersService(databaseService)
 
-  /**
-    * Does a member exist in the DB with the given e-mail or phone number?
-    *
-    * @param phoneNumber
-    * @param email
-    * @return
-    */
-  override def memberExists(phoneNumber: Option[String], email: Option[String]): Boolean = ???
+  val httpService = new HttpService(usersService)
+
+  Http().bindAndHandle(httpService.routes, interface, port)
 
 }

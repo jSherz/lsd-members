@@ -22,18 +22,34 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.api
+package com.jsherz.luskydive.core
 
-class ValidationResult()
-
-/**
-  * Represents validation succeeding.
-  */
-case class Valid() extends ValidationResult
+import com.jsherz.luskydive.models.Validators
 
 /**
-  * Represents validation failing.
+  * The main member class, representing a person that has provided us with a phone number or e-mail address.
   *
-  * @param reason The reason validation failed
+  * @param id          Record ID
+  * @param name        Peron's (first) name
+  * @param phoneNumber Phone number
+  * @param email       E-mail address
   */
-case class Invalid(reason: String) extends ValidationResult
+case class Member(id: Option[Int], name: String, phoneNumber: Option[String], email: Option[String]) {
+
+  /**
+    * Ensures that the record has at least:
+    *
+    * - A non-empty name
+    * - A valid phone number OR e-mail address.
+    *
+    * @return true if above conditions are met
+    */
+  def valid(): Boolean = {
+    val nameValid = Validators.isNameValid(name) == Valid()
+    val phoneNumberValid = Validators.parsePhoneNumber(phoneNumber).isRight
+    val emailValid = Validators.isEmailValid(email) == Valid()
+
+    nameValid && (phoneNumberValid || emailValid)
+  }
+
+}

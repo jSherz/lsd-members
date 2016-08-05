@@ -24,11 +24,11 @@
 
 package com.jsherz.luskydive.api
 
-import java.sql.Timestamp
+import spray.json.DefaultJsonProtocol
 
 /**
-  * An error that occurred while attempting to send a text message.
-  *
-  * Once the text message has been sent successfully, these errors can safely be removed.
+  * Formats used to (de)serialize JSON.
   */
-case class TextMessageError(id: Option[Int], textMessageId: Int, timestamp: Timestamp, message: String)
+trait Protocols extends DefaultJsonProtocol {
+
+}

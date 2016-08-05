@@ -22,12 +22,14 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.api
-
-import java.sql.Timestamp
+package com.jsherz.luskydive.core
 
 /**
-  * A text message that will be or has been sent to a member.
+  * A set of keys for the available settings.
   */
-case class TextMessage(id: Option[Int], memberId: Int, toNumber: String, fromNumber: String, sentDt: Option[Timestamp],
-                       sentMsid: Option[String], status: Short, message: String)
+object Settings {
+  /**
+    * The template for welcome text messages.
+    */
+  val WelcomeText = "welcome-text"
+}

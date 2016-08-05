@@ -22,49 +22,27 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive
+package com.jsherz.luskydive.services
 
-import com.datasift.dropwizard.scala.ScalaApplication
-import com.datasift.dropwizard.scala.jdbi.JDBI
-import com.jsherz.luskydive.dao.MemberDAOImpl
-import com.jsherz.luskydive.db.Members
-import com.jsherz.luskydive.resources.SignupResource
-import io.dropwizard.setup.{Bootstrap, Environment}
+import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
 
 /**
-  * The main setup point for the whole application.
+  * Created by james on 05/08/16.
   */
-object SkydiveApplication extends ScalaApplication[SkydiveConfiguration] {
+class DatabaseService(jdbcUrl: String, username: String, password: String) {
 
-  /**
-    * Called to bootstrap components & CLI commands.
-    *
-    * @param bootstrap
-    */
-  override def init(bootstrap: Bootstrap[SkydiveConfiguration]): Unit = super.init(bootstrap)
+  private val hikariConfig = new HikariConfig()
+  hikariConfig.setJdbcUrl(jdbcUrl)
+  hikariConfig.setUsername(username)
+  hikariConfig.setPassword(password)
 
-  /**
-    * Sets up the database and adds all resources.
-    *
-    * @param configuration
-    * @param environment
-    */
-  override def run(configuration: SkydiveConfiguration, environment: Environment): Unit = {
-    // DB
+  private val dataSource = new HikariDataSource(hikariConfig)
 
-    val db = JDBI(environment, configuration.getDataSourceFactory(), "postgres")
+  val driver = slick.driver.PostgresDriver
 
-    val members: Members = db.onDemand[Members](classOf[Members])
+  import driver.api._
 
-    // DAOs
-
-    val memberDAO = MemberDAOImpl(members)
-
-    // Resources
-
-    val signupResource = new SignupResource(memberDAO)
-
-    environment.jersey().register(signupResource)
-  }
+  val db = Database.forDataSource(dataSource)
+  db.createSession()
 
 }
