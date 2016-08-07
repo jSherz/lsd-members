@@ -53,9 +53,13 @@ libraryDependencies ++= {
     "org.scalatest" %% "scalatest" % "2.2.6" % "test",
 
     // Misc (version conflicts)
-    "org.scala-lang"         %  "scala-reflect" % scalaV,
-    "org.scala-lang.modules" %% "scala-xml"     % "1.0.4"
+    "org.scala-lang"         %  "scala-reflect"  % scalaV,
+    "org.scala-lang"         %  "scala-compiler" % scalaV,
+    "org.scala-lang"         %  "scala-library"  % scalaV,
+    "org.scala-lang.modules" %% "scala-xml"      % "1.0.4"
   )
 }
 
 Revolver.settings
+
+wartremoverErrors ++= Warts.all
