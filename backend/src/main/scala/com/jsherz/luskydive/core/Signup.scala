@@ -22,27 +22,36 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.api.routes
+package com.jsherz.luskydive.core
 
-import akka.http.scaladsl.model.HttpResponse
-import akka.http.scaladsl.server.Directives._
-import com.jsherz.luskydive.services.UsersService
-
-import scala.concurrent.ExecutionContext
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
+import spray.json.DefaultJsonProtocol
 
 /**
-  * Created by james on 05/08/16.
+  * JSON (de)serialization support.
   */
-class SignupRoutes(private val usersService: UsersService)(implicit ec: ExecutionContext) {
+object SignupJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
 
-  val route = pathPrefix("users") {
-    pathEndOrSingleSlash {
-      get {
-        complete {
-          HttpResponse(entity = "Hello, world!")
-        }
-      }
-    }
-  }
+  implicit val SignupRequestFormat = jsonFormat2(SignupRequest)
+  implicit val SignupAltRequestFormat = jsonFormat2(SignupAltRequest)
+  implicit val SignupResponseFormat = jsonFormat2(SignupResponse)
 
 }
+
+/**
+  * Standard method of a member signing up.
+  */
+case class SignupRequest(name: String, phoneNumber: String)
+
+/**
+  * Alternative method of a member signing up.
+  */
+case class SignupAltRequest(name: String, email: String)
+
+/**
+  * A response to a sign-up request.
+  *
+  * @param success Did signing up succeed?
+  * @param errors  Any errors that were reported as a field -> error mapping
+  */
+case class SignupResponse(success: Boolean, errors: Map[String, String])

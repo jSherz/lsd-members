@@ -22,9 +22,53 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.core
+package com.jsherz.luskydive.apis
+
+import akka.http.scaladsl.server.Directives._
+import com.jsherz.luskydive.core.{SignupAltRequest, SignupRequest, SignupResponse}
+import com.jsherz.luskydive.dao.MemberDAO
+
+import scala.concurrent.ExecutionContext
 
 /**
-  * The result of attempting to sign-up a new member.
+  * The two methods of signing up new members at a fresher's fair (phone number or e-mail).
   */
-case class SignupResult(success: Boolean, errors: Map[String, String])
+class SignupAPI(private val memberDao: MemberDAO)(implicit ec: ExecutionContext) {
+
+  import com.jsherz.luskydive.core.SignupJsonSupport._
+
+  /**
+    * The primary method of signing up new members.
+    *
+    * Requires a name and e-mail address.
+    */
+  private val signupRoute = path("sign-up") {
+    entity(as[SignupRequest]) { req =>
+      post {
+        complete {
+          SignupResponse(false, Map.empty)
+        }
+      }
+    }
+  }
+
+  /**
+    * The alternative method of signing up new members.
+    *
+    * Requires a name and phone number.
+    */
+  private val signupAltRoute = path("sign-up" / "alt") {
+    entity(as[SignupAltRequest]) { req =>
+      post {
+        complete {
+          SignupResponse(false, Map.empty)
+        }
+      }
+    }
+  }
+
+  val route = pathPrefix("members") {
+    signupRoute ~ signupAltRoute
+  }
+
+}

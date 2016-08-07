@@ -24,36 +24,50 @@
 
 package com.jsherz.luskydive.resources
 
-import org.scalatest.{FunSpec, Matchers}
+import akka.http.scaladsl.model.StatusCodes
+import akka.http.scaladsl.testkit.ScalatestRouteTest
+import com.jsherz.luskydive.apis.SignupAPI
+import com.jsherz.luskydive.core.{SignupAltRequest, SignupResponse}
+import com.jsherz.luskydive.dao.StubMemberDAO
+import org.scalatest.{Matchers, WordSpec}
 
 /**
   * Ensures the main sign-up endpoint functions correctly.
   */
-class SignupResourceSpec extends FunSpec with Matchers {
-/*
+class SignupAPISpec extends WordSpec with Matchers with ScalatestRouteTest {
+
   private val dao = new StubMemberDAO()
-  private val resource = new SignupResource(dao)
+  private val route = new SignupAPI(dao).route
 
-  describe("SignupResource") {
-    it("should return success with no errors if a valid username & e-mail are given") {
-      val member = memberWith("Tyler Davey", None, Some("TylerDavey@jourrapide.com"))
+  import com.jsherz.luskydive.core.SignupJsonSupport._
 
+  "SignupAPI" should {
+
+    "return success with no errors if a valid username & e-mail are given" in {
+      val request = SignupAltRequest("Tyler Davey", "TylerDavey@jourrapide.com")
+      val expected = SignupResponse(false, Map.empty)
+
+      Post("/members/sign-up/alt", request) ~> route ~> check {
+        response.status shouldEqual StatusCodes.OK
+        responseAs[SignupResponse].success shouldBe true
+        responseAs[SignupResponse].errors shouldBe empty
+      }
+
+    }
+
+    /*
+
+    "return success with no errors if a valid username & phone number are given" in {
+      val request = SignupRequest("Toby Howard", "07918323440")
+
+      Post("/api/v1/members/sign-up", request) ~> route ~> check {
       val result = resource.signup(member)
 
       result.success shouldEqual true
       result.errors shouldBe empty
     }
 
-    it("should return success with no errors if a valid username & phone number are given") {
-      val member = memberWith("Toby Howard", Some("07918323440"), None)
-
-      val result = resource.signup(member)
-
-      result.success shouldEqual true
-      result.errors shouldBe empty
-    }
-
-    it("should return failed with an error if no name is given") {
+    "return failed with an error if no name is given" in {
       val memberP = memberWith("", Some("07049215717"), None)
       val memberE = memberWith("", None, Some("LiamHurst@jourrapide.com"))
 
@@ -70,7 +84,7 @@ class SignupResourceSpec extends FunSpec with Matchers {
       resultE.errors.get("name") shouldEqual "Please enter a name"
     }
 
-    it("should return failed with an error if a blank name (only spaces) is given") {
+    "return failed with an error if a blank name (only spaces) is given" in {
       val memberP = memberWith("      ", Some("07856216259"), None)
       val memberE = memberWith("      ", None, Some("LucasJordan@rhyta.com"))
 
@@ -87,7 +101,7 @@ class SignupResourceSpec extends FunSpec with Matchers {
       resultE.errors.get("name") shouldEqual "Please enter a name"
     }
 
-    it("should return failed with an appropriate error if the phone number is in use") {
+    "return failed with an appropriate error if the phone number is in use" in {
       val member = memberWith("Declan Clark", StubMemberDAO.existsPhoneNumber, None)
 
       val result = resource.signup(member)
@@ -97,7 +111,7 @@ class SignupResourceSpec extends FunSpec with Matchers {
       result.errors.get("phoneNumber") shouldEqual "A member has already signed up with that phone number"
     }
 
-    it("should return failed with an appropriate error if the e-mail is in use") {
+    "return failed with an appropriate error if the e-mail is in use" in {
       val member = memberWith("Nicole Howarth", None, StubMemberDAO.existsEmail)
 
       val result = resource.signup(member)
@@ -107,7 +121,7 @@ class SignupResourceSpec extends FunSpec with Matchers {
       result.errors.get("email") shouldEqual "A member has already signed up with that e-mail address"
     }
 
-    it("should return failed with an appropriate error if the e-mail is invalid") {
+    "return failed with an appropriate error if the e-mail is invalid" in {
       val member = memberWith("Caitlin Chamberlain", None, Some("definitely-not-valid.com"))
 
       val result = resource.signup(member)
@@ -117,7 +131,7 @@ class SignupResourceSpec extends FunSpec with Matchers {
       result.errors.get("email") shouldEqual "Invalid e-mail address"
     }
 
-    it("should return failed with an appropriate error if the phone number is invalid") {
+    "return failed with an appropriate error if the phone number is invalid" in {
       val member = memberWith("Aidan Carter", Some("07123123"), None)
 
       val result = resource.signup(member)
@@ -125,11 +139,7 @@ class SignupResourceSpec extends FunSpec with Matchers {
       result.success shouldEqual false
       result.errors should contain("phoneNumber")
       result.errors.get("phoneNumber") shouldEqual "Invalid phone number"
-    }
+    }*/
   }
 
-  private def memberWith(name: String, phoneNumber: Option[String], email: Option[String]): Member = {
-    Member(None, name, phoneNumber, email)
-  }
-*/
 }

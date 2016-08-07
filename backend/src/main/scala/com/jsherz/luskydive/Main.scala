@@ -28,8 +28,8 @@ import akka.actor.ActorSystem
 import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.Http
 import akka.stream.ActorMaterializer
-import com.jsherz.luskydive.api.HttpService
-import com.jsherz.luskydive.services.{DatabaseService, UsersService}
+import com.jsherz.luskydive.dao.MemberDAOImpl
+import com.jsherz.luskydive.services.{DatabaseService, HttpService}
 import com.jsherz.luskydive.util.Config
 
 /**
@@ -44,9 +44,9 @@ object Main extends App with Config {
 
   val databaseService = new DatabaseService(dbUrl, dbUsername, dbPassword)
 
-  val usersService = new UsersService(databaseService)
+  val memberDao = new MemberDAOImpl(databaseService)
 
-  val httpService = new HttpService(usersService)
+  val httpService = new HttpService(memberDao)
 
   Http().bindAndHandle(httpService.routes, interface, port)
 
