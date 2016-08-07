@@ -24,6 +24,7 @@
 
 package com.jsherz.luskydive.dao
 
+import com.jsherz.luskydive.core.Member
 import com.jsherz.luskydive.services.DatabaseService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -50,7 +51,7 @@ trait MemberDAO {
     * @param email
     * @return
     */
-  def create(name: String, phoneNumber: Option[String], email: Option[String]): Future[Long]
+  def create(name: String, phoneNumber: Option[String], email: Option[String]): Future[Int]
 
 }
 
@@ -81,6 +82,7 @@ case class MemberDAOImpl(override protected val databaseService: DatabaseService
     * @param email
     * @return
     */
-  override def create(name: String, phoneNumber: Option[String], email: Option[String]): Future[Long] = ???
+  override def create(name: String, phoneNumber: Option[String], email: Option[String]): Future[Int] =
+    db.run((Members returning Members.map(_.id)) += Member(None, name, phoneNumber, email))
 
 }

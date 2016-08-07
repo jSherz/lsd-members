@@ -50,8 +50,8 @@ class StubMemberDAO()(implicit val ec: ExecutionContext) extends MemberDAO {
     * @param email
     * @return
     */
-  override def create(name: String, phoneNumber: Option[String], email: Option[String]): Future[Long] = {
-    Future(1L)
+  override def create(name: String, phoneNumber: Option[String], email: Option[String]): Future[Int] = {
+    Future(1)
   }
 }
 
