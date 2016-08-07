@@ -25,7 +25,6 @@
 package com.jsherz.luskydive.apis
 
 import akka.http.scaladsl.server.Directives._
-import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.jsherz.luskydive.core.{SignupAltRequest, SignupRequest, SignupResponse}
 import com.jsherz.luskydive.dao.MemberDAO
 
@@ -38,8 +37,6 @@ import scalaz.{Failure, Success}
 class SignupAPI(private val memberDao: MemberDAO)(implicit ec: ExecutionContext) {
 
   import com.jsherz.luskydive.core.SignupJsonSupport._
-
-  private val phoneNumberUtil = PhoneNumberUtil.getInstance()
 
   /**
     * The primary method of signing up new members.
