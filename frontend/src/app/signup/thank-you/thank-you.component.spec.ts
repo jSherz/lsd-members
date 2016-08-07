@@ -1,13 +1,23 @@
 /* tslint:disable:no-unused-variable */
 
-import { By }           from '@angular/platform-browser';
+import {
+  beforeEach, beforeEachProviders,
+  describe, xdescribe,
+  expect, it, xit,
+  async, inject
+} from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
-import { addProviders, async, inject } from '@angular/core/testing';
+import { Location, PathLocationStrategy, LocationStrategy } from '@angular/common';
+import { APP_ROUTER_PROVIDERS } from './../../index';
 import { ThankYouComponent } from './thank-you.component';
 
 describe('Component: ThankYou', () => {
-  it('should create an instance', () => {
-    let component = new ThankYouComponent();
+  beforeEachProviders(() => [APP_ROUTER_PROVIDERS])
+
+  it('should create an instance', inject([LocationStrategy], (locationStrategy: LocationStrategy) => {
+    let location = new Location(locationStrategy);
+    let component = new ThankYouComponent(location);
     expect(component).toBeTruthy();
-  });
+  }));
 });
