@@ -51,7 +51,11 @@ class SignupAPI(private val memberDao: MemberDAO)(implicit ec: ExecutionContext)
             case Success(phoneNumber) => {
               memberDao.memberExists(Some(phoneNumber), None).map {
                 case true => SignupResponse(false, Map("phoneNumber" -> "error.inUse"))
-                case false => SignupResponse(true, Map.empty)
+                case false => {
+                  memberDao.create(req.name, Some(phoneNumber), None)
+
+                  SignupResponse(true, Map.empty)
+                }
               }
             }
             case Failure(reason) => SignupResponse(false, reason.list.toList.toMap)
@@ -74,7 +78,11 @@ class SignupAPI(private val memberDao: MemberDAO)(implicit ec: ExecutionContext)
             case Success(_) => {
               memberDao.memberExists(None, Some(req.email)).map {
                 case true => SignupResponse(false, Map("email" -> "error.inUse"))
-                case false => SignupResponse(true, Map.empty)
+                case false => {
+                  memberDao.create(req.name, None, Some(req.email))
+
+                  SignupResponse(true, Map.empty)
+                }
               }
             }
             case Failure(reason) => SignupResponse(false, reason.list.toList.toMap)

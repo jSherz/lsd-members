@@ -49,8 +49,9 @@ libraryDependencies ++= {
     "com.googlecode.libphonenumber" % "libphonenumber" % "7.4.1",
 
     // Testing frameworks
-    "org.scalactic" %% "scalactic" % "2.2.6",
-    "org.scalatest" %% "scalatest" % "2.2.6" % "test",
+    "org.scalactic" %% "scalactic"    % "2.2.6",
+    "org.scalatest" %% "scalatest"    % "2.2.6"   % "test",
+    "org.mockito"   %  "mockito-core" % "1.10.19" % "test",
 
     // Misc (version conflicts)
     "org.scala-lang"         %  "scala-reflect"  % scalaV,

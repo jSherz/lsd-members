@@ -42,6 +42,16 @@ trait MemberDAO {
     */
   def memberExists(phoneNumber: Option[String], email: Option[String]): Future[Boolean]
 
+  /**
+    * Create a new member.
+    *
+    * @param name
+    * @param phoneNumber
+    * @param email
+    * @return
+    */
+  def create(name: String, phoneNumber: Option[String], email: Option[String]): Future[Long]
+
 }
 
 case class MemberDAOImpl(override protected val databaseService: DatabaseService)(implicit ec: ExecutionContext)
@@ -62,5 +72,15 @@ case class MemberDAOImpl(override protected val databaseService: DatabaseService
         (m.email.isDefined && m.email === email)
     ).result).map(_.nonEmpty)
   }
+
+  /**
+    * Create a new member.
+    *
+    * @param name
+    * @param phoneNumber
+    * @param email
+    * @return
+    */
+  override def create(name: String, phoneNumber: Option[String], email: Option[String]): Future[Long] = ???
 
 }

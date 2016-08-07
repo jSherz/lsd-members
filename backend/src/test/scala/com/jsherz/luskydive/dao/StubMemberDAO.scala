@@ -42,6 +42,17 @@ class StubMemberDAO()(implicit val ec: ExecutionContext) extends MemberDAO {
     Future(phoneNumber.contains(StubMemberDAO.existsPhoneNumberFormatted) || email.contains(StubMemberDAO.existsEmail))
   }
 
+  /**
+    * Create a new member.
+    *
+    * @param name
+    * @param phoneNumber
+    * @param email
+    * @return
+    */
+  override def create(name: String, phoneNumber: Option[String], email: Option[String]): Future[Long] = {
+    Future(1L)
+  }
 }
 
 object StubMemberDAO {
