@@ -24,6 +24,10 @@
 
 package com.jsherz.luskydive.dao
 
+import com.jsherz.luskydive.services.DatabaseService
+
+import scala.concurrent.{ExecutionContext, Future}
+
 /**
   * Data Access Object to retrieve and store Member information.
   */
@@ -36,11 +40,14 @@ trait MemberDAO {
     * @param email
     * @return
     */
-  def memberExists(phoneNumber: Option[String], email: Option[String]): Boolean
+  def memberExists(phoneNumber: Option[String], email: Option[String]): Future[Boolean]
 
 }
 
-case class MemberDAOImpl() extends MemberDAO {
+case class MemberDAOImpl(override protected val databaseService: DatabaseService)(implicit ec: ExecutionContext)
+  extends Tables(databaseService) with MemberDAO {
+
+  import driver.api._
 
   /**
     * Does a member exist in the DB with the given e-mail or phone number?
@@ -49,6 +56,11 @@ case class MemberDAOImpl() extends MemberDAO {
     * @param email
     * @return
     */
-  override def memberExists(phoneNumber: Option[String], email: Option[String]): Boolean = ???
+  override def memberExists(phoneNumber: Option[String], email: Option[String]): Future[Boolean] = {
+    db.run(Members.filter(m =>
+      (m.phoneNumber.isDefined && m.phoneNumber === phoneNumber) ||
+        (m.email.isDefined && m.email === email)
+    ).result).map(_.nonEmpty)
+  }
 
 }

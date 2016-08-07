@@ -24,10 +24,12 @@
 
 package com.jsherz.luskydive.dao
 
+import scala.concurrent.{ExecutionContext, Future}
+
 /**
   * A testing implementation of the MemberDAO that responds to a set of pre-defined inputs.
   */
-class StubMemberDAO extends MemberDAO {
+class StubMemberDAO()(implicit val ec: ExecutionContext) extends MemberDAO {
 
   /**
     * Does a member exist in the DB with the given e-mail or phone number?
@@ -36,8 +38,8 @@ class StubMemberDAO extends MemberDAO {
     * @param email
     * @return
     */
-  override def memberExists(phoneNumber: Option[String], email: Option[String]): Boolean = {
-    phoneNumber == StubMemberDAO.existsPhoneNumber || email == StubMemberDAO.existsEmail
+  override def memberExists(phoneNumber: Option[String], email: Option[String]): Future[Boolean] = {
+    Future(phoneNumber == StubMemberDAO.existsPhoneNumber || email == StubMemberDAO.existsEmail)
   }
 
 }
