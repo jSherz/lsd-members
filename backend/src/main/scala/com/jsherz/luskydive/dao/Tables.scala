@@ -24,10 +24,10 @@
 
 package com.jsherz.luskydive.dao
 
-import java.sql.Timestamp
+import java.sql.{Date, Timestamp}
 import java.util.UUID
 
-import com.jsherz.luskydive.core.{Member, Setting, TextMessage, TextMessageError}
+import com.jsherz.luskydive.core._
 import com.jsherz.luskydive.services.DatabaseService
 
 /**
@@ -145,6 +145,78 @@ class Tables(protected val databaseService: DatabaseService) {
     def message: Rep[String] = column[String]("message")
 
     def * = (id.?, textMessageId, timestamp, message) <> (TextMessageError.tupled, TextMessageError.unapply)
+
+  }
+
+  protected val CommitteeMembers: TableQuery[CommitteeMemberTables] = TableQuery[CommitteeMemberTables]
+
+  /**
+    * The Slick mapping for committee members.
+    * @param tag
+    */
+  protected class CommitteeMemberTables(tag: Tag) extends Table[CommitteeMember](tag, "committee_members") {
+
+    def uuid: Rep[UUID] = column[UUID]("uuid", O.PrimaryKey)
+
+    def name: Rep[String] = column[String]("name")
+
+    def email: Rep[String] = column[String]("email")
+
+    def password: Rep[String] = column[String]("password")
+
+    def salt: Rep[String] = column[String]("salt")
+
+    def locked: Rep[Boolean] = column[Boolean]("locked")
+
+    def createdAt: Rep[Date] = column[Date]("created_at")
+
+    def updatedAt: Rep[Date] = column[Date]("updated_at")
+
+    def * = (uuid.?, name, email, password, salt, locked, createdAt, updatedAt) <> (CommitteeMember.tupled, CommitteeMember.unapply)
+
+  }
+
+  protected val Courses: TableQuery[CoursesTable] = TableQuery[CoursesTable]
+
+  /**
+    * The Slick mapping for (typically static line) courses.
+    *
+    * @param tag
+    */
+  protected class CoursesTable(tag: Tag) extends Table[Course](tag, "courses") {
+
+    def uuid: Rep[UUID] = column[UUID]("uuid", O.PrimaryKey)
+
+    def date: Rep[Date] = column[Date]("date")
+
+    def organiserUuid: Rep[UUID] = column[UUID]("organiser_uuid")
+
+    def secondaryOrganiserUuid: Rep[Option[UUID]] = column[Option[UUID]]("secondary_organiser_uuid")
+
+    def status: Rep[Int] = column[Int]("status")
+
+    def * = (uuid.?, date, organiserUuid, secondaryOrganiserUuid, status) <> (Course.tupled, Course.unapply)
+
+  }
+
+  protected val CourseSpaces: TableQuery[CourseSpacesTable] = TableQuery[CourseSpacesTable]
+
+  /**
+    * The Slick mapping for a space on a course.
+    *
+    * @param tag
+    */
+  protected class CourseSpacesTable(tag: Tag) extends Table[CourseSpace](tag, "course_spaces") {
+
+    def uuid: Rep[UUID] = column[UUID]("uuid", O.PrimaryKey)
+
+    def courseUuid: Rep[UUID] = column[UUID]("course_uuid")
+
+    def number: Rep[Int] = column[Int]("number")
+
+    def memberUuid: Rep[Option[UUID]] = column[Option[UUID]]("member_uuid")
+
+    def * = (uuid.?, courseUuid, number, memberUuid) <> (CourseSpace.tupled, CourseSpace.unapply)
 
   }
 
