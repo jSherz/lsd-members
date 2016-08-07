@@ -28,7 +28,7 @@ import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.jsherz.luskydive.apis.SignupAPI
-import com.jsherz.luskydive.core.{SignupAltRequest, SignupRequest, SignupResponse}
+import com.jsherz.luskydive.core.{SignupAltRequest, SignupResponse}
 import com.jsherz.luskydive.dao.StubMemberDAO
 import org.scalatest.{Matchers, WordSpec}
 
@@ -100,13 +100,13 @@ class SignupAltAPISpec extends WordSpec with Matchers with ScalatestRouteTest {
       }
 
       Get(url) ~> Route.seal(route) ~> check {
-        response.status shouldEqual StatusCodes.BadRequest
+        response.status shouldEqual StatusCodes.MethodNotAllowed
       }
     }
 
     "return failed with an error if a blank name (only spaces) is given" in {
       Seq(" ", "  ", "         ").foreach { name =>
-        val request = SignupRequest(name, "07856216259")
+        val request = SignupAltRequest(name, "bla@example.com")
 
         Post(url, request) ~> route ~> check {
           response.status shouldEqual StatusCodes.OK
@@ -116,7 +116,7 @@ class SignupAltAPISpec extends WordSpec with Matchers with ScalatestRouteTest {
       }
     }
 
-    "return failed with an appropriate error if the phone number is in use" in {
+    "return failed with an appropriate error if the e-mail is in use" in {
       val request = SignupAltRequest("Nicole Howarth", StubMemberDAO.existsEmail)
 
       Post(url, request) ~> route ~> check {
@@ -126,8 +126,8 @@ class SignupAltAPISpec extends WordSpec with Matchers with ScalatestRouteTest {
       }
     }
 
-    "return failed with an appropriate error if the phone number is invalid" in {
-      val request = SignupRequest("Caitlin Chamberlain", "definitely-not-valid.com")
+    "return failed with an appropriate error if the e-mail is invalid" in {
+      val request = SignupAltRequest("Caitlin Chamberlain", "definitely-not-valid.com")
 
       Post(url, request) ~> route ~> check {
         response.status shouldEqual StatusCodes.OK

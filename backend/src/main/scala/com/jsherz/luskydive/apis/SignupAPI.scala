@@ -25,10 +25,12 @@
 package com.jsherz.luskydive.apis
 
 import akka.http.scaladsl.server.Directives._
+import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.jsherz.luskydive.core.{SignupAltRequest, SignupRequest, SignupResponse}
 import com.jsherz.luskydive.dao.MemberDAO
 
 import scala.concurrent.ExecutionContext
+import scalaz.{Failure, Success}
 
 /**
   * The two methods of signing up new members at a fresher's fair (phone number or e-mail).
@@ -37,16 +39,26 @@ class SignupAPI(private val memberDao: MemberDAO)(implicit ec: ExecutionContext)
 
   import com.jsherz.luskydive.core.SignupJsonSupport._
 
+  private val phoneNumberUtil = PhoneNumberUtil.getInstance()
+
   /**
     * The primary method of signing up new members.
     *
     * Requires a name and e-mail address.
     */
   private val signupRoute = path("sign-up") {
-    entity(as[SignupRequest]) { req =>
-      post {
+    post {
+      entity(as[SignupRequest]) { req =>
         complete {
-          SignupResponse(false, Map.empty)
+          req.validate() match {
+            case Success(phoneNumber) => {
+              memberDao.memberExists(Some(phoneNumber), None).map {
+                case true => SignupResponse(false, Map("phoneNumber" -> "error.inUse"))
+                case false => SignupResponse(true, Map.empty)
+              }
+            }
+            case Failure(reason) => SignupResponse(false, reason.list.toList.toMap)
+          }
         }
       }
     }
@@ -58,10 +70,18 @@ class SignupAPI(private val memberDao: MemberDAO)(implicit ec: ExecutionContext)
     * Requires a name and phone number.
     */
   private val signupAltRoute = path("sign-up" / "alt") {
-    entity(as[SignupAltRequest]) { req =>
-      post {
+    post {
+      entity(as[SignupAltRequest]) { req =>
         complete {
-          SignupResponse(false, Map.empty)
+          req.validate() match {
+            case Success(_) => {
+              memberDao.memberExists(None, Some(req.email)).map {
+                case true => SignupResponse(false, Map("email" -> "error.inUse"))
+                case false => SignupResponse(true, Map.empty)
+              }
+            }
+            case Failure(reason) => SignupResponse(false, reason.list.toList.toMap)
+          }
         }
       }
     }

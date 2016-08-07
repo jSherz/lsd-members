@@ -25,7 +25,11 @@
 package com.jsherz.luskydive.core
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
+import com.jsherz.luskydive.models.Validators
 import spray.json.DefaultJsonProtocol
+
+import scalaz.Scalaz._
+import scalaz._
 
 /**
   * JSON (de)serialization support.
@@ -41,12 +45,44 @@ object SignupJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
 /**
   * Standard method of a member signing up.
   */
-case class SignupRequest(name: String, phoneNumber: String)
+case class SignupRequest(name: String, phoneNumber: String) {
+
+  /**
+    * Ensures the given request is valid.
+    *
+    * @return If valid, returns the E164 formatted phone number
+    */
+  def validate(): ValidationNel[(String, String), String] = {
+    val nameValid = Validators.withFieldName("name", Validators.name(name))
+    val phoneNumberValid = Validators.withFieldName("phoneNumber", Validators.phoneNumber(phoneNumber))
+
+    (nameValid.toValidationNel |@| phoneNumberValid.toValidationNel) {
+      case (_, formattedPhoneNumber) => formattedPhoneNumber
+    }
+  }
+
+}
 
 /**
   * Alternative method of a member signing up.
   */
-case class SignupAltRequest(name: String, email: String)
+case class SignupAltRequest(name: String, email: String) {
+
+  /**
+    * Ensure the given request is valid.
+    *
+    * @return
+    */
+  def validate(): ValidationNel[(String, String), Unit] = {
+    val nameValid = Validators.withFieldName("name", Validators.name(name))
+    val emailValid = Validators.withFieldName("email", Validators.email(email))
+
+    (nameValid.toValidationNel |@| emailValid.toValidationNel) {
+      case _ => ()
+    }
+  }
+
+}
 
 /**
   * A response to a sign-up request.

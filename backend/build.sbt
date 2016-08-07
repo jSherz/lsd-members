@@ -17,7 +17,8 @@ scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
 libraryDependencies ++= {
   Seq(
     // Utils
-    "com.google.guava"    % "guava"         % "19.0",
+    "com.google.guava" %  "guava"       % "19.0",
+    "org.scalaz"       %% "scalaz-core" % "7.2.4",
 
     // DI
     "org.scaldi"         %% "scaldi"          % scaldiV,

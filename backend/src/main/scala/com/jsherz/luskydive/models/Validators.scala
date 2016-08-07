@@ -25,15 +25,17 @@
 package com.jsherz.luskydive.models
 
 import com.google.i18n.phonenumbers.PhoneNumberUtil
-import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber
+import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat
 import com.jsherz.luskydive.core.{Invalid, Valid, ValidationResult}
 
 import scala.util.matching.Regex
+import scalaz.{Failure, Success, Validation}
 
 /**
   * Created by james on 07/05/16.
   */
 object Validators {
+
   /**
     * Catch the worst e-mail mistakes and leave the rest to the mail server.
     */
@@ -55,27 +57,30 @@ object Validators {
   private val defaultPhoneNumberRegion = "GB"
 
   /**
-    * Ensures a valid phone number was provided and parses it into a <code>PhoneNumber</code>
-    * so that we can get the E164 formatted version.
+    * Phone number utilities.
+    */
+  private val parser = PhoneNumberUtil.getInstance()
+
+  /**
+    * Ensures a valid phone number was provided and parses it into the E164 formatted version.
     *
     * - 07123123123 (UK numbers)
     * - 447123123123 (Number with country code, no plus)
     * - +447123123123 (Number with country code and plus)
     *
-    * @return Left(translationKey) if invalid or Right(number) if not
+    * @param phoneNumber
+    * @return
     */
-  def parsePhoneNumber(maybePhoneNumber: Option[String]): Either[String, PhoneNumber] = {
-    maybePhoneNumber.fold(Left("error.required"): Either[String, PhoneNumber]) { phoneNumber =>
-      phoneNumber.trim.isEmpty match {
-        case true => Left("error.required")
-        case false =>
-          val parser = PhoneNumberUtil.getInstance()
-          val parsedNumber = parser.parse(phoneNumber, defaultPhoneNumberRegion)
+  def phoneNumber(phoneNumber: String): Validation[String, String] = {
+    if (phoneNumber.trim.isEmpty) {
+      Failure("error.required")
+    } else {
+      val parsedNumber = parser.parse(phoneNumber, defaultPhoneNumberRegion)
 
-          parser.isValidNumber(parsedNumber) match {
-            case true => Right(parsedNumber)
-            case false => Left("error.invalidPhoneNumber")
-          }
+      if (parser.isValidNumber(parsedNumber)) {
+        Success(parser.format(parsedNumber, PhoneNumberFormat.E164))
+      } else {
+        Failure("error.invalid")
       }
     }
   }
@@ -83,21 +88,19 @@ object Validators {
   /**
     * Performs a very basic check to see if an e-mail is valid.
     *
-    * @return Valid() if the e-mail looks roughly valid, Invalid(translationKey) if not
+    * @return
     */
-  def isEmailValid(maybeEmail: Option[String]): ValidationResult = {
-    maybeEmail.fold(Invalid("error.required"): ValidationResult) { email =>
-      val trimmed = email.trim
+  def email(email: String): Validation[String, String] = {
+    val trimmed = email.trim
 
-      if (trimmed.isEmpty) {
-        Invalid("error.required")
-      } else if (!(emailRegex findAllMatchIn trimmed).hasNext) {
-        Invalid("error.invalidEmail")
-      } else if (trimmed.length() > maxEmailLength) {
-        Invalid("error.emailTooLong")
-      } else {
-        Valid()
-      }
+    if (trimmed.isEmpty) {
+      Failure("error.required")
+    } else if (!(emailRegex findAllMatchIn trimmed).hasNext) {
+      Failure("error.invalid")
+    } else if (trimmed.length() > maxEmailLength) {
+      Failure("error.emailTooLong")
+    } else {
+      Success(email)
     }
   }
 
@@ -121,13 +124,31 @@ object Validators {
   /**
     * Ensures the provided member's name is shorter than the database field length.
     *
-    * @return Valid() if <= maxNameLength, otherwise Invalid(translationKey)
+    * @return
     */
-  def isNameValid(name: String): ValidationResult = {
-    if (name.length() > maxNameLength) {
-      Invalid("error.nameTooLong")
+  def name(name: String): Validation[String, String] = {
+    val trimmed = name.trim
+
+    if (trimmed.length() > maxNameLength) {
+      Failure("error.nameTooLong")
+    } else if (trimmed.length == 0) {
+      Failure("error.required")
     } else {
-      Valid()
+      Success(name)
     }
   }
+
+  /**
+    * Adds the field name to a failed validation.
+    *
+    * @param fieldName
+    * @param validation
+    * @tparam A
+    * @tparam B
+    * @return
+    */
+  def withFieldName[A, B](fieldName: String, validation: Validation[A, B]): Validation[(String, A), B] =
+  validation.fold(error => Failure(fieldName, error), result => Success(result))
+
+
 }

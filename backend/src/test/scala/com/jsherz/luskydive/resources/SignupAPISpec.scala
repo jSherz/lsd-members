@@ -100,7 +100,7 @@ class SignupAPISpec extends WordSpec with Matchers with ScalatestRouteTest {
       }
 
       Get(url) ~> Route.seal(route) ~> check {
-        response.status shouldEqual StatusCodes.BadRequest
+        response.status shouldEqual StatusCodes.MethodNotAllowed
       }
     }
 

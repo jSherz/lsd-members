@@ -24,8 +24,6 @@
 
 package com.jsherz.luskydive.core
 
-import com.jsherz.luskydive.models.Validators
-
 /**
   * The main member class, representing a person that has provided us with a phone number or e-mail address.
   *
@@ -34,22 +32,4 @@ import com.jsherz.luskydive.models.Validators
   * @param phoneNumber Phone number
   * @param email       E-mail address
   */
-case class Member(id: Option[Int], name: String, phoneNumber: Option[String], email: Option[String]) {
-
-  /**
-    * Ensures that the record has at least:
-    *
-    * - A non-empty name
-    * - A valid phone number OR e-mail address.
-    *
-    * @return true if above conditions are met
-    */
-  def valid(): Boolean = {
-    val nameValid = Validators.isNameValid(name) == Valid()
-    val phoneNumberValid = Validators.parsePhoneNumber(phoneNumber).isRight
-    val emailValid = Validators.isEmailValid(email) == Valid()
-
-    nameValid && (phoneNumberValid || emailValid)
-  }
-
-}
+case class Member(id: Option[Int], name: String, phoneNumber: Option[String], email: Option[String])
