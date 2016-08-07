@@ -39,15 +39,15 @@ class StubMemberDAO()(implicit val ec: ExecutionContext) extends MemberDAO {
     * @return
     */
   override def memberExists(phoneNumber: Option[String], email: Option[String]): Future[Boolean] = {
-    Future(phoneNumber == StubMemberDAO.existsPhoneNumber || email == StubMemberDAO.existsEmail)
+    Future(phoneNumber == Some(StubMemberDAO.existsPhoneNumber) || email == Some(StubMemberDAO.existsEmail))
   }
 
 }
 
 object StubMemberDAO {
 
-  val existsPhoneNumber = Some("07835798240")
+  val existsPhoneNumber = "07835798240"
 
-  val existsEmail = Some("IsaacBurgess@jourrapide.com")
+  val existsEmail = "IsaacBurgess@jourrapide.com"
 
 }

@@ -28,26 +28,26 @@ import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.jsherz.luskydive.apis.SignupAPI
-import com.jsherz.luskydive.core.{SignupRequest, SignupResponse}
+import com.jsherz.luskydive.core.{SignupAltRequest, SignupRequest, SignupResponse}
 import com.jsherz.luskydive.dao.StubMemberDAO
 import org.scalatest.{Matchers, WordSpec}
 
 /**
-  * Ensures the main sign-up endpoint functions correctly.
+  * Ensures the alternative sign-up endpoint functions correctly.
   */
-class SignupAPISpec extends WordSpec with Matchers with ScalatestRouteTest {
+class SignupAltAPISpec extends WordSpec with Matchers with ScalatestRouteTest {
 
   private val dao = new StubMemberDAO()
   private val route = new SignupAPI(dao).route
 
-  private val url = "/members/sign-up"
+  private val url = "/members/sign-up/alt"
 
   import com.jsherz.luskydive.core.SignupJsonSupport._
 
-  "SignupAPI" should {
+  "SignupAPI (alt)" should {
 
-    "return success with no errors if a valid username & phone number are given" in {
-      val request = SignupRequest("Toby Howard", "07918323440")
+    "return success with no errors if a valid username & e-mail are given" in {
+      val request = SignupAltRequest("Tyler Davey", "TylerDavey@jourrapide.com")
 
       Post(url, request) ~> route ~> check {
         response.status shouldEqual StatusCodes.OK
@@ -66,7 +66,7 @@ class SignupAPISpec extends WordSpec with Matchers with ScalatestRouteTest {
       }
     }
 
-    "return bad request if no name or phone number is given" in {
+    "return bad request if no name or e-mail is given" in {
       val request = HttpEntity(ContentTypes.`application/json`, """{}""")
 
       Post(url, request) ~> Route.seal(route) ~> check {
@@ -75,14 +75,14 @@ class SignupAPISpec extends WordSpec with Matchers with ScalatestRouteTest {
     }
 
     "return bad request if no name is given" in {
-      val request = HttpEntity(ContentTypes.`application/json`, """{"phoneNumber":"07123123123"}""")
+      val request = HttpEntity(ContentTypes.`application/json`, """{"email":"foot@ball.com"}""")
 
       Post(url, request) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.BadRequest
       }
     }
 
-    "return bad request if no phone number is given" in {
+    "return bad request if no e-mail is given" in {
       val request = HttpEntity(ContentTypes.`application/json`, """{"name":"Joe Bloggs"}""")
 
       Post(url, request) ~> Route.seal(route) ~> check {
@@ -91,7 +91,7 @@ class SignupAPISpec extends WordSpec with Matchers with ScalatestRouteTest {
     }
 
     "return method not allowed if not a post request" in {
-      val request = SignupRequest("Toby Howard", "07918323440")
+      val request = SignupAltRequest("Toby Howard", "toby@the-howards.webserv")
 
       Seq(Put, Delete, Patch).foreach { method =>
         method(url, request) ~> Route.seal(route) ~> check {
@@ -117,22 +117,22 @@ class SignupAPISpec extends WordSpec with Matchers with ScalatestRouteTest {
     }
 
     "return failed with an appropriate error if the phone number is in use" in {
-      val request = SignupRequest("Declan Clark", StubMemberDAO.existsPhoneNumber)
+      val request = SignupAltRequest("Nicole Howarth", StubMemberDAO.existsEmail)
 
       Post(url, request) ~> route ~> check {
         response.status shouldEqual StatusCodes.OK
         responseAs[SignupResponse].success shouldEqual false
-        responseAs[SignupResponse].errors shouldBe Map("phoneNumber" -> "error.inUse")
+        responseAs[SignupResponse].errors shouldBe Map("email" -> "error.inUse")
       }
     }
 
     "return failed with an appropriate error if the phone number is invalid" in {
-      val request = SignupRequest("Aidan Carter", "07123123")
+      val request = SignupRequest("Caitlin Chamberlain", "definitely-not-valid.com")
 
       Post(url, request) ~> route ~> check {
         response.status shouldEqual StatusCodes.OK
         responseAs[SignupResponse].success shouldEqual false
-        responseAs[SignupResponse].errors shouldBe Map("phoneNumber" -> "error.invalid")
+        responseAs[SignupResponse].errors shouldBe Map("email" -> "error.invalid")
       }
     }
 
