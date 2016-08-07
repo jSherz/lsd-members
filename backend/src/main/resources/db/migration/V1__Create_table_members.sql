@@ -2,7 +2,7 @@
 /* Create members table */
 
 CREATE TABLE members (
-    id SERIAL PRIMARY KEY,
+    uuid UUID PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE,
     phone_number VARCHAR(25) UNIQUE,

@@ -24,6 +24,9 @@
 
 package com.jsherz.luskydive.dao
 
+import java.util.UUID
+
+import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.Member
 import com.jsherz.luskydive.services.DatabaseService
 
@@ -49,9 +52,9 @@ trait MemberDAO {
     * @param name
     * @param phoneNumber
     * @param email
-    * @return
+    * @return UUID
     */
-  def create(name: String, phoneNumber: Option[String], email: Option[String]): Future[Int]
+  def create(name: String, phoneNumber: Option[String], email: Option[String]): Future[UUID]
 
 }
 
@@ -82,7 +85,10 @@ case class MemberDAOImpl(override protected val databaseService: DatabaseService
     * @param email
     * @return
     */
-  override def create(name: String, phoneNumber: Option[String], email: Option[String]): Future[Int] =
-    db.run((Members returning Members.map(_.id)) += Member(None, name, phoneNumber, email))
+  override def create(name: String, phoneNumber: Option[String], email: Option[String]): Future[UUID] = {
+    val uuid = Generators.randomBasedGenerator().generate()
+
+    db.run((Members returning Members.map(_.uuid)) += Member(Some(uuid), name, phoneNumber, email))
+  }
 
 }

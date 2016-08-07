@@ -25,6 +25,7 @@
 package com.jsherz.luskydive.dao
 
 import java.sql.Timestamp
+import java.util.UUID
 
 import com.jsherz.luskydive.core.{Member, Setting, TextMessage, TextMessageError}
 import com.jsherz.luskydive.services.DatabaseService
@@ -85,7 +86,7 @@ class Tables(protected val databaseService: DatabaseService) {
     */
   protected class MembersTable(tag: Tag) extends Table[Member](tag, "members") {
 
-    def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
+    def uuid: Rep[UUID] = column[UUID]("uuid", O.PrimaryKey)
 
     def name: Rep[String] = column[String]("name", O.Length(NAME_FIELD_LENGTH, varying = true))
 
@@ -93,7 +94,7 @@ class Tables(protected val databaseService: DatabaseService) {
 
     def email: Rep[Option[String]] = column[Option[String]]("email", O.Length(EMAIL_FIELD_LENGTH, varying = true))
 
-    def * = (id.?, name, phoneNumber, email) <> (Member.tupled, Member.unapply)
+    def * = (uuid.?, name, phoneNumber, email) <> (Member.tupled, Member.unapply)
 
   }
 

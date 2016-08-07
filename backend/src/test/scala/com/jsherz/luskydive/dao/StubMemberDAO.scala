@@ -24,6 +24,10 @@
 
 package com.jsherz.luskydive.dao
 
+import java.util.UUID
+
+import com.fasterxml.uuid.Generators
+
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
@@ -50,8 +54,8 @@ class StubMemberDAO()(implicit val ec: ExecutionContext) extends MemberDAO {
     * @param email
     * @return
     */
-  override def create(name: String, phoneNumber: Option[String], email: Option[String]): Future[Int] = {
-    Future(1)
+  override def create(name: String, phoneNumber: Option[String], email: Option[String]): Future[UUID] = {
+    Future(Generators.randomBasedGenerator().generate())
   }
 }
 

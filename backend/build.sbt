@@ -55,6 +55,9 @@ libraryDependencies ++= {
     "org.scalatest" %% "scalatest"    % "2.2.6"   % "test",
     "org.mockito"   %  "mockito-core" % "1.10.19" % "test",
 
+    // Utils
+    "com.fasterxml.uuid" % "java-uuid-generator" % "3.1.3",
+
     // Misc (version conflicts)
     "org.scala-lang"         %  "scala-reflect"  % scalaV,
     "org.scala-lang"         %  "scala-compiler" % scalaV,
