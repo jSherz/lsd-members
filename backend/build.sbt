@@ -37,13 +37,15 @@ libraryDependencies ++= {
     "io.dropwizard.metrics" % "metrics-core" % metricsV,
     "io.dropwizard.metrics" % "metrics-healthchecks" % metricsV,
 
-    "ch.qos.logback"      %   "logback-classic" % "1.1.3",
-    "com.typesafe.slick"  %%  "slick"           % "3.1.1",
-    "com.zaxxer" % "HikariCP" % "2.4.7",
+    // Logging
+    "ch.qos.logback" % "logback-classic" % "1.1.3",
+    "org.slf4j"      % "slf4j-api"       % "1.7.21",
 
     // DB
-    "org.slf4j"          %  "slf4j-api"            % "1.7.21",
-    "org.postgresql"     %  "postgresql"           % "9.4.1208",
+    "org.postgresql"     %  "postgresql"  % "9.4.1208",
+    "org.flywaydb"       %  "flyway-core" % "4.0.3",
+    "com.typesafe.slick" %% "slick"       % "3.1.1",
+    "com.zaxxer"         %  "HikariCP"    % "2.4.7",
 
     // Phone number parsing
     "com.googlecode.libphonenumber" % "libphonenumber" % "7.4.1",

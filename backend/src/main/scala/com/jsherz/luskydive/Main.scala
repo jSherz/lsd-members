@@ -31,6 +31,7 @@ import akka.stream.ActorMaterializer
 import com.jsherz.luskydive.dao.MemberDAOImpl
 import com.jsherz.luskydive.services.{DatabaseService, HttpService}
 import com.jsherz.luskydive.util.Config
+import org.flywaydb.core.Flyway
 
 /**
   * The main application service that bootstraps all other components and runs the HTTP server.
@@ -43,6 +44,11 @@ object Main extends App with Config {
   implicit val materializer = ActorMaterializer()
 
   val databaseService = new DatabaseService(dbUrl, dbUsername, dbPassword)
+
+  // Automatically run migrations
+  val flyway = new Flyway()
+  flyway.setDataSource(dbUrl, dbUsername, dbPassword)
+  flyway.migrate()
 
   val memberDao = new MemberDAOImpl(databaseService)
 
