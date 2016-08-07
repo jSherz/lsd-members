@@ -6,4 +6,4 @@ An [Angular 2](https://angular.io) project and is managed with [angular-cli](htt
 
 ## Backend
 
-A [spray](http://spray.io/) project, managed with [sbt](http://www.scala-sbt.org/).
+An [Akka HTTP](http://akka.io/) project, managed with [sbt](http://www.scala-sbt.org/).

@@ -1,5 +1,19 @@
 # LUU Skydivers Management System
 
+## Prerequisites
+
+* PostgreSQL database server (v9.5)
+
+* Role and database setup for the website
+
+* Environment variables that configure the above:
+
+    ```bash
+    export LSD_DB_URL=jdbc:postgresql://localhost/luskydive
+    export LSD_DB_USERNAME=luskydive
+    export LSD_DB_PASSWORD=luskydive
+    ```
+
 ## Backend
 
 1. Launch SBT:
@@ -12,14 +26,6 @@
 
 3. Start the application:
 
-        > re-start
+        > run
 
 4. Browse to [http://localhost:8080](http://localhost:8080/)
-
-5. Stop the application:
-
-        > re-stop
-
-6. Learn more at http://www.spray.io/
-
-7. Start hacking on `src/main/scala/com/example/MyService.scala`
