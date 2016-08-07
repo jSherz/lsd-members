@@ -27,7 +27,7 @@ package com.jsherz.luskydive.util
 import com.typesafe.config.ConfigFactory
 
 /**
-  * Created by james on 05/08/16.
+  * The application configuration, as read from resources/application.conf.
   */
 trait Config {
 

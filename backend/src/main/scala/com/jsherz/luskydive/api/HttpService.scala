@@ -31,7 +31,7 @@ import com.jsherz.luskydive.services.UsersService
 import scala.concurrent.ExecutionContext
 
 /**
-  * Created by james on 05/08/16.
+  * The holder of all configured routes.
   */
 class HttpService(usersService: UsersService)(implicit executionContext: ExecutionContext) {
 

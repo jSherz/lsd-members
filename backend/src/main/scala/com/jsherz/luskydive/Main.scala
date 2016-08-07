@@ -33,7 +33,7 @@ import com.jsherz.luskydive.services.{DatabaseService, UsersService}
 import com.jsherz.luskydive.util.Config
 
 /**
-  * The main application service that runs the API.
+  * The main application service that bootstraps all other components and runs the HTTP server.
   */
 object Main extends App with Config {
 

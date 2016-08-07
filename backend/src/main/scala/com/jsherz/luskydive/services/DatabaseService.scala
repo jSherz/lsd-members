@@ -27,7 +27,7 @@ package com.jsherz.luskydive.services
 import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
 
 /**
-  * Created by james on 05/08/16.
+  * A service that creates the HikariCP database pool and the Slick driver.
   */
 class DatabaseService(jdbcUrl: String, username: String, password: String) {
 
