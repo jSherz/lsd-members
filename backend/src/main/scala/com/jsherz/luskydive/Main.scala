@@ -33,6 +33,8 @@ import com.jsherz.luskydive.services.{DatabaseService, HttpService}
 import com.jsherz.luskydive.util.Config
 import org.flywaydb.core.Flyway
 
+import scala.io.{Codec, Source}
+
 /**
   * The main application service that bootstraps all other components and runs the HTTP server.
   */
@@ -42,6 +44,10 @@ object Main extends App with Config {
   implicit val executor = actorSystem.dispatcher
   implicit val log: LoggingAdapter = Logging(actorSystem, getClass)
   implicit val materializer = ActorMaterializer()
+
+  // What is an application without an ASCII-art banner?
+  implicit val codec = Codec.UTF8
+  log.info(Source.fromURL(getClass.getResource("/banner.txt")).mkString)
 
   val databaseService = new DatabaseService(dbUrl, dbUsername, dbPassword)
 
