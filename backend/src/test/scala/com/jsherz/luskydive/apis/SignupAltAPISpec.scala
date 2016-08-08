@@ -27,7 +27,6 @@ package com.jsherz.luskydive.apis
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import com.jsherz.luskydive.apis.SignupAPI
 import com.jsherz.luskydive.core.{SignupAltRequest, SignupResponse}
 import com.jsherz.luskydive.dao.{MemberDAO, StubMemberDAO}
 import org.mockito.Matchers.any
