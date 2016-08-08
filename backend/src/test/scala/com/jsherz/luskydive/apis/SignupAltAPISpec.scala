@@ -22,28 +22,28 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.resources
+package com.jsherz.luskydive.apis
 
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.jsherz.luskydive.apis.SignupAPI
-import com.jsherz.luskydive.core.{SignupRequest, SignupResponse}
+import com.jsherz.luskydive.core.{SignupAltRequest, SignupResponse}
 import com.jsherz.luskydive.dao.{MemberDAO, StubMemberDAO}
-import org.mockito.Matchers._
+import org.mockito.Matchers.any
 import org.mockito.Mockito
-import org.mockito.Mockito._
+import org.mockito.Mockito.{never, verify}
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
 
 /**
-  * Ensures the main sign-up endpoint functions correctly.
+  * Ensures the alternative sign-up endpoint functions correctly.
   */
-class SignupAPISpec extends WordSpec with Matchers with ScalatestRouteTest with BeforeAndAfter {
+class SignupAltAPISpec extends WordSpec with Matchers with ScalatestRouteTest with BeforeAndAfter {
 
   private var dao: MemberDAO = Mockito.spy(new StubMemberDAO())
   private var route = new SignupAPI(dao).route
 
-  private val url = "/members/sign-up"
+  private val url = "/members/sign-up/alt"
 
   import com.jsherz.luskydive.core.SignupJsonSupport._
 
@@ -52,21 +52,21 @@ class SignupAPISpec extends WordSpec with Matchers with ScalatestRouteTest with 
     route = new SignupAPI(dao).route
   }
 
-  "SignupAPI" should {
+  "SignupAPI (alt)" should {
 
-    "return success with no errors if a valid username & phone number are given" in {
-      val name = "Toby Howard"
-      val phoneNumber = "07918323440"
-      val phoneNumberFormatted = "+447918323440"
+    "return success with no errors if a valid username & e-mail are given" in {
+      val name = "Tyler Davey"
+      val email = "TylerDavey@jourrapide.com"
 
-      val request = SignupRequest(name, phoneNumber)
+      val request = SignupAltRequest(name, email)
 
       Post(url, request) ~> route ~> check {
         response.status shouldEqual StatusCodes.OK
         responseAs[SignupResponse].success shouldEqual true
         responseAs[SignupResponse].errors shouldBe empty
 
-        verify(dao).create(name, Some(phoneNumberFormatted), None)
+        verify(dao).create(name, None, Some(email))
+
       }
     }
 
@@ -82,7 +82,7 @@ class SignupAPISpec extends WordSpec with Matchers with ScalatestRouteTest with 
       }
     }
 
-    "return bad request if no name or phone number is given" in {
+    "return bad request if no name or e-mail is given" in {
       val request = HttpEntity(ContentTypes.`application/json`, """{}""")
 
       Post(url, request) ~> Route.seal(route) ~> check {
@@ -93,7 +93,7 @@ class SignupAPISpec extends WordSpec with Matchers with ScalatestRouteTest with 
     }
 
     "return bad request if no name is given" in {
-      val request = HttpEntity(ContentTypes.`application/json`, """{"phoneNumber":"07123123123"}""")
+      val request = HttpEntity(ContentTypes.`application/json`, """{"email":"foot@ball.com"}""")
 
       Post(url, request) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.BadRequest
@@ -102,7 +102,7 @@ class SignupAPISpec extends WordSpec with Matchers with ScalatestRouteTest with 
       }
     }
 
-    "return bad request if no phone number is given" in {
+    "return bad request if no e-mail is given" in {
       val request = HttpEntity(ContentTypes.`application/json`, """{"name":"Joe Bloggs"}""")
 
       Post(url, request) ~> Route.seal(route) ~> check {
@@ -113,7 +113,7 @@ class SignupAPISpec extends WordSpec with Matchers with ScalatestRouteTest with 
     }
 
     "return method not allowed if not a post request" in {
-      val request = SignupRequest("Toby Howard", "07918323440")
+      val request = SignupAltRequest("Toby Howard", "toby@the-howards.webserv")
 
       Seq(Put, Delete, Patch).foreach { method =>
         method(url, request) ~> Route.seal(route) ~> check {
@@ -130,37 +130,37 @@ class SignupAPISpec extends WordSpec with Matchers with ScalatestRouteTest with 
 
     "return failed with an error if a blank name (only spaces) is given" in {
       Seq(" ", "  ", "         ").foreach { name =>
-        val request = SignupRequest(name, "07856216259")
+        val request = SignupAltRequest(name, "bla@example.com")
 
         Post(url, request) ~> route ~> check {
           response.status shouldEqual StatusCodes.OK
           responseAs[SignupResponse].success shouldEqual false
           responseAs[SignupResponse].errors shouldBe Map("name" -> "error.required")
-
-          verify(dao, never()).create(any(), any(), any())
         }
       }
+
+      verify(dao, never()).create(any(), any(), any())
     }
 
-    "return failed with an appropriate error if the phone number is in use" in {
-      val request = SignupRequest("Declan Clark", StubMemberDAO.existsPhoneNumber)
+    "return failed with an appropriate error if the e-mail is in use" in {
+      val request = SignupAltRequest("Nicole Howarth", StubMemberDAO.existsEmail)
 
       Post(url, request) ~> route ~> check {
         response.status shouldEqual StatusCodes.OK
         responseAs[SignupResponse].success shouldEqual false
-        responseAs[SignupResponse].errors shouldBe Map("phoneNumber" -> "error.inUse")
+        responseAs[SignupResponse].errors shouldBe Map("email" -> "error.inUse")
 
         verify(dao, never()).create(any(), any(), any())
       }
     }
 
-    "return failed with an appropriate error if the phone number is invalid" in {
-      val request = SignupRequest("Aidan Carter", "07123123")
+    "return failed with an appropriate error if the e-mail is invalid" in {
+      val request = SignupAltRequest("Caitlin Chamberlain", "definitely-not-valid.com")
 
       Post(url, request) ~> route ~> check {
         response.status shouldEqual StatusCodes.OK
         responseAs[SignupResponse].success shouldEqual false
-        responseAs[SignupResponse].errors shouldBe Map("phoneNumber" -> "error.invalid")
+        responseAs[SignupResponse].errors shouldBe Map("email" -> "error.invalid")
 
         verify(dao, never()).create(any(), any(), any())
       }
