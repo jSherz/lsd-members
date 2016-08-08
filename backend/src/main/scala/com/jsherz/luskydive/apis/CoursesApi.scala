@@ -42,13 +42,13 @@ class CoursesApi(private val courseDao: CourseDAO)(implicit ec: ExecutionContext
   /**
     * Shows the courses that are
     */
-  val listRoute = path("") {
+  val listRoute = pathEnd {
     post {
       entity(as[CoursesListRequest]) { req =>
         if (req.endDate.before(req.startDate)) {
           complete(StatusCodes.BadRequest, "endDate must be after startDate")
         } else {
-          complete("Hello, world!")
+          complete(courseDao.find(req.startDate, req.endDate))
         }
       }
     }

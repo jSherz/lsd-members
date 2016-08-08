@@ -49,7 +49,7 @@ class CoursesListApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
 
   private val route = new CoursesApi(dao).route
 
-  private val url = "/courses/"
+  private val url = "/courses"
 
   "Courses list API" should {
 
@@ -116,7 +116,7 @@ class CoursesListApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
 
       Post(url, request) ~> route ~> check {
         response.status shouldEqual StatusCodes.OK
-        responseAs[String] shouldEqual expected.toJson
+        responseAs[String].parseJson shouldEqual expected.toJson
       }
 
       verify(dao).find(startDate, endDate)
