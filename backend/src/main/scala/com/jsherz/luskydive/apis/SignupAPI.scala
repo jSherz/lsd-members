@@ -24,6 +24,7 @@
 
 package com.jsherz.luskydive.apis
 
+import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._
 import com.jsherz.luskydive.core.{SignupAltRequest, SignupRequest, SignupResponse}
 import com.jsherz.luskydive.dao.MemberDAO
@@ -92,7 +93,7 @@ class SignupAPI(private val memberDao: MemberDAO)(implicit ec: ExecutionContext)
     }
   }
 
-  val route = pathPrefix("members") {
+  val route: Route = pathPrefix("members") {
     signupRoute ~ signupAltRoute
   }
 

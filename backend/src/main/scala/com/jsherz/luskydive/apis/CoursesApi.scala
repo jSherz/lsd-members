@@ -24,6 +24,7 @@
 
 package com.jsherz.luskydive.apis
 
+import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import com.jsherz.luskydive.core.CoursesListRequest
@@ -53,7 +54,7 @@ class CoursesApi(private val courseDao: CourseDAO)(implicit ec: ExecutionContext
     }
   }
 
-  val route = pathPrefix("courses") {
+  val route: Route = pathPrefix("courses") {
     listRoute
   }
 
