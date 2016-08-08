@@ -24,35 +24,35 @@
 
 package com.jsherz.luskydive.util
 
-import java.sql.Date
+import java.util.UUID
 
 import org.scalatest.{Matchers, WordSpec}
 import spray.json.{DeserializationException, JsArray, JsNull, JsNumber, JsObject, JsString}
 
 /**
-  * Ensures dates are properly (de)serialized by [[DateJsonFormat]].
+  * Exercises [[UuidJsonFormat]].
   */
-class DateJsonFormatSpec extends WordSpec with Matchers {
+class UuidJsonFormatSpec extends WordSpec with Matchers {
 
-  private val testDates: Map[JsString, Date] = Map(
-    JsString("2014-01-28") -> DateUtil.makeDate(2014, 1, 28),
-    JsString("2014-12-19") -> DateUtil.makeDate(2014, 12, 19),
-    JsString("2014-01-01") -> DateUtil.makeDate(2014, 1, 1),
-    JsString("2009-05-20") -> DateUtil.makeDate(2009, 5, 20),
-    JsString("1999-09-07") -> DateUtil.makeDate(1999, 9, 7)
-  )
+  "UuidJsonFormat" should {
 
-  "DateJsonFormat" should {
+    val testUuids: Map[JsString, UUID] = Map(
+      JsString("8a72449f-ff2d-4add-b716-f4fa0a686ef6") -> UUID.fromString("8a72449f-ff2d-4add-b716-f4fa0a686ef6"),
+      JsString("64eebea5-9428-4788-a381-4e15db9ac6a3") -> UUID.fromString("64eebea5-9428-4788-a381-4e15db9ac6a3"),
+      JsString("940a1ce4-7bfd-4cb7-a570-55c5af5b5245") -> UUID.fromString("940a1ce4-7bfd-4cb7-a570-55c5af5b5245"),
+      JsString("ab4f72d7-7ffd-4a8e-a673-2ff91e2e4bc7") -> UUID.fromString("ab4f72d7-7ffd-4a8e-a673-2ff91e2e4bc7"),
+      JsString("18f0b0c9-4bab-4114-bf1e-f8df9819af37") -> UUID.fromString("18f0b0c9-4bab-4114-bf1e-f8df9819af37")
+    )
 
-    "serialize dates correctly" in {
-      testDates.foreach { case (jsString, date) =>
-        DateJsonFormat.write(date) shouldEqual jsString
+    "serialize UUIDs correctly" in {
+      testUuids.foreach { case (jsString, uuid) =>
+        UuidJsonFormat.write(uuid) shouldEqual jsString
       }
     }
 
-    "deserialize dates correctly" in {
-      testDates.foreach { case (jsString, date) =>
-        DateJsonFormat.read(jsString) shouldEqual date
+    "deserialize UUIDs correctly" in {
+      testUuids.foreach { case (jsString, uuid) =>
+        UuidJsonFormat.read(jsString) shouldEqual uuid
       }
     }
 
