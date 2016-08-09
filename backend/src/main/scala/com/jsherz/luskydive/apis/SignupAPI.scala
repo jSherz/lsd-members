@@ -26,8 +26,8 @@ package com.jsherz.luskydive.apis
 
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._
-import com.jsherz.luskydive.core.{SignupAltRequest, SignupRequest, SignupResponse}
 import com.jsherz.luskydive.dao.MemberDAO
+import com.jsherz.luskydive.json.{SignupAltRequest, SignupJsonSupport, SignupRequest, SignupResponse}
 
 import scala.concurrent.ExecutionContext
 import scalaz.{Failure, Success}
@@ -37,7 +37,7 @@ import scalaz.{Failure, Success}
   */
 class SignupAPI(private val memberDao: MemberDAO)(implicit ec: ExecutionContext) {
 
-  import com.jsherz.luskydive.core.SignupJsonSupport._
+  import SignupJsonSupport._
 
   /**
     * The primary method of signing up new members.

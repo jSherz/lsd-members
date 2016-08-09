@@ -29,8 +29,8 @@ import java.sql.Date
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import com.jsherz.luskydive.core.CoursesListRequest
 import com.jsherz.luskydive.dao.StubCourseDao
+import com.jsherz.luskydive.json.{CoursesJsonSupport, CoursesListRequest}
 import com.jsherz.luskydive.util.DateUtil
 import org.mockito.Matchers.any
 import org.mockito.Mockito
@@ -42,7 +42,7 @@ import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
   */
 class CoursesListApiSpec extends WordSpec with Matchers with ScalatestRouteTest with BeforeAndAfter {
 
-  import com.jsherz.luskydive.core.CoursesJsonSupport._
+  import CoursesJsonSupport._
   import spray.json._
 
   private val dao = Mockito.spy(new StubCourseDao())

@@ -30,6 +30,7 @@ import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.jsherz.luskydive.dao.StubCourseDao
+import com.jsherz.luskydive.json.CoursesJsonSupport
 import org.mockito.Matchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.{never, verify}
@@ -41,7 +42,7 @@ import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
 class CoursesGetApiSpec extends WordSpec with Matchers with ScalatestRouteTest with BeforeAndAfter {
 
   import spray.json._
-  import com.jsherz.luskydive.core.CoursesJsonSupport._
+  import CoursesJsonSupport._
 
   private var dao = Mockito.spy(new StubCourseDao())
 

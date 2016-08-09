@@ -28,8 +28,8 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.PathMatchers.JavaUUID
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
-import com.jsherz.luskydive.core.CoursesListRequest
 import com.jsherz.luskydive.dao.CourseDAO
+import com.jsherz.luskydive.json.{CoursesJsonSupport, CoursesListRequest}
 
 import scala.concurrent.ExecutionContext
 
@@ -38,7 +38,7 @@ import scala.concurrent.ExecutionContext
   */
 class CoursesApi(private val courseDao: CourseDAO)(implicit ec: ExecutionContext) {
 
-  import com.jsherz.luskydive.core.CoursesJsonSupport._
+  import CoursesJsonSupport._
 
   /**
     * Shows the courses that are

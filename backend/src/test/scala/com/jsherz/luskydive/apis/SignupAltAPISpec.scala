@@ -27,8 +27,8 @@ package com.jsherz.luskydive.apis
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import com.jsherz.luskydive.core.{SignupAltRequest, SignupResponse}
 import com.jsherz.luskydive.dao.{MemberDAO, StubMemberDAO}
+import com.jsherz.luskydive.json.{SignupAltRequest, SignupJsonSupport, SignupResponse}
 import org.mockito.Matchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.{never, verify}
@@ -44,7 +44,7 @@ class SignupAltAPISpec extends WordSpec with Matchers with ScalatestRouteTest wi
 
   private val url = "/members/sign-up/alt"
 
-  import com.jsherz.luskydive.core.SignupJsonSupport._
+  import SignupJsonSupport._
 
   before {
     dao = Mockito.spy(new StubMemberDAO())
