@@ -25,6 +25,7 @@
 package com.jsherz.luskydive.apis
 
 import akka.http.scaladsl.server.Route
+import akka.http.scaladsl.server.PathMatchers.JavaUUID
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import com.jsherz.luskydive.core.CoursesListRequest
@@ -54,8 +55,18 @@ class CoursesApi(private val courseDao: CourseDAO)(implicit ec: ExecutionContext
     }
   }
 
+  val getRoute = path(JavaUUID) { uuid =>
+    get {
+      onSuccess(courseDao.get(uuid)) {
+        case Some(course) => complete(course)
+        case None => complete(StatusCodes.NotFound, "No course found with that UUID")
+      }
+    }
+  }
+
   val route: Route = pathPrefix("courses") {
-    listRoute
+    listRoute ~
+    getRoute
   }
 
 }

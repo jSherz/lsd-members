@@ -22,23 +22,27 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.core
+package com.jsherz.luskydive.fixtures
 
-import java.sql.Date
+import java.sql.Timestamp
 import java.util.UUID
 
-/**
-  * A (typically static line) course, booked on a particular day.
-  */
-case class Course(uuid: Option[UUID], date: Date, organiserUuid: UUID, secondaryOrganiserUuid: Option[UUID], status: Int)
+import com.jsherz.luskydive.core.CommitteeMember
 
 /**
-  * Possible states that a course can be in.
+  * Example committee members for testing.
   */
-object CourseStatuses {
+object CommitteeMembers {
 
-  val PENDING = 0
-
-  val CONFIRMED = 1
+  val committeeMemberA = CommitteeMember(
+    uuid = Some(UUID.fromString("b0da6d11-866b-447e-8a7d-d78fcde2da37")),
+    name = "Test Member",
+    email = "test@leedsskydivers.com",
+    password = "",
+    salt = "",
+    locked = false,
+    Timestamp.valueOf("2016-08-09 07:15:01.363"),
+    Timestamp.valueOf("2016-08-09 07:15:01.363")
+  )
 
 }

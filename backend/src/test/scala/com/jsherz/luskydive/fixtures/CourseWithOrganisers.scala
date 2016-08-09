@@ -22,23 +22,19 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.core
+package com.jsherz.luskydive.fixtures
 
-import java.sql.Date
-import java.util.UUID
-
-/**
-  * A (typically static line) course, booked on a particular day.
-  */
-case class Course(uuid: Option[UUID], date: Date, organiserUuid: UUID, secondaryOrganiserUuid: Option[UUID], status: Int)
+import com.jsherz.luskydive.core.CourseWithOrganisers
 
 /**
-  * Possible states that a course can be in.
+  * Examples of [[CourseWithOrganisers]].
   */
-object CourseStatuses {
+object CoursesWithOrganisers {
 
-  val PENDING = 0
-
-  val CONFIRMED = 1
+  val courseWithOrganisersA = CourseWithOrganisers(
+    Courses.courseA,
+    CommitteeMembers.committeeMemberA,
+    None
+  )
 
 }

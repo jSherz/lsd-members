@@ -27,6 +27,7 @@ import java.sql.Date
 import java.util.UUID
 
 import com.jsherz.luskydive.core.{Course, CourseSpace, CourseWithOrganisers}
+import com.jsherz.luskydive.fixtures.CoursesWithOrganisers
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -41,7 +42,15 @@ class StubCourseDao()(implicit ec: ExecutionContext) extends CourseDAO {
     * @param uuid
     * @return
     */
-  override def get(uuid: UUID): Future[Option[CourseWithOrganisers]] = Future(None)
+  override def get(uuid: UUID): Future[Option[CourseWithOrganisers]] = {
+    if (StubCourseDao.validCourseUuid.equals(uuid)) {
+      Future(Some(CoursesWithOrganisers.courseWithOrganisersA))
+    } else if (StubCourseDao.notFoundCourseUuid.equals(uuid)) {
+      Future(None)
+    } else {
+      throw new RuntimeException("unknown uuid used with stub")
+    }
+  }
 
   /**
     * Attempt to find courses within the given dates (inclusive).
@@ -63,6 +72,12 @@ class StubCourseDao()(implicit ec: ExecutionContext) extends CourseDAO {
 }
 
 object StubCourseDao {
+
+  val validCourseUuid = CoursesWithOrganisers.courseWithOrganisersA.course.uuid.get
+
+  val validCourse = CoursesWithOrganisers.courseWithOrganisersA
+
+  val notFoundCourseUuid = UUID.fromString("f309d4ca-c8b2-44ac-8380-678bb7bcc3cb")
 
   val courses: Seq[Course] = Seq()
 
