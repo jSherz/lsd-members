@@ -24,11 +24,11 @@
 
 package com.jsherz.luskydive.core
 
-import java.sql.Date
+import java.sql.Timestamp
 import java.util.UUID
 
 /**
   * An administrator.
   */
 case class CommitteeMember(uuid: Option[UUID], name: String, email: String, password: String, salt: String, locked: Boolean,
-                           createdAt: Date, updatedAt: Date)
+                           createdAt: Timestamp, updatedAt: Timestamp)

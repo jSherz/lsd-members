@@ -168,9 +168,9 @@ class Tables(protected val databaseService: DatabaseService) {
 
     def locked: Rep[Boolean] = column[Boolean]("locked")
 
-    def createdAt: Rep[Date] = column[Date]("created_at")
+    def createdAt: Rep[Timestamp] = column[Timestamp]("created_at")
 
-    def updatedAt: Rep[Date] = column[Date]("updated_at")
+    def updatedAt: Rep[Timestamp] = column[Timestamp]("updated_at")
 
     def * = (uuid.?, name, email, password, salt, locked, createdAt, updatedAt) <> (CommitteeMember.tupled, CommitteeMember.unapply)
 
