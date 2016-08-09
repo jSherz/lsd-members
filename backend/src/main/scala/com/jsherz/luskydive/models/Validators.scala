@@ -26,7 +26,6 @@ package com.jsherz.luskydive.models
 
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat
-import com.jsherz.luskydive.core.{Invalid, Valid, ValidationResult}
 
 import scala.util.matching.Regex
 import scalaz.{Failure, Success, Validation}
@@ -109,15 +108,15 @@ object Validators {
     *
     * @return Valid() if 1 <= length <= 480, otherwise Invalid(translationKey)
     */
-  def isWelcomeTextValid(welcomeText: String): ValidationResult = {
+  def isWelcomeTextValid(welcomeText: String): Validation[String, String] = {
     val welcomeTextLength = welcomeText.length()
 
     if (welcomeTextLength == 0) {
-      Invalid("error.welcomeTextEmpty")
+      Failure("error.welcomeTextEmpty")
     } else if (welcomeTextLength > 480) {
-      Invalid("error.welcomeTextTooLong")
+      Failure("error.welcomeTextTooLong")
     } else {
-      Valid()
+      Success(welcomeText)
     }
   }
 
