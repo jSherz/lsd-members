@@ -29,6 +29,7 @@ import java.util.UUID
 
 import com.jsherz.luskydive.core._
 import com.jsherz.luskydive.services.DatabaseService
+import slick.lifted.{ForeignKey, ForeignKeyQuery}
 
 /**
   * All of the database tables, modelled as Slick objects.
@@ -215,6 +216,9 @@ class Tables(protected val databaseService: DatabaseService) {
     def number: Rep[Int] = column[Int]("number")
 
     def memberUuid: Rep[Option[UUID]] = column[Option[UUID]]("member_uuid")
+
+    def course: ForeignKeyQuery[CoursesTable, Course] =
+      foreignKey("fk_course_spaces_course_uuid", courseUuid, Courses)(_.uuid, ForeignKeyAction.Cascade)
 
     def * = (uuid.?, courseUuid, number, memberUuid) <> (CourseSpace.tupled, CourseSpace.unapply)
 

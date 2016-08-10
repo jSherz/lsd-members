@@ -41,6 +41,7 @@ object CoursesJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val CourseOrganiserFormat = jsonFormat2(CourseOrganiser)
   implicit val CourseFormat = jsonFormat5(Course)
   implicit val CourseWithOrganisersFormat = jsonFormat3(CourseWithOrganisers)
+  implicit val courseWithNumSpacesFormat = jsonFormat3(CourseWithNumSpaces)
 
 }
 
@@ -56,3 +57,12 @@ case class CoursesListRequest(startDate: Date, endDate: Date)
   * @param name
   */
 case class CourseOrganiser(uuid: UUID, name: String)
+
+/**
+  * A course with some information about the spaces on it.
+  *
+  * @param course The course
+  * @param totalSpaces Course capacity
+  * @param spacesFree Number of available spaces
+  */
+case class CourseWithNumSpaces(course: Course, totalSpaces: Int, spacesFree: Int)

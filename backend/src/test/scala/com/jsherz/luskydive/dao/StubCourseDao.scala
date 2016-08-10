@@ -28,6 +28,7 @@ import java.util.UUID
 
 import com.jsherz.luskydive.core.{Course, CourseSpace, CourseWithOrganisers}
 import com.jsherz.luskydive.fixtures.CoursesWithOrganisers
+import com.jsherz.luskydive.json.CourseWithNumSpaces
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -59,7 +60,8 @@ class StubCourseDao()(implicit ec: ExecutionContext) extends CourseDAO {
     * @param endDate
     * @return
     */
-  override def find(startDate: Date, endDate: Date): Future[Seq[Course]] = Future(StubCourseDao.courses)
+  override def find(startDate: Date, endDate: Date): Future[Seq[CourseWithNumSpaces]] =
+    Future(StubCourseDao.coursesWithNumSpaces)
 
   /**
     * Get the space(s) (if any) on a course.
@@ -80,5 +82,7 @@ object StubCourseDao {
   val notFoundCourseUuid = UUID.fromString("f309d4ca-c8b2-44ac-8380-678bb7bcc3cb")
 
   val courses: Seq[Course] = Seq()
+
+  val coursesWithNumSpaces: Seq[CourseWithNumSpaces] = Seq()
 
 }

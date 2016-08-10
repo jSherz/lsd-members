@@ -28,7 +28,7 @@ import java.sql.Date
 import java.util.UUID
 
 import com.jsherz.luskydive.core.{Course, CourseSpace, CourseWithOrganisers}
-import com.jsherz.luskydive.json.CourseOrganiser
+import com.jsherz.luskydive.json.{CourseOrganiser, CourseWithNumSpaces}
 import com.jsherz.luskydive.services.DatabaseService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -53,7 +53,7 @@ trait CourseDAO {
     * @param endDate
     * @return
     */
-  def find(startDate: Date, endDate: Date): Future[Seq[Course]]
+  def find(startDate: Date, endDate: Date): Future[Seq[CourseWithNumSpaces]]
 
   /**
     * Get the space(s) (if any) on a course.
@@ -91,7 +91,7 @@ class CourseDAOImpl(protected override val databaseService: DatabaseService)(imp
       course,
       (organiser.uuid, organiser.name),
       secondaryOrganiser.map(so => (so.uuid, so.name))
-      )
+    )
 
     db.run(courseLookup.result.headOption).map(_.map {
       case (course, org, secOrg) => assembleCourse(course, org, secOrg)
@@ -104,10 +104,25 @@ class CourseDAOImpl(protected override val databaseService: DatabaseService)(imp
     * @param endDate
     * @return
     */
-  override def find(startDate: Date, endDate: Date): Future[Seq[Course]] = {
-    db.run(Courses.filter { course =>
-      course.date >= startDate && course.date <= endDate
-    }.result)
+  override def find(startDate: Date, endDate: Date): Future[Seq[CourseWithNumSpaces]] = {
+    // Find the course, joining in spaces
+    val lookup = (
+      for {
+        course <- Courses if course.date >= startDate && course.date <= endDate
+        (_, spaces) <- Courses join CourseSpaces on (_.uuid === _.courseUuid)
+      } yield (course, spaces)
+    ).groupBy(_._1)
+
+    // Pick out the course, total # spaces & spaces that are free
+    val transform = lookup.map {
+      case (course, spaces) => (
+        course,
+        spaces.length,
+        spaces.length - spaces.map(_._2.memberUuid).countDefined // calc num free
+      )
+    }
+
+    db.run(transform.result.map(_.map(CourseWithNumSpaces.tupled(_))))
   }
 
   /**
