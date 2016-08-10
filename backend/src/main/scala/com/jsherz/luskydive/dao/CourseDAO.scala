@@ -74,7 +74,6 @@ trait CourseDAO {
 class CourseDAOImpl(protected override val databaseService: DatabaseService)(implicit val ec: ExecutionContext)
   extends Tables(databaseService) with CourseDAO {
 
-  import slick.driver._
   import driver.api._
 
   /**
