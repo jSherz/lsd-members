@@ -6,10 +6,10 @@ import datetime
 from faker import Factory
 fake = Factory.create()
 
-num_people = 900
+num_people = 1000
 
 last_jump_start = datetime.datetime(2008, 9, 1)
-last_jump_end = datetime.datetime(2014, 8, 1)
+last_jump_end = datetime.datetime(2016, 8, 1)
 
 print('COPY members (uuid, name, email, phone_number, last_jump, created_at, updated_at) FROM stdin;')
 
