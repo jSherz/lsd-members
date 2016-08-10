@@ -23,5 +23,5 @@ CREATE TABLE course_spaces (
     course_uuid UUID REFERENCES courses(uuid) NOT NULL,
     number INT,
     member_uuid UUID REFERENCES members(uuid),
-    UNIQUE (uuid, number)
+    UNIQUE (course_uuid, number)
 );
