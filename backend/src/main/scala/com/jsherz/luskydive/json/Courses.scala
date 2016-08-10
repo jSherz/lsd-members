@@ -25,6 +25,7 @@
 package com.jsherz.luskydive.json
 
 import java.sql.Date
+import java.util.UUID
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import com.jsherz.luskydive.core.{CommitteeMember, Course, CourseWithOrganisers}
@@ -37,7 +38,7 @@ object CoursesJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val DateFormat = DateJsonFormat
   implicit val TimestampFormat = TimestampJsonFormat
   implicit val CoursesListFormat = jsonFormat2(CoursesListRequest)
-  implicit val CommitteeMemberFormat = jsonFormat8(CommitteeMember)
+  implicit val CourseOrganiserFormat = jsonFormat2(CourseOrganiser)
   implicit val CourseFormat = jsonFormat5(Course)
   implicit val CourseWithOrganisersFormat = jsonFormat3(CourseWithOrganisers)
 
@@ -47,3 +48,11 @@ object CoursesJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
   * Used to show the courses between a set of dates (inclusive).
   */
 case class CoursesListRequest(startDate: Date, endDate: Date)
+
+/**
+  * Stripped down [[CommitteeMember]] - used to only output important JSON.
+  *
+  * @param uuid
+  * @param name
+  */
+case class CourseOrganiser(uuid: UUID, name: String)

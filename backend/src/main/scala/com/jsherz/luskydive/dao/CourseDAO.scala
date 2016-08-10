@@ -28,6 +28,7 @@ import java.sql.Date
 import java.util.UUID
 
 import com.jsherz.luskydive.core.{Course, CourseSpace, CourseWithOrganisers}
+import com.jsherz.luskydive.json.CourseOrganiser
 import com.jsherz.luskydive.services.DatabaseService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -73,6 +74,7 @@ trait CourseDAO {
 class CourseDAOImpl(protected override val databaseService: DatabaseService)(implicit val ec: ExecutionContext)
   extends Tables(databaseService) with CourseDAO {
 
+  import slick.driver._
   import driver.api._
 
   /**
@@ -82,17 +84,19 @@ class CourseDAOImpl(protected override val databaseService: DatabaseService)(imp
     * @return
     */
   override def get(uuid: UUID): Future[Option[CourseWithOrganisers]] = {
-    val courseLookup = Courses.filter(_.uuid === uuid)
-      .join(CommitteeMembers)
-      .on(_.organiserUuid === _.uuid)
-      .joinLeft(CommitteeMembers)
-      .on(_._1.secondaryOrganiserUuid === _.uuid)
+    val courseLookup = for {
+      course <- Courses if course.uuid === uuid
+      organiser <- CommitteeMembers if course.organiserUuid === organiser.uuid
+      (_, secondaryOrganiser) <- Courses joinLeft CommitteeMembers on (_.secondaryOrganiserUuid === _.uuid)
+    } yield (
+      course,
+      (organiser.uuid, organiser.name),
+      secondaryOrganiser.map(so => (so.uuid, so.name))
+      )
 
-    db.run(courseLookup.result.headOption).map {
-      _.map { result =>
-        CourseWithOrganisers(result._1._1, result._1._2, result._2)
-      }
-    }
+    db.run(courseLookup.result.headOption).map(_.map {
+      case (course, org, secOrg) => assembleCourse(course, org, secOrg)
+    })
   }
 
   /**
@@ -115,6 +119,22 @@ class CourseDAOImpl(protected override val databaseService: DatabaseService)(imp
     */
   override def spaces(uuid: UUID): Future[Seq[CourseSpace]] = {
     db.run(CourseSpaces.filter(_.courseUuid === uuid).result)
+  }
+
+  /**
+    * Turn the raw returned course and organiser information into a class ready for serialization.
+    *
+    * @param course
+    * @param organiser
+    * @param secondaryOrganiser
+    * @return
+    */
+  private def assembleCourse(course: Course, organiser: (UUID, String), secondaryOrganiser: Option[(UUID, String)]): CourseWithOrganisers = {
+    CourseWithOrganisers(
+      course,
+      CourseOrganiser.tupled(organiser),
+      secondaryOrganiser.map(x => CourseOrganiser.tupled(x))
+    )
   }
 
 }

@@ -25,6 +25,7 @@
 package com.jsherz.luskydive.fixtures
 
 import com.jsherz.luskydive.core.CourseWithOrganisers
+import com.jsherz.luskydive.json.CourseOrganiser
 
 /**
   * Examples of [[CourseWithOrganisers]].
@@ -33,7 +34,7 @@ object CoursesWithOrganisers {
 
   val courseWithOrganisersA = CourseWithOrganisers(
     Courses.courseA,
-    CommitteeMembers.committeeMemberA,
+    CourseOrganiser(CommitteeMembers.committeeMemberA.uuid.get, CommitteeMembers.committeeMemberA.name),
     None
   )
 

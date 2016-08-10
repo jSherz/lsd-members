@@ -24,7 +24,9 @@
 
 package com.jsherz.luskydive.core
 
+import com.jsherz.luskydive.json.CourseOrganiser
+
 /**
   * Used to form a pretty JSON representation of a course with attached children.
   */
-case class CourseWithOrganisers(course: Course, organiser: CommitteeMember, secondaryOrganiser: Option[CommitteeMember])
+case class CourseWithOrganisers(course: Course, organiser: CourseOrganiser, secondaryOrganiser: Option[CourseOrganiser])
