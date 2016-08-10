@@ -109,7 +109,7 @@ class CourseDAOImpl(protected override val databaseService: DatabaseService)(imp
     val lookup = (
       for {
         course <- Courses if course.date >= startDate && course.date <= endDate
-        (_, spaces) <- Courses join CourseSpaces on (_.uuid === _.courseUuid)
+        spaces <- CourseSpaces if course.uuid === spaces.courseUuid
       } yield (course, spaces)
     ).groupBy(_._1)
 
