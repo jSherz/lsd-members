@@ -84,9 +84,10 @@ class CourseDAOImpl(protected override val databaseService: DatabaseService)(imp
     */
   override def get(uuid: UUID): Future[Option[CourseWithOrganisers]] = {
     val courseLookup = for {
-      course <- Courses if course.uuid === uuid
-      organiser <- CommitteeMembers if course.organiserUuid === organiser.uuid
-      (_, secondaryOrganiser) <- Courses joinLeft CommitteeMembers on (_.secondaryOrganiserUuid === _.uuid)
+      ((course, organiser), secondaryOrganiser) <-
+        Courses.filter(_.uuid === uuid) join
+          CommitteeMembers on (_.organiserUuid === _.uuid) joinLeft
+          CommitteeMembers on (_._1.secondaryOrganiserUuid === _.uuid)
     } yield (
       course,
       (organiser.uuid, organiser.name),

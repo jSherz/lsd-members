@@ -24,27 +24,33 @@
 
 package com.jsherz.luskydive.itest
 
-import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
+import com.jsherz.luskydive.Main._
+import com.jsherz.luskydive.services.DatabaseService
+
+import scala.io.{Codec, Source}
 
 /**
-  * Ensures the member DAO works correctly with the golden test DB.
+  * Ensures the database is setup correctly before each test.
   */
-class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
+object Util {
 
-  override protected def beforeAll(): Unit = Util.setupGoldTestDb()
+  /**
+    * Load the golden database SQL file into our test database.
+    */
+  def setupGoldTestDb(): DatabaseService = {
+    implicit val codec = Codec.UTF8
+    val goldenSql = Source.fromURL(getClass.getResource("/test-golden-v1.sql")).mkString
 
-  // memberExists -> returns false when no phone number or e-mail is given
+    val service = new DatabaseService(dbUrl, dbUsername, dbPassword)
 
-  // memberExists -> returns true when matching phone number is given
+    service
+      .db
+      .createSession
+      .conn
+      .prepareStatement(goldenSql)
+      .execute()
 
-  // memberExists -> returns true when matching e-mail is given
-
-  // memberExists -> returns true when matching phone number and e-mail are given
-
-  // create -> throws exception if no phone number or e-mail given?
-
-  // create -> generates valid uuid and inserts member (lookup /w returned uuid, confirm info)
-
-  // create -> uuid is different every time
+    service
+  }
 
 }

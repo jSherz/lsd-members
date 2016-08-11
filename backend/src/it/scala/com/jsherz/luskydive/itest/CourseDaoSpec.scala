@@ -24,21 +24,76 @@
 
 package com.jsherz.luskydive.itest
 
-import org.scalatest.{Matchers, WordSpec}
+import java.sql.{Date, Timestamp}
+import java.util.UUID
 
-class CourseDaoSpec extends WordSpec with Matchers {
+import com.jsherz.luskydive.core.{CommitteeMember, Course, CourseWithOrganisers}
+import com.jsherz.luskydive.dao.{CourseDAO, CourseDAOImpl, StubCourseDao}
+import com.jsherz.luskydive.json.CourseOrganiser
+import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import org.scalatest.concurrent.ScalaFutures._
+
+class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
+
+  private var dao: CourseDAO = new StubCourseDao() // Used only to setup dao variable - real version used later
+
+  override protected def beforeAll(): Unit = {
+    val dbService = Util.setupGoldTestDb()
+
+    dao = new CourseDAOImpl(databaseService = dbService)
+  }
 
   "CourseDao" should {
 
-    "do a thing" in {
-      assert(true)
+    "return None when course does not exist" in {
+      val course = dao.get(UUID.fromString("5a535978-324c-40aa-a658-20c7eace865e"))
+
+      course.futureValue.isDefined shouldBe false
     }
 
-    // get -> return None when course does not exist
+    "return the correct course with its organiser when the course does exist (one organiser)" in {
+      val course = dao.get(UUID.fromString("ed89a51d-f479-475f-ab61-6903c50b8b89"))
 
-    // get -> return Some(correct course with num spaces) when course does exist (one organiser)
+      whenReady(course) { c =>
+        c.isDefined shouldBe true
 
-    // get -> return Some(correct course with num spaces) when course does exist (both organisers)
+        c shouldBe Some(CourseWithOrganisers(
+          Course(
+            Some(UUID.fromString("ed89a51d-f479-475f-ab61-6903c50b8b89")),
+            Date.valueOf("2015-10-25"),
+            UUID.fromString("18cb4209-df83-4202-94fb-e6a2f7f92c8d"),
+            None,
+            1),
+
+          CourseOrganiser(UUID.fromString("18cb4209-df83-4202-94fb-e6a2f7f92c8d"), "Benjamin Johnson"),
+
+          None
+        ))
+      }
+    }
+
+    "return the correct course with its organisers when the course does exist (both organisers)" in {
+      val course = dao.get(UUID.fromString("ad702bb1-0eac-41d9-b146-ea794211449a"))
+
+      whenReady(course) { c =>
+        c.isDefined shouldBe true
+
+        c shouldBe Some(CourseWithOrganisers(
+          Course(
+            Some(UUID.fromString("ad702bb1-0eac-41d9-b146-ea794211449a")),
+            Date.valueOf("2009-10-16"),
+            UUID.fromString("2bb4ccd7-927a-4e5d-9456-40e5dcee3d34"),
+            Some(UUID.fromString("756bf336-e3c7-47d3-bd14-00dbfff302cf")),
+            1),
+
+          CourseOrganiser(UUID.fromString("2bb4ccd7-927a-4e5d-9456-40e5dcee3d34"), "Valerie Barker MD"),
+
+          Some(CourseOrganiser(UUID.fromString("756bf336-e3c7-47d3-bd14-00dbfff302cf"), "Jessica Schmidt"))
+        ))
+      }
+    }
 
     // find -> return Seq() when no courses exist between given dates
 
