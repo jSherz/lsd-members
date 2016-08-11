@@ -1,5 +1,5 @@
 --
--- PostgreSQL database dump
+-- Golden test database (v1)
 --
 
 -- Dumped from database version 9.5.3
@@ -37,6 +37,8 @@ SET default_with_oids = false;
 -- Name: committee_members; Type: TABLE; Schema: public; Owner: luskydive
 --
 
+DROP TABLE committee_members;
+
 CREATE TABLE committee_members (
     uuid uuid NOT NULL,
     name character varying(50) NOT NULL,
@@ -48,12 +50,11 @@ CREATE TABLE committee_members (
     updated_at timestamp without time zone DEFAULT now() NOT NULL
 );
 
-
-ALTER TABLE committee_members OWNER TO luskydive;
-
 --
 -- Name: course_spaces; Type: TABLE; Schema: public; Owner: luskydive
 --
+
+DROP TABLE course_spaces;
 
 CREATE TABLE course_spaces (
     uuid uuid NOT NULL,
@@ -62,12 +63,11 @@ CREATE TABLE course_spaces (
     member_uuid uuid
 );
 
-
-ALTER TABLE course_spaces OWNER TO luskydive;
-
 --
 -- Name: courses; Type: TABLE; Schema: public; Owner: luskydive
 --
+
+DROP TABLE courses;
 
 CREATE TABLE courses (
     uuid uuid NOT NULL,
@@ -77,12 +77,11 @@ CREATE TABLE courses (
     status integer
 );
 
-
-ALTER TABLE courses OWNER TO luskydive;
-
 --
 -- Name: members; Type: TABLE; Schema: public; Owner: luskydive
 --
+
+DROP TABLE members;
 
 CREATE TABLE members (
     uuid uuid NOT NULL,
@@ -94,12 +93,11 @@ CREATE TABLE members (
     updated_at timestamp without time zone DEFAULT now() NOT NULL
 );
 
-
-ALTER TABLE members OWNER TO luskydive;
-
 --
 -- Name: schema_version; Type: TABLE; Schema: public; Owner: luskydive
 --
+
+DROP TABLE schema_version;
 
 CREATE TABLE schema_version (
     installed_rank integer NOT NULL,
@@ -113,9 +111,6 @@ CREATE TABLE schema_version (
     execution_time integer NOT NULL,
     success boolean NOT NULL
 );
-
-
-ALTER TABLE schema_version OWNER TO luskydive;
 
 --
 -- Data for Name: committee_members; Type: TABLE DATA; Schema: public; Owner: luskydive
@@ -213,7 +208,6 @@ f545a332-0d12-4562-845a-591275740f16	Russell Aguirre	obrienroy@gmail.com	BN9YOQi
 78e25bf7-ae21-41a5-ad1f-0e11f3cc0b29	Kristine Sullivan	grace77@hotmail.com	lZOM6A5xBQgbTPMqBtPfbgYsUvVISe7G8YS4FzYZUYKmGA2axQ.BT/Q6JzZfOOPO0ei2cqdweNc4eN9R7wy5Vw	cm7NWesdI.Tcu/eeUyolBACglLJ2TokRghCi1No7Z0w	t	2016-10-20 16:30:05	2017-04-20 00:30:34
 3048bd06-ecd9-415c-9b88-8a4f09831002	Tara Bell	ellisonrachel@miller.com	chl2rgLurUN39Yv444.1A0XUHuBDmWqmqpHD62EEJ5Qgw6Kifibxw14etfWPmcTEkdz0wZlEEtltuS8EdFFklg	ydnbO2fMGeO8t5aSUioF4Fzr/X9vLYVwbu0dQ2jNGeM	t	2016-09-18 08:53:31	2016-12-29 21:40:45
 \.
-
 
 --
 -- Data for Name: course_spaces; Type: TABLE DATA; Schema: public; Owner: luskydive
@@ -903,7 +897,6 @@ fe223cb8-8d95-44e8-ac1a-fe8ce8fa3059	a716a5a5-d086-48b0-aef5-9bd8231a06cd	1	c180
 54de6be4-d779-4209-a021-236f78a27f9a	a4c1f289-8652-4c75-86ac-a1a42d0cdec8	1	27875ec3-7355-4260-be5a-6b184a2a78ad
 \.
 
-
 --
 -- Data for Name: courses; Type: TABLE DATA; Schema: public; Owner: luskydive
 --
@@ -995,7 +988,6 @@ a716a5a5-d086-48b0-aef5-9bd8231a06cd	2016-05-13	f57ea7c2-929b-498e-93b2-86696ce7
 ec5c8f9b-57e0-4fb7-8f5b-09ff53a900e3	2016-01-12	290b607d-6fe5-42f9-b2c0-a2941fce10ab	2bb4ccd7-927a-4e5d-9456-40e5dcee3d34	1
 a7d4025e-40cc-4b07-88d2-5e9e0925237c	2016-03-09	230a1d38-9f4e-4a38-908c-4a2bafad6698	4024bcef-2bfb-4f93-81c7-0433faa79623	1
 \.
-
 
 --
 -- Data for Name: members; Type: TABLE DATA; Schema: public; Owner: luskydive
@@ -2004,7 +1996,6 @@ ab660f8c-9b4f-4407-b324-84afe278e0e0	Daisy Stephenson	steven89@hotmail.com	+4472
 f91a2df7-6055-4956-866a-51faa43d0f42	Brian Peterson	robertfreeman@gmail.com	+447153264841	2010-11-26	2009-03-29 16:15:22	2009-08-14 15:59:36
 \.
 
-
 --
 -- Data for Name: schema_version; Type: TABLE DATA; Schema: public; Owner: luskydive
 --
@@ -2014,14 +2005,12 @@ COPY schema_version (installed_rank, version, description, type, script, checksu
 2	1.1	Create committee and raps course tables	SQL	V1_1__Create_committee_and_raps_course_tables.sql	1397392807	luskydive	2016-08-10 22:08:39.126118	37	t
 \.
 
-
 --
 -- Name: committee_members_pkey; Type: CONSTRAINT; Schema: public; Owner: luskydive
 --
 
 ALTER TABLE ONLY committee_members
     ADD CONSTRAINT committee_members_pkey PRIMARY KEY (uuid);
-
 
 --
 -- Name: course_spaces_course_uuid_number_key; Type: CONSTRAINT; Schema: public; Owner: luskydive
@@ -2030,14 +2019,12 @@ ALTER TABLE ONLY committee_members
 ALTER TABLE ONLY course_spaces
     ADD CONSTRAINT course_spaces_course_uuid_number_key UNIQUE (course_uuid, number);
 
-
 --
 -- Name: course_spaces_pkey; Type: CONSTRAINT; Schema: public; Owner: luskydive
 --
 
 ALTER TABLE ONLY course_spaces
     ADD CONSTRAINT course_spaces_pkey PRIMARY KEY (uuid);
-
 
 --
 -- Name: courses_pkey; Type: CONSTRAINT; Schema: public; Owner: luskydive
@@ -2046,14 +2033,12 @@ ALTER TABLE ONLY course_spaces
 ALTER TABLE ONLY courses
     ADD CONSTRAINT courses_pkey PRIMARY KEY (uuid);
 
-
 --
 -- Name: members_email_key; Type: CONSTRAINT; Schema: public; Owner: luskydive
 --
 
 ALTER TABLE ONLY members
     ADD CONSTRAINT members_email_key UNIQUE (email);
-
 
 --
 -- Name: members_phone_number_key; Type: CONSTRAINT; Schema: public; Owner: luskydive
@@ -2062,14 +2047,12 @@ ALTER TABLE ONLY members
 ALTER TABLE ONLY members
     ADD CONSTRAINT members_phone_number_key UNIQUE (phone_number);
 
-
 --
 -- Name: members_pkey; Type: CONSTRAINT; Schema: public; Owner: luskydive
 --
 
 ALTER TABLE ONLY members
     ADD CONSTRAINT members_pkey PRIMARY KEY (uuid);
-
 
 --
 -- Name: schema_version_pk; Type: CONSTRAINT; Schema: public; Owner: luskydive
@@ -2078,13 +2061,11 @@ ALTER TABLE ONLY members
 ALTER TABLE ONLY schema_version
     ADD CONSTRAINT schema_version_pk PRIMARY KEY (installed_rank);
 
-
 --
 -- Name: schema_version_s_idx; Type: INDEX; Schema: public; Owner: luskydive
 --
 
 CREATE INDEX schema_version_s_idx ON schema_version USING btree (success);
-
 
 --
 -- Name: course_spaces_course_uuid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: luskydive
@@ -2093,14 +2074,12 @@ CREATE INDEX schema_version_s_idx ON schema_version USING btree (success);
 ALTER TABLE ONLY course_spaces
     ADD CONSTRAINT course_spaces_course_uuid_fkey FOREIGN KEY (course_uuid) REFERENCES courses(uuid);
 
-
 --
 -- Name: course_spaces_member_uuid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: luskydive
 --
 
 ALTER TABLE ONLY course_spaces
     ADD CONSTRAINT course_spaces_member_uuid_fkey FOREIGN KEY (member_uuid) REFERENCES members(uuid);
-
 
 --
 -- Name: courses_organiser_uuid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: luskydive
@@ -2109,26 +2088,9 @@ ALTER TABLE ONLY course_spaces
 ALTER TABLE ONLY courses
     ADD CONSTRAINT courses_organiser_uuid_fkey FOREIGN KEY (organiser_uuid) REFERENCES committee_members(uuid);
 
-
 --
 -- Name: courses_secondary_organiser_uuid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: luskydive
 --
 
 ALTER TABLE ONLY courses
     ADD CONSTRAINT courses_secondary_organiser_uuid_fkey FOREIGN KEY (secondary_organiser_uuid) REFERENCES committee_members(uuid);
-
-
---
--- Name: public; Type: ACL; Schema: -; Owner: james
---
-
-REVOKE ALL ON SCHEMA public FROM PUBLIC;
-REVOKE ALL ON SCHEMA public FROM james;
-GRANT ALL ON SCHEMA public TO james;
-GRANT ALL ON SCHEMA public TO PUBLIC;
-
-
---
--- PostgreSQL database dump complete
---
-
