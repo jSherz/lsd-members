@@ -1353,17 +1353,6 @@ ALTER TABLE ONLY courses
 ALTER TABLE ONLY courses
     ADD CONSTRAINT courses_secondary_organiser_uuid_fkey FOREIGN KEY (secondary_organiser_uuid) REFERENCES committee_members(uuid);
 
-
---
--- Name: public; Type: ACL; Schema: -; Owner: postgres
---
-
-REVOKE ALL ON SCHEMA public FROM PUBLIC;
-REVOKE ALL ON SCHEMA public FROM postgres;
-GRANT ALL ON SCHEMA public TO postgres;
-GRANT ALL ON SCHEMA public TO PUBLIC;
-
-
 --
 -- PostgreSQL database dump complete
 --
