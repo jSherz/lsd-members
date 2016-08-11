@@ -66,6 +66,8 @@ libraryDependencies ++= {
   )
 }
 
+lazy val IntegrationTest = config("it") extend Test
+
 Revolver.settings
 
 wartremoverErrors ++= Warts.all
