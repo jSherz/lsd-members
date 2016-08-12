@@ -29,7 +29,8 @@ import java.util.UUID
 
 import com.jsherz.luskydive.core.{CommitteeMember, Course, CourseWithOrganisers}
 import com.jsherz.luskydive.dao.{CourseDAO, CourseDAOImpl, StubCourseDao}
-import com.jsherz.luskydive.json.CourseOrganiser
+import com.jsherz.luskydive.json.{CourseOrganiser, CourseWithNumSpaces}
+import com.jsherz.luskydive.util.DateUtil
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -95,9 +96,28 @@ class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       }
     }
 
-    // find -> return Seq() when no courses exist between given dates
+    "return nothing when no courses are found on the given dates" in {
+      val courses = dao.find(DateUtil.makeDate(2015, 10, 31), DateUtil.makeDate(2016, 1, 11))
 
-    // find -> return Seq(course) when one course is found
+      courses.futureValue shouldBe empty
+    }
+
+    "return a list of one course if only one is found" in {
+      val courses = dao.find(DateUtil.makeDate(2012, 10, 11), DateUtil.makeDate(2012, 10, 11))
+
+      val course = courses.futureValue.head
+
+      course shouldEqual CourseWithNumSpaces(
+        Course(
+          Some(UUID.fromString("c1756c09-7d56-4be3-a225-fbab59ceef7e")),
+          Date.valueOf("2012-10-11"),
+          UUID.fromString("fe27ae3d-ae32-4097-ae4c-809cd2d5a946"),
+          Some(UUID.fromString("80b0ffad-b9c4-4888-8915-428520c7c960")),
+          1),
+        7,
+        4
+      )
+    }
 
     // find -> return Seq(course, course) when multiple courses are found
 
