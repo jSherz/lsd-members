@@ -24,10 +24,14 @@
 
 package com.jsherz.luskydive.itest.dao
 
+import java.util.UUID
+
+import com.jsherz.luskydive.core.Member
 import com.jsherz.luskydive.dao._
 import com.jsherz.luskydive.itest.util.Util
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 import org.scalatest.concurrent.ScalaFutures._
+import com.jsherz.luskydive.json.MemberJsonSupport._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -82,13 +86,13 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       exists.futureValue shouldBe true
     }
 
-    "returns true when matching phone number and e-mail are given" in {
+    "return true when matching phone number and e-mail are given" in {
       val exists = dao.memberExists(Some("+447156850760"), Some("destiny82@gmail.com"))
 
       exists.futureValue shouldBe true
     }
 
-    "returns true when phone number and e-mail match but are for different members" in {
+    "return true when phone number and e-mail match but are for different members" in {
       val exists = dao.memberExists(Some("+447793403999"), Some("gescobar@lawson-petty.biz"))
 
       exists.futureValue shouldBe true
@@ -98,11 +102,62 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
   "MemberDao#create" should {
 
-    // create -> throws exception if no phone number or e-mail given?
+    "return None if creating the member failed" in {
+      val result = dao.create("Tegan Harper", None, None)
 
-    // create -> generates valid uuid and inserts member (lookup /w returned uuid, confirm info)
+      result.futureValue shouldBe None
+    }
 
-    // create -> uuid is different every time
+    "generates a valid UUID and inserts a member with the correct information" in {
+      val member = Member(None, "Keira Rahman", Some("+447916149532"), Some("KeiraRahman@armyspy.com"))
+
+      val futureResult = dao.create(member.name, member.phoneNumber, member.email)
+      val result = futureResult.futureValue
+
+      result.isDefined shouldBe true
+
+      val foundMember = dao.get(result.get)
+      foundMember.futureValue shouldBe Some(member.copy(uuid = Some(result.get)))
+    }
+
+    "generates a different UUID with each creation" in {
+      val memberA = Member(None, "Alisha Stevens", Some("+447985203839"), Some("AlishaStevens@yahoo.com"))
+      val memberB = Member(None, "Hollie Hammond", Some("+447885929137"), Some("x_x_hollie_x_x@fanmail.com"))
+      val memberC = Member(None, "Kayleigh Barker", Some("+447043025413"), Some("kay_kay100101@hotmail.co.uk"))
+
+      val memberAUuid = dao.create(memberA.name, memberA.phoneNumber, memberA.email).futureValue
+      val memberBUuid = dao.create(memberB.name, memberB.phoneNumber, memberB.email).futureValue
+      val memberCUuid = dao.create(memberC.name, memberC.phoneNumber, memberC.email).futureValue
+
+      memberAUuid shouldNot be(None)
+      memberBUuid shouldNot be(None)
+      memberCUuid shouldNot be(None)
+
+      memberAUuid shouldNot equal(memberBUuid)
+      memberAUuid shouldNot equal(memberCUuid)
+
+      memberBUuid shouldNot equal(memberAUuid)
+      memberBUuid shouldNot equal(memberCUuid)
+
+      memberCUuid shouldNot equal(memberAUuid)
+      memberCUuid shouldNot equal(memberBUuid)
+    }
+
+  }
+
+  "MemberDao#get" should {
+
+    "return None if the member was not found" in {
+      val member = dao.get(UUID.fromString("d8418dda-aed4-4e58-9dc1-38a8ea720120"))
+
+      member.futureValue shouldBe None
+    }
+
+    "return Some(member) if a valid UUID was given" in {
+      val member = dao.get(UUID.fromString("0d0fa940-6d3f-45f9-9be0-07b08ec4e240"))
+
+      member.futureValue shouldEqual Some(Util.fixture[Member]("0d0fa940.json"))
+    }
 
   }
 

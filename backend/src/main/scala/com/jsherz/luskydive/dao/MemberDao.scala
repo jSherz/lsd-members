@@ -52,9 +52,17 @@ trait MemberDao {
     * @param name
     * @param phoneNumber
     * @param email
-    * @return UUID
+    * @return UUID if creation succeeded
     */
-  def create(name: String, phoneNumber: Option[String], email: Option[String]): Future[UUID]
+  def create(name: String, phoneNumber: Option[String], email: Option[String]): Future[Option[UUID]]
+
+  /**
+    * Get a member with the provided UUID.
+    *
+    * @param uuid
+    * @return
+    */
+  def get(uuid: UUID): Future[Option[Member]]
 
 }
 
@@ -83,12 +91,25 @@ case class MemberDaoImpl(override protected val databaseService: DatabaseService
     * @param name
     * @param phoneNumber
     * @param email
-    * @return
+    * @return UUID if creation succeeded
     */
-  override def create(name: String, phoneNumber: Option[String], email: Option[String]): Future[UUID] = {
+  override def create(name: String, phoneNumber: Option[String], email: Option[String]): Future[Option[UUID]] = {
     val uuid = Generators.randomBasedGenerator().generate()
 
-    db.run((Members returning Members.map(_.uuid)) += Member(Some(uuid), name, phoneNumber, email))
+    (phoneNumber, email) match {
+      case (None, None) => Future(None)
+      case _ => db.run((Members returning Members.map(_.uuid)) += Member(Some(uuid), name, phoneNumber, email)).map(Some(_))
+    }
+  }
+
+  /**
+    * Get a member with the provided UUID.
+    *
+    * @param uuid
+    * @return
+    */
+  override def get(uuid: UUID): Future[Option[Member]] = {
+    db.run(Members.filter(_.uuid === uuid).result.headOption)
   }
 
 }
