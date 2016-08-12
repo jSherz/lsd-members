@@ -1,0 +1,12 @@
+{
+  "course": {
+    "uuid": "ed89a51d-f479-475f-ab61-6903c50b8b89",
+    "date": "2015-10-25",
+    "organiserUuid": "18cb4209-df83-4202-94fb-e6a2f7f92c8d",
+    "status": 1
+  },
+  "organiser": {
+    "uuid": "18cb4209-df83-4202-94fb-e6a2f7f92c8d",
+    "name": "Benjamin Johnson"
+  }
+}

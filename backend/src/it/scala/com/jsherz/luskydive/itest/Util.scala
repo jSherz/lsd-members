@@ -34,6 +34,10 @@ import scala.io.{Codec, Source}
   */
 object Util {
 
+  import spray.json._
+
+  implicit val codec: Codec = Codec.UTF8
+
   /**
     * Load the golden database SQL file into our test database.
     */
@@ -51,6 +55,25 @@ object Util {
       .execute()
 
     service
+  }
+
+  /**
+    * Parse a JSON fixture into an object.
+    *
+    * @param path
+    * @tparam T
+    * @return
+    */
+  def fixture[T :JsonReader](path: String)(implicit jsonFormat: JsonFormat[T]): T = {
+    val fullPath = "/fixtures/" + path
+    val resourceUrl = getClass.getResource(fullPath)
+    val raw = Source.fromURL(resourceUrl).mkString
+
+    if (raw == null) {
+      throw new RuntimeException(s"Cannot find fixture '${fullPath}'")
+    }
+
+    raw.parseJson.convertTo[T]
   }
 
 }
