@@ -31,7 +31,6 @@ import com.jsherz.luskydive.dao.{CourseDao, CourseDaoImpl}
 import com.jsherz.luskydive.itest.util.Util
 import com.jsherz.luskydive.json.{CourseSpaceWithMember, CourseWithNumSpaces}
 import com.jsherz.luskydive.itest.util.DateUtil
-import org.scalatest.concurrent.ScalaFutures._
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 import org.scalatest.concurrent.ScalaFutures._
 import com.jsherz.luskydive.json.CoursesJsonSupport._
