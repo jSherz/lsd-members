@@ -27,6 +27,7 @@ package com.jsherz.luskydive.itest.dao
 import com.jsherz.luskydive.dao._
 import com.jsherz.luskydive.itest.util.Util
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
+import org.scalatest.concurrent.ScalaFutures._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -48,25 +49,49 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
     "return false when no phone number or e-mail is given" in {
       val exists = dao.memberExists(None, None)
 
-      exists shouldBe false
+      exists.futureValue shouldBe false
+    }
+
+    "return false when the phone number does not match any member" in {
+      val exists = dao.memberExists(Some("+44777111888"), None)
+
+      exists.futureValue shouldBe false
+    }
+
+    "return false when the e-mail does not match any member" in {
+      val exists = dao.memberExists(None, Some("goats@matthews-mosley.org"))
+
+      exists.futureValue shouldBe false
+    }
+
+    "return false when neither the phone number nor e-mail matches any member" in {
+      val exists = dao.memberExists(Some("+44700100200"), Some("destiny821337@gmail.com"))
+
+      exists.futureValue shouldBe false
     }
 
     "return true when matching phone number is given" in {
       val exists = dao.memberExists(Some("+447155728581"), None)
 
-      exists shouldBe true
+      exists.futureValue shouldBe true
     }
 
     "return true when matching e-mail is given" in {
       val exists = dao.memberExists(None, Some("nelsonbryan@matthews-mosley.org"))
 
-      exists shouldBe true
+      exists.futureValue shouldBe true
     }
 
     "returns true when matching phone number and e-mail are given" in {
       val exists = dao.memberExists(Some("+447156850760"), Some("destiny82@gmail.com"))
 
-      exists shouldBe true
+      exists.futureValue shouldBe true
+    }
+
+    "returns true when phone number and e-mail match but are for different members" in {
+      val exists = dao.memberExists(Some("+447793403999"), Some("gescobar@lawson-petty.biz"))
+
+      exists.futureValue shouldBe true
     }
 
   }
