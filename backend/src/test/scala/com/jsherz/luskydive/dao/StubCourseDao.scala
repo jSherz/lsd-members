@@ -33,9 +33,9 @@ import com.jsherz.luskydive.json.{CourseSpaceWithMember, CourseWithNumSpaces}
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
-  * A [[CourseDAO]] that returns canned responses.
+  * A [[CourseDao]] that returns canned responses.
   */
-class StubCourseDao()(implicit ec: ExecutionContext) extends CourseDAO {
+class StubCourseDao()(implicit ec: ExecutionContext) extends CourseDao {
 
   /**
     * Try and find a course with the given UUID.

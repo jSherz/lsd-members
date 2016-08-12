@@ -26,14 +26,14 @@ package com.jsherz.luskydive.services
 
 import akka.http.scaladsl.server.Directives._
 import com.jsherz.luskydive.apis.{CoursesApi, SignupApi}
-import com.jsherz.luskydive.dao.{CourseDAO, MemberDAO}
+import com.jsherz.luskydive.dao.{CourseDao, MemberDao}
 
 import scala.concurrent.ExecutionContext
 
 /**
   * The holder of all configured routes.
   */
-class HttpService(memberDao: MemberDAO, courseDao: CourseDAO)(implicit executionContext: ExecutionContext) {
+class HttpService(memberDao: MemberDao, courseDao: CourseDao)(implicit executionContext: ExecutionContext) {
 
   val signupRoutes = new SignupApi(memberDao)
 

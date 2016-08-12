@@ -28,7 +28,7 @@ import java.sql.{Date, Timestamp}
 import java.util.UUID
 
 import com.jsherz.luskydive.core.{CommitteeMember, Course, CourseWithOrganisers}
-import com.jsherz.luskydive.dao.{CourseDAO, CourseDAOImpl, StubCourseDao}
+import com.jsherz.luskydive.dao.{CourseDao, CourseDaoImpl, StubCourseDao}
 import com.jsherz.luskydive.json.{CourseOrganiser, CourseSpaceWithMember, CourseWithNumSpaces}
 import com.jsherz.luskydive.util.DateUtil
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
@@ -40,12 +40,12 @@ class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
   import com.jsherz.luskydive.json.CoursesJsonSupport._
 
-  private var dao: CourseDAO = new StubCourseDao() // Used only to setup dao variable - real version used later
+  private var dao: CourseDao = new StubCourseDao() // Used only to setup dao variable - real version used later
 
   override protected def beforeAll(): Unit = {
     val dbService = Util.setupGoldTestDb()
 
-    dao = new CourseDAOImpl(databaseService = dbService)
+    dao = new CourseDaoImpl(databaseService = dbService)
   }
 
   "CourseDao" should {

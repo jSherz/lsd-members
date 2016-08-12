@@ -35,7 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 /**
   * Data Access Object to retrieve and store Member information.
   */
-trait MemberDAO {
+trait MemberDao {
 
   /**
     * Does a member exist in the DB with the given e-mail or phone number?
@@ -58,8 +58,8 @@ trait MemberDAO {
 
 }
 
-case class MemberDAOImpl(override protected val databaseService: DatabaseService)(implicit ec: ExecutionContext)
-  extends Tables(databaseService) with MemberDAO {
+case class MemberDaoImpl(override protected val databaseService: DatabaseService)(implicit ec: ExecutionContext)
+  extends Tables(databaseService) with MemberDao {
 
   import driver.api._
 

@@ -27,7 +27,7 @@ package com.jsherz.luskydive.apis
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import com.jsherz.luskydive.dao.{MemberDAO, StubMemberDAO}
+import com.jsherz.luskydive.dao.{MemberDao, StubMemberDao}
 import com.jsherz.luskydive.json.{SignupJsonSupport, SignupRequest, SignupResponse}
 import org.mockito.Matchers._
 import org.mockito.Mockito
@@ -39,7 +39,7 @@ import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
   */
 class SignupApiSpec extends WordSpec with Matchers with ScalatestRouteTest with BeforeAndAfter {
 
-  private var dao: MemberDAO = Mockito.spy(new StubMemberDAO())
+  private var dao: MemberDao = Mockito.spy(new StubMemberDao())
   private var route = new SignupApi(dao).route
 
   private val url = "/members/sign-up"
@@ -47,7 +47,7 @@ class SignupApiSpec extends WordSpec with Matchers with ScalatestRouteTest with 
   import SignupJsonSupport._
 
   before {
-    dao = Mockito.spy(new StubMemberDAO())
+    dao = Mockito.spy(new StubMemberDao())
     route = new SignupApi(dao).route
   }
 
@@ -142,7 +142,7 @@ class SignupApiSpec extends WordSpec with Matchers with ScalatestRouteTest with 
     }
 
     "return failed with an appropriate error if the phone number is in use" in {
-      val request = SignupRequest("Declan Clark", StubMemberDAO.existsPhoneNumber)
+      val request = SignupRequest("Declan Clark", StubMemberDao.existsPhoneNumber)
 
       Post(url, request) ~> route ~> check {
         response.status shouldEqual StatusCodes.OK

@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 /**
   * A testing implementation of the MemberDAO that responds to a set of pre-defined inputs.
   */
-class StubMemberDAO()(implicit val ec: ExecutionContext) extends MemberDAO {
+class StubMemberDao()(implicit val ec: ExecutionContext) extends MemberDao {
 
   /**
     * Does a member exist in the DB with the given e-mail or phone number?
@@ -43,7 +43,7 @@ class StubMemberDAO()(implicit val ec: ExecutionContext) extends MemberDAO {
     * @return
     */
   override def memberExists(phoneNumber: Option[String], email: Option[String]): Future[Boolean] = {
-    Future(phoneNumber.contains(StubMemberDAO.existsPhoneNumberFormatted) || email.contains(StubMemberDAO.existsEmail))
+    Future(phoneNumber.contains(StubMemberDao.existsPhoneNumberFormatted) || email.contains(StubMemberDao.existsEmail))
   }
 
   /**
@@ -59,7 +59,7 @@ class StubMemberDAO()(implicit val ec: ExecutionContext) extends MemberDAO {
   }
 }
 
-object StubMemberDAO {
+object StubMemberDao {
 
   val existsPhoneNumber = "+447835798240"
 

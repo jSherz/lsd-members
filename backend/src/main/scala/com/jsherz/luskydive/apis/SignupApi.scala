@@ -26,7 +26,7 @@ package com.jsherz.luskydive.apis
 
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._
-import com.jsherz.luskydive.dao.MemberDAO
+import com.jsherz.luskydive.dao.MemberDao
 import com.jsherz.luskydive.json.{SignupAltRequest, SignupJsonSupport, SignupRequest, SignupResponse}
 
 import scala.concurrent.ExecutionContext
@@ -35,7 +35,7 @@ import scalaz.{Failure, Success}
 /**
   * The two methods of signing up new members at a fresher's fair (phone number or e-mail).
   */
-class SignupApi(private val memberDao: MemberDAO)(implicit ec: ExecutionContext) {
+class SignupApi(private val memberDao: MemberDao)(implicit ec: ExecutionContext) {
 
   import SignupJsonSupport._
 

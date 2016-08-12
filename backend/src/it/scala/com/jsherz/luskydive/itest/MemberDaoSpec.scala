@@ -24,6 +24,7 @@
 
 package com.jsherz.luskydive.itest
 
+import com.jsherz.luskydive.dao._
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 
 /**
@@ -31,7 +32,15 @@ import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
   */
 class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
-  override protected def beforeAll(): Unit = Util.setupGoldTestDb()
+  import com.jsherz.luskydive.json.SignupJsonSupport._
+
+  private var dao: MemberDao = new StubMemberDao() // Used only to setup dao variable - real version used later
+
+  override protected def beforeAll(): Unit = {
+    val dbService = Util.setupGoldTestDb()
+
+    dao = new MemberDaoImpl(databaseService = dbService)
+  }
 
   // memberExists -> returns false when no phone number or e-mail is given
 

@@ -36,7 +36,7 @@ import scala.concurrent.{ExecutionContext, Future}
 /**
   * Access to courses.
   */
-trait CourseDAO {
+trait CourseDao {
 
   /**
     * Try and find a course with the given UUID.
@@ -71,8 +71,8 @@ trait CourseDAO {
   * @param databaseService
   * @param ec
   */
-class CourseDAOImpl(protected override val databaseService: DatabaseService)(implicit val ec: ExecutionContext)
-  extends Tables(databaseService) with CourseDAO {
+class CourseDaoImpl(protected override val databaseService: DatabaseService)(implicit val ec: ExecutionContext)
+  extends Tables(databaseService) with CourseDao {
 
   import driver.api._
 

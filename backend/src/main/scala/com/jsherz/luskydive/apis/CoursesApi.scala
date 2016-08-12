@@ -28,7 +28,7 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.PathMatchers.JavaUUID
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
-import com.jsherz.luskydive.dao.CourseDAO
+import com.jsherz.luskydive.dao.CourseDao
 import com.jsherz.luskydive.json.{CoursesJsonSupport, CoursesListRequest}
 
 import scala.concurrent.ExecutionContext
@@ -36,7 +36,7 @@ import scala.concurrent.ExecutionContext
 /**
   * Used to retrieve and store course information.
   */
-class CoursesApi(private val courseDao: CourseDAO)(implicit ec: ExecutionContext) {
+class CoursesApi(private val courseDao: CourseDao)(implicit ec: ExecutionContext) {
 
   import CoursesJsonSupport._
 
