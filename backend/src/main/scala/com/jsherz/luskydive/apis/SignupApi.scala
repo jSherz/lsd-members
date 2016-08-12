@@ -28,6 +28,7 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._
 import com.jsherz.luskydive.dao.MemberDao
 import com.jsherz.luskydive.json.{SignupAltRequest, SignupJsonSupport, SignupRequest, SignupResponse}
+import com.jsherz.luskydive.services.Cors.cors
 
 import scala.concurrent.ExecutionContext
 import scalaz.{Failure, Success}
@@ -45,21 +46,23 @@ class SignupApi(private val memberDao: MemberDao)(implicit ec: ExecutionContext)
     * Requires a name and e-mail address.
     */
   private val signupRoute = path("sign-up") {
-    post {
-      entity(as[SignupRequest]) { req =>
-        complete {
-          req.validate() match {
-            case Success(phoneNumber) => {
-              memberDao.memberExists(Some(phoneNumber), None).map {
-                case true => SignupResponse(false, Map("phoneNumber" -> "error.inUse"))
-                case false => {
-                  memberDao.create(req.name, Some(phoneNumber), None)
+    cors {
+      post {
+        entity(as[SignupRequest]) { req =>
+          complete {
+            req.validate() match {
+              case Success(phoneNumber) => {
+                memberDao.memberExists(Some(phoneNumber), None).map {
+                  case true => SignupResponse(false, Map("phoneNumber" -> "error.inUse"))
+                  case false => {
+                    memberDao.create(req.name, Some(phoneNumber), None)
 
-                  SignupResponse(true, Map.empty)
+                    SignupResponse(true, Map.empty)
+                  }
                 }
               }
+              case Failure(reason) => SignupResponse(false, reason.list.toList.toMap)
             }
-            case Failure(reason) => SignupResponse(false, reason.list.toList.toMap)
           }
         }
       }
@@ -72,21 +75,23 @@ class SignupApi(private val memberDao: MemberDao)(implicit ec: ExecutionContext)
     * Requires a name and phone number.
     */
   private val signupAltRoute = path("sign-up" / "alt") {
-    post {
-      entity(as[SignupAltRequest]) { req =>
-        complete {
-          req.validate() match {
-            case Success(_) => {
-              memberDao.memberExists(None, Some(req.email)).map {
-                case true => SignupResponse(false, Map("email" -> "error.inUse"))
-                case false => {
-                  memberDao.create(req.name, None, Some(req.email))
+    cors {
+      post {
+        entity(as[SignupAltRequest]) { req =>
+          complete {
+            req.validate() match {
+              case Success(_) => {
+                memberDao.memberExists(None, Some(req.email)).map {
+                  case true => SignupResponse(false, Map("email" -> "error.inUse"))
+                  case false => {
+                    memberDao.create(req.name, None, Some(req.email))
 
-                  SignupResponse(true, Map.empty)
+                    SignupResponse(true, Map.empty)
+                  }
                 }
               }
+              case Failure(reason) => SignupResponse(false, reason.list.toList.toMap)
             }
-            case Failure(reason) => SignupResponse(false, reason.list.toList.toMap)
           }
         }
       }

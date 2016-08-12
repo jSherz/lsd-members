@@ -69,6 +69,7 @@ lazy val root = (project in file("."))
         "com.typesafe.akka" %% "akka-testkit"                      % akkaV,
         "com.typesafe.akka" %% "akka-http-experimental"            % akkaV,
         "com.typesafe.akka" %% "akka-http-spray-json-experimental" % akkaV,
+        "ch.megard" %% "akka-http-cors" % "0.1.4",
 
         "io.dropwizard.metrics" % "metrics-core" % metricsV,
         "io.dropwizard.metrics" % "metrics-healthchecks" % metricsV,

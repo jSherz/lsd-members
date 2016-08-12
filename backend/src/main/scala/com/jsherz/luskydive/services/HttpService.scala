@@ -24,7 +24,11 @@
 
 package com.jsherz.luskydive.services
 
+import akka.http.scaladsl.model.headers
+import akka.http.scaladsl.model.headers.{HttpOrigin, HttpOriginRange}
+import akka.http.scaladsl.server.Directive0
 import akka.http.scaladsl.server.Directives._
+import ch.megard.akka.http.cors.CorsSettings
 import com.jsherz.luskydive.apis.{CoursesApi, SignupApi}
 import com.jsherz.luskydive.dao.{CourseDao, MemberDao}
 
@@ -44,5 +48,18 @@ class HttpService(memberDao: MemberDao, courseDao: CourseDao)(implicit execution
       signupRoutes.route ~
       coursesRoutes.route
     }
+
+}
+
+object Cors {
+
+  private val settings = CorsSettings.defaultSettings.copy(allowedOrigins = HttpOriginRange(
+    HttpOrigin("http://localhost:4200"),
+    HttpOrigin("https://dev.leedsskydivers.com"),
+    HttpOrigin("https://www.leedsskydivers.com"),
+    HttpOrigin("https://leedsskydivers.com")
+  ))
+
+  def cors: Directive0 = ch.megard.akka.http.cors.CorsDirectives.corsDecorate(settings).map(_ ⇒ ())
 
 }
