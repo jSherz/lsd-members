@@ -46,6 +46,9 @@ lazy val root = (project in file("."))
   .settings(
     parallelExecution in IntegrationTest := false,
 
+    unmanagedSourceDirectories in IntegrationTest <<=
+      (baseDirectory in Test)(base => Seq(base)),
+
     Revolver.settings,
 
     wartremoverErrors ++= Warts.all,
