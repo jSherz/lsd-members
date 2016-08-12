@@ -61,7 +61,7 @@ class CoursesGetApiSpec extends WordSpec with Matchers with ScalatestRouteTest w
     route = new CoursesApi(dao).route
   }
 
-  "Courses get API" should {
+  "CoursesApi#get" should {
 
     "return method not allowed when used with anything other than GET" in {
       Seq(Post, Put, Delete, Patch).foreach { method =>

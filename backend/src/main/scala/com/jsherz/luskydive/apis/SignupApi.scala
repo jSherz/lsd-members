@@ -35,7 +35,7 @@ import scalaz.{Failure, Success}
 /**
   * The two methods of signing up new members at a fresher's fair (phone number or e-mail).
   */
-class SignupAPI(private val memberDao: MemberDAO)(implicit ec: ExecutionContext) {
+class SignupApi(private val memberDao: MemberDAO)(implicit ec: ExecutionContext) {
 
   import SignupJsonSupport._
 

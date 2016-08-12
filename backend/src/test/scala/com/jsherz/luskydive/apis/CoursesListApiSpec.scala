@@ -51,7 +51,7 @@ class CoursesListApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
 
   private val url = "/courses"
 
-  "Courses list API" should {
+  "CoursesApi#list" should {
 
     "return method not allowed when used with anything other than POST" in {
       Seq(Get, Put, Delete, Patch).foreach { method =>
