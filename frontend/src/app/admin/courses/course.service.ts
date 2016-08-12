@@ -26,7 +26,7 @@ export abstract class CourseService {
 @Injectable()
 export class CourseServiceImpl extends CourseService {
 
-  private coursesFindUrl = 'http://localhost:8080/admin/courses'
+  private coursesFindUrl = 'http://localhost:8080/api/v1/courses'
 
   constructor(private http: Http) {
     super();
@@ -34,8 +34,8 @@ export class CourseServiceImpl extends CourseService {
 
   find(startDate: moment.Moment, endDate: moment.Moment): Observable<CourseWithNumSpaces[]> {
     let body = JSON.stringify({
-      startDate: startDate,
-      endDate: endDate
+      startDate: startDate.format("YYYY-MM-DD"),
+      endDate: endDate.format("YYYY-MM-DD")
     });
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers });
