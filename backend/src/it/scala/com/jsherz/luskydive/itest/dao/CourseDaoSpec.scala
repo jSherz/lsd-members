@@ -22,25 +22,25 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.itest
+package com.jsherz.luskydive.itest.dao
 
-import java.sql.{Date, Timestamp}
 import java.util.UUID
 
-import com.jsherz.luskydive.core.{CommitteeMember, Course, CourseWithOrganisers}
-import com.jsherz.luskydive.dao.{CourseDao, CourseDaoImpl, StubCourseDao}
-import com.jsherz.luskydive.json.{CourseOrganiser, CourseSpaceWithMember, CourseWithNumSpaces}
-import com.jsherz.luskydive.util.DateUtil
+import com.jsherz.luskydive.core.CourseWithOrganisers
+import com.jsherz.luskydive.dao.{CourseDao, CourseDaoImpl}
+import com.jsherz.luskydive.itest.util.Util
+import com.jsherz.luskydive.json.{CourseSpaceWithMember, CourseWithNumSpaces}
+import com.jsherz.luskydive.itest.util.DateUtil
+import org.scalatest.concurrent.ScalaFutures._
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
+import org.scalatest.concurrent.ScalaFutures._
+import com.jsherz.luskydive.json.CoursesJsonSupport._
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import org.scalatest.concurrent.ScalaFutures._
 
 class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
-  import com.jsherz.luskydive.json.CoursesJsonSupport._
-
-  private var dao: CourseDao = new StubCourseDao() // Used only to setup dao variable - real version used later
+  private var dao: CourseDao = _
 
   override protected def beforeAll(): Unit = {
     val dbService = Util.setupGoldTestDb()

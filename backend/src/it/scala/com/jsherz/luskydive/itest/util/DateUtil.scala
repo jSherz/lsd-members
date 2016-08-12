@@ -22,38 +22,45 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.itest
+package com.jsherz.luskydive.itest.util
 
-import com.jsherz.luskydive.dao._
-import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
+import java.sql.Date
+import java.util.GregorianCalendar
+
+import org.scalatest.{Matchers, WordSpec}
 
 /**
-  * Ensures the member DAO works correctly with the golden test DB.
+  * Utility method for working with [[java.sql.Date]]s.
   */
-class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
+object DateUtil {
 
-  import com.jsherz.luskydive.json.SignupJsonSupport._
-
-  private var dao: MemberDao = new StubMemberDao() // Used only to setup dao variable - real version used later
-
-  override protected def beforeAll(): Unit = {
-    val dbService = Util.setupGoldTestDb()
-
-    dao = new MemberDaoImpl(databaseService = dbService)
+  /**
+    * Create an SQL Date with the given year, month and day.
+    *
+    * @param year  Year (4 digits plz)
+    * @param month One indexed month
+    * @param day   Day of month
+    */
+  def makeDate(year: Int, month: Int, day: Int): Date = {
+    new Date(new GregorianCalendar(
+      year,
+      month - 1, // Java dates are 0 indexed
+      day
+    ).getTime.getTime)
   }
 
-  // memberExists -> returns false when no phone number or e-mail is given
+}
 
-  // memberExists -> returns true when matching phone number is given
+class DateUtilSpec extends WordSpec with Matchers {
 
-  // memberExists -> returns true when matching e-mail is given
+  "DateUtil#makeDate" should {
 
-  // memberExists -> returns true when matching phone number and e-mail are given
+    "return the correct Date, given a one indexed month" in {
+      DateUtil.makeDate(2016, 1, 1) shouldEqual Date.valueOf("2016-01-01")
+      DateUtil.makeDate(1998, 12, 5) shouldEqual Date.valueOf("1998-12-05")
+      DateUtil.makeDate(2011, 6, 23) shouldEqual Date.valueOf("2011-06-23")
+    }
 
-  // create -> throws exception if no phone number or e-mail given?
-
-  // create -> generates valid uuid and inserts member (lookup /w returned uuid, confirm info)
-
-  // create -> uuid is different every time
+  }
 
 }

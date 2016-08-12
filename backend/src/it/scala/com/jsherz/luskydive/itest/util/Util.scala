@@ -22,7 +22,7 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.itest
+package com.jsherz.luskydive.itest.util
 
 import java.nio.file.Paths
 
