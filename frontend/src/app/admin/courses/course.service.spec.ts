@@ -1,18 +1,14 @@
 /* tslint:disable:no-unused-variable */
 
-import {
-  beforeEach, beforeEachProviders,
-  describe, xdescribe,
-  expect, it, xit,
-  async, inject
-} from '@angular/core/testing';
-import { CourseService } from './course.service';
+import {CourseService, CourseServiceImpl} from './course.service';
+import {addProviders} from "@angular/core/testing/testing";
+import {inject} from "@angular/core/testing/test_injector";
 
 describe('Course Service', () => {
-  beforeEachProviders(() => [CourseService]);
+  beforeEach(() => addProviders([CourseServiceImpl]));
 
   it('should ...',
-      inject([CourseService], (service: CourseService) => {
+      inject([CourseServiceImpl], (service: CourseService) => {
     expect(service).toBeTruthy();
   }));
 });

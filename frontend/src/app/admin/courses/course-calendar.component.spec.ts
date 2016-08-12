@@ -1,10 +1,7 @@
 /* tslint:disable:no-unused-variable */
 
-import { By } from '@angular/platform-browser';
-import { DebugElement, Type } from '@angular/core';
 import {
   ActivatedRoute,
-  ActivatedRouteSnapshot,
   UrlPathWithParams,
   Params,
   Data
@@ -12,18 +9,17 @@ import {
 import * as moment from 'moment';
 import { Observable } from 'rxjs/Rx';
 
-import {
-  beforeEach, beforeEachProviders,
-  describe, xdescribe,
-
-  expect, it, xit,
-  async, inject
-} from '@angular/core/testing';
-
 import { MonthService }            from './month.service';
 import { TileService }             from './tile.service';
 import { CourseCalendarComponent } from './course-calendar.component';
 import { MOMENT_MATCHER }          from '../../utils/moment-matcher';
+import {CourseService, CourseWithNumSpaces} from "./course.service";
+
+export class StubCourseService implements CourseService {
+  find(startDate: moment.Moment, endDate: moment.Moment): Observable<CourseWithNumSpaces[]> {
+    return undefined;
+  }
+}
 
 // Useful to mock a component with a given year & month
 let mockComp = function(
@@ -43,7 +39,9 @@ let mockComp = function(
 
   let tileService = new TileService();
 
-  let component = new CourseCalendarComponent(monthService, activatedRoute, tileService);
+  let courseService = new StubCourseService();
+
+  let component = new CourseCalendarComponent(monthService, activatedRoute, tileService, courseService);
   component.ngOnInit();
 
   return component;
