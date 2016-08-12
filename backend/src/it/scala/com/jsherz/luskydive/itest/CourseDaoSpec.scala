@@ -62,7 +62,7 @@ class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       whenReady(course) { c =>
         c.isDefined shouldBe true
 
-        c shouldBe Some(Util.fixture[CourseWithOrganisers]("course_with_organisers_ed89a51d.json"))
+        c shouldBe Some(Util.fixture[CourseWithOrganisers]("ed89a51d.json"))
       }
     }
 

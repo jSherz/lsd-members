@@ -24,6 +24,8 @@
 
 package com.jsherz.luskydive.itest
 
+import java.nio.file.Paths
+
 import com.jsherz.luskydive.Main._
 import com.jsherz.luskydive.services.DatabaseService
 
@@ -60,12 +62,20 @@ object Util {
   /**
     * Parse a JSON fixture into an object.
     *
+    * The path to the fixture is resolved as:
+    *
+    * res/fixtures/T/path
+    *
+    * e.g.
+    *
+    * res/fixtures/CourseWithOrganisers/ed89a51d.json
+    *
     * @param path
     * @tparam T
     * @return
     */
-  def fixture[T :JsonReader](path: String)(implicit jsonFormat: JsonFormat[T]): T = {
-    val fullPath = "/fixtures/" + path
+  def fixture[T :JsonReader](path: String)(implicit jsonFormat: JsonFormat[T], t: reflect.Manifest[T]): T = {
+    val fullPath = Paths.get("/fixtures", t.toString.split("\\.").last, path).toString
     val resourceUrl = getClass.getResource(fullPath)
     val raw = Source.fromURL(resourceUrl).mkString
 
