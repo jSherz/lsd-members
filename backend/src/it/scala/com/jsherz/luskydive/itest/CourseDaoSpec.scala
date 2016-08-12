@@ -29,7 +29,7 @@ import java.util.UUID
 
 import com.jsherz.luskydive.core.{CommitteeMember, Course, CourseWithOrganisers}
 import com.jsherz.luskydive.dao.{CourseDAO, CourseDAOImpl, StubCourseDao}
-import com.jsherz.luskydive.json.{CourseOrganiser, CourseWithNumSpaces}
+import com.jsherz.luskydive.json.{CourseOrganiser, CourseSpaceWithMember, CourseWithNumSpaces}
 import com.jsherz.luskydive.util.DateUtil
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 
@@ -61,7 +61,6 @@ class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
       whenReady(course) { c =>
         c.isDefined shouldBe true
-
         c shouldBe Some(Util.fixture[CourseWithOrganisers]("ed89a51d.json"))
       }
     }
@@ -71,19 +70,7 @@ class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
       whenReady(course) { c =>
         c.isDefined shouldBe true
-
-        c shouldBe Some(CourseWithOrganisers(
-          Course(
-            Some(UUID.fromString("ad702bb1-0eac-41d9-b146-ea794211449a")),
-            Date.valueOf("2009-10-16"),
-            UUID.fromString("2bb4ccd7-927a-4e5d-9456-40e5dcee3d34"),
-            Some(UUID.fromString("756bf336-e3c7-47d3-bd14-00dbfff302cf")),
-            1),
-
-          CourseOrganiser(UUID.fromString("2bb4ccd7-927a-4e5d-9456-40e5dcee3d34"), "Valerie Barker MD"),
-
-          Some(CourseOrganiser(UUID.fromString("756bf336-e3c7-47d3-bd14-00dbfff302cf"), "Jessica Schmidt"))
-        ))
+        c shouldBe Some(Util.fixture[CourseWithOrganisers]("ad702bb1.json"))
       }
     }
 
@@ -98,23 +85,26 @@ class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
       val course = courses.futureValue.head
 
-      course shouldEqual CourseWithNumSpaces(
-        Course(
-          Some(UUID.fromString("c1756c09-7d56-4be3-a225-fbab59ceef7e")),
-          Date.valueOf("2012-10-11"),
-          UUID.fromString("fe27ae3d-ae32-4097-ae4c-809cd2d5a946"),
-          Some(UUID.fromString("80b0ffad-b9c4-4888-8915-428520c7c960")),
-          1),
-        7,
-        4
-      )
+      course shouldEqual Util.fixture[CourseWithNumSpaces]("c1756c09.json")
     }
 
-    // find -> return Seq(course, course) when multiple courses are found
+    "return all matching courses sorted by date" in {
+      val courses = dao.find(DateUtil.makeDate(2010, 1, 16), DateUtil.makeDate(2010, 2, 20))
 
-    // spaces -> return correct spaces, including member information (if present)
+      courses.futureValue shouldEqual Util.fixture[Vector[CourseWithNumSpaces]]("2010-01-16_2010-02-20.json")
+    }
 
-    // spaces -> return Seq() for unknown course uuid
+    "return the correct spaces for a course, including the attached member (sorted by number)" in {
+      val spaces = dao.spaces(UUID.fromString("ad3f289b-ce04-428d-968c-513eaf9889b0"))
+
+      spaces.futureValue shouldBe Util.fixture[Vector[CourseSpaceWithMember]]("ad3f289b.json")
+    }
+
+    "return nothing when no spaces are linked to a course" in {
+      val spaces = dao.spaces(UUID.fromString("d3f900ad-a062-4d00-be2e-c53a846b7438"))
+
+      spaces.futureValue shouldBe empty
+    }
 
   }
 

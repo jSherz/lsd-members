@@ -28,7 +28,7 @@ import java.sql.Date
 import java.util.UUID
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import com.jsherz.luskydive.core.{CommitteeMember, Course, CourseWithOrganisers}
+import com.jsherz.luskydive.core.{CommitteeMember, Course, CourseSpace, CourseWithOrganisers}
 import com.jsherz.luskydive.util.{DateJsonFormat, TimestampJsonFormat, UuidJsonFormat}
 import spray.json.DefaultJsonProtocol
 
@@ -41,7 +41,9 @@ object CoursesJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val CourseOrganiserFormat = jsonFormat2(CourseOrganiser)
   implicit val CourseFormat = jsonFormat5(Course)
   implicit val CourseWithOrganisersFormat = jsonFormat3(CourseWithOrganisers)
-  implicit val courseWithNumSpacesFormat = jsonFormat3(CourseWithNumSpaces)
+  implicit val CourseWithNumSpacesFormat = jsonFormat3(CourseWithNumSpaces)
+  implicit val StrippedMemberFormat = jsonFormat2(StrippedMember)
+  implicit val CourseSpaceWithMemberFormat = jsonFormat4(CourseSpaceWithMember)
 
 }
 
@@ -66,3 +68,21 @@ case class CourseOrganiser(uuid: UUID, name: String)
   * @param spacesFree Number of available spaces
   */
 case class CourseWithNumSpaces(course: Course, totalSpaces: Int, spacesFree: Int)
+
+/**
+  * A member stripped of most personal info.
+  *
+  * @param uuid
+  * @param name
+  */
+case class StrippedMember(uuid: Option[UUID], name: String)
+
+/**
+  * A course space, including stripped member.
+  *
+  * @param uuid
+  * @param courseUuid
+  * @param number
+  * @param member
+  */
+case class CourseSpaceWithMember(uuid: Option[UUID], courseUuid: UUID, number: Int, member: Option[StrippedMember])

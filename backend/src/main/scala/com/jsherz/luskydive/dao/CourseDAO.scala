@@ -28,7 +28,7 @@ import java.sql.Date
 import java.util.UUID
 
 import com.jsherz.luskydive.core.{Course, CourseSpace, CourseWithOrganisers}
-import com.jsherz.luskydive.json.{CourseOrganiser, CourseWithNumSpaces}
+import com.jsherz.luskydive.json.{CourseOrganiser, CourseSpaceWithMember, CourseWithNumSpaces, StrippedMember}
 import com.jsherz.luskydive.services.DatabaseService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -61,7 +61,7 @@ trait CourseDAO {
     * @param uuid
     * @return
     */
-  def spaces(uuid: UUID): Future[Seq[CourseSpace]]
+  def spaces(uuid: UUID): Future[Seq[CourseSpaceWithMember]]
 
 }
 
@@ -112,7 +112,7 @@ class CourseDAOImpl(protected override val databaseService: DatabaseService)(imp
         course <- Courses if course.date >= startDate && course.date <= endDate
         spaces <- CourseSpaces if course.uuid === spaces.courseUuid
       } yield (course, spaces)
-    ).groupBy(_._1)
+    ).sortBy(_._1.date).groupBy(_._1)
 
     // Pick out the course, total # spaces & spaces that are free
     val transform = lookup.map {
@@ -132,8 +132,22 @@ class CourseDAOImpl(protected override val databaseService: DatabaseService)(imp
     * @param uuid
     * @return
     */
-  override def spaces(uuid: UUID): Future[Seq[CourseSpace]] = {
-    db.run(CourseSpaces.filter(_.courseUuid === uuid).result)
+  override def spaces(uuid: UUID): Future[Seq[CourseSpaceWithMember]] = {
+    val query = for {
+      (space, member) <-
+        CourseSpaces.filter(_.courseUuid === uuid) joinLeft
+          Members on (_.memberUuid === _.uuid)
+    } yield (space, member)
+
+    db.run(query.sortBy(_._1.number).result).map {
+      _.map {
+        case (space, member) =>
+          CourseSpaceWithMember(
+            space.uuid, space.courseUuid, space.number,
+            member.map(x => StrippedMember(x.uuid, x.name))
+          )
+      }
+    }
   }
 
   /**

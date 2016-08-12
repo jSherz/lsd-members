@@ -1,0 +1,45 @@
+[
+  {
+    "course": {
+      "uuid": "e29668eb-e8e3-44b0-b9ca-0f72770a576f",
+      "secondaryOrganiserUuid": "17df9c8c-f39e-444e-89ee-99a5a504eb3c",
+      "date": "2010-01-16",
+      "status": 1,
+      "organiserUuid": "be920f06-47e3-440e-8476-fb906004264f"
+    },
+    "totalSpaces": 9,
+    "spacesFree": 2
+  },
+  {
+    "course": {
+      "uuid": "d3e121ee-9827-456a-a252-afbd4a618180",
+      "date": "2010-02-09",
+      "organiserUuid": "dbabfcc4-20e5-4a01-ae55-30149179179c",
+      "status": 1
+    },
+    "totalSpaces": 9,
+    "spacesFree": 4
+  },
+  {
+    "course": {
+      "uuid": "2ae8d372-5160-47a7-91ae-2d3b38e9b9b6",
+      "secondaryOrganiserUuid": "c257e6e1-fec9-443c-8e82-4917cf189ac5",
+      "date": "2010-02-20",
+      "status": 1,
+      "organiserUuid": "0d6717b7-530c-418b-9b97-dffbe972de87"
+    },
+    "totalSpaces": 8,
+    "spacesFree": 0
+  },
+  {
+    "course": {
+      "uuid": "45800e69-298f-4368-85b7-d3e1dfca71ea",
+      "secondaryOrganiserUuid": "8f41e284-20f3-4de8-96f2-5171569ecb75",
+      "date": "2010-01-21",
+      "status": 1,
+      "organiserUuid": "6d0520c0-8a0b-459a-bc2e-f1126dd848f3"
+    },
+    "totalSpaces": 7,
+    "spacesFree": 2
+  }
+]

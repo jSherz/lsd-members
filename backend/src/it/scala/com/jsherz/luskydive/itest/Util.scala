@@ -75,7 +75,7 @@ object Util {
     * @return
     */
   def fixture[T :JsonReader](path: String)(implicit jsonFormat: JsonFormat[T], t: reflect.Manifest[T]): T = {
-    val fullPath = Paths.get("/fixtures", t.toString.split("\\.").last, path).toString
+    val fullPath = Paths.get("/fixtures", t.toString.split("\\.").last.replace("]", ""), path).toString
     val resourceUrl = getClass.getResource(fullPath)
     val raw = Source.fromURL(resourceUrl).mkString
 

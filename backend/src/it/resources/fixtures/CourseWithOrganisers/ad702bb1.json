@@ -1,0 +1,17 @@
+{
+  "course": {
+    "uuid": "ad702bb1-0eac-41d9-b146-ea794211449a",
+    "date": "2009-10-16",
+    "organiserUuid": "2bb4ccd7-927a-4e5d-9456-40e5dcee3d34",
+    "secondaryOrganiserUuid": "756bf336-e3c7-47d3-bd14-00dbfff302cf",
+    "status": 1
+  },
+  "organiser": {
+    "uuid": "2bb4ccd7-927a-4e5d-9456-40e5dcee3d34",
+    "name": "Valerie Barker MD"
+  },
+  "secondaryOrganiser": {
+    "uuid": "756bf336-e3c7-47d3-bd14-00dbfff302cf",
+    "name": "Jessica Schmidt"
+  }
+}

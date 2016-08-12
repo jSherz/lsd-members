@@ -1,0 +1,11 @@
+{
+  "course": {
+    "uuid": "c1756c09-7d56-4be3-a225-fbab59ceef7e",
+    "date": "2012-10-11",
+    "organiserUuid": "fe27ae3d-ae32-4097-ae4c-809cd2d5a946",
+    "secondaryOrganiserUuid": "80b0ffad-b9c4-4888-8915-428520c7c960",
+    "status": 1
+  },
+  "totalSpaces": 7,
+  "spacesFree": 4
+}

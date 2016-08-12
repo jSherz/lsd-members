@@ -28,7 +28,7 @@ import java.util.UUID
 
 import com.jsherz.luskydive.core.{Course, CourseSpace, CourseWithOrganisers}
 import com.jsherz.luskydive.fixtures.CoursesWithOrganisers
-import com.jsherz.luskydive.json.CourseWithNumSpaces
+import com.jsherz.luskydive.json.{CourseSpaceWithMember, CourseWithNumSpaces}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -69,7 +69,7 @@ class StubCourseDao()(implicit ec: ExecutionContext) extends CourseDAO {
     * @param uuid
     * @return
     */
-  override def spaces(uuid: UUID): Future[Seq[CourseSpace]] = Future(Seq())
+  override def spaces(uuid: UUID): Future[Seq[CourseSpaceWithMember]] = Future(Seq())
 
 }
 
