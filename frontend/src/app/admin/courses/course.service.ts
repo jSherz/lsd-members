@@ -4,11 +4,29 @@ import {RequestOptions, Headers, Http, Response} from "@angular/http";
 import {Observable} from "rxjs/Observable";
 
 export class Course {
-  constructor (uuid: String, date: moment.Moment, organiserUuid: String, secondaryOrganiserUuid: String) {}
+  uuid: String;
+  date: moment.Moment;
+  organiserUuid: String;
+  secondaryOrganiserUuid: String;
+
+  constructor (uuid: String, date: moment.Moment, organiserUuid: String, secondaryOrganiserUuid: String) {
+    this.uuid = uuid;
+    this.date = date;
+    this.organiserUuid = organiserUuid;
+    this.secondaryOrganiserUuid = secondaryOrganiserUuid;
+  }
 }
 
 export class CourseWithNumSpaces {
-  constructor (course: Course, totalSpace: number, openSpaces: number) {}
+  course: Course;
+  totalSpaces: number;
+  spacesFree: number;
+
+  constructor (course: Course, totalSpaces: number, spacesFree: number) {
+    this.course = course;
+    this.totalSpaces = totalSpaces;
+    this.spacesFree = spacesFree;
+  }
 }
 
 /**
@@ -41,7 +59,7 @@ export class CourseServiceImpl extends CourseService {
     let options = new RequestOptions({ headers: headers });
 
     return this.http.post(this.coursesFindUrl, body, options)
-      .map(this.extractData)
+      .map(this.extractFindResult)
       .catch(this.handleError)
   }
 
@@ -49,11 +67,11 @@ export class CourseServiceImpl extends CourseService {
    * Extract the JSON body of a response.
    *
    * @param res
-   * @returns {ArrayBuffer|string|Data|Uint8ClampedArray|any|Observable<Data>}
+   * @returns
    */
-  private extractData(res: Response) {
+  private extractFindResult(res: Response): CourseWithNumSpaces[] {
     let body = res.json();
-    return body.data || {};
+    return body || [];
   }
 
   /**

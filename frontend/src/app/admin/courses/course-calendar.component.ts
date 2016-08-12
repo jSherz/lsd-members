@@ -6,7 +6,7 @@ import * as moment                           from 'moment';
 import { MonthService }                      from './month.service';
 import { Tile, TileService }                 from './tile.service';
 import { TileComponent }                     from './tile.component';
-import {CourseService, CourseWithNumSpaces, CourseServiceImpl} from "./course.service";
+import {CourseService, CourseWithNumSpaces, CourseServiceImpl, Course} from "./course.service";
 
 @Component({
   moduleId: module.id,
@@ -46,7 +46,19 @@ export class CourseCalendarComponent implements OnInit, OnDestroy {
     this.tiles = this.tileService.getTiles(this.currentMonth, moment());
 
     this.courseService.find(this.tiles[0].date, this.tiles[this.tiles.length - 1].date).subscribe(
-      courses => this.courses = courses,
+      courses => {
+        this.courses = courses;
+
+        for(let tile of this.tiles) {
+          tile.courses = [];
+
+          for(let course of this.courses) {
+            if (tile.date.isSame(course.course.date)) {
+              tile.courses.push(course);
+            }
+          }
+        }
+      },
       error => this.errorMessage = error
     );
   }

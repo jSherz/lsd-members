@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
+import {CourseWithNumSpaces} from "./course.service";
 
 export const TILES_PER_CALENDAR = 42;
 
@@ -8,6 +9,7 @@ export class Tile {
   isPreviousMonth: boolean;
   isNextMonth: boolean;
   isToday: boolean;
+  courses: CourseWithNumSpaces[] = [];
 
   constructor (
     date: moment.Moment,
