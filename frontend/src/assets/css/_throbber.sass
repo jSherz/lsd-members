@@ -1,0 +1,42 @@
+// Adapter from cssload.net
+// Written by https://codepen.io/nicolae/
+
+$speed: 600ms
+
+.throbber
+  display: none
+  width: 2em
+  height: 2em
+  margin: 0 0 -0.8em 0.5em
+  border: 0.1em solid rgb(0, 0, 0)
+  border-radius: 50%
+  border-left-color: transparent
+  border-right-color: transparent
+  animation: spin $speed infinite linear
+
+  &.visible
+    display: inline-block
+
+@keyframes spin
+  100%
+    transform: rotate(360deg)
+
+
+@-o-keyframes spin
+  100%
+    transform: rotate(360deg)
+
+
+@-ms-keyframes spin
+  100%
+    transform: rotate(360deg)
+
+
+@-webkit-keyframes spin
+  100%
+    transform: rotate(360deg)
+
+
+@-moz-keyframes spin
+  100%
+    transform: rotate(360deg)
