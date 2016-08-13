@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component                 } from '@angular/core';
+import { Router, ROUTER_DIRECTIVES } from '@angular/router';
+import { HTTP_PROVIDERS            } from '@angular/http';
 import {
   FormControl,
   FormBuilder,
@@ -7,11 +8,16 @@ import {
   Validators,
   REACTIVE_FORM_DIRECTIVES
 } from '@angular/forms';
-import { CustomValidators } from '../utils';
+import { CustomValidators                 } from '../utils';
+import { SignupService, SignupServiceImpl } from './signup.service';
 
 @Component({
   templateUrl: 'signup-alt.component.html',
-  directives: [REACTIVE_FORM_DIRECTIVES]
+  providers: [
+    HTTP_PROVIDERS,
+    { provide: SignupService, useClass: SignupServiceImpl }
+  ],
+  directives: [ROUTER_DIRECTIVES, REACTIVE_FORM_DIRECTIVES]
 })
 export class SignupAltComponent {
 
@@ -20,7 +26,7 @@ export class SignupAltComponent {
   ctrlName: FormControl;
   ctrlEmail: FormControl;
 
-  constructor(private builder: FormBuilder, private router: Router) {
+  constructor(private builder: FormBuilder, private router: Router, private signupService: SignupService) {
     this.ctrlName = new FormControl('', Validators.required);
     this.ctrlEmail = new FormControl('', Validators.compose([Validators.required, CustomValidators.email]));
 
@@ -30,8 +36,15 @@ export class SignupAltComponent {
     });
   }
 
-  signup() {
-    this.router.navigate(['sign-up', 'thank-you']);
+  signup(user) {
+    this.signupService.signupAlt(user.name, user.email).subscribe(
+      result => {
+        console.log(result);
+
+        this.router.navigate(['sign-up', 'thank-you']);
+      },
+      error => console.log(error)
+    );
   }
 
 }

@@ -4,7 +4,7 @@
   </ul>
 
   <div id="sign-up-form">
-    <form (ngSubmit)="signup()" [formGroup]="signupForm">
+    <form [formGroup]="signupForm">
       <div>
         <label for="name">Name</label>
         <input type="text" id="name" name="name" formControlName="name" required value=""
@@ -25,7 +25,7 @@
          </div>
       </div>
 
-      <button type="submit" [disabled]="!signupForm.valid">Sign me up!</button>
+      <button type="button" (click)="signup(signupForm.value)" [disabled]="!signupForm.valid">Sign me up!</button>
     </form>
   </div>
 </div>

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import '../rxjs-operators';
 
 export class SignupResult {
 
@@ -12,35 +11,54 @@ export class SignupResult {
 
 }
 
-export interface ISignupService {
+export abstract class SignupService {
 
-  signup(name: string, email?: string, phoneNumber?: string): Observable<SignupResult>;
+  abstract signup(name: string, phoneNumber?: string): Observable<SignupResult>;
+
+  abstract signupAlt(name: string, email?: string): Observable<SignupResult>;
 
 }
 
 @Injectable()
-export class SignupService implements ISignupService {
+export class SignupServiceImpl extends SignupService {
 
-  private signupUrl: string = 'signup';
+  private signupUrl: string = 'http://localhost:8080/api/v1/members/sign-up';
+  private signupAltUrl: string = 'http://localhost:8080/api/v1/members/sign-up/alt';
 
-  constructor(private http: Http) {}
+  constructor(private http: Http) {
+    super();
+  }
 
-  signup(name: string, email?: string, phoneNumber?: string): Observable<SignupResult> {
-    let body = JSON.stringify({
+  signup(name: string, phoneNumber: string): Observable<SignupResult> {
+    let request = {
       name: name,
-      email: email,
       phoneNumber: phoneNumber
-    });
+    };
+
+    return this.doSignup(this.signupUrl, request);
+  }
+
+  signupAlt(name: string, email?: string): Observable<SignupResult> {
+    let request = {
+      name: name,
+      email: email
+    };
+
+    return this.doSignup(this.signupAltUrl, request);
+  }
+
+  private doSignup(url: string, request: any): Observable<Response> {
+    let body = JSON.stringify(request);
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers });
 
-    return this.http.post(this.signupUrl, body, options)
-                    .map(this.extractData)
-                    .catch(this.handleError);
+    return this.http.post(url, body, options)
+      .map(this.extractData)
+      .catch(this.handleError);
   }
 
   private extractData(res: Response) {
-    return res.json().data || {};
+    return res.json() || {};
   }
 
   private handleError(error: any) {
