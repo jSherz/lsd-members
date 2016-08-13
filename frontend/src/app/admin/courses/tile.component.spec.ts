@@ -1,15 +1,5 @@
 /* tslint:disable:no-unused-variable */
 
-import { By }           from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
-
-import {
-  beforeEach, beforeEachProviders,
-  describe, xdescribe,
-  expect, it, xit,
-  async, inject
-} from '@angular/core/testing';
-
 import * as moment       from 'moment';
 import { Tile }          from './tile.service';
 import { TileComponent } from './tile.component';
@@ -21,7 +11,7 @@ describe('Component: Tile', () => {
     component.tile = tile;
 
     return component;
-  }
+  };
 
   it('selects the correct class for today\'s tile', () => {
     let comp = mock(new Tile(moment(), false, false, true));

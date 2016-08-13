@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
-import { ROUTER_DIRECTIVES } from '@angular/router';
+import {Component} from '@angular/core';
+import {ROUTER_DIRECTIVES} from '@angular/router';
 
-import { NavComponent } from '../utils';
+import {NavComponent} from '../utils';
 
 @Component({
   selector: 'router-outlet',
-  templateUrl: 'app/signup/signup-base.component.html',
+  templateUrl: './signup-base.component.html',
   directives: [
     ROUTER_DIRECTIVES,
     NavComponent

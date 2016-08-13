@@ -1,11 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
 @Component({
-  moduleId: module.id,
   selector: 'app-thank-you',
-  templateUrl: 'thank-you.component.html',
-  styleUrls: ['thank-you.component.css']
+  templateUrl: 'thank-you.component.html'
 })
 export class ThankYouComponent {
 

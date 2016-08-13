@@ -3,7 +3,7 @@ import { ROUTER_DIRECTIVES } from '@angular/router';
 
 @Component({
   selector: 'nav-item',
-  templateUrl: 'app/utils/nav.component.html',
+  templateUrl: './nav.component.html',
   directives: [ROUTER_DIRECTIVES]
 })
 

@@ -1,19 +1,13 @@
 /* tslint:disable:no-unused-variable */
 
-import {
-  beforeEach, beforeEachProviders,
-  describe, xdescribe,
-  expect, it, xit,
-  async, inject
-} from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
-import { Location, PathLocationStrategy, LocationStrategy } from '@angular/common';
+import { Location, LocationStrategy } from '@angular/common';
 import { APP_ROUTER_PROVIDERS } from './../../index';
 import { ThankYouComponent } from './thank-you.component';
+import { addProviders } from '@angular/core/testing/testing';
+import { inject } from '@angular/core/testing/test_injector';
 
 describe('Component: ThankYou', () => {
-  beforeEachProviders(() => [APP_ROUTER_PROVIDERS])
+  beforeEach(() => addProviders([APP_ROUTER_PROVIDERS]));
 
   it('should create an instance', inject([LocationStrategy], (locationStrategy: LocationStrategy) => {
     let location = new Location(locationStrategy);

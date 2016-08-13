@@ -1,20 +1,22 @@
-<div id="signup-container">
-  <div id="small-header">
-    <nav>
-      <ul>
-        <nav-item href="/sign-up" linkText="Main"></nav-item>
-        <nav-item href="/sign-up/alt" linkText="Alt"></nav-item>
-      </ul>
-    </nav>
+<div>
+  <div id="signup-container">
+    <div id="small-header">
+      <nav>
+        <ul>
+          <nav-item href="/sign-up" linkText="Main"></nav-item>
+          <nav-item href="/sign-up/alt" linkText="Alt"></nav-item>
+        </ul>
+      </nav>
 
-    <a [routerLink]="['/']" title="Home">
-      <img id="logo" src="assets/images/header.png" title="Leeds University Skydivers" alt="Leeds University Skydivers logo">
-    </a>
+      <a [routerLink]="['/']" title="Home">
+        <img id="logo" src="assets/images/header.png" title="Leeds University Skydivers" alt="Leeds University Skydivers logo">
+      </a>
+    </div>
+
+    <router-outlet></router-outlet>
+
+    <footer class="footer">
+      <p>&copy; 2016 Leeds University Skydivers</p>
+    </footer>
   </div>
-
-  <router-outlet></router-outlet>
-
-  <footer class="footer">
-    <p>&copy; 2016 Leeds University Skydivers</p>
-  </footer>
 </div>

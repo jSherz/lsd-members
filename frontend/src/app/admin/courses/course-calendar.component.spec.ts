@@ -13,11 +13,14 @@ import { MonthService }            from './month.service';
 import { TileService }             from './tile.service';
 import { CourseCalendarComponent } from './course-calendar.component';
 import { MOMENT_MATCHER }          from '../../utils/moment-matcher';
-import {CourseService, CourseWithNumSpaces} from "./course.service";
+import {
+  CourseService,
+  CourseWithNumSpaces
+} from './course.service';
 
 export class StubCourseService implements CourseService {
   find(startDate: moment.Moment, endDate: moment.Moment): Observable<CourseWithNumSpaces[]> {
-    return undefined;
+    return Observable.of([]);
   }
 }
 

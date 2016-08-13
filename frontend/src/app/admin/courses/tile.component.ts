@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { Tile } from './tile.service';
 
 @Component({
-  moduleId: module.id,
   selector: 'calendar-tile',
   templateUrl: 'tile.component.html'
 })
@@ -13,7 +12,7 @@ export class TileComponent {
   otherClasses(): string {
     if (this.tile.isToday) {
       return 'tile-today';
-    } else if(this.tile.isPreviousMonth || this.tile.isNextMonth) {
+    } else if (this.tile.isPreviousMonth || this.tile.isNextMonth) {
       return 'tile-other-month';
     } else {
       return '';

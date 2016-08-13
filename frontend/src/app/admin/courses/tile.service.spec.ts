@@ -1,21 +1,16 @@
 /* tslint:disable:no-unused-variable */
 
-import {
-  beforeEach, beforeEachProviders,
-  describe, xdescribe,
-  expect, it, xit,
-  async, inject
-} from '@angular/core/testing';
 import * as moment from 'moment';
 
 import { Tile, TileService } from './tile.service';
 import { MOMENT_MATCHER } from '../../utils/moment-matcher';
+import { addProviders } from '@angular/core/testing/testing';
 
 describe('Tile Service', () => {
-  beforeEachProviders(() => [TileService]);
+  beforeEach(() => addProviders([TileService]));
 
-  var testSamples: Tile[][] = []
-  var service = undefined
+  var testSamples: Tile[][] = [];
+  var service = undefined;
 
   beforeEach(() => {
     service = new TileService();
@@ -37,9 +32,9 @@ describe('Tile Service', () => {
 
   it('should return tiles in the correct date order', () => {
     testSamples.map((sample) => {
-      var lastTile = sample[0];
+      let lastTile = sample[0];
 
-      for (var i = 1; i < sample.length; i++) {
+      for (let i = 1; i < sample.length; i++) {
         expect(sample[i].date.isAfter(lastTile.date)).toEqual(true);
         expect(sample[i].date.clone().subtract(1, 'days')).toBeSameAs(lastTile.date);
 
@@ -76,14 +71,14 @@ describe('Tile Service', () => {
       [moment([2016, 5, 15]), 16],
       [moment([2016, 6, 1]),  4],
       [moment([2016, 7, 18]), 24]
-    ]
+    ];
 
     examples.map(([dayInMonth, expectedTodayIndex]) => {
       let startOfMonth = moment([dayInMonth.year(), dayInMonth.month(), 1]);
       let tiles = service.getTiles(startOfMonth, dayInMonth);
 
-      for (var i = 0; i < tiles.length; i++) {
-        if (i == expectedTodayIndex) {
+      for (let i = 0; i < tiles.length; i++) {
+        if (i === expectedTodayIndex) {
           expect(tiles[i].isToday).toEqual(true);
         } else {
           expect(tiles[i].isToday).toEqual(false);

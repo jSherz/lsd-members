@@ -5,13 +5,11 @@ import {
   FormBuilder,
   FormGroup,
   Validators,
-  FORM_DIRECTIVES,
   REACTIVE_FORM_DIRECTIVES
 } from '@angular/forms';
 import { CustomValidators } from '../utils';
 
 @Component({
-  moduleId: module.id,
   templateUrl: 'signup-alt.component.html',
   directives: [REACTIVE_FORM_DIRECTIVES]
 })

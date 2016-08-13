@@ -5,7 +5,7 @@ import {
   SignupAltComponent,
   SignupBaseComponent,
   ThankYouComponent
-} from './index'
+} from './index';
 
 export const SignupRoutes: RouterConfig = [
   {

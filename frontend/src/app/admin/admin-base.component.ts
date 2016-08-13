@@ -4,8 +4,7 @@ import { ROUTER_DIRECTIVES } from '@angular/router';
 import { NavComponent } from '../utils/nav.component';
 
 @Component({
-  moduleId: module.id,
-  selector: 'div',
+  selector: 'admin-base-component',
   templateUrl: 'admin-base.component.html',
   directives: [
     ROUTER_DIRECTIVES,

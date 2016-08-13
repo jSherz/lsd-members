@@ -1,15 +1,14 @@
 /* tslint:disable:no-unused-variable */
 
 import {
-  beforeEach, beforeEachProviders,
-  describe, xdescribe,
-  expect, it, xit,
-  async, inject
+  inject
 } from '@angular/core/testing';
-import { SignupService } from './signup.service';
+import { SignupService  } from './signup.service';
+import { addProviders   } from '@angular/core/testing/testing';
+import { HTTP_PROVIDERS } from '@angular/http';
 
 describe('Signup Service', () => {
-  beforeEachProviders(() => [SignupService]);
+  beforeEach(() => addProviders([HTTP_PROVIDERS, SignupService]));
 
   it('should ...',
       inject([SignupService], (service: SignupService) => {

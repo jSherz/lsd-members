@@ -1,15 +1,21 @@
 /* tslint:disable:no-unused-variable */
 
-import {
-  beforeEach, beforeEachProviders,
-  describe, xdescribe,
-  expect, it, xit,
-  async, inject
-} from '@angular/core/testing';
-import { FormBuilder } from '@angular/forms';
-import { SignupComponent } from './signup.component';
+import { inject, addProviders   } from '@angular/core/testing';
+import { FormBuilder            } from '@angular/forms';
+import { APP_BASE_HREF          } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 
-beforeEachProviders(() => [FormBuilder, SignupComponent]);
+import { APP_ROUTER_PROVIDERS   } from '../app.routes';
+import { SignupComponent        } from './signup.component';
+
+beforeEach(() => addProviders([
+  APP_ROUTER_PROVIDERS,
+  {provide: APP_BASE_HREF, useValue: '/'},
+  {provide: ActivatedRoute, useValue: {}},
+  {provide: Router, useValue: {}},
+  FormBuilder,
+  SignupComponent
+]));
 
 describe('LSD.SignupComponent', () => {
   it('should create the app', inject([SignupComponent], (app: SignupComponent) => {

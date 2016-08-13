@@ -1,16 +1,15 @@
-import { Component, OnInit, OnDestroy }      from '@angular/core';
-import { ROUTER_DIRECTIVES, ActivatedRoute } from '@angular/router';
-import { HTTP_PROVIDERS } from '@angular/http';
-import { Subscription }                      from 'rxjs/Subscription';
-import * as moment                           from 'moment';
-import { MonthService }                      from './month.service';
-import { Tile, TileService }                 from './tile.service';
-import { TileComponent }                     from './tile.component';
-import {CourseService, CourseWithNumSpaces, CourseServiceImpl, Course} from "./course.service";
+import {Component, OnInit, OnDestroy}      from '@angular/core';
+import {ROUTER_DIRECTIVES, ActivatedRoute} from '@angular/router';
+import {HTTP_PROVIDERS}    from '@angular/http';
+import {Subscription}      from 'rxjs/Subscription';
+import * as moment         from 'moment';
+import {MonthService}      from './month.service';
+import {Tile, TileService} from './tile.service';
+import {TileComponent}     from './tile.component';
+import {CourseService, CourseWithNumSpaces, CourseServiceImpl} from './course.service';
 
 @Component({
-  moduleId: module.id,
-  selector: 'div',
+  selector: 'course-calendar-component',
   templateUrl: 'course-calendar.component.html',
   providers: [MonthService, TileService, HTTP_PROVIDERS, { provide: CourseService, useClass: CourseServiceImpl }],
   directives: [ROUTER_DIRECTIVES, TileComponent]
@@ -49,10 +48,10 @@ export class CourseCalendarComponent implements OnInit, OnDestroy {
       courses => {
         this.courses = courses;
 
-        for(let tile of this.tiles) {
+        for (let tile of this.tiles) {
           tile.courses = [];
 
-          for(let course of this.courses) {
+          for (let course of this.courses) {
             if (tile.date.isSame(course.course.date)) {
               tile.courses.push(course);
             }

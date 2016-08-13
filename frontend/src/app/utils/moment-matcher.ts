@@ -1,9 +1,3 @@
-import {
-  beforeEach, beforeEachProviders,
-  describe, xdescribe,
-  expect, it, xit,
-  async, inject
-} from '@angular/core/testing';
 import * as moment from 'moment';
 
 export const MOMENT_MATCHER: jasmine.CustomMatcherFactories = {
@@ -17,7 +11,7 @@ export const MOMENT_MATCHER: jasmine.CustomMatcherFactories = {
         if (result.pass) {
           result.message = `${expected} was the same as ${actual}`;
         } else {
-          result.message `${expected} was not the same as ${actual}`;
+          result.message = `${expected} was not the same as ${actual}`;
         }
 
         return result;

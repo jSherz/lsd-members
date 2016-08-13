@@ -11,10 +11,6 @@
 
   <title>Leeds University Skydivers</title>
   <base href="/">
-
-  {{#unless environment.production}}
-  <script src="/ember-cli-live-reload.js" type="text/javascript"></script>
-  {{/unless}}
 </head>
 
 <body role="document">
@@ -33,16 +29,6 @@
     @keyframes rotate{0%{transform:rotate(0deg);border:.2em solid #009dd9;border-bottom-color:transparent}25%{border:.2em solid #fdda00;border-bottom-color:transparent}50%{transform:rotate(180deg);border:.2em solid #ea0005;border-bottom-color:transparent}100%{transform:rotate(360deg);border:.2em solid #009dd9;border-bottom-color:transparent}}#loading-spinner>div{width:4em;height:4em;border-radius:100%;margin:0;animation-fill-mode:both;border:.2em solid #009dd9;border-bottom-color:transparent;background:transparent !important;display:inline-block;animation:rotate 1.2s 0s linear infinite}#loading-container{margin-top:3em;text-align:center;text-transform:uppercase}
   </style>
 
-  <link href="css/application.css" rel="stylesheet" async>
   <link href="https://fonts.googleapis.com/css?family=Patrick+Hand+SC|Open+Sans" rel="stylesheet" type="text/css" async>
-
-  {{#each scripts.polyfills}}
-  <script src="{{.}}"></script>
-  {{/each}}
-  <script>
-    System.import('system-config.js').then(function () {
-      System.import('main');
-    }).catch(console.error.bind(console));
-  </script>
 </body>
 </html>

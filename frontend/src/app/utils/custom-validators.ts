@@ -1,5 +1,5 @@
-import { AbstractControl, ValidatorFn } from '@angular/forms';
-import { PhoneNumberUtil, PhoneNumber } from 'google-libphonenumber';
+import { AbstractControl } from '@angular/forms';
+import { PhoneNumberUtil } from 'google-libphonenumber';
 
 type ValidationResult = {
   [key: string]: boolean;
@@ -7,7 +7,7 @@ type ValidationResult = {
 
 export class CustomValidators {
 
-  private static phoneNumberUtil = PhoneNumberUtil.getInstance();
+  private static phoneNumberUtil: any = PhoneNumberUtil.getInstance();
 
   private static defaultRegion = 'GB';
 
@@ -15,7 +15,7 @@ export class CustomValidators {
    * Perform a basic sanity check on an e-mail address.
    */
   static email(control: AbstractControl): ValidationResult {
-    if (control.value == undefined || control.value == '' || !/.+\@.+\..+/.test(control.value)) {
+    if (control.value === undefined || control.value === '' || !/.+\@.+\..+/.test(control.value)) {
       return { 'email': true };
     } else {
       return null;
@@ -28,7 +28,7 @@ export class CustomValidators {
   static phoneNumber(control: AbstractControl): ValidationResult {
     let numToTest: string = control.value;
 
-    if (numToTest != undefined && numToTest != '') {
+    if (numToTest !== undefined && numToTest !== '') {
       try {
         let parsed = CustomValidators.phoneNumberUtil.parse(numToTest, CustomValidators.defaultRegion);
 

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import * as moment    from 'moment';
-import {RequestOptions, Headers, Http, Response} from "@angular/http";
-import {Observable} from "rxjs/Observable";
+import * as moment from 'moment';
+import {RequestOptions, Headers, Http, Response} from '@angular/http';
+import {Observable} from 'rxjs/Observable';
 
 export class Course {
   uuid: String;
@@ -44,7 +44,7 @@ export abstract class CourseService {
 @Injectable()
 export class CourseServiceImpl extends CourseService {
 
-  private coursesFindUrl = 'http://localhost:8080/api/v1/courses'
+  private coursesFindUrl = 'http://localhost:8080/api/v1/courses';
 
   constructor(private http: Http) {
     super();
@@ -52,15 +52,15 @@ export class CourseServiceImpl extends CourseService {
 
   find(startDate: moment.Moment, endDate: moment.Moment): Observable<CourseWithNumSpaces[]> {
     let body = JSON.stringify({
-      startDate: startDate.format("YYYY-MM-DD"),
-      endDate: endDate.format("YYYY-MM-DD")
+      startDate: startDate.format('YYYY-MM-DD'),
+      endDate: endDate.format('YYYY-MM-DD')
     });
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers });
 
     return this.http.post(this.coursesFindUrl, body, options)
       .map(this.extractFindResult)
-      .catch(this.handleError)
+      .catch(this.handleError);
   }
 
   /**
