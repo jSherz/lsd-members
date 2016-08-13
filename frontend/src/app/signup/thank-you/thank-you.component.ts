@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
 @Component({
-  selector: 'router-outlet',
-  templateUrl: './thank-you.component.html'
+  selector: 'thank-you-component',
+  templateUrl: 'thank-you.component.html'
 })
 export class ThankYouComponent {
 

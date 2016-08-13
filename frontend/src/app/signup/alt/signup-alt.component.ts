@@ -9,14 +9,15 @@ import {
   REACTIVE_FORM_DIRECTIVES
 } from '@angular/forms';
 
-import { CustomValidators } from '../utils';
+import { CustomValidators } from '../../utils';
 import {
   SignupService,
   SignupServiceImpl,
   SignupResult
-} from './signup.service';
+} from '../service/signup.service';
 
 @Component({
+  selector: 'signup-alt-component',
   templateUrl: 'signup-alt.component.html',
   providers: [
     HTTP_PROVIDERS,

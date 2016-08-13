@@ -5,7 +5,7 @@ import { FormBuilder            } from '@angular/forms';
 import { APP_BASE_HREF          } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { APP_ROUTER_PROVIDERS   } from '../app.routes';
+import { APP_ROUTER_PROVIDERS   } from '../../app.routes';
 import { SignupComponent        } from './signup.component';
 
 beforeEach(() => addProviders([

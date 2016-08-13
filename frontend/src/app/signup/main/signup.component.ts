@@ -7,9 +7,10 @@ import {
   Validators,
   REACTIVE_FORM_DIRECTIVES
 } from '@angular/forms';
-import { CustomValidators } from '../utils';
+import { CustomValidators } from '../../utils';
 
 @Component({
+  selector: 'signup-component',
   templateUrl: 'signup.component.html',
   directives: [REACTIVE_FORM_DIRECTIVES]
 })
