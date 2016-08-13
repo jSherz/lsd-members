@@ -1,7 +1,7 @@
 /* tslint:disable:no-unused-variable */
 
 import { Location, LocationStrategy } from '@angular/common';
-import { APP_ROUTER_PROVIDERS } from './../../index';
+import { APP_ROUTER_PROVIDERS } from '../index';
 import { ThankYouComponent } from './thank-you.component';
 import { addProviders } from '@angular/core/testing/testing';
 import { inject } from '@angular/core/testing/test_injector';
