@@ -26,7 +26,7 @@ function mockComp(): TestSetup {
   }
 
   let builder = new FormBuilder();
-  let router = jasmine.createSpyObj("MockRouter", keys);
+  let router = jasmine.createSpyObj('MockRouter', keys);
   let service = new SignupServiceStub();
 
   return new TestSetup(router, service, new SignupAltComponent(builder, router, service));

@@ -12,8 +12,7 @@ import {
 import { CustomValidators } from '../../utils';
 import {
   SignupService,
-  SignupServiceImpl,
-  SignupResult
+  SignupServiceImpl
 } from '../service/signup.service';
 
 @Component({
@@ -97,7 +96,7 @@ export class SignupAltComponent {
       },
       error => {
         // API request failed, show generic error
-        console.log(error)
+        console.log('Sign-up alt failed: ' + error);
 
         this.apiRequestFailed = true;
         this.showThrobber = false;
@@ -113,8 +112,8 @@ export class SignupAltComponent {
    */
   translate(key: string) {
     return {
-      "error.inUse": "This e-mail is in use. Have you already signed up?"
-    }[key]
+      'error.inUse': 'This e-mail is in use. Have you already signed up?'
+    }[key];
   }
 
 }
