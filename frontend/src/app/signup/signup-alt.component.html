@@ -1,7 +1,7 @@
 <div id="intro-hero">
-  <ul>
-    <li *ngFor="let error of errors">{{ error }}</li>
-  </ul>
+  <div *ngIf="apiRequestFailed" class="form-field-error">
+    An unknown error occurred #sadtimes #turnitoffandonagain
+  </div>
 
   <div id="sign-up-form">
     <form [formGroup]="signupForm">
@@ -13,6 +13,10 @@
         <div [hidden]="ctrlName.valid || ctrlName.untouched" class="form-field-error" id="name-form-field-error">
           Please enter a name
         </div>
+
+        <div *ngIf="errors && errors.name" class="form-field-error">
+          {{translate(errors.name)}}
+        </div>
       </div>
 
       <div>
@@ -23,9 +27,14 @@
          <div [hidden]="ctrlEmail.valid || ctrlEmail.untouched" class="form-field-error" id="email-form-field-error">
            Please enter a valid e-mail address
          </div>
+
+        <div *ngIf="errors && errors.email" class="form-field-error">
+          {{translate(errors.email)}}
+        </div>
       </div>
 
       <button type="button" (click)="signup(signupForm.value)" [disabled]="!signupForm.valid">Sign me up!</button>
+      <span [ngClass]="{visible: showThrobber}" class="throbber"></span>
     </form>
   </div>
 </div>

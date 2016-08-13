@@ -4,10 +4,13 @@ import { Observable } from 'rxjs/Observable';
 
 export class SignupResult {
 
-  constructor(
-    success: boolean,
-    errors: [{ [field: string]: string; }]
-  ) {}
+  success: boolean;
+  errors: any;
+
+  constructor(success: boolean, errors: any) {
+    this.success = success;
+    this.errors = errors;
+  }
 
 }
 
@@ -47,18 +50,14 @@ export class SignupServiceImpl extends SignupService {
     return this.doSignup(this.signupAltUrl, request);
   }
 
-  private doSignup(url: string, request: any): Observable<Response> {
+  private doSignup(url: string, request: any): Observable<SignupResult> {
     let body = JSON.stringify(request);
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers });
 
     return this.http.post(url, body, options)
-      .map(this.extractData)
+      .map(res => res.json() || {})
       .catch(this.handleError);
-  }
-
-  private extractData(res: Response) {
-    return res.json() || {};
   }
 
   private handleError(error: any) {
