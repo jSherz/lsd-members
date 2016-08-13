@@ -20,6 +20,6 @@ export class SignupAltForm {
   }
 
   submitButton() {
-    return element(by.css('button[type=submit]'));
+    return element(by.css('button'));
   }
 }
