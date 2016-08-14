@@ -27,6 +27,7 @@ package com.jsherz.luskydive.apis
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
+import com.jsherz.luskydive.core.Member
 import com.jsherz.luskydive.dao.{MemberDao, StubMemberDao}
 import com.jsherz.luskydive.json.{SignupAltRequest, SignupJsonSupport, SignupResponse}
 import org.mockito.Matchers.any
@@ -64,8 +65,8 @@ class SignupAltApiSpec extends WordSpec with Matchers with ScalatestRouteTest wi
         responseAs[SignupResponse].success shouldEqual true
         responseAs[SignupResponse].errors shouldBe empty
 
-        verify(dao).create(name, None, Some(email))
-
+        // TODO: Try making this more specific
+        verify(dao).create(any())
       }
     }
 
@@ -76,7 +77,7 @@ class SignupAltApiSpec extends WordSpec with Matchers with ScalatestRouteTest wi
         Post(url, request) ~> Route.seal(route) ~> check {
           response.status shouldEqual StatusCodes.UnsupportedMediaType
 
-          verify(dao, never()).create(any(), any(), any())
+          verify(dao, never()).create(any())
         }
       }
     }
@@ -87,7 +88,7 @@ class SignupAltApiSpec extends WordSpec with Matchers with ScalatestRouteTest wi
       Post(url, request) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.BadRequest
 
-        verify(dao, never()).create(any(), any(), any())
+        verify(dao, never()).create(any())
       }
     }
 
@@ -97,7 +98,7 @@ class SignupAltApiSpec extends WordSpec with Matchers with ScalatestRouteTest wi
       Post(url, request) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.BadRequest
 
-        verify(dao, never()).create(any(), any(), any())
+        verify(dao, never()).create(any())
       }
     }
 
@@ -107,7 +108,7 @@ class SignupAltApiSpec extends WordSpec with Matchers with ScalatestRouteTest wi
       Post(url, request) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.BadRequest
 
-        verify(dao, never()).create(any(), any(), any())
+        verify(dao, never()).create(any())
       }
     }
 
@@ -124,7 +125,7 @@ class SignupAltApiSpec extends WordSpec with Matchers with ScalatestRouteTest wi
         response.status shouldEqual StatusCodes.MethodNotAllowed
       }
 
-      verify(dao, never()).create(any(), any(), any())
+      verify(dao, never()).create(any())
     }
 
     "return failed with an error if a blank name (only spaces) is given" in {
@@ -138,7 +139,7 @@ class SignupAltApiSpec extends WordSpec with Matchers with ScalatestRouteTest wi
         }
       }
 
-      verify(dao, never()).create(any(), any(), any())
+      verify(dao, never()).create(any())
     }
 
     "return failed with an appropriate error if the e-mail is in use" in {
@@ -149,7 +150,7 @@ class SignupAltApiSpec extends WordSpec with Matchers with ScalatestRouteTest wi
         responseAs[SignupResponse].success shouldEqual false
         responseAs[SignupResponse].errors shouldBe Map("email" -> "error.inUse")
 
-        verify(dao, never()).create(any(), any(), any())
+        verify(dao, never()).create(any())
       }
     }
 
@@ -161,7 +162,7 @@ class SignupAltApiSpec extends WordSpec with Matchers with ScalatestRouteTest wi
         responseAs[SignupResponse].success shouldEqual false
         responseAs[SignupResponse].errors shouldBe Map("email" -> "error.invalid")
 
-        verify(dao, never()).create(any(), any(), any())
+        verify(dao, never()).create(any())
       }
     }
 

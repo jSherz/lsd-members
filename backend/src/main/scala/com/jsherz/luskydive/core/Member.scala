@@ -24,6 +24,7 @@
 
 package com.jsherz.luskydive.core
 
+import java.sql.{Date, Timestamp}
 import java.util.UUID
 
 /**
@@ -33,5 +34,9 @@ import java.util.UUID
   * @param name        Peron's (first) name
   * @param phoneNumber Phone number
   * @param email       E-mail address
+  * @param lastJump    The date the member last jumped, if applicable
+  * @param createdAt   When the member was created
+  * @param updatedAt   When the member's record was last updated
   */
-case class Member(uuid: Option[UUID], name: String, phoneNumber: Option[String], email: Option[String])
+case class Member(uuid: Option[UUID], name: String, phoneNumber: Option[String], email: Option[String], lastJump: Option[Date],
+                  createdAt: Timestamp, updatedAt: Timestamp)

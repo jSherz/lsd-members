@@ -50,12 +50,10 @@ class StubMemberDao()(implicit val ec: ExecutionContext) extends MemberDao {
   /**
     * Create a new member.
     *
-    * @param name
-    * @param phoneNumber
-    * @param email
+    * @param member
     * @return
     */
-  override def create(name: String, phoneNumber: Option[String], email: Option[String]): Future[Option[UUID]] = {
+  override def create(member: Member): Future[Option[UUID]] = {
     Future(Some(Generators.randomBasedGenerator().generate()))
   }
 

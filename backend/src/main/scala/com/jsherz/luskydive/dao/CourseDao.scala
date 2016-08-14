@@ -144,7 +144,7 @@ class CourseDaoImpl(protected override val databaseService: DatabaseService)(imp
         case (space, member) =>
           CourseSpaceWithMember(
             space.uuid, space.courseUuid, space.number,
-            member.map(x => StrippedMember(x.uuid, x.name))
+            member.map(x => StrippedMember(x.uuid, x.name, x.createdAt))
           )
       }
     }

@@ -95,7 +95,13 @@ class Tables(protected val databaseService: DatabaseService) {
 
     def email: Rep[Option[String]] = column[Option[String]]("email", O.Length(EMAIL_FIELD_LENGTH, varying = true))
 
-    def * = (uuid.?, name, phoneNumber, email) <> (Member.tupled, Member.unapply)
+    def lastJump: Rep[Option[Date]] = column[Option[Date]]("last_jump")
+
+    def createdAt: Rep[Timestamp] = column[Timestamp]("created_at")
+
+    def updatedAt: Rep[Timestamp] = column[Timestamp]("updated_at")
+
+    def * = (uuid.?, name, phoneNumber, email, lastJump, createdAt, updatedAt) <> (Member.tupled, Member.unapply)
 
   }
 

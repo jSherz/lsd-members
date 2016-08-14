@@ -24,7 +24,7 @@
 
 package com.jsherz.luskydive.json
 
-import java.sql.Date
+import java.sql.{Date, Timestamp}
 import java.util.UUID
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
@@ -42,7 +42,7 @@ object CoursesJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val CourseFormat = jsonFormat5(Course)
   implicit val CourseWithOrganisersFormat = jsonFormat3(CourseWithOrganisers)
   implicit val CourseWithNumSpacesFormat = jsonFormat3(CourseWithNumSpaces)
-  implicit val StrippedMemberFormat = jsonFormat2(StrippedMember)
+  implicit val StrippedMemberFormat = jsonFormat3(StrippedMember)
   implicit val CourseSpaceWithMemberFormat = jsonFormat4(CourseSpaceWithMember)
 
 }
@@ -74,8 +74,9 @@ case class CourseWithNumSpaces(course: Course, totalSpaces: Int, spacesFree: Int
   *
   * @param uuid
   * @param name
+  * @param createdAt The date the member joined
   */
-case class StrippedMember(uuid: Option[UUID], name: String)
+case class StrippedMember(uuid: Option[UUID], name: String, createdAt: Timestamp)
 
 /**
   * A course space, including stripped member.

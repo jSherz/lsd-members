@@ -24,6 +24,7 @@
 
 package com.jsherz.luskydive.dao
 
+import java.sql.{Date, Timestamp}
 import java.util.UUID
 
 import com.fasterxml.uuid.Generators
@@ -47,14 +48,14 @@ trait MemberDao {
   def memberExists(phoneNumber: Option[String], email: Option[String]): Future[Boolean]
 
   /**
-    * Create a new member.
+    * Insert a member into the database.
     *
-    * @param name
-    * @param phoneNumber
-    * @param email
+    * NB: It will generate a UUID if one is not provided.
+    *
+    * @param member
     * @return UUID if creation succeeded
     */
-  def create(name: String, phoneNumber: Option[String], email: Option[String]): Future[Option[UUID]]
+  def create(member: Member): Future[Option[UUID]]
 
   /**
     * Get a member with the provided UUID.
@@ -86,19 +87,20 @@ case class MemberDaoImpl(override protected val databaseService: DatabaseService
   }
 
   /**
-    * Create a new member.
+    * Insert a member into the database.
     *
-    * @param name
-    * @param phoneNumber
-    * @param email
+    * NB: It will generate a UUID if one is not provided.
+    *
+    * @param member
     * @return UUID if creation succeeded
     */
-  override def create(name: String, phoneNumber: Option[String], email: Option[String]): Future[Option[UUID]] = {
-    val uuid = Generators.randomBasedGenerator().generate()
+  override def create(member: Member): Future[Option[UUID]] = {
+    val uuid = member.uuid.getOrElse(Generators.randomBasedGenerator().generate())
 
-    (phoneNumber, email) match {
-      case (None, None) => Future(None)
-      case _ => db.run((Members returning Members.map(_.uuid)) += Member(Some(uuid), name, phoneNumber, email)).map(Some(_))
+    if (member.phoneNumber.isDefined || member.email.isDefined) {
+      db.run((Members returning Members.map(_.uuid)) += member.copy(uuid = Some(uuid))).map(Some(_))
+    } else {
+      Future(None)
     }
   }
 

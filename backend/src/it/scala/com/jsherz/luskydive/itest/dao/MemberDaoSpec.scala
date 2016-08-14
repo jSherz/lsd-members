@@ -24,11 +24,12 @@
 
 package com.jsherz.luskydive.itest.dao
 
+import java.sql.Timestamp
 import java.util.UUID
 
 import com.jsherz.luskydive.core.Member
 import com.jsherz.luskydive.dao._
-import com.jsherz.luskydive.itest.util.Util
+import com.jsherz.luskydive.itest.util.{Util, DateUtil}
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 import org.scalatest.concurrent.ScalaFutures._
 import com.jsherz.luskydive.json.MemberJsonSupport._
@@ -102,16 +103,24 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
   "MemberDao#create" should {
 
-    "return None if creating the member failed" in {
-      val result = dao.create("Tegan Harper", None, None)
+    "return None if no phone number or e-mail was supplied" in {
+      val createdAt = Timestamp.valueOf("2016-08-13 21:13:37.10101")
+      val updatedAt = Timestamp.valueOf("2016-08-13 21:14:10.00101")
+
+      val member = Member(None, "Tegan Harper", None, None, None, createdAt, updatedAt)
+      val result = dao.create(member)
 
       result.futureValue shouldBe None
     }
 
-    "generates a valid UUID and inserts a member with the correct information" in {
-      val member = Member(None, "Keira Rahman", Some("+447916149532"), Some("KeiraRahman@armyspy.com"))
+    "generates a valid UUID (if not supplied) and inserts a member with the correct information" in {
+      val createdAt = Timestamp.valueOf("2009-01-20 10:19:59.10101")
+      val updatedAt = Timestamp.valueOf("2009-01-21 18:10:10.123814")
 
-      val futureResult = dao.create(member.name, member.phoneNumber, member.email)
+      val member = Member(None, "Keira Rahman", Some("+447916149532"), Some("KeiraRahman@armyspy.com"),
+        Some(DateUtil.makeDate(2011, 5, 9)), createdAt, updatedAt)
+
+      val futureResult = dao.create(member)
       val result = futureResult.futureValue
 
       result.isDefined shouldBe true
@@ -120,14 +129,32 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       foundMember.futureValue shouldBe Some(member.copy(uuid = Some(result.get)))
     }
 
-    "generates a different UUID with each creation" in {
-      val memberA = Member(None, "Alisha Stevens", Some("+447985203839"), Some("AlishaStevens@yahoo.com"))
-      val memberB = Member(None, "Hollie Hammond", Some("+447885929137"), Some("x_x_hollie_x_x@fanmail.com"))
-      val memberC = Member(None, "Kayleigh Barker", Some("+447043025413"), Some("kay_kay100101@hotmail.co.uk"))
+    "uses the supplied UUID (if provided) and inserts a member with the correct information" in {
+      val createdAt = Timestamp.valueOf("2009-01-20 10:19:59.10101")
+      val updatedAt = Timestamp.valueOf("2009-01-21 18:10:10.812728")
 
-      val memberAUuid = dao.create(memberA.name, memberA.phoneNumber, memberA.email).futureValue
-      val memberBUuid = dao.create(memberB.name, memberB.phoneNumber, memberB.email).futureValue
-      val memberCUuid = dao.create(memberC.name, memberC.phoneNumber, memberC.email).futureValue
+      val member = Member(Some(UUID.fromString("da53db07-72b5-40e5-88a6-caa4e3d41403")), "Spencer Burton",
+        Some("+447938921821"), Some("sburton@theburtons.xyz"), None, createdAt, updatedAt)
+
+      val futureResult = dao.create(member)
+      val result = futureResult.futureValue
+
+      result.isDefined shouldBe true
+
+      val foundMember = dao.get(result.get)
+      foundMember.futureValue shouldBe Some(member)
+    }
+
+    "generates a different UUID with each creation" in {
+      val createdAt = Timestamp.valueOf("2016-08-14 12:13:00")
+      val updatedAt = Timestamp.valueOf("2016-08-14 12:13:01")
+      val memberA = Member(None, "Alisha Stevens", Some("+447985203839"), Some("AlishaStevens@yahoo.com"), None, createdAt, updatedAt)
+      val memberB = Member(None, "Hollie Hammond", Some("+447885929137"), Some("x_x_hollie_x_x@fanmail.com"), None, createdAt, updatedAt)
+      val memberC = Member(None, "Kayleigh Barker", Some("+447043025413"), Some("kay_kay100101@hotmail.co.uk"), None, createdAt, updatedAt)
+
+      val memberAUuid = dao.create(memberA).futureValue
+      val memberBUuid = dao.create(memberB).futureValue
+      val memberCUuid = dao.create(memberC).futureValue
 
       memberAUuid shouldNot be(None)
       memberBUuid shouldNot be(None)

@@ -24,8 +24,11 @@
 
 package com.jsherz.luskydive.apis
 
+import java.sql.Timestamp
+
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._
+import com.jsherz.luskydive.core.Member
 import com.jsherz.luskydive.dao.MemberDao
 import com.jsherz.luskydive.json.{SignupAltRequest, SignupJsonSupport, SignupRequest, SignupResponse}
 import com.jsherz.luskydive.services.Cors.cors
@@ -55,7 +58,8 @@ class SignupApi(private val memberDao: MemberDao)(implicit ec: ExecutionContext)
                 memberDao.memberExists(Some(phoneNumber), None).map {
                   case true => SignupResponse(false, Map("phoneNumber" -> "error.inUse"))
                   case false => {
-                    memberDao.create(req.name, Some(phoneNumber), None)
+                    val createdAt = currentTimestamp
+                    memberDao.create(Member(None, req.name, Some(phoneNumber), None, None, createdAt, createdAt))
 
                     SignupResponse(true, Map.empty)
                   }
@@ -84,7 +88,8 @@ class SignupApi(private val memberDao: MemberDao)(implicit ec: ExecutionContext)
                 memberDao.memberExists(None, Some(req.email)).map {
                   case true => SignupResponse(false, Map("email" -> "error.inUse"))
                   case false => {
-                    memberDao.create(req.name, None, Some(req.email))
+                    val createdAt = currentTimestamp
+                    memberDao.create(Member(None, req.name, None, Some(req.email), None, createdAt, createdAt))
 
                     SignupResponse(true, Map.empty)
                   }
@@ -100,6 +105,10 @@ class SignupApi(private val memberDao: MemberDao)(implicit ec: ExecutionContext)
 
   val route: Route = pathPrefix("members") {
     signupRoute ~ signupAltRoute
+  }
+
+  private def currentTimestamp(): Timestamp = {
+    new Timestamp(new java.util.Date().getTime)
   }
 
 }

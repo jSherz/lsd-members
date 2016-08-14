@@ -24,7 +24,7 @@
 
 package com.jsherz.luskydive.util
 
-import java.sql.Date
+import java.sql.{Date, Timestamp}
 import java.util.GregorianCalendar
 
 import org.scalatest.{Matchers, WordSpec}
@@ -49,6 +49,18 @@ object DateUtil {
     ).getTime.getTime)
   }
 
+  /**
+    * Create an SQL timestamp at midnight on the given day.
+    *
+    * @param year  Year (4 digits plz)
+    * @param month One indexed month
+    * @param day   Day of month
+    * @return
+    */
+  def makeTimestamp(year: Int, month: Int, day: Int): Timestamp = {
+    new Timestamp(makeDate(year, month, day).getTime)
+  }
+
 }
 
 class DateUtilSpec extends WordSpec with Matchers {
@@ -59,6 +71,16 @@ class DateUtilSpec extends WordSpec with Matchers {
       DateUtil.makeDate(2016, 1, 1) shouldEqual Date.valueOf("2016-01-01")
       DateUtil.makeDate(1998, 12, 5) shouldEqual Date.valueOf("1998-12-05")
       DateUtil.makeDate(2011, 6, 23) shouldEqual Date.valueOf("2011-06-23")
+    }
+
+  }
+
+  "DateUtil#makeTimestamp" should {
+
+    "return the correct Timestamp, given a one indexed month" in {
+      DateUtil.makeTimestamp(2016, 1, 1) shouldEqual Timestamp.valueOf("2016-01-01 00:00:00")
+      DateUtil.makeTimestamp(1998, 12, 5) shouldEqual Timestamp.valueOf("1998-12-05 00:00:00")
+      DateUtil.makeTimestamp(2011, 6, 23) shouldEqual Timestamp.valueOf("2011-06-23 00:00:00")
     }
 
   }
