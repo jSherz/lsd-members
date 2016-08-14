@@ -53,7 +53,7 @@ CREATE TABLE committee_members (
 CREATE TABLE course_spaces (
     uuid uuid NOT NULL,
     course_uuid uuid NOT NULL,
-    number integer,
+    number integer NOT NULL,
     member_uuid uuid
 );
 
@@ -1989,7 +1989,7 @@ INSERT INTO members (uuid, name, email, phone_number, last_jump, created_at, upd
 --
 
 INSERT INTO schema_version (installed_rank, version, description, type, script, checksum, installed_by, installed_on, execution_time, success) VALUES (1, '1.0', 'Create table members', 'SQL', 'V1_0__Create_table_members.sql', 333059038, 'luskydive', '2016-08-10 22:08:39.045016', 29, true);
-INSERT INTO schema_version (installed_rank, version, description, type, script, checksum, installed_by, installed_on, execution_time, success) VALUES (2, '1.1', 'Create committee and raps course tables', 'SQL', 'V1_1__Create_committee_and_raps_course_tables.sql', 1397392807, 'luskydive', '2016-08-10 22:08:39.126118', 37, true);
+INSERT INTO schema_version (installed_rank, version, description, type, script, checksum, installed_by, installed_on, execution_time, success) VALUES (2, '1.1', 'Create committee and raps course tables', 'SQL', 'V1_1__Create_committee_and_raps_course_tables.sql', -2057073705, 'luskydive', '2016-08-10 22:08:39.126118', 37, true);
 
 
 --
