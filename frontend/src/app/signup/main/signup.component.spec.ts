@@ -7,8 +7,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { APP_ROUTER_PROVIDERS   } from '../../app.routes';
 import { SignupComponent        } from './signup.component';
-import {SignupService} from "../../../../signup.service";
-import {SignupServiceStub} from "../service/signup.service.stub";
+import { SignupService          } from "../service/signup.service";
+import { SignupServiceStub      } from "../service/signup.service.stub";
 
 beforeEach(() => addProviders([
   APP_ROUTER_PROVIDERS,

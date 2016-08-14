@@ -1,5 +1,5 @@
 import { Observable                  } from 'rxjs/Observable';
-import { SignupService, SignupResult } from '../index';
+import { SignupResult, SignupService } from '../index';
 
 export class SignupServiceStub extends SignupService {
 
