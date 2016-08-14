@@ -58,6 +58,16 @@ class CoursesApi(private val courseDao: CourseDao)(implicit ec: ExecutionContext
     }
   }
 
+  val spacesRoute = path(JavaUUID / "spaces") { uuid =>
+    cors {
+      get {
+        onSuccess(courseDao.spaces(uuid)) {
+          complete(_)
+        }
+      }
+    }
+  }
+
   val getRoute = path(JavaUUID) { uuid =>
     cors {
       get {
@@ -71,6 +81,7 @@ class CoursesApi(private val courseDao: CourseDao)(implicit ec: ExecutionContext
 
   val route: Route = pathPrefix("courses") {
     listRoute ~
+    spacesRoute ~
     getRoute
   }
 

@@ -24,8 +24,10 @@
 
 package com.jsherz.luskydive.fixtures
 
-import com.jsherz.luskydive.core.CourseWithOrganisers
-import com.jsherz.luskydive.json.CourseOrganiser
+import java.util.UUID
+
+import com.jsherz.luskydive.core.{CourseSpace, CourseWithOrganisers}
+import com.jsherz.luskydive.json.{CourseOrganiser, CourseSpaceWithMember, StrippedMember}
 
 /**
   * Examples of [[CourseWithOrganisers]].
@@ -36,6 +38,21 @@ object CoursesWithOrganisers {
     Courses.courseA,
     CourseOrganiser(CommitteeMembers.committeeMemberA.uuid.get, CommitteeMembers.committeeMemberA.name),
     None
+  )
+
+  val courseWithOrganisersASpaces = Seq(
+    CourseSpaceWithMember(Some(UUID.fromString("f543c4c2-7e07-4e2a-8ce3-f2e653008daa")), Courses.courseA.uuid.get, 1,
+      Some(StrippedMember(Some(UUID.fromString("61e6c06f-295c-49e9-bf2b-b3a8dda299e2")), "Callum Scott"))),
+    CourseSpaceWithMember(Some(UUID.fromString("16daf695-5509-4cb7-ae40-6e04c7ce4b44")), Courses.courseA.uuid.get, 2, None),
+    CourseSpaceWithMember(Some(UUID.fromString("ff526943-55f2-4b51-a863-e3ce800eabf7")), Courses.courseA.uuid.get, 3, None),
+    CourseSpaceWithMember(Some(UUID.fromString("2a14e024-d165-4147-9d98-00463bbf93c9")), Courses.courseA.uuid.get, 4,
+      Some(StrippedMember(Some(UUID.fromString("8556d0dd-05e9-44e6-8b66-d9607240387e")), "Brandon Gardner"))),
+    CourseSpaceWithMember(Some(UUID.fromString("38c429c2-8147-4c56-a9bb-8675647fbf51")), Courses.courseA.uuid.get, 5,
+      Some(StrippedMember(Some(UUID.fromString("98d9c289-f966-4767-8f9d-ec0a17831a27")), "Alicia Moore"))),
+    CourseSpaceWithMember(Some(UUID.fromString("c914214c-4498-4506-b9dc-fc1f7d715215")), Courses.courseA.uuid.get, 6,
+      Some(StrippedMember(Some(UUID.fromString("35c816a9-eb6f-4fe2-bea2-15a340a81508")), "Samuel Barber"))),
+    CourseSpaceWithMember(Some(UUID.fromString("bae4cba2-e6d1-4dd3-ad6c-a6a452aad646")), Courses.courseA.uuid.get, 7, None),
+    CourseSpaceWithMember(Some(UUID.fromString("c8bfcaca-e55e-4f32-9f3f-782b72d8acfa")), Courses.courseA.uuid.get, 8, None)
   )
 
 }
