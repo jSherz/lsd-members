@@ -1,0 +1,54 @@
+<div id="full-column">
+  <h2>Create a new course</h2>
+
+  <p>
+    This page can be used to create a new course that's yet to happen or to record a previous course to ensure we keep
+    in touch with the members on it.
+  </p>
+
+  <div *ngIf="apiRequestFailed" class="form-field-error">
+    An unknown error occurred #sadtimes #turnitoffandonagain
+  </div>
+
+  <form [formGroup]="courseForm">
+    <div>
+      <label for="date">Date</label>
+      <input type="date" id="date" formControlName="date" required value="">
+
+      <div [hidden]="ctrlDate.valid || ctrlDate.untouched" class="form-field-error" id="date-form-field-error">
+        Please enter a valid date
+      </div>
+    </div>
+
+    <div>
+      <label for="organiser">Organiser</label>
+      <select id="organiser" formControlName="organiser" required>
+        <option *ngFor="let committee of committeeMembers">{{ committee.name }}</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="secondaryOrganiser">Secondary organiser</label>
+      <select id="secondaryOrganiser" formControlName="secondaryOrganiser">
+        <option>- None -</option>
+        <option *ngFor="let committee of committeeMembers">{{ committee.name }}</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="numSpaces">Number of spaces</label>
+      <input type="number" id="numSpaces" formControlName="numSpaces" required value="8">
+
+      <div [hidden]="ctrlNumSpaces.valid || ctrlNumSpaces.untouched" class="form-field-error" id="numSpaces-form-field-error">
+        Please enter a valid number of spaces (1 - {{ maxSpaces }})
+      </div>
+
+      <div *ngIf="errors && errors.numSpaces" class="form-field-error">
+        {{translate(errors.numSpaces)}}
+      </div>
+    </div>
+
+    <button type="button" (click)="createCourse(courseForm.value)" [disabled]="!courseForm.valid">Create course</button>
+    <span [ngClass]="{visible: showThrobber}" class="throbber"></span>
+  </form>
+</div>
