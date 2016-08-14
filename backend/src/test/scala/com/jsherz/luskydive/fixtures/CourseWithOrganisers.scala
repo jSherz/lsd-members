@@ -26,8 +26,8 @@ package com.jsherz.luskydive.fixtures
 
 import java.util.UUID
 
-import com.jsherz.luskydive.core.{CourseSpace, CourseWithOrganisers}
-import com.jsherz.luskydive.json.{CourseOrganiser, CourseSpaceWithMember, StrippedMember}
+import com.jsherz.luskydive.core.CourseWithOrganisers
+import com.jsherz.luskydive.json.{CourseSpaceWithMember, StrippedCommitteeMember, StrippedMember}
 import com.jsherz.luskydive.util.DateUtil
 
 /**
@@ -37,7 +37,7 @@ object CoursesWithOrganisers {
 
   val courseWithOrganisersA = CourseWithOrganisers(
     Courses.courseA,
-    CourseOrganiser(CommitteeMembers.committeeMemberA.uuid.get, CommitteeMembers.committeeMemberA.name),
+    StrippedCommitteeMember(CommitteeMembers.committeeMemberA.uuid.get, CommitteeMembers.committeeMemberA.name),
     None
   )
 

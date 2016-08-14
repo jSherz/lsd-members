@@ -28,7 +28,7 @@ import java.sql.Date
 import java.util.UUID
 
 import com.jsherz.luskydive.core.{Course, CourseSpace, CourseWithOrganisers}
-import com.jsherz.luskydive.json.{CourseOrganiser, CourseSpaceWithMember, CourseWithNumSpaces, StrippedMember}
+import com.jsherz.luskydive.json._
 import com.jsherz.luskydive.services.DatabaseService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -161,8 +161,8 @@ class CourseDaoImpl(protected override val databaseService: DatabaseService)(imp
   private def assembleCourse(course: Course, organiser: (UUID, String), secondaryOrganiser: Option[(UUID, String)]): CourseWithOrganisers = {
     CourseWithOrganisers(
       course,
-      CourseOrganiser.tupled(organiser),
-      secondaryOrganiser.map(x => CourseOrganiser.tupled(x))
+      StrippedCommitteeMember.tupled(organiser),
+      secondaryOrganiser.map(x => StrippedCommitteeMember.tupled(x))
     )
   }
 

@@ -22,11 +22,40 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.core
+package com.jsherz.luskydive.itest.dao
 
+import com.jsherz.luskydive.dao.{CommitteeMemberDao, CommitteeMemberDaoImpl}
+import com.jsherz.luskydive.itest.util.Util
 import com.jsherz.luskydive.json.StrippedCommitteeMember
+import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
+import org.scalatest.concurrent.ScalaFutures._
+import com.jsherz.luskydive.json.CommitteeMembersJsonSupport._
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
-  * Used to form a pretty JSON representation of a course with attached children.
+  * Exercises the committee member database functionality.
   */
-case class CourseWithOrganisers(course: Course, organiser: StrippedCommitteeMember, secondaryOrganiser: Option[StrippedCommitteeMember])
+class CommitteeMemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
+
+  private var dao: CommitteeMemberDao = _
+
+  override protected def beforeAll(): Unit = {
+    val dbService = Util.setupGoldTestDb()
+
+    dao = new CommitteeMemberDaoImpl(databaseService = dbService)
+  }
+
+  "CommitteeMemberDao" should {
+
+    "return the correct committee members, sorted by name" in {
+      val results = dao.active()
+
+      whenReady(results) { r =>
+        r shouldBe Util.fixture[Seq[StrippedCommitteeMember]]("active.json")
+      }
+    }
+
+  }
+
+}

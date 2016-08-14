@@ -22,11 +22,30 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.core
+package com.jsherz.luskydive.json
 
-import com.jsherz.luskydive.json.StrippedCommitteeMember
+import java.util.UUID
+
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
+import com.jsherz.luskydive.util.UuidJsonFormat
+import spray.json.DefaultJsonProtocol
 
 /**
-  * Used to form a pretty JSON representation of a course with attached children.
+  * JSON support objects for committee member endpoints.
   */
-case class CourseWithOrganisers(course: Course, organiser: StrippedCommitteeMember, secondaryOrganiser: Option[StrippedCommitteeMember])
+object CommitteeMembersJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
+
+  implicit val UuidFormat = UuidJsonFormat
+  // implicit val DateFormat = DateJsonFormat
+  // implicit val TimestampFormat = TimestampJsonFormat
+  implicit val StrippedCommitteeMemberFormat = jsonFormat2(StrippedCommitteeMember)
+
+}
+
+/**
+  * A committee member with the bare minimum information.
+  *
+  * @param uuid
+  * @param name
+  */
+case class StrippedCommitteeMember(uuid: UUID, name: String)

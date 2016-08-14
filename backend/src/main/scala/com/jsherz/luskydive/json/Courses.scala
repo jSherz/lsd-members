@@ -38,7 +38,7 @@ object CoursesJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val DateFormat = DateJsonFormat
   implicit val TimestampFormat = TimestampJsonFormat
   implicit val CoursesListFormat = jsonFormat2(CoursesListRequest)
-  implicit val CourseOrganiserFormat = jsonFormat2(CourseOrganiser)
+  implicit val CourseOrganiserFormat = jsonFormat2(StrippedCommitteeMember)
   implicit val CourseFormat = jsonFormat5(Course)
   implicit val CourseWithOrganisersFormat = jsonFormat3(CourseWithOrganisers)
   implicit val CourseWithNumSpacesFormat = jsonFormat3(CourseWithNumSpaces)
@@ -51,14 +51,6 @@ object CoursesJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
   * Used to show the courses between a set of dates (inclusive).
   */
 case class CoursesListRequest(startDate: Date, endDate: Date)
-
-/**
-  * Stripped down [[CommitteeMember]] - used to only output important JSON.
-  *
-  * @param uuid
-  * @param name
-  */
-case class CourseOrganiser(uuid: UUID, name: String)
 
 /**
   * A course with some information about the spaces on it.

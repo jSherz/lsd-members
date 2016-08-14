@@ -22,11 +22,46 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.core
+package com.jsherz.luskydive.dao
 
 import com.jsherz.luskydive.json.StrippedCommitteeMember
+import com.jsherz.luskydive.services.DatabaseService
+
+import scala.concurrent.{ExecutionContext, Future}
 
 /**
-  * Used to form a pretty JSON representation of a course with attached children.
+  * Used to store and retrieve information about committee members.
   */
-case class CourseWithOrganisers(course: Course, organiser: StrippedCommitteeMember, secondaryOrganiser: Option[StrippedCommitteeMember])
+trait CommitteeMemberDao {
+
+  /**
+    * Get active committee members, sorted by name.
+    *
+    * @return
+    */
+  def active(): Future[Seq[StrippedCommitteeMember]]
+
+}
+
+/**
+  * Database backed committee member DAO.
+  */
+class CommitteeMemberDaoImpl(protected override val databaseService: DatabaseService)(implicit val ec: ExecutionContext)
+  extends Tables(databaseService) with CommitteeMemberDao {
+
+  import driver.api._
+
+  /**
+    * Get active committee members, sorted by name.
+    *
+    * @return
+    */
+  override def active(): Future[Seq[StrippedCommitteeMember]] = {
+    val lookup = for {
+      committee <- CommitteeMembers.filter(_.locked === false).sortBy(_.name)
+    } yield (committee.uuid, committee.name)
+
+    db.run(lookup.result).map(_.map(StrippedCommitteeMember.tupled(_)))
+  }
+
+}
