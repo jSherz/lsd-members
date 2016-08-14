@@ -75,7 +75,7 @@ export class CourseSpaceWithMember {
     this.uuid = uuid;
     this.courseUuid = courseUuid;
     this.number = number;
-    this.member = StrippedMember;
+    this.member = member;
   }
 }
 
