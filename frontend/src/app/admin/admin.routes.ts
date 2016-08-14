@@ -1,8 +1,8 @@
 import { RouterConfig } from '@angular/router';
 
-import { AdminBaseComponent } from './admin-base.component';
+import { AdminBaseComponent      } from './admin-base.component';
 import { CourseCalendarComponent } from './courses/course-calendar.component';
-import { CourseViewComponent } from './courses/course-view';
+import { CourseViewComponent     } from './courses/course-view';
 
 export const AdminRoutes: RouterConfig = [
   {
@@ -11,7 +11,7 @@ export const AdminRoutes: RouterConfig = [
     children: [
       { path: 'courses/calendar/:year/:month', component: CourseCalendarComponent },
       { path: 'courses/calendar', component: CourseCalendarComponent },
-      { path: 'courses/:id', component: CourseViewComponent }
+      { path: 'courses/:uuid', component: CourseViewComponent }
     ]
   }
 ];

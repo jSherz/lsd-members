@@ -3,8 +3,7 @@
 import {
   ActivatedRoute,
   UrlPathWithParams,
-  Params,
-  Data
+  Params
 } from '@angular/router';
 import * as moment from 'moment';
 import { Observable } from 'rxjs/Rx';
