@@ -56,10 +56,12 @@ export class CourseWithOrganisers {
 export class StrippedMember {
   name: string;
   uuid: string;
+  createdAt: moment.Moment;
 
-  constructor (name: string, uuid: string) {
+  constructor (name: string, uuid: string, createdAt: moment.Moment) {
     this.name = name;
     this.uuid = uuid;
+    this.createdAt = createdAt;
   }
 }
 

@@ -1,9 +1,12 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input  } from '@angular/core';
+import { ROUTER_DIRECTIVES } from '@angular/router';
+
 import { Tile } from './tile.service';
 
 @Component({
   selector: 'calendar-tile',
-  templateUrl: 'tile.component.html'
+  templateUrl: 'tile.component.html',
+  directives: [ROUTER_DIRECTIVES]
 })
 export class TileComponent {
 
