@@ -301,7 +301,7 @@ INSERT INTO course_spaces (uuid, course_uuid, number, member_uuid) VALUES ('edef
 INSERT INTO course_spaces (uuid, course_uuid, number, member_uuid) VALUES ('f41ae08c-9b65-4911-8fe7-23f8f645e855', 'f07e4e63-c910-4063-854b-307308c6625a', 9, 'e187165e-d2f2-4c9a-abba-53da3fd41544');
 INSERT INTO course_spaces (uuid, course_uuid, number, member_uuid) VALUES ('34f1d74d-4003-488b-b03a-a2667b25a8eb', 'e8f9fe3f-9197-49f4-b2a9-037d4601ef78', 3, 'cd30f4a5-3e39-48bd-a418-33d5ad45dffe');
 INSERT INTO course_spaces (uuid, course_uuid, number, member_uuid) VALUES ('ea3011e9-c39a-4e06-8a98-6a22001d6751', 'e8f9fe3f-9197-49f4-b2a9-037d4601ef78', 4, 'f5cc865b-7703-48bf-8526-a72eb37bbd2b');
-INSERT INTO course_spaces (uuid, course_uuid, number, member_uuid) VALUES ('a4c1f289-8652-4c75-86ac-a1a42d0cdec8', 'a4c1f289-8652-4c75-86ac-a1a42d0cdec8', NULL, '46c928d9-a9b4-4ddd-bd5a-69436c8ee07a');
+INSERT INTO course_spaces (uuid, course_uuid, number, member_uuid) VALUES ('a4c1f289-8652-4c75-86ac-a1a42d0cdec8', 'a4c1f289-8652-4c75-86ac-a1a42d0cdec8', 8, '46c928d9-a9b4-4ddd-bd5a-69436c8ee07a');
 INSERT INTO course_spaces (uuid, course_uuid, number, member_uuid) VALUES ('c958abd3-d14f-455a-b43b-3581a4bd3df7', 'ad702bb1-0eac-41d9-b146-ea794211449a', 2, NULL);
 INSERT INTO course_spaces (uuid, course_uuid, number, member_uuid) VALUES ('1de6c5c8-dbde-42d8-8a51-196be9ed4ffe', 'e8f9fe3f-9197-49f4-b2a9-037d4601ef78', 5, NULL);
 INSERT INTO course_spaces (uuid, course_uuid, number, member_uuid) VALUES ('3626dd9e-ec0a-4b2d-8a77-b7c294967b13', 'e8f9fe3f-9197-49f4-b2a9-037d4601ef78', 6, NULL);
