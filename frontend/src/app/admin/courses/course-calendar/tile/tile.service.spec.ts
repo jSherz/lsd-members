@@ -3,7 +3,7 @@
 import * as moment from 'moment';
 
 import { Tile, TileService } from './tile.service';
-import { MOMENT_MATCHER } from '../../utils/moment-matcher';
+import { MOMENT_MATCHER } from '../../../../utils/moment-matcher';
 import { addProviders } from '@angular/core/testing/testing';
 
 describe('Tile Service', () => {

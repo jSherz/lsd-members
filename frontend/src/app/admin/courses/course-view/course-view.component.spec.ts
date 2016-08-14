@@ -8,7 +8,7 @@ import {
 import { Observable } from 'rxjs/Rx';
 
 import { CourseViewComponent } from './course-view.component';
-import { StubCourseService   } from '../course-calendar.component.spec';
+import { StubCourseService   } from '../course-calendar/course-calendar.component.spec';
 
 describe('Component: CourseView', () => {
 

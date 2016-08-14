@@ -1,7 +1,7 @@
 import { RouterConfig } from '@angular/router';
 
 import { AdminBaseComponent      } from './admin-base.component';
-import { CourseCalendarComponent } from './courses/course-calendar.component';
+import { CourseCalendarComponent } from './courses/course-calendar/course-calendar.component';
 import { CourseViewComponent     } from './courses/course-view';
 
 export const AdminRoutes: RouterConfig = [

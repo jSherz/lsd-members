@@ -3,10 +3,10 @@ import {ROUTER_DIRECTIVES, ActivatedRoute} from '@angular/router';
 import {HTTP_PROVIDERS}    from '@angular/http';
 import {Subscription}      from 'rxjs/Subscription';
 import * as moment         from 'moment';
-import {MonthService}      from './month.service';
-import {Tile, TileService} from './tile.service';
-import {TileComponent}     from './tile.component';
-import {CourseService, CourseWithNumSpaces, CourseServiceImpl} from './course.service';
+import {MonthService}      from '../month.service';
+import {Tile, TileService} from './tile/tile.service';
+import {TileComponent}     from './tile/tile.component';
+import {CourseService, CourseWithNumSpaces, CourseServiceImpl} from '../course.service';
 
 @Component({
   selector: 'course-calendar-component',

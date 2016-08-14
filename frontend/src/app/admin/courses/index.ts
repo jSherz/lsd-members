@@ -1,1 +1,1 @@
-export * from './course-calendar.component';
+export * from './course-calendar/course-calendar.component';

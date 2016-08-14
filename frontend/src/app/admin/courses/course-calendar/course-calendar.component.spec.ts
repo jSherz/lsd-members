@@ -8,14 +8,14 @@ import {
 import * as moment from 'moment';
 import { Observable } from 'rxjs/Rx';
 
-import { MonthService }            from './month.service';
-import { TileService }             from './tile.service';
+import { MonthService }            from '../month.service';
+import { TileService }             from './tile/tile.service';
 import { CourseCalendarComponent } from './course-calendar.component';
-import { MOMENT_MATCHER }          from '../../utils/moment-matcher';
+import { MOMENT_MATCHER }          from '../../../utils/moment-matcher';
 import {
   CourseService,
   CourseWithNumSpaces, Course
-} from './course.service';
+} from '../course.service';
 
 /**
  * A fake course service, used for testing.
