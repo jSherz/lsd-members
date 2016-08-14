@@ -7,7 +7,7 @@ import * as moment        from 'moment';
 import {
   CourseService,
   Course,
-  CourseSpace,
+  CourseSpaceWithMember,
   CourseServiceImpl, CourseWithOrganisers, CommitteeMember
 } from '../course.service';
 
@@ -35,7 +35,7 @@ export class CourseViewComponent implements OnInit {
   /**
    * The spaces on this course, if a course is loaded.
    */
-  private spaces: CourseSpace[] = [];
+  private spaces: CourseSpaceWithMember[] = [];
 
   /**
    * Set when an API request fails.
