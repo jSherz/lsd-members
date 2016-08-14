@@ -26,7 +26,8 @@ textarea {
 }
 
 #{$all-text-inputs},
-select[multiple] {
+select[multiple],
+select {
   background-color: $base-background-color;
   border: $base-border;
   border-radius: $base-border-radius;
@@ -78,6 +79,5 @@ textarea {
 
 select {
   margin-bottom: $small-spacing;
-  max-width: 100%;
-  width: auto;
+  width: 100%;
 }
