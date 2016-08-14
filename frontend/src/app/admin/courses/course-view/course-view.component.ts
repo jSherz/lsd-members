@@ -87,7 +87,14 @@ export class CourseViewComponent implements OnInit {
 
     this.service.spaces(uuid).subscribe(
       spaces => {
-        this.spaces = spaces;
+        this.spaces = spaces.map(space => {
+          // Ensure createdAt is a moment
+          if (space.member) {
+            space.member.createdAt = moment(space.member.createdAt);
+          }
+
+          return space;
+        });
       },
       error => {
         this.apiRequestFailed = true;

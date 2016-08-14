@@ -39,7 +39,7 @@
       <tr *ngFor="let space of spaces">
         <td class="sl-course-students-id">{{ space.number }}</td>
         <td class="sl-course-students-name">{{ space.member?.name || 'N/A' }}</td>
-        <td class="sl-course-students-date-joined">{{ space.member?.createdAt || '' }}</td>
+        <td class="sl-course-students-date-joined">{{ space.member?.createdAt?.format('YYYY-MM-DD') || '' }}</td>
         <td class="sl-course-students-info-complete"><i class="fa fa-times" aria-hidden="true" style="color: red;"></i></td>
         <td class="sl-course-students-forms-complete"><i class="fa fa-check" aria-hidden="true" style="color: green;"></i></td>
         <td class="sl-course-students-reg-langar"><i class="fa fa-times" aria-hidden="true" style="color: red;"></i></td>

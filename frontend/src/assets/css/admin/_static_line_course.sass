@@ -48,8 +48,16 @@ $sl-course-students-border: solid 0.08em #ccc
 #sl-course-students-options
   width: 15%
 
-.sl-course-students-remove, .sl-course-students-contact, .sl-course-students-edit-member
+.sl-course-students-remove, .sl-course-students-contact, .sl-course-students-edit-member, .sl-course-students-add-member
   padding: 0.5em
+
+$add-member-bg: lighten(green, 4%)
+
+.sl-course-students-add-member
+  background: $add-member-bg
+
+  &:hover
+    background: darken($add-member-bg, 7%)
 
 @include media(max-width 68em)
   #sl-course-students
