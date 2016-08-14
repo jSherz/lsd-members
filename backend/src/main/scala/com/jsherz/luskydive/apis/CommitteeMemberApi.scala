@@ -22,47 +22,31 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.services
+package com.jsherz.luskydive.apis
 
-import akka.http.scaladsl.model.headers
-import akka.http.scaladsl.model.headers.{HttpOrigin, HttpOriginRange}
-import akka.http.scaladsl.server.Directive0
+import com.jsherz.luskydive.dao.CommitteeMemberDao
+import com.jsherz.luskydive.json.CommitteeMembersJsonSupport._
 import akka.http.scaladsl.server.Directives._
-import ch.megard.akka.http.cors.CorsSettings
-import com.jsherz.luskydive.apis.{CommitteeMemberApi, CoursesApi, SignupApi}
-import com.jsherz.luskydive.dao.{CommitteeMemberDao, CourseDao, MemberDao}
+import com.jsherz.luskydive.services.Cors.cors
 
 import scala.concurrent.ExecutionContext
 
 /**
-  * The holder of all configured routes.
+  * Used to retrieve information about committee members.
   */
-class HttpService(memberDao: MemberDao, courseDao: CourseDao, committeeMemberDao: CommitteeMemberDao)(implicit executionContext: ExecutionContext) {
+class CommitteeMemberApi(private val dao: CommitteeMemberDao)(implicit ec: ExecutionContext) {
 
-  val signupRoutes = new SignupApi(memberDao)
-
-  val coursesRoutes = new CoursesApi(courseDao)
-
-  val committeeRoutes = new CommitteeMemberApi(committeeMemberDao)
-
-  val routes =
-    (pathPrefix("api") & pathPrefix("v1")) {
-      signupRoutes.route ~
-      coursesRoutes.route ~
-      committeeRoutes.route
+  /**
+    * Get currently active committee members.
+    */
+  val activeRoute = (path("active") & cors) {
+    get {
+      complete(dao.active())
     }
+  }
 
-}
-
-object Cors {
-
-  private val settings = CorsSettings.defaultSettings.copy(allowedOrigins = HttpOriginRange(
-    HttpOrigin("http://localhost:4200"),
-    HttpOrigin("https://dev.leedsskydivers.com"),
-    HttpOrigin("https://www.leedsskydivers.com"),
-    HttpOrigin("https://leedsskydivers.com")
-  ))
-
-  def cors: Directive0 = ch.megard.akka.http.cors.CorsDirectives.corsDecorate(settings).map(_ ⇒ ())
+  val route = pathPrefix("committee-members") {
+    activeRoute
+  }
 
 }
