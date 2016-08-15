@@ -63,6 +63,17 @@ trait CourseDao {
     */
   def spaces(uuid: UUID): Future[Seq[CourseSpaceWithMember]]
 
+  /**
+    * Create a course on the given date and add [[numSpaces]] to it.
+    *
+    * @param date
+    * @param organiserUuid
+    * @param secondaryOrganiserUuid
+    * @param numSpaces
+    * @return
+    */
+  def create(date: Date, organiserUuid: UUID, secondaryOrganiserUuid: Option[UUID], numSpaces: Int): Future[Either[String, UUID]]
+
 }
 
 /**
@@ -165,5 +176,16 @@ class CourseDaoImpl(protected override val databaseService: DatabaseService)(imp
       secondaryOrganiser.map(x => StrippedCommitteeMember.tupled(x))
     )
   }
+
+  /**
+    * Create a course on the given date and add numSpaces spaces to it.
+    *
+    * @param date
+    * @param organiserUuid
+    * @param secondaryOrganiserUuid
+    * @param numSpaces
+    * @return
+    */
+  override def create(date: Date, organiserUuid: UUID, secondaryOrganiserUuid: Option[UUID], numSpaces: Int): Future[Either[String, UUID]] = ???
 
 }

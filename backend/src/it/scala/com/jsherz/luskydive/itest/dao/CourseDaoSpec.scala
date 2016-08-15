@@ -29,13 +29,14 @@ import java.util.UUID
 import com.jsherz.luskydive.core.CourseWithOrganisers
 import com.jsherz.luskydive.dao.{CourseDao, CourseDaoImpl}
 import com.jsherz.luskydive.itest.util.Util
-import com.jsherz.luskydive.json.{CourseSpaceWithMember, CourseWithNumSpaces}
+import com.jsherz.luskydive.json.{CourseCreateRequest, CourseSpaceWithMember, CourseWithNumSpaces}
 import com.jsherz.luskydive.itest.util.DateUtil
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 import org.scalatest.concurrent.ScalaFutures._
 import com.jsherz.luskydive.json.CoursesJsonSupport._
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
@@ -47,7 +48,7 @@ class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
     dao = new CourseDaoImpl(databaseService = dbService)
   }
 
-  "CourseDao" should {
+  "CourseDao#get" should {
 
     "return None when course does not exist" in {
       val course = dao.get(UUID.fromString("5a535978-324c-40aa-a658-20c7eace865e"))
@@ -72,6 +73,9 @@ class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
         c shouldBe Some(Util.fixture[CourseWithOrganisers]("ad702bb1.json"))
       }
     }
+  }
+
+  "CourseDao#find" should {
 
     "return nothing when no courses are found on the given dates" in {
       val courses = dao.find(DateUtil.makeDate(2015, 10, 31), DateUtil.makeDate(2016, 1, 11))
@@ -93,6 +97,10 @@ class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       courses.futureValue shouldEqual Util.fixture[Vector[CourseWithNumSpaces]]("2010-01-16_2010-02-20.json")
     }
 
+  }
+
+  "CourseDao#spaces" should {
+
     "return the correct spaces for a course, including the attached member (sorted by number)" in {
       val spaces = dao.spaces(UUID.fromString("ad3f289b-ce04-428d-968c-513eaf9889b0"))
 
@@ -105,6 +113,62 @@ class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       spaces.futureValue shouldBe empty
     }
 
+  }
+
+  "CourseDao#create" should {
+
+    "return Left(error.invalidNumSpaces) when numSpaces < 1 || > 50" in {
+      val zeroSpaces = createWithFixture("numSpaces_zero.json")
+      val fiftyOneSpaces = createWithFixture("numSpaces_fiftyone.json")
+
+      zeroSpaces.futureValue shouldEqual Left("error.invalidNumSpaces")
+      fiftyOneSpaces.futureValue shouldEqual Left("error.invalidNumSpaces")
+    }
+
+    "return Left(error.invalidOrganiser) when one of the organisers (or both) doesn't exist" in {
+      val organiserDoesntExist = createWithFixture("organiser_doesnt_exist.json")
+      val secondaryOrganiserDoesntExist = createWithFixture("secondary_organiser_does_exist.json")
+      val bothOrganisersDontExist = createWithFixture("both_organisers_dont_exist.json")
+
+      Seq(organiserDoesntExist, secondaryOrganiserDoesntExist, bothOrganisersDontExist).foreach(req =>
+        req.futureValue shouldEqual Left("error.invalidOrganiser")
+      )
+    }
+
+    "return Right(UUID) when a course is created successfully" in {
+      val examples = Util.fixture[Seq[CourseCreateRequest]]("valid_examples.json")
+
+      examples.foreach(req => {
+        val result = dao.create(req.date, req.organiserUuid, req.secondaryOrganiserUuid, req.numSpaces)
+        result.futureValue shouldBe 'right
+
+        val uuid = result.futureValue.right.get
+        val found = dao.get(uuid)
+        val foundSpaces = dao.spaces(uuid)
+
+        val maybeSavedCourse = found.futureValue
+        maybeSavedCourse.isDefined shouldEqual true
+
+        val savedCourse = maybeSavedCourse.get
+        savedCourse.course.date shouldEqual req.date
+        savedCourse.course.organiserUuid shouldEqual req.organiserUuid
+        savedCourse.course.secondaryOrganiserUuid shouldEqual req.secondaryOrganiserUuid
+
+        val actualNumSpaces = foundSpaces.futureValue.length
+        actualNumSpaces shouldEqual numSpaces
+      })
+    }
+
+  }
+
+  /**
+    * Create a course with the given fixture's data.
+    *
+    * @return
+    */
+  private def createWithFixture(fixture: String): Future[Either[String, UUID]] = {
+    val req = Util.fixture[CourseCreateRequest](fixture)
+    dao.create(req.date, req.organiserUuid, req.secondaryOrganiserUuid, req.numSpaces)
   }
 
 }

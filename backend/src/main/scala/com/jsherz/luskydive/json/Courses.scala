@@ -44,6 +44,7 @@ object CoursesJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val CourseWithNumSpacesFormat = jsonFormat3(CourseWithNumSpaces)
   implicit val StrippedMemberFormat = jsonFormat3(StrippedMember)
   implicit val CourseSpaceWithMemberFormat = jsonFormat4(CourseSpaceWithMember)
+  implicit val CourseCreateRequestFormat = jsonFormat4(CourseCreateRequest)
 
 }
 
@@ -79,3 +80,13 @@ case class StrippedMember(uuid: Option[UUID], name: String, createdAt: Timestamp
   * @param member
   */
 case class CourseSpaceWithMember(uuid: Option[UUID], courseUuid: UUID, number: Int, member: Option[StrippedMember])
+
+/**
+  * A request to create a new course.
+  *
+  * @param date
+  * @param organiserUuid
+  * @param secondaryOrganiserUuid
+  * @param numSpaces
+  */
+case class CourseCreateRequest(date: Date, organiserUuid: UUID, secondaryOrganiserUuid: Option[UUID], numSpaces: Int)
