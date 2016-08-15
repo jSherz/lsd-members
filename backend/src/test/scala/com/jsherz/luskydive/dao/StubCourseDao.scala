@@ -80,6 +80,17 @@ class StubCourseDao()(implicit ec: ExecutionContext) extends CourseDao {
     }
   }
 
+  /**
+    * Create a course on the given date and add numSpaces to it.
+    *
+    * @param course
+    * @param numSpaces
+    * @return
+    */
+  override def create(course: Course, numSpaces: Int): Future[UUID] = {
+    Future(UUID.randomUUID())
+  }
+
 }
 
 object StubCourseDao {

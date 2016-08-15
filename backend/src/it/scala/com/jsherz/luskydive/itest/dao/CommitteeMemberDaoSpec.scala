@@ -24,6 +24,9 @@
 
 package com.jsherz.luskydive.itest.dao
 
+import java.util.UUID
+
+import com.jsherz.luskydive.core.CommitteeMember
 import com.jsherz.luskydive.dao.{CommitteeMemberDao, CommitteeMemberDaoImpl}
 import com.jsherz.luskydive.itest.util.Util
 import com.jsherz.luskydive.json.StrippedCommitteeMember
@@ -46,14 +49,30 @@ class CommitteeMemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterA
     dao = new CommitteeMemberDaoImpl(databaseService = dbService)
   }
 
-  "CommitteeMemberDao" should {
+  "CommitteeMemberDao#active" should {
 
     "return the correct committee members, sorted by name" in {
       val results = dao.active()
 
       whenReady(results) { r =>
-        r shouldBe Util.fixture[Seq[StrippedCommitteeMember]]("active.json")
+        r shouldBe Util.fixture[Vector[StrippedCommitteeMember]]("active.json")
       }
+    }
+
+  }
+
+  "CommitteeMemberDao#get" should {
+
+    "return None when no committee member is found" in {
+      val result = dao.get(UUID.fromString("b457ffa1-9a24-4da8-9d6c-07d0fb16bb80"))
+
+      result.futureValue shouldBe None
+    }
+
+    "return the correct information when a committee member is found" in {
+      val result = dao.get(UUID.fromString("0d6717b7-530c-418b-9b97-dffbe972de87"))
+
+      result.futureValue shouldBe Some(Util.fixture[CommitteeMember]("0d6717b7.json"))
     }
 
   }

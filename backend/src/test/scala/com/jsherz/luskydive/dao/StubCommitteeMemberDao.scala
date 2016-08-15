@@ -24,6 +24,9 @@
 
 package com.jsherz.luskydive.dao
 
+import java.util.UUID
+
+import com.jsherz.luskydive.core.CommitteeMember
 import com.jsherz.luskydive.util.Util
 import com.jsherz.luskydive.json.StrippedCommitteeMember
 import com.jsherz.luskydive.json.CommitteeMembersJsonSupport._
@@ -45,10 +48,29 @@ class StubCommitteeMemberDao extends CommitteeMemberDao {
     Future(StubCommitteeMemberDao.activeMembers)
   }
 
+  /**
+    * Get a committee member with the given UUID.
+    *
+    * @param uuid
+    * @return
+    */
+  override def get(uuid: UUID): Future[Option[CommitteeMember]] = {
+    if (StubCommitteeMemberDao.foundMember.uuid.get.equals(uuid)) {
+      Future(Some(StubCommitteeMemberDao.foundMember))
+    } else if (StubCommitteeMemberDao.notFoundMemberUuid.equals(uuid)) {
+      Future(None)
+    } else {
+      throw new RuntimeException("Unknown UUID used with stub")
+    }
+  }
+
 }
 
 object StubCommitteeMemberDao {
 
   val activeMembers = Util.fixture[Seq[StrippedCommitteeMember]]("active.json")
+
+  val foundMember = Util.fixture[CommitteeMember]("0d717b7.json")
+  val notFoundMemberUuid = UUID.fromString("e0048a33-0624-4855-844c-91419c29c380")
 
 }

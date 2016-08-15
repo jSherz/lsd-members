@@ -27,7 +27,8 @@ package com.jsherz.luskydive.json
 import java.util.UUID
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import com.jsherz.luskydive.util.UuidJsonFormat
+import com.jsherz.luskydive.core.CommitteeMember
+import com.jsherz.luskydive.util.{TimestampJsonFormat, UuidJsonFormat}
 import spray.json.DefaultJsonProtocol
 
 /**
@@ -37,8 +38,9 @@ object CommitteeMembersJsonSupport extends DefaultJsonProtocol with SprayJsonSup
 
   implicit val UuidFormat = UuidJsonFormat
   // implicit val DateFormat = DateJsonFormat
-  // implicit val TimestampFormat = TimestampJsonFormat
+  implicit val TimestampFormat = TimestampJsonFormat
   implicit val StrippedCommitteeMemberFormat = jsonFormat2(StrippedCommitteeMember)
+  implicit val CommitteeMemberFormat = jsonFormat8(CommitteeMember)
 
 }
 

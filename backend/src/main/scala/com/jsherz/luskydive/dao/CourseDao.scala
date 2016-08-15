@@ -27,7 +27,8 @@ package com.jsherz.luskydive.dao
 import java.sql.Date
 import java.util.UUID
 
-import com.jsherz.luskydive.core.{Course, CourseSpace, CourseWithOrganisers}
+import com.fasterxml.uuid.{Generators, UUIDGenerator}
+import com.jsherz.luskydive.core.{CommitteeMember, Course, CourseWithOrganisers}
 import com.jsherz.luskydive.json._
 import com.jsherz.luskydive.services.DatabaseService
 
@@ -64,15 +65,13 @@ trait CourseDao {
   def spaces(uuid: UUID): Future[Seq[CourseSpaceWithMember]]
 
   /**
-    * Create a course on the given date and add [[numSpaces]] to it.
+    * Create a course on the given date and add numSpaces to it.
     *
-    * @param date
-    * @param organiserUuid
-    * @param secondaryOrganiserUuid
+    * @param course
     * @param numSpaces
     * @return
     */
-  def create(date: Date, organiserUuid: UUID, secondaryOrganiserUuid: Option[UUID], numSpaces: Int): Future[Either[String, UUID]]
+  def create(course: Course, numSpaces: Int): Future[UUID]
 
 }
 
@@ -82,7 +81,10 @@ trait CourseDao {
   * @param databaseService
   * @param ec
   */
-class CourseDaoImpl(protected override val databaseService: DatabaseService)(implicit val ec: ExecutionContext)
+class CourseDaoImpl(protected override val databaseService: DatabaseService,
+                    private val committeeMemberDao: CommitteeMemberDao,
+                    private val courseSpaceDao: CourseSpaceDao
+                   )(implicit val ec: ExecutionContext)
   extends Tables(databaseService) with CourseDao {
 
   import driver.api._
@@ -180,12 +182,34 @@ class CourseDaoImpl(protected override val databaseService: DatabaseService)(imp
   /**
     * Create a course on the given date and add numSpaces spaces to it.
     *
-    * @param date
-    * @param organiserUuid
-    * @param secondaryOrganiserUuid
+    * @param course
     * @param numSpaces
     * @return
     */
-  override def create(date: Date, organiserUuid: UUID, secondaryOrganiserUuid: Option[UUID], numSpaces: Int): Future[Either[String, UUID]] = ???
+  override def create(course: Course, numSpaces: Int): Future[UUID] = {
+    for {
+      // Lookup main organiser
+      organiser <- committeeMemberDao.get(course.organiserUuid)
+      // Lookup secondary organiser, if defined
+      secondaryOrganiser <- lookupSecondaryOrganiser(course.secondaryOrganiserUuid)
+      // Add the course record if the given organisers were found
+      courseUuid <- db.run(coursesReturningUuid += course) if
+        organiser.isDefined && (course.secondaryOrganiserUuid.isEmpty || secondaryOrganiser.isDefined)
+      // Add the spaces
+      spacesResult <- courseSpaceDao.createForCourse(courseUuid, numSpaces)
+    } yield courseUuid
+  }
+
+  private def generateUuid(): UUID = Generators.randomBasedGenerator().generate()
+
+  private def coursesReturningUuid(): driver.ReturningInsertActionComposer[Course, UUID] =
+    Courses returning Courses.map(_.uuid)
+
+  private def lookupSecondaryOrganiser(maybeUuid: Option[UUID]): Future[Option[CommitteeMember]] = {
+    maybeUuid match {
+      case Some(uuid) => committeeMemberDao.get(uuid)
+      case None => Future(None)
+    }
+  }
 
 }

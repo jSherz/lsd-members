@@ -26,14 +26,16 @@ package com.jsherz.luskydive.itest.dao
 
 import java.util.UUID
 
-import com.jsherz.luskydive.core.CourseWithOrganisers
-import com.jsherz.luskydive.dao.{CourseDao, CourseDaoImpl}
+import com.fasterxml.uuid.Generators
+import com.jsherz.luskydive.core.{Course, CourseStatuses, CourseWithOrganisers}
+import com.jsherz.luskydive.dao.{CommitteeMemberDaoImpl, CourseDao, CourseDaoImpl, CourseSpaceDaoImpl}
 import com.jsherz.luskydive.itest.util.Util
 import com.jsherz.luskydive.json.{CourseCreateRequest, CourseSpaceWithMember, CourseWithNumSpaces}
 import com.jsherz.luskydive.itest.util.DateUtil
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 import org.scalatest.concurrent.ScalaFutures._
 import com.jsherz.luskydive.json.CoursesJsonSupport._
+import org.scalatest.time.{Seconds, Span}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -45,7 +47,9 @@ class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
   override protected def beforeAll(): Unit = {
     val dbService = Util.setupGoldTestDb()
 
-    dao = new CourseDaoImpl(databaseService = dbService)
+    val committeeMemberDao = new CommitteeMemberDaoImpl(dbService)
+    val courseSpaceDao = new CourseSpaceDaoImpl(dbService)
+    dao = new CourseDaoImpl(dbService, committeeMemberDao, courseSpaceDao)
   }
 
   "CourseDao#get" should {
@@ -117,45 +121,55 @@ class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
   "CourseDao#create" should {
 
-    "return Left(error.invalidNumSpaces) when numSpaces < 1 || > 50" in {
+    "fails when numSpaces < 1 || > 50" in {
       val zeroSpaces = createWithFixture("numSpaces_zero.json")
       val fiftyOneSpaces = createWithFixture("numSpaces_fiftyone.json")
 
-      zeroSpaces.futureValue shouldEqual Left("error.invalidNumSpaces")
-      fiftyOneSpaces.futureValue shouldEqual Left("error.invalidNumSpaces")
+      zeroSpaces.failed.futureValue shouldBe a[Throwable]
+      fiftyOneSpaces.failed.futureValue shouldBe a[Throwable]
     }
 
-    "return Left(error.invalidOrganiser) when one of the organisers (or both) doesn't exist" in {
+    "fails when one of the organisers (or both) doesn't exist" in {
       val organiserDoesntExist = createWithFixture("organiser_doesnt_exist.json")
-      val secondaryOrganiserDoesntExist = createWithFixture("secondary_organiser_does_exist.json")
+      val secondaryOrganiserDoesntExist = createWithFixture("secondary_organiser_doesnt_exist.json")
       val bothOrganisersDontExist = createWithFixture("both_organisers_dont_exist.json")
 
       Seq(organiserDoesntExist, secondaryOrganiserDoesntExist, bothOrganisersDontExist).foreach(req =>
-        req.futureValue shouldEqual Left("error.invalidOrganiser")
+        req.failed.futureValue shouldBe a[Throwable]
       )
     }
 
-    "return Right(UUID) when a course is created successfully" in {
+    "adds valid courses with the correct number of spaces" in {
       val examples = Util.fixture[Seq[CourseCreateRequest]]("valid_examples.json")
 
-      examples.foreach(req => {
-        val result = dao.create(req.date, req.organiserUuid, req.secondaryOrganiserUuid, req.numSpaces)
-        result.futureValue shouldBe 'right
+      implicit val patienceConfig = PatienceConfig(scaled(Span(1, Seconds)))
 
-        val uuid = result.futureValue.right.get
+      examples.foreach(req => {
+        // Build a course
+        val uuid = Generators.randomBasedGenerator().generate()
+        val course = Course(Some(uuid), req.date, req.organiserUuid, req.secondaryOrganiserUuid, CourseStatuses.PENDING)
+
+        // Insert it with the given num spaces
+        val result = dao.create(course, req.numSpaces)
+        result.futureValue shouldEqual uuid
+
+        // Lookup the same course
         val found = dao.get(uuid)
         val foundSpaces = dao.spaces(uuid)
 
         val maybeSavedCourse = found.futureValue
         maybeSavedCourse.isDefined shouldEqual true
 
+        // Verify the course data is correct
         val savedCourse = maybeSavedCourse.get
         savedCourse.course.date shouldEqual req.date
         savedCourse.course.organiserUuid shouldEqual req.organiserUuid
         savedCourse.course.secondaryOrganiserUuid shouldEqual req.secondaryOrganiserUuid
+        savedCourse.course.status shouldEqual CourseStatuses.PENDING
 
+        // Verify the correct number of spaces were added
         val actualNumSpaces = foundSpaces.futureValue.length
-        actualNumSpaces shouldEqual numSpaces
+        actualNumSpaces shouldEqual req.numSpaces
       })
     }
 
@@ -166,9 +180,12 @@ class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
     *
     * @return
     */
-  private def createWithFixture(fixture: String): Future[Either[String, UUID]] = {
+  private def createWithFixture(fixture: String): Future[UUID] = {
     val req = Util.fixture[CourseCreateRequest](fixture)
-    dao.create(req.date, req.organiserUuid, req.secondaryOrganiserUuid, req.numSpaces)
+    val uuid = Generators.randomBasedGenerator().generate()
+    val course = Course(Some(uuid), req.date, req.organiserUuid, req.secondaryOrganiserUuid, CourseStatuses.PENDING)
+
+    dao.create(course, req.numSpaces)
   }
 
 }

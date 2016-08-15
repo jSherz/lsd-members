@@ -24,6 +24,9 @@
 
 package com.jsherz.luskydive.dao
 
+import java.util.UUID
+
+import com.jsherz.luskydive.core.CommitteeMember
 import com.jsherz.luskydive.json.StrippedCommitteeMember
 import com.jsherz.luskydive.services.DatabaseService
 
@@ -40,6 +43,14 @@ trait CommitteeMemberDao {
     * @return
     */
   def active(): Future[Seq[StrippedCommitteeMember]]
+
+  /**
+    * Get a committee member with the given UUID.
+    *
+    * @param uuid
+    * @return
+    */
+  def get(uuid: UUID): Future[Option[CommitteeMember]]
 
 }
 
@@ -62,6 +73,16 @@ class CommitteeMemberDaoImpl(protected override val databaseService: DatabaseSer
     } yield (committee.uuid, committee.name)
 
     db.run(lookup.result).map(_.map(StrippedCommitteeMember.tupled(_)))
+  }
+
+  /**
+    * Get a committee member with the given UUID.
+    *
+    * @param uuid
+    * @return
+    */
+  override def get(uuid: UUID): Future[Option[CommitteeMember]] = {
+    db.run(CommitteeMembers.filter(_.uuid === uuid).result.headOption)
   }
 
 }
