@@ -35,6 +35,7 @@ import org.scalatest.concurrent.ScalaFutures._
 
 import scala.io.Source
 import scala.concurrent.ExecutionContext.Implicits.global
+import scalaz.-\/
 
 /**
   * Ensures the course space management functions correctly.
@@ -54,11 +55,23 @@ class CourseSpaceDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
   "CourseSpaceDao#createForCourse" should {
 
-    "fail if the course already exists" in {
+    "returns Left(error.invalidNumSpaces) if the number of spaces is outside of the allowed values" in {
+      val testCases = Seq(
+        -2141, -1, 0, 51, 52, 112391
+      )
+
+      testCases.foreach { numSpaces =>
+        val result = dao.createForCourse(UUID.fromString("95ae2682-1f03-4a88-9a0e-2761b6a32141"), numSpaces)
+
+        result.futureValue shouldEqual -\/("error.invalidNumSpaces")
+      }
+    }
+
+    "return Left(error.courseAlreadySetup) if the course already has spaces" in {
       val numSpaces = 5
       val result = dao.createForCourse(UUID.fromString("3594633d-5ea8-46a9-b83e-021de2f8862f"), numSpaces)
 
-      result.failed.futureValue shouldBe a[Throwable]
+      result.futureValue shouldEqual -\/("error.courseAlreadySetup")
     }
 
     "add the correct number of course spaces with no members attached" in {

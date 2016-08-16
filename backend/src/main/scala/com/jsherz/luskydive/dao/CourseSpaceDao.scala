@@ -31,6 +31,7 @@ import com.jsherz.luskydive.core.CourseSpace
 import com.jsherz.luskydive.services.DatabaseService
 
 import scala.concurrent.{ExecutionContext, Future}
+import scalaz.{-\/, \/, \/-}
 
 /**
   * The available slots on a course.
@@ -45,7 +46,7 @@ trait CourseSpaceDao {
     * @param courseUuid
     * @param numSpaces
     */
-  def createForCourse(courseUuid: UUID, numSpaces: Integer): Future[Unit]
+  def createForCourse(courseUuid: UUID, numSpaces: Integer): Future[String \/ Unit]
 
 }
 
@@ -65,18 +66,29 @@ class CourseSpaceDaoImpl(protected override val databaseService: DatabaseService
     * @param courseUuid
     * @param numSpaces
     */
-  override def createForCourse(courseUuid: UUID, numSpaces: Integer): Future[Unit] = {
+  override def createForCourse(courseUuid: UUID, numSpaces: Integer): Future[String \/ Unit] = {
     if (numSpaces >= CourseSpaceDaoImpl.MIN_SPACES && numSpaces <= CourseSpaceDaoImpl.MAX_SPACES) {
-      db.run(DBIO.sequence(
+      // Prepare a DBIO action to add the spaces
+      val createSpacesAction = DBIO.sequence(
         (1 to numSpaces).map { number =>
           val uuid = Some(Generators.randomBasedGenerator().generate())
 
           CourseSpaces += CourseSpace(uuid, courseUuid, number, None)
         }
-      )).map(_ => ())
+      )
+
+      (
+        for {
+          existingSpaces <- db.run(CourseSpaces.filter(_.courseUuid === courseUuid).countDistinct.result)
+          if existingSpaces == 0
+          createResult <- db.run(createSpacesAction).map(_ => ())
+        } yield \/-(createResult)
+      ).recover {
+        case _: NoSuchElementException => -\/("error.courseAlreadySetup")
+        case _ => -\/("error.unknown")
+      }
     } else {
-      throw new IllegalArgumentException(s"Invalid number of spaces, must be between ${CourseSpaceDaoImpl.MIN_SPACES} " +
-        s"and ${CourseSpaceDaoImpl.MAX_SPACES}")
+      Future(-\/("error.invalidNumSpaces"))
     }
   }
 
