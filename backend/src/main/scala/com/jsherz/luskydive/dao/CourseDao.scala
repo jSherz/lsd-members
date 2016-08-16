@@ -27,12 +27,15 @@ package com.jsherz.luskydive.dao
 import java.sql.Date
 import java.util.UUID
 
-import com.fasterxml.uuid.{Generators, UUIDGenerator}
+import akka.event.LoggingAdapter
+import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.{CommitteeMember, Course, CourseWithOrganisers}
 import com.jsherz.luskydive.json._
 import com.jsherz.luskydive.services.DatabaseService
+import com.jsherz.luskydive.util.FutureError._
 
 import scala.concurrent.{ExecutionContext, Future}
+import scalaz.{-\/, \/, \/-}
 
 /**
   * Access to courses.
@@ -71,7 +74,7 @@ trait CourseDao {
     * @param numSpaces
     * @return
     */
-  def create(course: Course, numSpaces: Int): Future[UUID]
+  def create(course: Course, numSpaces: Int): Future[String \/ UUID]
 
 }
 
@@ -81,10 +84,15 @@ trait CourseDao {
   * @param databaseService
   * @param ec
   */
-class CourseDaoImpl(protected override val databaseService: DatabaseService,
-                    private val committeeMemberDao: CommitteeMemberDao,
-                    private val courseSpaceDao: CourseSpaceDao
-                   )(implicit val ec: ExecutionContext)
+class CourseDaoImpl(
+                     protected override val databaseService: DatabaseService,
+                     private val committeeMemberDao: CommitteeMemberDao,
+                     private val courseSpaceDao: CourseSpaceDao
+                   )
+                   (
+                     implicit val ec: ExecutionContext,
+                     implicit val log: LoggingAdapter
+                   )
   extends Tables(databaseService) with CourseDao {
 
   import driver.api._
@@ -98,14 +106,14 @@ class CourseDaoImpl(protected override val databaseService: DatabaseService,
   override def get(uuid: UUID): Future[Option[CourseWithOrganisers]] = {
     val courseLookup = for {
       ((course, organiser), secondaryOrganiser) <-
-        Courses.filter(_.uuid === uuid) join
-          CommitteeMembers on (_.organiserUuid === _.uuid) joinLeft
-          CommitteeMembers on (_._1.secondaryOrganiserUuid === _.uuid)
+      Courses.filter(_.uuid === uuid) join
+        CommitteeMembers on (_.organiserUuid === _.uuid) joinLeft
+        CommitteeMembers on (_._1.secondaryOrganiserUuid === _.uuid)
     } yield (
       course,
       (organiser.uuid, organiser.name),
       secondaryOrganiser.map(so => (so.uuid, so.name))
-    )
+      )
 
     db.run(courseLookup.result.headOption).map(_.map {
       case (course, org, secOrg) => assembleCourse(course, org, secOrg)
@@ -114,6 +122,7 @@ class CourseDaoImpl(protected override val databaseService: DatabaseService,
 
   /**
     * Attempt to find courses within the given dates (inclusive).
+    *
     * @param startDate
     * @param endDate
     * @return
@@ -125,7 +134,7 @@ class CourseDaoImpl(protected override val databaseService: DatabaseService,
         course <- Courses if course.date >= startDate && course.date <= endDate
         spaces <- CourseSpaces if course.uuid === spaces.courseUuid
       } yield (course, spaces)
-    ).sortBy(_._1.date).groupBy(_._1)
+      ).sortBy(_._1.date).groupBy(_._1)
 
     // Pick out the course, total # spaces & spaces that are free
     val transform = lookup.map {
@@ -133,7 +142,7 @@ class CourseDaoImpl(protected override val databaseService: DatabaseService,
         course,
         spaces.length,
         spaces.length - spaces.map(_._2.memberUuid).countDefined // calc num free
-      )
+        )
     }
 
     db.run(transform.result.map(_.map(CourseWithNumSpaces.tupled(_))))
@@ -148,8 +157,8 @@ class CourseDaoImpl(protected override val databaseService: DatabaseService,
   override def spaces(uuid: UUID): Future[Seq[CourseSpaceWithMember]] = {
     val query = for {
       (space, member) <-
-        CourseSpaces.filter(_.courseUuid === uuid) joinLeft
-          Members on (_.memberUuid === _.uuid)
+      CourseSpaces.filter(_.courseUuid === uuid) joinLeft
+        Members on (_.memberUuid === _.uuid)
     } yield (space, member)
 
     db.run(query.sortBy(_._1.number).result).map {
@@ -186,18 +195,28 @@ class CourseDaoImpl(protected override val databaseService: DatabaseService,
     * @param numSpaces
     * @return
     */
-  override def create(course: Course, numSpaces: Int): Future[UUID] = {
-    for {
+  override def create(course: Course, numSpaces: Int): Future[String \/ UUID] = {
+    if (numSpaces >= CourseSpaceDaoImpl.MIN_SPACES && numSpaces <= CourseSpaceDaoImpl.MAX_SPACES) {
+      for {
       // Lookup main organiser
-      organiser <- committeeMemberDao.get(course.organiserUuid)
-      // Lookup secondary organiser, if defined
-      secondaryOrganiser <- lookupSecondaryOrganiser(course.secondaryOrganiserUuid)
-      // Add the course record if the given organisers were found
-      courseUuid <- db.run(coursesReturningUuid += course) if
-        organiser.isDefined && (course.secondaryOrganiserUuid.isEmpty || secondaryOrganiser.isDefined)
-      // Add the spaces
-      spacesResult <- courseSpaceDao.createForCourse(courseUuid, numSpaces)
-    } yield courseUuid
+        organiser <- committeeMemberDao.get(course.organiserUuid) ifNone CourseDaoErrors.invalidOrganiser
+        // Lookup secondary organiser, if defined
+        secondaryOrganiser <- lookupSecondaryOrganiser(course.secondaryOrganiserUuid)
+        // Add the course record if the given organisers were found
+        courseUuid <- secondaryOrganiser match {
+          case \/-(maybeSecondaryOrganiser: Option[CommitteeMember]) =>
+            db.run(coursesReturningUuid += course.copy(secondaryOrganiserUuid = maybeSecondaryOrganiser.flatMap(_.uuid))) withServerError
+          case -\/(err) => Future(-\/(err))
+        }
+        // Add the spaces
+        spacesResult <- courseUuid match {
+          case \/-(uuid: UUID) => courseSpaceDao.createForCourse(uuid, numSpaces)
+          case -\/(err) => Future(err)
+        }
+      } yield courseUuid
+    } else {
+      Future(-\/(CourseSpaceDaoErrors.invalidNumSpaces))
+    }
   }
 
   private def generateUuid(): UUID = Generators.randomBasedGenerator().generate()
@@ -205,11 +224,22 @@ class CourseDaoImpl(protected override val databaseService: DatabaseService,
   private def coursesReturningUuid(): driver.ReturningInsertActionComposer[Course, UUID] =
     Courses returning Courses.map(_.uuid)
 
-  private def lookupSecondaryOrganiser(maybeUuid: Option[UUID]): Future[Option[CommitteeMember]] = {
+  private def lookupSecondaryOrganiser(maybeUuid: Option[UUID]): Future[String \/ Option[CommitteeMember]] = {
     maybeUuid match {
-      case Some(uuid) => committeeMemberDao.get(uuid)
-      case None => Future(None)
+      case Some(uuid) => committeeMemberDao.get(uuid).map {
+        case Some(committeeMember) => \/-(Some(committeeMember))
+        case None => -\/(CourseDaoErrors.invalidSecondaryOrganiser)
+      }
+      case None => Future(\/-(None))
     }
   }
+
+}
+
+object CourseDaoErrors {
+
+  val invalidOrganiser = "error.invalidOrganiser"
+
+  val invalidSecondaryOrganiser = "error.invalidSecondaryOrganiser"
 
 }

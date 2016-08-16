@@ -26,6 +26,8 @@ package com.jsherz.luskydive.itest.dao
 
 import java.util.UUID
 
+import akka.actor.ActorSystem
+import akka.event.{Logging, LoggingAdapter}
 import com.jsherz.luskydive.dao._
 import com.jsherz.luskydive.itest.util.Util
 import com.jsherz.luskydive.itest.util.Util._
@@ -47,6 +49,7 @@ class CourseSpaceDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
   private var courseDao: CourseDao = _
 
   override protected def beforeAll(): Unit = {
+    implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
     dbService = Util.setupGoldTestDb()
 
     dao = new CourseSpaceDaoImpl(dbService)
@@ -55,7 +58,7 @@ class CourseSpaceDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
   "CourseSpaceDao#createForCourse" should {
 
-    "returns Left(error.invalidNumSpaces) if the number of spaces is outside of the allowed values" in {
+    "return Left(error.invalidNumSpaces) if the number of spaces is outside of the allowed values" in {
       val testCases = Seq(
         -2141, -1, 0, 51, 52, 112391
       )

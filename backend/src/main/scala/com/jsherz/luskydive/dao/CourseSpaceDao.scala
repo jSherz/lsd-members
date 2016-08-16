@@ -29,6 +29,7 @@ import java.util.UUID
 import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.CourseSpace
 import com.jsherz.luskydive.services.DatabaseService
+import com.jsherz.luskydive.util.Errors
 
 import scala.concurrent.{ExecutionContext, Future}
 import scalaz.{-\/, \/, \/-}
@@ -84,11 +85,11 @@ class CourseSpaceDaoImpl(protected override val databaseService: DatabaseService
           createResult <- db.run(createSpacesAction).map(_ => ())
         } yield \/-(createResult)
       ).recover {
-        case _: NoSuchElementException => -\/("error.courseAlreadySetup")
-        case _ => -\/("error.unknown")
+        case _: NoSuchElementException => -\/(CourseSpaceDaoErrors.courseAlreadySetup)
+        case _ => -\/(Errors.internalServer)
       }
     } else {
-      Future(-\/("error.invalidNumSpaces"))
+      Future(-\/(CourseSpaceDaoErrors.invalidNumSpaces))
     }
   }
 
@@ -105,5 +106,13 @@ object CourseSpaceDaoImpl {
     * Maximum number of spaces that a course can have.
     */
   val MAX_SPACES: Integer = 50
+
+}
+
+object CourseSpaceDaoErrors {
+
+  val invalidNumSpaces = "error.invalidNumSpaces"
+
+  val courseAlreadySetup = "error.courseAlreadySetup"
 
 }

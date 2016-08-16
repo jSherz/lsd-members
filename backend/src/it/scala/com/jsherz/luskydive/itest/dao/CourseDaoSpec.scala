@@ -26,6 +26,8 @@ package com.jsherz.luskydive.itest.dao
 
 import java.util.UUID
 
+import akka.actor.ActorSystem
+import akka.event.{Logging, LoggingAdapter}
 import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.{Course, CourseStatuses, CourseWithOrganisers}
 import com.jsherz.luskydive.dao.{CommitteeMemberDaoImpl, CourseDao, CourseDaoImpl, CourseSpaceDaoImpl}
@@ -39,12 +41,14 @@ import org.scalatest.time.{Seconds, Span}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scalaz.{-\/, \/, \/-}
 
 class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
   private var dao: CourseDao = _
 
   override protected def beforeAll(): Unit = {
+    implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
     val dbService = Util.setupGoldTestDb()
 
     val committeeMemberDao = new CommitteeMemberDaoImpl(dbService)
@@ -121,25 +125,33 @@ class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
   "CourseDao#create" should {
 
-    "fails when numSpaces < 1 || > 50" in {
+    "return Left(error.invalidNumSpaces) when numSpaces < 1 || > 50" in {
       val zeroSpaces = createWithFixture("numSpaces_zero.json")
       val fiftyOneSpaces = createWithFixture("numSpaces_fiftyone.json")
 
-      zeroSpaces.failed.futureValue shouldBe a[Throwable]
-      fiftyOneSpaces.failed.futureValue shouldBe a[Throwable]
+      zeroSpaces.futureValue shouldBe -\/("error.invalidNumSpaces")
+      fiftyOneSpaces.futureValue shouldBe -\/("error.invalidNumSpaces")
     }
 
-    "fails when one of the organisers (or both) doesn't exist" in {
-      val organiserDoesntExist = createWithFixture("organiser_doesnt_exist.json")
-      val secondaryOrganiserDoesntExist = createWithFixture("secondary_organiser_doesnt_exist.json")
-      val bothOrganisersDontExist = createWithFixture("both_organisers_dont_exist.json")
+    "return Left(error.invalidOrganiser) when the organiser doesn't exist" in {
+      val req = createWithFixture("organiser_doesnt_exist.json")
 
-      Seq(organiserDoesntExist, secondaryOrganiserDoesntExist, bothOrganisersDontExist).foreach(req =>
-        req.failed.futureValue shouldBe a[Throwable]
-      )
+      req.futureValue shouldEqual -\/("error.invalidOrganiser")
     }
 
-    "adds valid courses with the correct number of spaces" in {
+    "return Left(error.invalidSecondaryOrganiser) when the secondary organiser doesn't exist" in {
+      val req = createWithFixture("secondary_organiser_doesnt_exist.json")
+
+      req.futureValue shouldEqual -\/("error.invalidSecondaryOrganiser")
+    }
+
+    "return Left(error.invalidSecondaryOrganiser) when both of the organisers don't exist" in {
+      val req = createWithFixture("both_organisers_dont_exist.json")
+
+      req.futureValue shouldEqual -\/("error.invalidSecondaryOrganiser")
+    }
+
+    "add valid courses with the correct number of spaces" in {
       val examples = Util.fixture[Seq[CourseCreateRequest]]("valid_examples.json")
 
       implicit val patienceConfig = PatienceConfig(scaled(Span(1, Seconds)))
@@ -151,7 +163,7 @@ class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
         // Insert it with the given num spaces
         val result = dao.create(course, req.numSpaces)
-        result.futureValue shouldEqual uuid
+        result.futureValue shouldEqual \/-(uuid)
 
         // Lookup the same course
         val found = dao.get(uuid)
@@ -180,7 +192,7 @@ class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
     *
     * @return
     */
-  private def createWithFixture(fixture: String): Future[UUID] = {
+  private def createWithFixture(fixture: String): Future[String \/ UUID] = {
     val req = Util.fixture[CourseCreateRequest](fixture)
     val uuid = Generators.randomBasedGenerator().generate()
     val course = Course(Some(uuid), req.date, req.organiserUuid, req.secondaryOrganiserUuid, CourseStatuses.PENDING)
