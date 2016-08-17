@@ -32,7 +32,7 @@ import com.jsherz.luskydive.fixtures.CoursesWithOrganisers
 import com.jsherz.luskydive.json.{CourseSpaceWithMember, CourseWithNumSpaces}
 
 import scala.concurrent.{ExecutionContext, Future}
-import scalaz.{\/, \/-}
+import scalaz.{-\/, \/, \/-}
 
 /**
   * A [[CourseDao]] that returns canned responses.
@@ -89,7 +89,13 @@ class StubCourseDao()(implicit ec: ExecutionContext) extends CourseDao {
     * @return
     */
   override def create(course: Course, numSpaces: Int): Future[String \/ UUID] = {
-    Future(\/-(UUID.randomUUID()))
+    Future {
+      if (numSpaces >= CourseSpaceDaoImpl.MIN_SPACES && numSpaces <= CourseSpaceDaoImpl.MAX_SPACES) {
+        \/-(course.uuid.get)
+      } else {
+        -\/("error.invalidNumSpaces")
+      }
+    }
   }
 
 }

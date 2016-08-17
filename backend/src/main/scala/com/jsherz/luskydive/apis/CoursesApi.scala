@@ -28,11 +28,14 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.PathMatchers.JavaUUID
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
+import com.fasterxml.uuid.Generators
+import com.jsherz.luskydive.core.{Course, CourseStatuses}
 import com.jsherz.luskydive.services.Cors.cors
 import com.jsherz.luskydive.dao.CourseDao
-import com.jsherz.luskydive.json.{CoursesJsonSupport, CoursesListRequest}
+import com.jsherz.luskydive.json.{CourseCreateRequest, CourseCreateResponse, CoursesJsonSupport, CoursesListRequest}
 
 import scala.concurrent.ExecutionContext
+import scalaz.{-\/, \/-}
 
 /**
   * Used to retrieve and store course information.
@@ -79,10 +82,41 @@ class CoursesApi(private val courseDao: CourseDao)(implicit ec: ExecutionContext
     }
   }
 
+  val createRoute = path("create") {
+    cors {
+      post {
+        entity(as[CourseCreateRequest]) { req =>
+          val (course, numSpaces) = createRequestToDaoFormat(req)
+
+          onSuccess(courseDao.create(course, numSpaces)) {
+            case \/-(courseUuid) => complete(CourseCreateResponse(true, None))
+            case -\/(error) => complete(CourseCreateResponse(false, Some(error)))
+          }
+        }
+      }
+    }
+  }
+
   val route: Route = pathPrefix("courses") {
     listRoute ~
     spacesRoute ~
-    getRoute
+    getRoute ~
+    createRoute
+  }
+
+  /**
+    * Generate a UUID for a course and build the objects required by the DAO.
+    *
+    * @param req
+    * @return
+    */
+  private def createRequestToDaoFormat(req: CourseCreateRequest): (Course, Integer) = {
+    val uuid = Generators.randomBasedGenerator().generate()
+
+    (
+      Course(Some(uuid), req.date, req.organiserUuid, req.secondaryOrganiserUuid, CourseStatuses.PENDING),
+      req.numSpaces
+    )
   }
 
 }
