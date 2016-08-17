@@ -70,7 +70,8 @@ object StubCommitteeMemberDao {
 
   val activeMembers = Util.fixture[Seq[StrippedCommitteeMember]]("active.json")
 
-  val foundMember = Util.fixture[CommitteeMember]("0d717b7.json")
+  val foundMember = Util.fixture[CommitteeMember]("956610c8.json")
+
   val notFoundMemberUuid = UUID.fromString("e0048a33-0624-4855-844c-91419c29c380")
 
 }
