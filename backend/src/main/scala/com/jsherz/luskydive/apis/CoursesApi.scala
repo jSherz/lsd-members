@@ -89,8 +89,8 @@ class CoursesApi(private val courseDao: CourseDao)(implicit ec: ExecutionContext
           val (course, numSpaces) = createRequestToDaoFormat(req)
 
           onSuccess(courseDao.create(course, numSpaces)) {
-            case \/-(courseUuid) => complete(CourseCreateResponse(true, None))
-            case -\/(error) => complete(CourseCreateResponse(false, Some(error)))
+            case \/-(courseUuid) => complete(CourseCreateResponse(true, None, Some(courseUuid)))
+            case -\/(error) => complete(CourseCreateResponse(false, Some(error), None))
           }
         }
       }

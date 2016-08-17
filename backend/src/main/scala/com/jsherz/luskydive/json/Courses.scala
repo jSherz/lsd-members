@@ -45,7 +45,7 @@ object CoursesJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val StrippedMemberFormat = jsonFormat3(StrippedMember)
   implicit val CourseSpaceWithMemberFormat = jsonFormat4(CourseSpaceWithMember)
   implicit val CourseCreateRequestFormat = jsonFormat4(CourseCreateRequest)
-  implicit val CourseCreateResponseFormat = jsonFormat2(CourseCreateResponse)
+  implicit val CourseCreateResponseFormat = jsonFormat3(CourseCreateResponse)
 
 }
 
@@ -97,5 +97,6 @@ case class CourseCreateRequest(date: Date, organiserUuid: UUID, secondaryOrganis
   *
   * @param success Did creating the course succeed?
   * @param error   The error that caused creating the course to fail, if applicable
+  * @param uuid    The created course's UUID, if successful
   */
-case class CourseCreateResponse(success: Boolean, error: Option[String])
+case class CourseCreateResponse(success: Boolean, error: Option[String], uuid: Option[UUID])
