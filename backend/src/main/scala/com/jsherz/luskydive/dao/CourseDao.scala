@@ -199,7 +199,7 @@ class CourseDaoImpl(
   override def create(course: Course, numSpaces: Int): Future[String \/ UUID] = {
     if (numSpaces >= CourseSpaceDaoImpl.MIN_SPACES && numSpaces <= CourseSpaceDaoImpl.MAX_SPACES) {
       for {
-      // Lookup main organiser
+        // Lookup main organiser
         organiser <- committeeMemberDao.get(course.organiserUuid) ifNone CourseDaoErrors.invalidOrganiser
         // Lookup secondary organiser, if defined
         secondaryOrganiser <- lookupSecondaryOrganiser(course.secondaryOrganiserUuid)
