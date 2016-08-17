@@ -1,6 +1,3 @@
-<!-- @{if(tile.isPreviousMonth || tile.isNextMonth) "tile-other-month" else if(tile.isToday) "tile-today"}" -->
-<!-- @tile.date.toString(dateFormatter) -->
-<!-- @tile.date.dayOfMonth().get() -->
 <div
   class="sl-course-calendar-tile {{otherClasses()}}"
   [title]="tile.date.format('dddd, MMMM Do YYYY')">
