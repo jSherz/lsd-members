@@ -33,6 +33,7 @@ import com.jsherz.luskydive.core.{CommitteeMember, Course, CourseWithOrganisers}
 import com.jsherz.luskydive.json._
 import com.jsherz.luskydive.services.DatabaseService
 import com.jsherz.luskydive.util.FutureError._
+import com.jsherz.luskydive.util.EitherFutureExtensions._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scalaz.{-\/, \/, \/-}
@@ -203,15 +204,15 @@ class CourseDaoImpl(
         // Lookup secondary organiser, if defined
         secondaryOrganiser <- lookupSecondaryOrganiser(course.secondaryOrganiserUuid)
         // Add the course record if the given organisers were found
-        courseUuid <- secondaryOrganiser match {
-          case \/-(maybeSecondaryOrganiser: Option[CommitteeMember]) =>
-            db.run(coursesReturningUuid += course.copy(secondaryOrganiserUuid = maybeSecondaryOrganiser.flatMap(_.uuid))) withServerError
-          case -\/(err) => Future(-\/(err))
+        courseUuid <- organiser withFutureF { _ =>
+          secondaryOrganiser withFutureF { maybeSecondaryOrganiser =>
+            db.run(coursesReturningUuid +=
+              course.copy(secondaryOrganiserUuid = maybeSecondaryOrganiser.flatMap(_.uuid))) withServerError
+          }
         }
         // Add the spaces
-        spacesResult <- courseUuid match {
-          case \/-(uuid: UUID) => courseSpaceDao.createForCourse(uuid, numSpaces)
-          case -\/(err) => Future(err)
+        spacesResult <- courseUuid withFutureF { uuid: UUID =>
+          courseSpaceDao.createForCourse(uuid, numSpaces)
         }
       } yield courseUuid
     } else {

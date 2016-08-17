@@ -148,7 +148,7 @@ class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
     "return Left(error.invalidSecondaryOrganiser) when both of the organisers don't exist" in {
       val req = createWithFixture("both_organisers_dont_exist.json")
 
-      req.futureValue shouldEqual -\/("error.invalidSecondaryOrganiser")
+      req.futureValue shouldEqual -\/("error.invalidOrganiser")
     }
 
     "add valid courses with the correct number of spaces" in {
