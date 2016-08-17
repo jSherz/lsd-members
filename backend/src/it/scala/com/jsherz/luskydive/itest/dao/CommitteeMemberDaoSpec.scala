@@ -70,9 +70,9 @@ class CommitteeMemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterA
     }
 
     "return the correct information when a committee member is found" in {
-      val result = dao.get(UUID.fromString("0d6717b7-530c-418b-9b97-dffbe972de87"))
+      val result = dao.get(UUID.fromString("956610c8-a7d6-4fd5-9e91-91013a681ef4"))
 
-      result.futureValue shouldBe Some(Util.fixture[CommitteeMember]("0d6717b7.json"))
+      result.futureValue shouldBe Some(Util.fixture[CommitteeMember]("956610c8.json"))
     }
 
   }

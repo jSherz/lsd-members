@@ -83,7 +83,8 @@ class CourseSpaceDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
         "8bc6a2e3-a403-4630-9ad2-90b3d9fa1f4b" -> 10,
         "019b7077-b994-42be-924c-015275d44b55" -> 1,
         "f920c658-62fa-44c2-aec7-2c46182ca9f3" -> 20,
-        "c1c6f7ee-424f-4672-8741-2483cf83c6f4" -> 50
+        "c1c6f7ee-424f-4672-8741-2483cf83c6f4" -> 50,
+        "5f83767e-96db-4c7d-a221-a38288307481" -> 7
       )
 
       // Create some courses with no spaces for testing
