@@ -30,6 +30,7 @@ import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.CourseSpace
 import com.jsherz.luskydive.services.DatabaseService
 import com.jsherz.luskydive.util.Errors
+import com.jsherz.luskydive.util.FutureError._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scalaz.{-\/, \/, \/-}
@@ -48,6 +49,24 @@ trait CourseSpaceDao {
     * @param numSpaces
     */
   def createForCourse(courseUuid: UUID, numSpaces: Integer): Future[String \/ Unit]
+
+  /**
+    * Add a member to this course space. Will fail if the space already has a member.
+    *
+    * @param spaceUuid
+    * @param memberUuid
+    * @return Error or UUID of the member that was added
+    */
+  def addMember(spaceUuid: UUID, memberUuid: UUID): Future[String \/ UUID]
+
+  /**
+    * Removes the provided member from this course space. Will fail if the provided member isn't on that space.
+    *
+    * @param spaceUuid
+    * @param memberUuid
+    * @return Error or UUID of the member that was removed
+    */
+  def removeMember(spaceUuid: UUID, memberUuid: UUID): Future[String \/ UUID]
 
 }
 
@@ -93,6 +112,74 @@ class CourseSpaceDaoImpl(protected override val databaseService: DatabaseService
     }
   }
 
+  /**
+    * Add a member to this course space. Will fail if the space already has a member.
+    *
+    * @param uuid
+    * @param memberUuid
+    * @return Error or UUID of the member that was added
+    */
+  override def addMember(uuid: UUID, memberUuid: UUID): Future[String \/ UUID] = {
+    get(uuid).flatMap {
+      case Some(space) => {
+        // Check the space isn't already full
+        if (space.memberUuid.isDefined) {
+          Future(-\/(CourseSpaceDaoErrors.spaceNotEmpty))
+        } else {
+          // Ensure the member isn't already on this course
+          val courseLookup = db.run(CourseSpaces.filter(foundSpace =>
+            foundSpace.courseUuid === space.courseUuid &&
+            foundSpace.memberUuid === memberUuid
+          ).result.headOption)
+
+          courseLookup.flatMap {
+            case Some(_: CourseSpace) => Future(-\/(CourseSpaceDaoErrors.alreadyOnCourse))
+            case _ => {
+              db.run(CourseSpaces.filter(_.uuid === uuid)
+                .map(_.memberUuid)
+                .update(Some(memberUuid))
+              ).map(_ => \/-(uuid))
+            }
+          }
+        }
+      }
+      case None => Future(-\/(CourseSpaceDaoErrors.unknownSpace))
+    }
+  }
+
+  /**
+    * Removes the provided member from this course space. Will fail if the provided member isn't on that space.
+    *
+    * @param uuid
+    * @param memberUuid
+    * @return Error or UUID of the member that was removed
+    */
+  override def removeMember(uuid: UUID, memberUuid: UUID): Future[String \/ UUID] = {
+    get(uuid).flatMap {
+      case Some(space) => {
+        // Check space has the correct member
+        if (space.memberUuid.contains(memberUuid)) {
+          db.run(CourseSpaces.filter(_.uuid === uuid)
+            .map(_.memberUuid)
+            .update(None)
+          ).map(_ => \/-(uuid))
+        } else {
+          Future(-\/(CourseSpaceDaoErrors.memberNotInSpace))
+        }
+      }
+    }
+  }
+
+  /**
+    * Lookup a space by UUID. Private as no tests for it yet.
+    *
+    * @param uuid
+    * @return
+    */
+  private def get(uuid: UUID): Future[Option[CourseSpace]] = {
+    db.run(CourseSpaces.filter(_.uuid === uuid).result.headOption)
+  }
+
 }
 
 object CourseSpaceDaoImpl {
@@ -114,5 +201,13 @@ object CourseSpaceDaoErrors {
   val invalidNumSpaces = "error.invalidNumSpaces"
 
   val courseAlreadySetup = "error.courseAlreadySetup"
+
+  val unknownSpace = "error.unknownSpace"
+
+  val spaceNotEmpty = "error.spaceNotEmpty"
+
+  val alreadyOnCourse = "error.alreadyOnCourse"
+
+  val memberNotInSpace = "error.memberNotInSpace"
 
 }
