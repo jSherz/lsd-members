@@ -198,6 +198,8 @@ object CourseSpaceDaoImpl {
 
 object CourseSpaceDaoErrors {
 
+  val internalServer = "error.internalServer"
+
   val invalidNumSpaces = "error.invalidNumSpaces"
 
   val courseAlreadySetup = "error.courseAlreadySetup"
