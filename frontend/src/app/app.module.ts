@@ -11,7 +11,7 @@ import {CourseAddComponent} from "./admin/courses/course-add/course-add.componen
 import {TileComponent} from "./admin/courses/course-calendar/tile/tile.component";
 import {CourseCalendarComponent} from "./admin/courses/course-calendar/course-calendar.component";
 import {CourseViewComponent} from "./admin/courses/course-view/course-view.component";
-import {MemberSearchComponent} from "./admin/courses/member-search/member-search.component";
+import {MemberSearchComponent} from "./admin/member-search/member-search.component";
 import {AdminBaseComponent} from "./admin/admin-base.component";
 import {SignupBaseComponent} from "./signup/signup-base.component";
 import {SignupComponent} from "./signup/main/signup.component";

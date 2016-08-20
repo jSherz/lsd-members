@@ -30,8 +30,9 @@ $sl-course-students-border: solid 0.08em #ccc
     padding: 0.5em
     border: $sl-course-students-border
 
-#sl-course-students-id
+#sl-course-students-number, .sl-course-students-number
   width: 5%
+  text-align: center
 
 #sl-course-students-date-joined
   width: 15%
@@ -68,13 +69,13 @@ $add-member-bg: lighten(green, 4%)
       display: block
       width: 100%
 
-  .sl-course-students-id:before, .sl-course-students-name:before, .sl-course-students-date-joined:before,
-  .sl-course-students-info-complete:before, .sl-course-students-forms-complete:before, .sl-course-students-reg-langar:before,
-  .sl-course-students-options:before
-    font-weight: bold
-    margin-right: 0.5em
+  .sl-course-students-number, .sl-course-students-name, .sl-course-students-date-joined, .sl-course-students-info-complete,
+  .sl-course-students-forms-complete, .sl-course-students-reg-langar, .sl-course-students-options
+    &:before
+      font-weight: bold
+      margin-right: 0.5em
 
-  .sl-course-students-id
+  .sl-course-students-number
     background-color: #eee
 
     &:before

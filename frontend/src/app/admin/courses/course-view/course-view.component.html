@@ -25,7 +25,7 @@
   <table id="sl-course-students">
     <thead>
       <tr>
-        <th id="sl-course-students-id">#</th>
+        <th id="sl-course-students-number">#</th>
         <th id="sl-course-students-name">Name</th>
         <th id="sl-course-students-date-joined">Date joined</th>
         <th id="sl-course-students-info-complete">Info complete</th>
@@ -37,23 +37,41 @@
 
     <tbody>
       <tr *ngFor="let space of spaces">
-        <td class="sl-course-students-id">{{ space.number }}</td>
-        <td class="sl-course-students-name">{{ space.member?.name || 'N/A' }}</td>
-        <td class="sl-course-students-date-joined">{{ space.member?.createdAt?.format('YYYY-MM-DD') || '' }}</td>
-        <td class="sl-course-students-info-complete"><i class="fa fa-times" aria-hidden="true" style="color: red;"></i></td>
-        <td class="sl-course-students-forms-complete"><i class="fa fa-check" aria-hidden="true" style="color: green;"></i></td>
-        <td class="sl-course-students-reg-langar"><i class="fa fa-times" aria-hidden="true" style="color: red;"></i></td>
-        <td class="sl-course-students-options">
-          <div *ngIf="space.member">
-            <button type="button" title="Contact student" class="sl-course-students-contact"><i class="fa fa-phone" aria-hidden="true"></i></button>
-            <button type="button" title="Edit member information" class="sl-course-students-edit-member"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-            <button type="button" class="btn-warning sl-course-students-remove" title="Remove from course"><i class="fa fa-trash-o"></i></button>
-          </div>
-          <div *ngIf="!space.member">
-            <button type="button" title="Add member" class="sl-course-students-add-member"><i class="fa fa-user-plus" aria-hidden="true"></i></button>
-          </div>
+        <td class="sl-course-students-number">
+          {{ space.number }}
+        </td>
+        <td class="sl-course-students-name" *ngIf="space.member">
+          {{ space.member?.name }}
+        </td>
+        <td class="sl-course-students-name" colspan="6" *ngIf="!space.member">
+          N/A
+        </td>
+        <td class="sl-course-students-date-joined" *ngIf="space.member">
+          {{ space.member?.createdAt?.format('YYYY-MM-DD') || '' }}
+        </td>
+        <td class="sl-course-students-info-complete" *ngIf="space.member">
+          <i class="fa fa-times" aria-hidden="true" style="color: red;"></i>
+        </td>
+        <td class="sl-course-students-forms-complete" *ngIf="space.member">
+          <i class="fa fa-check" aria-hidden="true" style="color: green;"></i>
+        </td>
+        <td class="sl-course-students-reg-langar" *ngIf="space.member">
+          <i class="fa fa-times" aria-hidden="true" style="color: red;"></i>
+        </td>
+        <td class="sl-course-students-options" *ngIf="space.member">
+          <button type="button" title="Contact student" class="sl-course-students-contact"><i class="fa fa-phone" aria-hidden="true"></i></button>
+          <button type="button" title="Edit member information" class="sl-course-students-edit-member"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+          <button type="button" class="btn-warning sl-course-students-remove" title="Remove from course"><i class="fa fa-trash-o"></i></button>
         </td>
       </tr>
     </tbody>
   </table>
+
+  <div id="sl-course-add-member">
+    <h3>Add a member</h3>
+
+    <p>Search for a member below to add to this course.</p>
+
+    <lsd-member-search></lsd-member-search>
+  </div>
 </div>
