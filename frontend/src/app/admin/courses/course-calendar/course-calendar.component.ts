@@ -10,7 +10,6 @@ import {
   CourseWithNumSpaces,
   CourseServiceImpl
 } from '../course.service';
-import UnitOfTime = moment.UnitOfTime;
 
 @Component({
   selector: 'course-calendar-component',

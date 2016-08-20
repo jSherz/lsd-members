@@ -2,8 +2,11 @@
 
 import {
   ActivatedRoute,
-  Params, UrlSegment
+  Params, UrlSegment, Router
 } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/esm/testing/router_testing_module';
+import { TestBed, inject } from '@angular/core/testing/test_bed';
+
 import * as moment from 'moment';
 import { Observable } from 'rxjs/Rx';
 
@@ -15,63 +18,10 @@ import {
   CourseService,
   CourseWithNumSpaces, Course, CourseWithOrganisers, CourseSpaceWithMember
 } from '../course.service';
-
-/**
- * A fake course service, used for testing.
- */
-export class StubCourseService implements CourseService {
-
-  get(uuid: string): Observable<CourseWithOrganisers> {
-    return undefined;
-  }
-
-  spaces(uuid: string): Observable<CourseSpaceWithMember[]> {
-    return undefined;
-  }
-
-  /**
-   * The course service will return the given courses for any find() call.
-   *
-   * @param courses
-   */
-  constructor(private courses: CourseWithNumSpaces[]) {}
-
-  find(startDate: moment.Moment, endDate: moment.Moment): Observable<CourseWithNumSpaces[]> {
-    return Observable.of(this.courses);
-  }
-
-}
-
-// Useful to mock a component with a given year & month
-let mockComp = function(
-  urlParts: [string, Params][] = [['courses', {}], ['calendar', {}]],
-  params: Params = {},
-  courses: CourseWithNumSpaces[] = []
-): CourseCalendarComponent {
-  let urls = urlParts.map(([path, pathParams]) => new UrlSegment(path, pathParams));
-
-  let observableUrls = Observable.of(urls);
-  let observableParams: Observable<Params> = Observable.of(params);
-
-  let activatedRoute = new ActivatedRoute();
-  activatedRoute.url = observableUrls;
-  activatedRoute.params = observableParams;
-
-  let monthService = new MonthService();
-
-  let tileService = new TileService();
-
-  let courseService = new StubCourseService(courses);
-
-  let component = new CourseCalendarComponent(monthService, activatedRoute, tileService, courseService);
-  component.ngOnInit();
-
-  return component;
-};
-
-beforeEach(() => jasmine.addMatchers(MOMENT_MATCHER));
+import {APP_BASE_HREF} from "@angular/common";
 
 describe('Component: CourseCalendar', () => {
+
   it('should create an instance', () => {
     let app = mockComp();
     expect(app).toBeTruthy();
@@ -142,4 +92,73 @@ describe('Component: CourseCalendar', () => {
     expect(app.tiles[30].courses[0].course.uuid).toEqual('b9a9a1b1-29a6-40af-bb48-e2cc3fa83938');
     expect(app.tiles[41].courses[0].course.uuid).toEqual('09406555-a166-4fbf-8452-df526fc690d3');
   });
+
+});
+
+/**
+ * A fake course service, used for testing.
+ */
+export class StubCourseService implements CourseService {
+
+  get(uuid: string): Observable<CourseWithOrganisers> {
+    return undefined;
+  }
+
+  spaces(uuid: string): Observable<CourseSpaceWithMember[]> {
+    return undefined;
+  }
+
+  /**
+   * The course service will return the given courses for any find() call.
+   *
+   * @param courses
+   */
+  constructor(private courses: CourseWithNumSpaces[]) {}
+
+  find(startDate: moment.Moment, endDate: moment.Moment): Observable<CourseWithNumSpaces[]> {
+    return Observable.of(this.courses);
+  }
+
+}
+
+// Useful to mock a component with a given year & month
+let mockComp = function(
+  urlParts: [string, Params][] = [['courses', {}], ['calendar', {}]],
+  params: Params = {},
+  courses: CourseWithNumSpaces[] = []
+): CourseCalendarComponent {
+  return inject([Router], (router: Router) => {
+    let urls = urlParts.map(([path, pathParams]) => new UrlSegment(path, pathParams));
+
+    let observableUrls = Observable.of(urls);
+    let observableParams: Observable<Params> = Observable.of(params);
+
+    let activatedRoute = new ActivatedRoute();
+    activatedRoute.url = observableUrls;
+    activatedRoute.params = observableParams;
+
+    let monthService = new MonthService();
+
+    let tileService = new TileService();
+
+    let courseService = new StubCourseService(courses);
+
+    let component = new CourseCalendarComponent(monthService, router, activatedRoute, tileService, courseService);
+    component.ngOnInit();
+
+    return component;
+  })();
+};
+
+beforeEach(() => {
+  // TODO: Replace with RouterTestingModule.withRoutes when released
+  TestBed.configureTestingModule({
+    imports: [RouterTestingModule],
+    providers: [
+      { provide: APP_BASE_HREF, useValue: '/' },
+      { provide: Router, useValue: {} }
+    ]
+  });
+
+  jasmine.addMatchers(MOMENT_MATCHER)
 });
