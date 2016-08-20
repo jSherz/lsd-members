@@ -3,14 +3,13 @@
 import * as moment from 'moment';
 
 import { Tile, TileService } from './tile.service';
-import { MOMENT_MATCHER } from '../../../../utils/moment-matcher';
-import { addProviders } from '@angular/core/testing/testing';
+import { MOMENT_MATCHER    } from '../../../../utils/moment-matcher';
+import { TestBed           } from '@angular/core/testing/test_bed';
 
 describe('Tile Service', () => {
-  beforeEach(() => addProviders([TileService]));
 
   var testSamples: Tile[][] = [];
-  var service = undefined;
+  var service: TileService = null;
 
   beforeEach(() => {
     service = new TileService();
@@ -86,4 +85,5 @@ describe('Tile Service', () => {
       }
     });
   });
+
 });

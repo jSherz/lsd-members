@@ -1,7 +1,6 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
   Router,
-  ROUTER_DIRECTIVES,
   ActivatedRoute
 } from '@angular/router';
 import {
@@ -12,7 +11,6 @@ import {
   REACTIVE_FORM_DIRECTIVES
 } from '@angular/forms';
 import * as moment from 'moment';
-import { HTTP_PROVIDERS } from '@angular/http';
 import { Subscription } from 'rxjs';
 
 import {
@@ -24,9 +22,8 @@ import {
 @Component({
   selector: 'course-add-component',
   templateUrl: 'course-add.component.html',
-  directives: [REACTIVE_FORM_DIRECTIVES],
+  directives: [ REACTIVE_FORM_DIRECTIVES ],
   providers: [
-    HTTP_PROVIDERS,
     { provide: CommitteeService, useClass: CommitteeServiceImpl }
   ]
 })
@@ -88,6 +85,7 @@ export class CourseAddComponent implements OnInit, OnDestroy {
    * @param builder
    * @param router
    * @param service
+   * @param route
    */
   constructor(private builder: FormBuilder, private router: Router, private service: CommitteeService,
               private route: ActivatedRoute) {

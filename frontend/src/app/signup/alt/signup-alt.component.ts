@@ -1,28 +1,20 @@
-import { Component                 } from '@angular/core';
-import { Router, ROUTER_DIRECTIVES } from '@angular/router';
-import { HTTP_PROVIDERS            } from '@angular/http';
+import { Component } from '@angular/core';
+import { Router    } from '@angular/router';
 import {
   FormControl,
   FormBuilder,
   FormGroup,
-  Validators,
-  REACTIVE_FORM_DIRECTIVES
+  Validators
 } from '@angular/forms';
 
 import { CustomValidators } from '../../utils';
 import {
-  SignupService,
-  SignupServiceImpl
+  SignupService
 } from '../service/signup.service';
 
 @Component({
   selector: 'signup-alt-component',
-  templateUrl: 'signup-alt.component.html',
-  providers: [
-    HTTP_PROVIDERS,
-    { provide: SignupService, useClass: SignupServiceImpl }
-  ],
-  directives: [ROUTER_DIRECTIVES, REACTIVE_FORM_DIRECTIVES]
+  templateUrl: 'signup-alt.component.html'
 })
 export class SignupAltComponent {
 

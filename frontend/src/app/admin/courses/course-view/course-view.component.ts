@@ -14,7 +14,7 @@ import {
 @Component({
   selector: 'app-course-view',
   templateUrl: 'course-view.component.html',
-  providers: [HTTP_PROVIDERS, { provide: CourseService, useClass: CourseServiceImpl }]
+  providers: [{ provide: CourseService, useClass: CourseServiceImpl }]
 })
 export class CourseViewComponent implements OnInit {
 

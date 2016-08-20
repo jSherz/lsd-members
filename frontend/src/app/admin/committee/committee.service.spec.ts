@@ -1,16 +1,20 @@
 /* tslint:disable:no-unused-variable */
 
-import { addProviders, async, inject } from '@angular/core/testing';
+import { inject           } from '@angular/core/testing';
+import { TestBed          } from '@angular/core/testing/test_bed';
+
 import { CommitteeService } from './committee.service';
 
 describe('Service: Committee', () => {
+
+  it('should ...', inject([CommitteeService], (service: CommitteeService) => {
+    expect(service).toBeTruthy();
+  }));
+
   beforeEach(() => {
-    addProviders([CommitteeService]);
+    TestBed.configureTestingModule({
+      providers: [CommitteeService]
+    });
   });
 
-  it('should ...',
-    inject([CommitteeService],
-      (service: CommitteeService) => {
-        expect(service).toBeTruthy();
-      }));
 });

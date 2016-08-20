@@ -1,6 +1,5 @@
 import {Component, OnInit, OnDestroy}      from '@angular/core';
 import {ROUTER_DIRECTIVES, ActivatedRoute} from '@angular/router';
-import {HTTP_PROVIDERS}    from '@angular/http';
 import {Subscription}      from 'rxjs/Subscription';
 import * as moment         from 'moment';
 import {MonthService}      from '../month.service';
@@ -11,7 +10,7 @@ import {CourseService, CourseWithNumSpaces, CourseServiceImpl} from '../course.s
 @Component({
   selector: 'course-calendar-component',
   templateUrl: 'course-calendar.component.html',
-  providers: [MonthService, TileService, HTTP_PROVIDERS, { provide: CourseService, useClass: CourseServiceImpl }],
+  providers: [MonthService, TileService,  { provide: CourseService, useClass: CourseServiceImpl }],
   directives: [ROUTER_DIRECTIVES, TileComponent]
 })
 export class CourseCalendarComponent implements OnInit, OnDestroy {

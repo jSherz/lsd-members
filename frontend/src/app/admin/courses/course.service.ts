@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import * as moment from 'moment';
 import {RequestOptions, Headers, Http, Response} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
+import {ErrorObservable} from "rxjs/observable/ErrorObservable";
 
 export class Course {
   uuid: String;
@@ -162,14 +163,15 @@ export class CourseServiceImpl extends CourseService {
   /**
    * Handle a generic error encountered when performing an AJAX request.
    *
-   * @param error
+   * @param err
+   * @param caught
    * @returns {ErrorObservable}
    */
-  private handleError(error: any) {
-    let errMsg = (error.message) ? error.message : error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+  private handleError<R, T>(err: any, caught: Observable<T>): ErrorObservable {
+    let errMsg = (err.message) ? err.message : err.status ? `${err.status} - ${err.statusText}` : 'Server error';
     console.error(errMsg);
 
-    return Observable.throw(errMsg);
+    return Observable.throw(new Error(errMsg));
   }
 
   /**

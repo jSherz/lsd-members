@@ -1,13 +1,13 @@
-import { RouterConfig } from '@angular/router';
+import { Routes } from '@angular/router';
 
-import { AdminBaseComponent      } from './admin-base.component';
+import { AdminBaseComponent } from './admin-base.component';
 import {
   CourseCalendarComponent,
   CourseViewComponent,
   CourseAddComponent
 } from './courses';
 
-export const AdminRoutes: RouterConfig = [
+export const AdminRoutes: Routes = [
   {
     path: 'admin',
     component: AdminBaseComponent,

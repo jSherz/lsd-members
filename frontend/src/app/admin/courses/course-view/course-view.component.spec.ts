@@ -2,8 +2,7 @@
 
 import {
   ActivatedRoute,
-  UrlPathWithParams,
-  Params
+  Params, UrlSegment
 } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
 
@@ -30,7 +29,7 @@ function mockComp(courseUuid: string): CourseViewComponent {
   let params = { uuid: courseUuid };
   let urlParts = [['courses', params]];
 
-  let urls = urlParts.map(([path, pathParams]) => new UrlPathWithParams(path, pathParams));
+  let urls = [new UrlSegment('courses', {'uuid': courseUuid})];
 
   let observableUrls = Observable.of(urls);
   let observableParams: Observable<Params> = Observable.of(params);

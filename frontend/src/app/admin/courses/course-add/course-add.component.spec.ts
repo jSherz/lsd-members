@@ -1,13 +1,24 @@
 /* tslint:disable:no-unused-variable */
 
-import { By }           from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
-import { addProviders, async, inject } from '@angular/core/testing';
+import { TestBed, inject          } from '@angular/core/testing/test_bed';
+import { FormsModule, FormBuilder } from '@angular/forms';
+
 import { CourseAddComponent } from './course-add.component';
 
 describe('Component: CourseAddComponent', () => {
-  it('should create an instance', () => {
-    let component = new CourseAddComponent();
+
+  it('should create an instance', inject([CourseAddComponent], (component: CourseAddComponent) => {
     expect(component).toBeTruthy();
+  }));
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [FormsModule],
+      providers: [
+        CourseAddComponent,
+        FormBuilder
+      ]
+    });
   });
+
 });

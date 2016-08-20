@@ -1,23 +1,36 @@
 /* tslint:disable:no-unused-variable */
 
-import { inject, addProviders   } from '@angular/core/testing';
-import { FormBuilder            } from '@angular/forms';
-import { APP_BASE_HREF          } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder } from '@angular/forms';
+import { Router      } from '@angular/router';
 
-import { APP_ROUTER_PROVIDERS   } from '../../app.routes';
-import { SignupComponent        } from './signup.component';
-import { SignupService          } from "../service/signup.service";
-import { SignupServiceStub      } from "../service/signup.service.stub";
+import { SignupComponent   } from './signup.component';
+import { SignupServiceStub } from '../service/signup.service.stub';
+import { SignupService     } from '../service/signup.service';
 
-beforeEach(() => addProviders([
-  APP_ROUTER_PROVIDERS,
-  {provide: APP_BASE_HREF, useValue: '/'},
-  {provide: ActivatedRoute, useValue: {}},
-  {provide: Router, useValue: {}},
-  FormBuilder,
-  SignupComponent
-]));
+class TestSetup {
+  router: Router;
+  service: SignupService;
+  component: SignupComponent;
+
+  constructor(router: Router, service: SignupService, component: SignupComponent) {
+    this.router = router;
+    this.service = service;
+    this.component = component;
+  }
+}
+
+function mockComp(): TestSetup {
+  let keys = [];
+  for (let key in Router.prototype) {
+    keys.push(key);
+  }
+
+  let builder = new FormBuilder();
+  let router = jasmine.createSpyObj('MockRouter', keys);
+  let service = new SignupServiceStub();
+
+  return new TestSetup(router, service, new SignupComponent(builder, router, service));
+}
 
 describe('SignupComponent', () => {
 
@@ -68,36 +81,3 @@ describe('SignupComponent', () => {
   });
 
 });
-
-/**
- * A holder class for test fixtures.
- */
-class TestSetup {
-  router: Router;
-  service: SignupService;
-  component: SignupComponent;
-
-  constructor(router: Router, service: SignupService, component: SignupComponent) {
-    this.router = router;
-    this.service = service;
-    this.component = component;
-  }
-}
-
-/**
- * Create a new component with mocked router, stubbed service and a real form builder.
- *
- * @returns {TestSetup}
- */
-function mockComp(): TestSetup {
-  let keys = [];
-  for (let key in Router.prototype) {
-    keys.push(key);
-  }
-
-  let builder = new FormBuilder();
-  let router = jasmine.createSpyObj('MockRouter', keys);
-  let service = new SignupServiceStub();
-
-  return new TestSetup(router, service, new SignupComponent(builder, router, service));
-}

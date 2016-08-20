@@ -1,13 +1,7 @@
 /* tslint:disable:no-unused-variable */
 
-import {
-  beforeEach, beforeEachProviders,
-  describe, xdescribe,
-  expect, it, xit,
-  async, inject
-} from '@angular/core/testing';
-import { Title } from '@angular/platform-browser';
 import { FormControl } from '@angular/forms';
+
 import { CustomValidators } from './index';
 
 describe('CustomValidators', () => {

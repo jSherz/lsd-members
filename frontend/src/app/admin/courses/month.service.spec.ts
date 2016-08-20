@@ -1,20 +1,13 @@
 /* tslint:disable:no-unused-variable */
 
-import {
-  beforeEach, beforeEachProviders,
-  describe, xdescribe,
-  expect, it, xit,
-  async, inject
-} from '@angular/core/testing';
-import * as moment        from 'moment';
-import { Moment }         from 'moment';
-import { MonthService }   from './month.service';
+import { inject  } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing/test_bed';
+import * as moment from 'moment';
+
+import { MonthService   } from './month.service';
 import { MOMENT_MATCHER } from '../../utils/moment-matcher';
 
-describe('Month Service', () => {
-  beforeEachProviders(() => [MonthService]);
-
-  beforeEach(() => jasmine.addMatchers(MOMENT_MATCHER));
+describe('Service: Month', () => {
 
   let testDate = moment();
 
@@ -46,4 +39,13 @@ describe('Month Service', () => {
       expect(expected[i]).toBeSameAs(actual[i]);
     }
   }));
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [MonthService]
+    });
+
+    jasmine.addMatchers(MOMENT_MATCHER)
+  });
+
 });

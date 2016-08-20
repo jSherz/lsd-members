@@ -1,17 +1,13 @@
 /* tslint:disable:no-unused-variable */
 
-import {
-  beforeEach, beforeEachProviders,
-  describe, xdescribe,
-  expect, it, xit,
-  async, inject
-} from '@angular/core/testing';
 import { AdminBaseComponent } from './admin-base.component';
 
-beforeEachProviders(() => [AdminBaseComponent]);
+describe('Component: Admin Base', () => {
 
-describe('Admin Base Component', () => {
-  it('should create the app', inject([AdminBaseComponent], (app: AdminBaseComponent) => {
-    expect(app).toBeTruthy();
-  }));
+  it('should create the app', () => {
+    let component = new AdminBaseComponent();
+
+    expect(component).toBeTruthy();
+  });
+
 });

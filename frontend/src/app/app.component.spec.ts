@@ -1,17 +1,13 @@
 /* tslint:disable:no-unused-variable */
 
-import {
-  beforeEach, beforeEachProviders,
-  describe, xdescribe,
-  expect, it, xit,
-  async, inject
-} from '@angular/core/testing';
-import { Title } from '@angular/platform-browser';
+import { inject  } from '@angular/core/testing';
+import { Title   } from '@angular/platform-browser';
+import { TestBed } from '@angular/core/testing/test_bed';
+
 import { AppComponent } from './app.component';
 
-beforeEachProviders(() => [AppComponent]);
+describe('Component: App', () => {
 
-describe('App: Luskydive', () => {
   it('should create the app', inject([AppComponent], (app: AppComponent) => {
     expect(app).toBeTruthy();
   }));
@@ -46,4 +42,11 @@ describe('App: Luskydive', () => {
     component.setTitle(undefined);
     expect(mockedTitleService.getTitle()).toEqual('Leeds University Skydivers');
   });
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [AppComponent]
+    });
+  });
+
 });

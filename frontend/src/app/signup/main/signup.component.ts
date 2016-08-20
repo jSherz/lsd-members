@@ -1,28 +1,18 @@
-import { Component                 } from '@angular/core';
-import { Router, ROUTER_DIRECTIVES } from '@angular/router';
-import { HTTP_PROVIDERS            } from '@angular/http';
+import { Component } from '@angular/core';
+import { Router    } from '@angular/router';
 import {
   FormControl,
   FormBuilder,
   FormGroup,
-  Validators,
-  REACTIVE_FORM_DIRECTIVES
+  Validators
 } from '@angular/forms';
 
 import { CustomValidators } from '../../utils';
-import {
-  SignupService,
-  SignupServiceImpl
-} from '../service/signup.service';
+import { SignupService    } from '../service/signup.service';
 
 @Component({
   selector: 'signup-component',
-  templateUrl: 'signup.component.html',
-  directives: [REACTIVE_FORM_DIRECTIVES],
-  providers: [
-    HTTP_PROVIDERS,
-    { provide: SignupService, useClass: SignupServiceImpl }
-  ]
+  templateUrl: 'signup.component.html'
 })
 export class SignupComponent {
 

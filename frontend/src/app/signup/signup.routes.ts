@@ -1,4 +1,4 @@
-import { RouterConfig } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import {
   SignupComponent,
@@ -7,7 +7,7 @@ import {
   ThankYouComponent
 } from './index';
 
-export const SignupRoutes: RouterConfig = [
+export const SignupRoutes: Routes = [
   {
     path: 'sign-up',
     component: SignupBaseComponent,
