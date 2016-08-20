@@ -34,7 +34,9 @@ export class CommitteeServiceImpl extends CommitteeService {
 
   private committeeLookupUrl = 'http://localhost:8080/api/v1/committee-members/active';
 
-  constructor(private http: Http) {}
+  constructor(private http: Http) {
+    super();
+  }
 
   active(): Observable<StrippedCommitteeMember[]> {
     return this.http.get(this.committeeLookupUrl)

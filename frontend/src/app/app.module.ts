@@ -1,4 +1,4 @@
-/// <reference path="../custom-typings.d.ts" />
+/// <reference path="../typings.d.ts" />
 
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
