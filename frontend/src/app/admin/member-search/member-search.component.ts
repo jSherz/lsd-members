@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {Observable} from "rxjs";
+import {SearchResult, MemberSearchService} from "./member-search.service";
 
 /**
  * Enables a user to search for a member and then select that member.
@@ -11,9 +13,33 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MemberSearchComponent implements OnInit {
 
-  constructor() { }
+  searchTerm: string = '';
+
+  /**
+   * Has the user performed a search yet?
+   *
+   * @type {boolean}
+   */
+  hasSearched: boolean = false;
+
+  searchResults: SearchResult[] = [];
+
+  constructor(private searchService: MemberSearchService) { }
 
   ngOnInit() {
+  }
+
+  performSearch() {
+    this.hasSearched = true;
+
+    this.searchService.search(this.searchTerm).subscribe(results => {
+      this.searchResults = results;
+    });
+  }
+
+  selectResult(result) {
+    console.log('Selected: ');
+    console.log(result);
   }
 
 }

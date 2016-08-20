@@ -19,6 +19,7 @@ import {SignupAltComponent} from "./signup/alt/signup-alt.component";
 import {SignupService, SignupServiceImpl} from "./signup/service/signup.service";
 import {ThankYouComponent} from "./signup/thank-you/thank-you.component";
 import {LocationStrategy, PathLocationStrategy} from "@angular/common";
+import {MemberSearchService, MemberSearchServiceImpl} from "./admin/member-search/member-search.service";
 
 @NgModule({
   imports:      [
@@ -48,7 +49,8 @@ import {LocationStrategy, PathLocationStrategy} from "@angular/common";
   providers: [
     FormBuilder,
     { provide: SignupService, useClass: SignupServiceImpl },
-    { provide: LocationStrategy, useClass: PathLocationStrategy }
+    { provide: LocationStrategy, useClass: PathLocationStrategy },
+    { provide: MemberSearchService, useClass: MemberSearchServiceImpl }
   ]
 })
 export class AppModule { }

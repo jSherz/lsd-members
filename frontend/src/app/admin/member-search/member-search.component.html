@@ -1,30 +1,17 @@
 <div class="member-search">
-  <input type="text" id="member-search-term">
-  <button id="member-search-button">
+  <input type="text" id="member-search-term" [(ngModel)]="searchTerm">
+  <button id="member-search-button" [disabled]="searchTerm.length == 0" (click)="performSearch()">
     <i class="fa fa-search" aria-hidden="true" title="Search"></i>
   </button>
 
-  <ul id="member-search-results">
-    <li>
-      <a href="#" onclick="return false;">Test Member (test@test-member.com, +447123123123)</a>
+  <ul id="member-search-results" *ngIf="hasSearched">
+    <li *ngIf="searchResults.length == 0">
+      No results found matching the given term.
     </li>
-    <li>
-      <a href="#" onclick="return false;">Test Member (test@test-member.com, +447123123123)</a>
-    </li>
-    <li>
-      <a href="#" onclick="return false;">Test Member (test@test-member.com, +447123123123)</a>
-    </li>
-    <li>
-      <a href="#" onclick="return false;">Test Member (test@test-member.com, +447123123123)</a>
-    </li>
-    <li>
-      <a href="#" onclick="return false;">Test Member (test@test-member.com, +447123123123)</a>
-    </li>
-    <li>
-      <a href="#" onclick="return false;">Test Member (test@test-member.com, +447123123123)</a>
-    </li>
-    <li>
-      <a href="#" onclick="return false;">Test Member (test@test-member.com, +447123123123)</a>
+    <li *ngFor="let result of searchResults">
+      <a href="#" (click)="$event.preventDefault(); selectResult(result)">
+        {{ result.name }} ({{ result.phoneNumber }} - {{ result.email }})
+      </a>
     </li>
   </ul>
 </div>
