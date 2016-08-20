@@ -10,13 +10,11 @@
 
     <div id="sl-course-calendar-filter">
       <label for="calendar-filter-month">Month</label>
-      <select id="calendar-filter-month" name="calendar-filter-month" [value]="currentMonth.toISOString()">
-        <option *ngFor="let month of months" [value]="month.toISOString()">
+      <select id="calendar-filter-month" name="calendar-filter-month" (value)="currentMonth.format('YYYY - MMMM')" (change)="monthSelectionChanged($event)">
+        <option *ngFor="let month of months" [value]="month.format('YYYY-MM-DD')">
           {{month.format('YYYY - MMMM')}}
         </option>
       </select>
-
-      <button type="submit">View</button>
     </div>
 
     <div class="sl-course-calendar-nav-right">

@@ -1,11 +1,16 @@
 import {Component, OnInit, OnDestroy}      from '@angular/core';
-import {ROUTER_DIRECTIVES, ActivatedRoute} from '@angular/router';
+import {ROUTER_DIRECTIVES, ActivatedRoute, Router} from '@angular/router';
 import {Subscription}      from 'rxjs/Subscription';
 import * as moment         from 'moment';
 import {MonthService}      from '../month.service';
 import {Tile, TileService} from './tile/tile.service';
 import {TileComponent}     from './tile/tile.component';
-import {CourseService, CourseWithNumSpaces, CourseServiceImpl} from '../course.service';
+import {
+  CourseService,
+  CourseWithNumSpaces,
+  CourseServiceImpl
+} from '../course.service';
+import UnitOfTime = moment.UnitOfTime;
 
 @Component({
   selector: 'course-calendar-component',
@@ -29,6 +34,7 @@ export class CourseCalendarComponent implements OnInit, OnDestroy {
 
   constructor(
     private monthService: MonthService,
+    private router: Router,
     private route: ActivatedRoute,
     private tileService: TileService,
     private courseService: CourseService) { }
@@ -59,6 +65,24 @@ export class CourseCalendarComponent implements OnInit, OnDestroy {
       },
       error => this.errorMessage = error
     );
+  }
+
+  /**
+   * Called when the month selection is changed.
+   *
+   * Navigates the user to the newly selected month, if we're not currently viewing it.
+   *
+   * @param event
+   */
+  private monthSelectionChanged(event) {
+    let chosenMonth = moment(event.target.value);
+
+    if (!chosenMonth.isSame(this.currentMonth)) {
+      let year = chosenMonth.year();
+      let month = chosenMonth.month() + 1; // Month is zero indexed, URL is 1 indexed
+
+      this.router.navigate(['admin', 'courses', 'calendar', year, month]);
+    }
   }
 
   ngOnInit() {
