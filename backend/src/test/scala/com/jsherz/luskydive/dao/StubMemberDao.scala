@@ -28,10 +28,12 @@ import java.util.UUID
 
 import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.Member
+import com.jsherz.luskydive.itest.util.Util
 import com.jsherz.luskydive.json.MemberSearchResult
+import com.jsherz.luskydive.json.MemberJsonSupport._
 
 import scala.concurrent.{ExecutionContext, Future}
-import scalaz.{\/, \/-}
+import scalaz.{-\/, \/, \/-}
 
 /**
   * A testing implementation of the MemberDAO that responds to a set of pre-defined inputs.
@@ -73,7 +75,15 @@ class StubMemberDao()(implicit val ec: ExecutionContext) extends MemberDao {
     * @param term
     * @return
     */
-  override def search(term: String): Future[\/[String, Seq[MemberSearchResult]]] = Future(\/-(Seq.empty))
+  override def search(term: String): Future[\/[String, Seq[MemberSearchResult]]] = {
+    Future {
+      if (term.trim.length >= 3) {
+        \/-(StubMemberDao.searchResults)
+      } else {
+        -\/(MemberDaoErrors.invalidSearchTerm)
+      }
+    }
+  }
 
 }
 
@@ -84,5 +94,7 @@ object StubMemberDao {
   val existsPhoneNumberFormatted = "+447835798240"
 
   val existsEmail = "IsaacBurgess@jourrapide.com"
+
+  val searchResults = Util.fixture[Seq[MemberSearchResult]]("example.json")
 
 }

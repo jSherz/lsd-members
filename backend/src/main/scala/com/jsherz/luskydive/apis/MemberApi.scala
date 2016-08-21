@@ -22,42 +22,45 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.json
+package com.jsherz.luskydive.apis
 
-import java.util.UUID
+import akka.http.scaladsl.model.StatusCodes
+import com.jsherz.luskydive.dao.{MemberDao, MemberDaoErrors}
 
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import com.jsherz.luskydive.core.Member
-import com.jsherz.luskydive.util.{DateJsonFormat, TimestampJsonFormat, UuidJsonFormat}
-import spray.json.DefaultJsonProtocol
+import scala.concurrent.ExecutionContext
+import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.server._
+import com.jsherz.luskydive.json.MemberSearchRequest
+import com.jsherz.luskydive.services.Cors.cors
+
+import scalaz.{-\/, \/-}
 
 /**
-  * JSON (de)serialization support.
+  * Used to retrieve member information.
   */
-object MemberJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
+class MemberApi(private val memberDao: MemberDao)(implicit ec: ExecutionContext) {
 
-  implicit val UuidFormat = UuidJsonFormat
-  implicit val DateFormat = DateJsonFormat
-  implicit val TimestampFormat = TimestampJsonFormat
-  implicit val MemberFormat = jsonFormat7(Member)
-  implicit val MemberSearchResultFormat = jsonFormat4(MemberSearchResult)
-  implicit val MemberSearchRequestFormat = jsonFormat1(MemberSearchRequest)
+  import com.jsherz.luskydive.json.MemberJsonSupport._
+
+  val searchRoute = path("search") {
+    cors {
+      post {
+        entity(as[MemberSearchRequest]) { req =>
+          if (req.searchTerm.trim.length >= 3) {
+            onSuccess(memberDao.search(req.searchTerm)) {
+              case \/-(results) => complete(results)
+              case -\/(error) => complete(StatusCodes.InternalServerError, error)
+            }
+          } else {
+            complete(StatusCodes.BadRequest, MemberDaoErrors.invalidSearchTerm)
+          }
+        }
+      }
+    }
+  }
+
+  val route: Route = pathPrefix("members") {
+    searchRoute
+  }
 
 }
-
-/**
-  * Used to look for members.
-  *
-  * @param searchTerm
-  */
-case class MemberSearchRequest(searchTerm: String)
-
-/**
-  * Useful information about a member to return from a search.
-  *
-  * @param uuid
-  * @param name
-  * @param phoneNumber
-  * @param email
-  */
-case class MemberSearchResult(uuid: Option[UUID], name: String, phoneNumber: Option[String], email: Option[String])

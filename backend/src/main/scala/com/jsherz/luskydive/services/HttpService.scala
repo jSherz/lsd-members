@@ -29,7 +29,7 @@ import akka.http.scaladsl.model.headers.{HttpOrigin, HttpOriginRange}
 import akka.http.scaladsl.server.Directive0
 import akka.http.scaladsl.server.Directives._
 import ch.megard.akka.http.cors.CorsSettings
-import com.jsherz.luskydive.apis.{CommitteeMemberApi, CoursesApi, SignupApi}
+import com.jsherz.luskydive.apis.{CommitteeMemberApi, CoursesApi, MemberApi, SignupApi}
 import com.jsherz.luskydive.dao.{CommitteeMemberDao, CourseDao, MemberDao}
 
 import scala.concurrent.ExecutionContext
@@ -45,11 +45,14 @@ class HttpService(memberDao: MemberDao, courseDao: CourseDao, committeeMemberDao
 
   val committeeRoutes = new CommitteeMemberApi(committeeMemberDao)
 
+  val memberRoutes = new MemberApi(memberDao)
+
   val routes =
     (pathPrefix("api") & pathPrefix("v1")) {
       signupRoutes.route ~
       coursesRoutes.route ~
-      committeeRoutes.route
+      committeeRoutes.route ~
+      memberRoutes.route
     }
 
 }

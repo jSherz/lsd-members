@@ -1,0 +1,20 @@
+[
+  {
+    "uuid": "c9ec82a1-97d3-4dce-b1f8-ef0d103cad73",
+    "name": "Paul Stout",
+    "email": "jonathancunningham@yahoo.com",
+    "phoneNumber": "+447419374319"
+  },
+  {
+    "uuid": "85c81aa2-38b7-43ed-a644-478f4fb91af1",
+    "name": "Rachel Jackson",
+    "email": "efoster@rodriguez-cunningham.com",
+    "phoneNumber": null
+  },
+  {
+    "uuid": "cf20f34e-d358-4e88-b68c-2f183e4fea39",
+    "name": "Dylan Foster",
+    "email": "kristencunningham@yahoo.com",
+    "phoneNumber": null
+  }
+]
