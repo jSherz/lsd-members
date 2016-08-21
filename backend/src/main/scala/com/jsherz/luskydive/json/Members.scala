@@ -24,6 +24,8 @@
 
 package com.jsherz.luskydive.json
 
+import java.util.UUID
+
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import com.jsherz.luskydive.core.Member
 import com.jsherz.luskydive.util.{DateJsonFormat, TimestampJsonFormat, UuidJsonFormat}
@@ -38,5 +40,16 @@ object MemberJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val DateFormat = DateJsonFormat
   implicit val TimestampFormat = TimestampJsonFormat
   implicit val MemberFormat = jsonFormat7(Member)
+  implicit val MemberSearchResultFormat = jsonFormat4(MemberSearchResult)
 
 }
+
+/**
+  * Useful information about a member to return from a search.
+  *
+  * @param uuid
+  * @param name
+  * @param phoneNumber
+  * @param email
+  */
+case class MemberSearchResult(uuid: Option[UUID], name: String, phoneNumber: Option[String], email: Option[String])

@@ -27,14 +27,18 @@ package com.jsherz.luskydive.itest.dao
 import java.sql.Timestamp
 import java.util.UUID
 
+import akka.actor.ActorSystem
+import akka.event.{Logging, LoggingAdapter}
 import com.jsherz.luskydive.core.Member
 import com.jsherz.luskydive.dao._
-import com.jsherz.luskydive.itest.util.{Util, DateUtil}
+import com.jsherz.luskydive.itest.util.{DateUtil, Util}
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 import org.scalatest.concurrent.ScalaFutures._
 import com.jsherz.luskydive.json.MemberJsonSupport._
+import com.jsherz.luskydive.json.MemberSearchResult
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scalaz.{-\/, \/-}
 
 /**
   * Ensures the member DAO works correctly with the golden test DB.
@@ -44,6 +48,8 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
   private var dao: MemberDao = _
 
   override protected def beforeAll(): Unit = {
+    implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
+
     val dbService = Util.setupGoldTestDb()
 
     dao = new MemberDaoImpl(databaseService = dbService)
@@ -184,6 +190,38 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       val member = dao.get(UUID.fromString("0d0fa940-6d3f-45f9-9be0-07b08ec4e240"))
 
       member.futureValue shouldEqual Some(Util.fixture[Member]("0d0fa940.json"))
+    }
+
+  }
+
+  "MemberDao#search" should {
+
+    "return Left(error.invalidSearchTerm) if the search term is blank or under three characters" in {
+      val testCases = Seq("", "a", "Ja", "  ", "  Br  ")
+
+      testCases.foreach { example =>
+        dao.search(example).futureValue shouldEqual -\/("error.invalidSearchTerm")
+      }
+    }
+
+    "not return anything when no fields are a match" in {
+      val testCases = Seq("Brucey", "+451182", "freestyler")
+
+      testCases.foreach { example =>
+        dao.search(example).futureValue shouldEqual \/-(Seq.empty)
+      }
+    }
+
+    "return a match on any of name, phone number or e-mail" in {
+      val testCases = Map(
+        "Bruce" -> Util.fixture[Vector[MemberSearchResult]]("bruce.json"),
+        "+447189154" -> Util.fixture[Vector[MemberSearchResult]]("plus447189154.json"),
+        "alexandra" -> Util.fixture[Vector[MemberSearchResult]]("alexandra.json")
+      )
+
+      testCases.foreach {
+        case (term, expected) => dao.search(term).futureValue shouldEqual \/-(expected)
+      }
     }
 
   }

@@ -28,8 +28,10 @@ import java.util.UUID
 
 import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.Member
+import com.jsherz.luskydive.json.MemberSearchResult
 
 import scala.concurrent.{ExecutionContext, Future}
+import scalaz.{\/, \/-}
 
 /**
   * A testing implementation of the MemberDAO that responds to a set of pre-defined inputs.
@@ -64,6 +66,14 @@ class StubMemberDao()(implicit val ec: ExecutionContext) extends MemberDao {
     * @return
     */
   override def get(uuid: UUID): Future[Option[Member]] = Future(None)
+
+  /**
+    * Perform a search for members by matching on names, phone numbers and e-mails.
+    *
+    * @param term
+    * @return
+    */
+  override def search(term: String): Future[\/[String, Seq[MemberSearchResult]]] = Future(\/-(Seq.empty))
 
 }
 

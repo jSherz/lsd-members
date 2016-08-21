@@ -24,14 +24,18 @@
 
 package com.jsherz.luskydive.dao
 
-import java.sql.{Date, Timestamp}
 import java.util.UUID
 
+import akka.event.LoggingAdapter
 import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.Member
+import com.jsherz.luskydive.json.MemberSearchResult
 import com.jsherz.luskydive.services.DatabaseService
+import com.jsherz.luskydive.util.FutureError
+import com.jsherz.luskydive.util.FutureError._
 
 import scala.concurrent.{ExecutionContext, Future}
+import scalaz.{-\/, \/}
 
 /**
   * Data Access Object to retrieve and store Member information.
@@ -65,9 +69,18 @@ trait MemberDao {
     */
   def get(uuid: UUID): Future[Option[Member]]
 
+  /**
+    * Perform a search for members by matching on names, phone numbers and e-mails.
+    *
+    * @param term
+    * @return
+    */
+  def search(term: String): Future[String \/ Seq[MemberSearchResult]]
+
 }
 
-case class MemberDaoImpl(override protected val databaseService: DatabaseService)(implicit ec: ExecutionContext)
+case class MemberDaoImpl(override protected val databaseService: DatabaseService)
+                        (implicit ec: ExecutionContext, implicit val log: LoggingAdapter)
   extends Tables(databaseService) with MemberDao {
 
   import driver.api._
@@ -113,5 +126,42 @@ case class MemberDaoImpl(override protected val databaseService: DatabaseService
   override def get(uuid: UUID): Future[Option[Member]] = {
     db.run(Members.filter(_.uuid === uuid).result.headOption)
   }
+
+  /**
+    * Perform a search for members by matching on all of the fields that are specified.
+    *
+    * For example, if name and phoneNumber are not None, members must match both to be included in the results.
+    *
+    * @param term
+    * @return
+    */
+  override def search(term: String): Future[String \/ Seq[MemberSearchResult]] = {
+    val termTrimmed = term.trim
+
+    if (termTrimmed.length >= 3) {
+      val formattedTerm = '%' + termTrimmed + '%'
+
+      val query = db.run(
+        Members.filter(member =>
+          // Match on any of name, phone or e-mail
+          (member.name like formattedTerm) ||
+            (member.phoneNumber like formattedTerm) ||
+            (member.email like formattedTerm)
+        ).result.map(_.map { rawMember =>
+          MemberSearchResult(rawMember.uuid, rawMember.name, rawMember.phoneNumber, rawMember.email)
+        })
+      )
+
+      query.withServerError
+    } else {
+      Future(-\/(MemberDaoErrors.invalidSearchTerm))
+    }
+  }
+
+}
+
+object MemberDaoErrors {
+
+  val invalidSearchTerm = "error.invalidSearchTerm"
 
 }

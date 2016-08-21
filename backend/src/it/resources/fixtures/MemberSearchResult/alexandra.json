@@ -1,0 +1,20 @@
+[
+  {
+    "uuid": "2ea6f183-9876-46a9-b6a7-3928574edf1e",
+    "name": "Christopher Davis",
+    "email": "alexandradavid@gmail.com",
+    "phoneNumber": "+447337289080"
+  },
+  {
+    "uuid": "98bad42d-d2b0-41c4-8a12-4c752b6431bf",
+    "name": "Maria Cook",
+    "email": "perezalexandra@gmail.com",
+    "phoneNumber": "+447724874864"
+  },
+  {
+    "uuid": "313e1d7d-db06-4460-8f86-888e09993a89",
+    "name": "James Harvey",
+    "email": "alexandramiles@gmail.com",
+    "phoneNumber": "+447707588138"
+  }
+]
