@@ -167,6 +167,7 @@ class CourseSpaceDaoImpl(protected override val databaseService: DatabaseService
           Future(-\/(CourseSpaceDaoErrors.memberNotInSpace))
         }
       }
+      case None => Future(-\/(CourseSpaceDaoErrors.unknownSpace))
     }
   }
 

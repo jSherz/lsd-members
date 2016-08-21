@@ -186,7 +186,7 @@ class CourseSpaceDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       )
 
       invalidSpaces.foreach { case (spaceUuid, memberUuid) =>
-        val result = dao.addMember(UUID.fromString(spaceUuid), UUID.fromString(memberUuid))
+        val result = dao.removeMember(UUID.fromString(spaceUuid), UUID.fromString(memberUuid))
 
         result.futureValue shouldEqual -\/("error.unknownSpace")
       }
