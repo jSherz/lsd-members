@@ -61,7 +61,9 @@
         <td class="sl-course-students-options" *ngIf="space.member">
           <button type="button" title="Contact student" class="sl-course-students-contact"><i class="fa fa-phone" aria-hidden="true"></i></button>
           <button type="button" title="Edit member information" class="sl-course-students-edit-member"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-          <button type="button" class="btn-warning sl-course-students-remove" title="Remove from course"><i class="fa fa-trash-o"></i></button>
+          <button type="button" class="btn-warning sl-course-students-remove" title="Remove from course" (click)="removeMemberFromCourse(space)">
+            <i class="fa fa-trash-o"></i>
+          </button>
         </td>
       </tr>
     </tbody>

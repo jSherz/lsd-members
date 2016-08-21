@@ -152,6 +152,28 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Remove the selected member from the course.
+   *
+   * @param space
+   */
+  removeMemberFromCourse(space: CourseSpaceWithMember) {
+    this.spaceService.removeMember(space.uuid, space.member.uuid).subscribe(
+      result => {
+        if (result.success) {
+          this.updateSpaces();
+        } else {
+          alert(this.translateError(result.error));
+        }
+      },
+      error => {
+        this.apiRequestFailed = true;
+        console.error('Failed to remove member from course:');
+        console.error(error)
+      }
+    )
+  }
+
+  /**
    * Turn a status returned by the API into a meaningful version.
    *
    * @param status
