@@ -12,8 +12,7 @@ import {
 
 @Component({
   selector: 'app-course-view',
-  templateUrl: 'course-view.component.html',
-  providers: [{ provide: CourseService, useClass: CourseServiceImpl }]
+  templateUrl: 'course-view.component.html'
 })
 export class CourseViewComponent implements OnInit, OnDestroy {
 

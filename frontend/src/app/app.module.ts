@@ -22,6 +22,7 @@ import {LocationStrategy, PathLocationStrategy} from "@angular/common";
 import {MemberSearchService, MemberSearchServiceImpl} from "./admin/member-search/member-search.service";
 import {CourseSpaceService, CourseSpaceServiceImpl} from "./admin/course-spaces/course-spaces.service";
 import {CommitteeService, CommitteeServiceImpl} from "./admin/committee/committee.service";
+import {CourseService, CourseServiceImpl} from "./admin/courses/course.service";
 
 @NgModule({
   imports:      [
@@ -53,6 +54,7 @@ import {CommitteeService, CommitteeServiceImpl} from "./admin/committee/committe
     { provide: SignupService, useClass: SignupServiceImpl },
     { provide: LocationStrategy, useClass: PathLocationStrategy },
     { provide: MemberSearchService, useClass: MemberSearchServiceImpl },
+    { provide: CourseService, useClass: CourseServiceImpl },
     { provide: CourseSpaceService, useClass: CourseSpaceServiceImpl },
     { provide: CommitteeService, useClass: CommitteeServiceImpl }
   ]
