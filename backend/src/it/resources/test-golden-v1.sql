@@ -23,11 +23,24 @@ SET default_with_oids = false;
 -- Cleanup old tables
 --
 
+DROP TABLE IF EXISTS api_keys;
 DROP TABLE IF EXISTS course_spaces;
 DROP TABLE IF EXISTS courses;
 DROP TABLE IF EXISTS members;
 DROP TABLE IF EXISTS committee_members;
 DROP TABLE IF EXISTS schema_version;
+
+
+--
+-- Name: api_keys; Type: TABLE; Schema: public; Owner: luskydive
+--
+
+CREATE TABLE api_keys (
+    uuid UUID PRIMARY KEY NOT NULL,
+    committee_member_uuid UUID NOT NULL,
+    created_at TIMESTAMP DEFAULT now() NOT NULL,
+    expires_at TIMESTAMP NOT NULL
+);
 
 
 --
@@ -102,6 +115,112 @@ CREATE TABLE schema_version (
     execution_time integer NOT NULL,
     success boolean NOT NULL
 );
+
+
+--
+-- Data for Name: api_keys; Type: TABLE DATA; Schema: public; Owner: luskydive
+--
+
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('fc3b6da2-08f1-4139-a12b-aa5a755631a4', 'd9d90f87-4fa0-4892-8376-1eeafa99c64b', '2015-03-18 05:38:12', '2015-03-19 06:15:50');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('0f03593b-5816-4fc8-83ca-c0fce1d08221', '2bb4ccd7-927a-4e5d-9456-40e5dcee3d34', '2009-08-08 07:31:36', '2009-08-08 15:34:32');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('35550988-fdef-41ec-886f-f3c1d6d03785', '7d466e82-ce83-4778-a050-28faa02785e1', '2014-02-03 03:31:38', '2014-02-03 14:29:49');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('e10de0cb-5a18-4515-9a16-c03b27f04ce0', 'a3fb1c86-af9c-49db-a0ac-3bff22b9352d', '2009-05-28 03:10:50', '2009-05-29 00:41:28');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('f6cb728e-0e4b-496d-8711-656b29880973', '4024bcef-2bfb-4f93-81c7-0433faa79623', '2012-11-17 22:19:17', '2012-11-18 16:36:37');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('d0fc51e7-b2f5-495a-9d24-ba573108756d', '8fb97bac-04cc-4704-a89f-1a23d9faf2b8', '2009-11-19 01:09:46', '2009-11-20 03:08:57');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('56d2776b-c6ee-498d-969b-d11d6e07039d', '80b0ffad-b9c4-4888-8915-428520c7c960', '2013-09-15 09:19:11', '2013-09-16 18:15:02');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('bf1ff96a-8e94-4cd8-a20a-6c26828c0a5d', '1e6197b4-dcd3-4287-a87f-3ca761dccba2', '2010-03-03 21:45:48', '2010-03-04 05:23:37');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('ded2cd5d-b4e9-437f-b229-2ae82d334843', 'dbabfcc4-20e5-4a01-ae55-30149179179c', '2016-11-22 13:15:08', '2016-11-22 13:48:51');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('487a2930-8e6a-41a5-bcc0-b7fd7f2421e4', 'd9d90f87-4fa0-4892-8376-1eeafa99c64b', '2017-07-25 10:41:16', '2017-07-25 18:58:42');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('29ebf242-134e-43a1-8347-7a71c13d21a4', '4024bcef-2bfb-4f93-81c7-0433faa79623', '2016-10-05 04:38:04', '2016-10-05 17:41:25');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('f1e37365-ada6-4a5a-8798-1725e71d4538', '91a35643-3fd0-403b-b90f-c612092cc97b', '2013-01-12 14:38:03', '2013-01-13 07:52:42');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('9d809e58-4050-4dcb-aed2-755c98afce18', 'f545a332-0d12-4562-845a-591275740f16', '2016-12-23 21:14:54', '2016-12-24 08:25:59');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('b6ea0b34-e7b3-4934-8b06-afa1f188b44d', '17df9c8c-f39e-444e-89ee-99a5a504eb3c', '2009-03-03 08:18:07', '2009-03-03 11:36:02');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('448a7427-48b6-400e-a531-4e2a03ad6c0b', '7d466e82-ce83-4778-a050-28faa02785e1', '2008-09-25 16:57:53', '2008-09-26 09:39:18');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('eb8a8cb7-248f-4da5-8077-611fd860606f', '5806c981-63b9-4dab-a448-1ea93eefb37d', '2009-11-11 04:42:23', '2009-11-11 22:00:47');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('7e724b6d-dc8b-4be3-af58-1fdf266abb69', '9b0e8361-ef74-4612-8bfe-9acc956b8fc4', '2017-04-30 01:53:24', '2017-05-01 04:37:36');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('71f12330-107c-4506-9118-591fff2b71ee', '338fa63a-0486-469c-ba3f-737c0e8aafef', '2014-03-29 08:42:16', '2014-03-30 05:52:02');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('54eb8e17-f785-45b0-a010-0ff0acfca42f', 'b502f2c5-50cd-42e3-af11-d3248d18a0a3', '2014-05-16 02:04:35', '2014-05-16 08:51:34');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('c402b2f5-fd54-41c8-a66c-3ca19363ec5a', 'dcca3bf6-5f0a-4eeb-a016-f86ef477b82a', '2013-03-08 20:21:25', '2013-03-09 12:38:44');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('ef56ab20-54e1-4147-b541-89010a2a9b48', '2bb4ccd7-927a-4e5d-9456-40e5dcee3d34', '2012-07-20 08:24:58', '2012-07-21 03:02:10');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('36f863e8-7cee-46e2-aa23-615dc3a475ab', 'be920f06-47e3-440e-8476-fb906004264f', '2015-09-21 08:02:04', '2015-09-22 00:39:45');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('618270c5-b31d-41d0-ac62-2745923fb93e', 'a8df22ad-c2a4-40b6-9939-852421d9b30e', '2012-11-04 01:59:15', '2012-11-05 00:27:06');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('2aa7ad97-e8fd-479a-9dc8-9b6ac5ac7b92', '45b9369c-246c-46ce-be79-62bf03a696c2', '2013-08-21 07:55:22', '2013-08-21 08:35:52');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('62c900b4-d647-46a6-b3d3-e8b438f85fda', 'd9d90f87-4fa0-4892-8376-1eeafa99c64b', '2016-03-12 12:53:45', '2016-03-13 03:10:14');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('5dec5393-0048-478b-8564-5d2f2f9d26c0', 'b0632bbb-ee6b-45df-9fdd-65fae209e2f2', '2010-01-17 18:52:36', '2010-01-18 07:25:45');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('507f0cae-b09f-470c-9e15-96232220ca5b', '2b35ed41-7915-4fce-8fcf-e11449593c4e', '2013-11-24 11:06:40', '2013-11-25 08:06:29');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('979dd908-13b2-43f5-bed9-3897a81d8b86', '3048bd06-ecd9-415c-9b88-8a4f09831002', '2009-08-30 15:20:36', '2009-08-30 18:10:31');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('f7ac1249-47c3-4eb3-baa3-d27ed9c26de5', '15c34873-7a23-4440-a540-5314f64fda7b', '2013-08-02 12:58:01', '2013-08-02 23:16:48');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('af5b92be-adfb-4359-a03b-30986b5b7515', '338fa63a-0486-469c-ba3f-737c0e8aafef', '2016-10-08 15:20:50', '2016-10-08 22:28:23');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('362892d3-727a-4aff-a970-d4da050de91d', '6892fcb3-a9d8-4ae1-954b-f6e9c7a0f57d', '2010-04-23 10:13:25', '2010-04-24 03:05:27');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('b04b1299-3a4d-48b9-8810-8c5238c803e1', '45b9369c-246c-46ce-be79-62bf03a696c2', '2010-04-19 07:57:41', '2010-04-20 01:22:13');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('7bd8ba05-c7e0-4a16-af19-4493c67d2566', '5806c981-63b9-4dab-a448-1ea93eefb37d', '2012-04-27 08:39:49', '2012-04-28 08:05:42');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('4a143178-aa20-4969-8fab-76b7b3d6d8a3', '90ab1869-92f4-44a9-95b4-73f74bba5bfd', '2012-06-02 06:40:52', '2012-06-03 12:53:47');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('8fee2a58-701a-436d-920a-112621d78526', '068d078d-c844-478d-a365-c2498f0e7717', '2012-02-22 18:26:38', '2012-02-23 04:36:07');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('50302413-3491-48f5-8b2e-f27a17883479', '596518da-5c2c-4747-9a96-aff2411672d4', '2014-04-04 07:51:40', '2014-04-05 04:31:49');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('2ccbcaea-5eaa-4772-b5b3-ff51cb1f5d36', '1cf5b143-40b0-4658-b017-0b1c905a690a', '2015-05-10 21:45:44', '2015-05-11 08:04:16');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('42017660-49e6-4e4e-ada6-ebde76f9f6d5', '8f41e284-20f3-4de8-96f2-5171569ecb75', '2017-04-25 18:46:42', '2017-04-26 15:32:40');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('46718d29-c284-44c1-b095-6c064d944bf8', '4f07fa88-8922-41a7-889d-d2553624c4ab', '2009-08-21 10:37:26', '2009-08-21 15:29:31');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('ca00808a-67bd-4664-9565-f661353c3509', '45b9369c-246c-46ce-be79-62bf03a696c2', '2015-04-22 20:46:10', '2015-04-24 01:22:53');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('7155cf78-c275-448a-9b5a-4fabd3716962', '749c4b9c-773e-4aa2-bfa2-90716c4fdfb3', '2014-04-20 18:24:17', '2014-04-21 15:13:18');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('ecbf1415-a47e-43ce-8de5-8a5da6db8753', '7e2cb7ef-46d4-4109-a7b8-79d5294b9457', '2011-02-05 21:15:54', '2011-02-06 07:19:53');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('913e99ea-4aad-41d9-948b-7d767bca1657', 'a8df22ad-c2a4-40b6-9939-852421d9b30e', '2014-03-07 11:23:02', '2014-03-08 04:55:50');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('e873e6ef-9150-42bd-83be-8199e41c81df', '7cbc440d-6dee-40d5-ad90-515cb226318c', '2013-08-02 03:32:51', '2013-08-02 08:09:08');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('49db3b93-c896-4365-a4b8-a6c68dc9266d', 'a3fb1c86-af9c-49db-a0ac-3bff22b9352d', '2014-08-04 11:37:50', '2014-08-05 01:03:19');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('1dd66aec-69a6-4333-9bf1-921fff828926', '9f036a07-605b-44e8-a262-d33e7fc73d5d', '2010-09-27 01:44:56', '2010-09-27 08:25:34');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('674bb10e-b51e-41e3-8946-c7503fd0ae5b', '8fb97bac-04cc-4704-a89f-1a23d9faf2b8', '2016-08-10 18:49:55', '2016-08-11 06:43:47');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('afd3aabe-d8ff-44ea-8f8a-7bedf2903169', 'dcca3bf6-5f0a-4eeb-a016-f86ef477b82a', '2015-02-05 01:17:05', '2015-02-05 19:25:31');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('63c0cee3-f2a3-4755-aeb6-fa85641a14f7', 'b0632bbb-ee6b-45df-9fdd-65fae209e2f2', '2010-08-02 08:05:59', '2010-08-02 23:22:59');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('b558c2d8-5f10-4ef5-8b84-18430ee70aac', '756bf336-e3c7-47d3-bd14-00dbfff302cf', '2008-12-28 09:36:35', '2008-12-28 14:03:17');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('948cae8a-6a2a-4b39-8390-3d75aa8b5043', '0d6717b7-530c-418b-9b97-dffbe972de87', '2017-01-17 11:09:45', '2017-01-17 22:46:38');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('f1dfb2f0-9f0b-407d-b1ce-09c7090d1223', '89afafe2-37a9-4483-8e25-77ad925aa8ed', '2012-06-09 23:17:48', '2012-06-10 03:30:33');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('416fa662-bef4-4ce2-8f68-1afdc60a44aa', 'de8359e5-db63-494c-9273-cf99e171ae39', '2016-11-29 20:11:02', '2016-11-30 16:55:01');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('1f2fe240-1120-4484-9b03-e5f3369bc977', '8d1ac4cc-2c50-4466-acf8-21d89dbaf231', '2013-10-16 19:35:19', '2013-10-17 07:38:07');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('a8f5d9cb-92fc-44ad-a4b6-d78e7bf8b718', 'bf5e8752-69ea-4a4b-a76e-343afb105483', '2016-08-09 22:09:24', '2016-08-10 15:12:11');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('96bc7d5d-609a-464a-9526-5683f0dd19e2', '338fa63a-0486-469c-ba3f-737c0e8aafef', '2008-10-10 00:29:33', '2008-10-10 04:08:31');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('693c4e2a-fc4c-4d2e-be69-716765a224a0', 'e6adfd3f-719b-4307-b0b7-5b0944f675e7', '2014-06-23 21:35:55', '2014-06-24 21:18:58');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('1dad5374-26fd-43de-8872-4dd5626d4a97', '75f2bfee-8859-46a8-8c08-956c2162f5c3', '2011-05-22 10:25:53', '2011-05-22 11:33:51');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('e445812f-1f84-49bb-9143-f8bd441373a1', 'ebee9670-5a80-4f76-8a3a-a89b09cda159', '2015-12-05 09:01:26', '2015-12-05 13:53:29');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('1a1a8491-826a-4880-8c28-e0c338c76c99', '50b7fec4-a416-44b4-a0be-c28d0f1c01ca', '2010-08-21 21:04:38', '2010-08-22 07:55:12');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('b8cc7eef-35f8-4910-a3cd-f3d64638cfa6', '45b9369c-246c-46ce-be79-62bf03a696c2', '2015-05-05 16:40:27', '2015-05-06 07:10:13');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('ebc61815-1765-4846-9561-7de80fa932a5', '90ab1869-92f4-44a9-95b4-73f74bba5bfd', '2014-07-26 09:28:02', '2014-07-26 19:07:43');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('28fd69f1-d671-4c94-8ba0-26bcfd0a3672', '2bb4ccd7-927a-4e5d-9456-40e5dcee3d34', '2014-05-13 13:57:28', '2014-05-14 17:30:33');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('558f82ee-0d06-48db-971d-9aa7bc80709e', '3a21c215-55a8-455a-ae45-c9dd6e0ca7dd', '2015-04-23 19:04:33', '2015-04-25 06:15:49');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('dcc571c5-7000-4629-ac18-2fa3211a5ddc', '8823be6a-0fb4-4ba9-bca2-dbf0cd4a0fe6', '2011-11-11 20:48:04', '2011-11-12 17:53:51');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('a1e23843-17b4-4326-ad30-c144f92b4a3b', '52abe905-4d2c-4f38-819c-fc6b5d6b851f', '2014-06-16 16:04:58', '2014-06-17 19:55:25');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('409305ac-5fed-4268-ad17-81f10db49f1f', '7ef66aa5-92c3-4e0c-a9a5-a1ae91189837', '2011-11-24 05:34:49', '2011-11-24 12:34:33');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('8a2d9ad7-1aca-4199-89a8-aa188f9423b6', '756bf336-e3c7-47d3-bd14-00dbfff302cf', '2009-12-10 10:40:11', '2009-12-11 11:29:57');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('b8f8ac97-2601-45ca-b5c3-30f661526aed', '78e25bf7-ae21-41a5-ad1f-0e11f3cc0b29', '2017-02-08 02:20:15', '2017-02-08 15:25:25');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('000365ba-30f6-46f0-b087-5439b0648989', '61d28e64-e505-41a1-971c-53ec472252aa', '2015-08-16 06:56:48', '2015-08-17 16:38:25');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('f59548e5-9ac6-4ba3-9021-c12d70e6489f', 'ebee9670-5a80-4f76-8a3a-a89b09cda159', '2015-04-15 17:12:47', '2015-04-16 11:36:13');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('ea22c615-ff86-4a63-b463-b140f9306114', '6d0520c0-8a0b-459a-bc2e-f1126dd848f3', '2009-05-15 11:55:07', '2009-05-16 07:13:07');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('5a584fc1-8592-420d-ba5c-1d3254de7cbb', 'c4b36906-2b31-47f4-9280-051552dde18e', '2017-07-09 05:56:18', '2017-07-09 14:36:21');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('d012f02b-e642-4d79-848d-096d940f29d5', 'dbabfcc4-20e5-4a01-ae55-30149179179c', '2012-06-26 07:56:17', '2012-06-26 17:54:25');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('f5d03868-a5b5-4153-8db3-346c7a6bde21', '756bf336-e3c7-47d3-bd14-00dbfff302cf', '2009-09-13 03:46:47', '2009-09-13 23:07:08');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('ede3a04c-dfec-41c1-a405-0d0e00185ba1', '9b0e8361-ef74-4612-8bfe-9acc956b8fc4', '2012-07-29 01:41:38', '2012-07-30 11:20:51');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('641e99aa-8b39-414b-bed2-eb9d85ed815e', 'de8359e5-db63-494c-9273-cf99e171ae39', '2011-04-11 08:04:27', '2011-04-11 09:37:19');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('fa959911-8d4a-4c22-8ab1-9ebe45c0832f', '7e2cb7ef-46d4-4109-a7b8-79d5294b9457', '2010-01-26 18:29:01', '2010-01-27 20:22:56');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('010ea6f0-1947-46ca-b46e-7f64ba7bdb4b', '61d28e64-e505-41a1-971c-53ec472252aa', '2014-07-14 23:22:55', '2014-07-15 21:43:19');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('6a494b6a-9e11-43f1-ae1b-e03139ad80ac', '52abe905-4d2c-4f38-819c-fc6b5d6b851f', '2016-12-08 06:43:24', '2016-12-08 15:44:45');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('35650b51-ec75-4536-95e7-873ebb9f02d0', 'e6adfd3f-719b-4307-b0b7-5b0944f675e7', '2016-07-15 05:36:20', '2016-07-15 14:00:53');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('9525e31d-dd6e-446c-a7d2-26db96d5c182', 'e54872dc-3721-4437-b2af-71860e9fcb07', '2011-02-18 07:56:53', '2011-02-18 17:17:22');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('9ec25bca-dd8d-4564-9273-dba7461d76e7', '78e25bf7-ae21-41a5-ad1f-0e11f3cc0b29', '2011-02-12 04:34:04', '2011-02-12 22:36:49');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('1121e092-4d98-4d98-9ed2-0c1b3fc257e9', 'fe27ae3d-ae32-4097-ae4c-809cd2d5a946', '2012-09-19 00:44:51', '2012-09-19 09:11:17');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('32148d3f-07d3-4f20-8da8-df790372d590', 'a94c14b3-4542-4b4f-bf6c-e9a9a88f5b4a', '2014-08-02 09:46:50', '2014-08-02 11:17:11');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('59957125-a5dd-46c8-87ea-5ab08760d114', 'd40ebb60-ede6-4dc7-95b7-f141c544ea18', '2009-09-17 06:41:33', '2009-09-18 00:49:32');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('a0184291-bea9-480a-b68a-e7e3ffa35a6e', '36b7cfde-486d-4b66-a645-54cd641035d4', '2015-09-13 22:13:57', '2015-09-14 06:54:51');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('c42cd781-160f-46ff-aca0-c28c35c4f084', 'f545a332-0d12-4562-845a-591275740f16', '2012-08-24 17:35:27', '2012-08-25 21:19:50');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('7aadd18c-7ba6-4c15-9f49-19c465cf362f', '15c34873-7a23-4440-a540-5314f64fda7b', '2014-03-03 21:36:30', '2014-03-03 22:51:22');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('8cb71d15-e1e7-4a64-bfca-19d8a2ccf3c8', '61d28e64-e505-41a1-971c-53ec472252aa', '2016-07-10 05:34:24', '2016-07-10 09:44:50');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('36ffda64-5679-45fc-80c1-04068f91d0ef', 'bf5e8752-69ea-4a4b-a76e-343afb105483', '2011-03-28 14:47:06', '2011-03-28 22:30:32');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('8a3f6419-1291-41db-be10-10b2c309de73', '3048bd06-ecd9-415c-9b88-8a4f09831002', '2012-01-27 22:26:49', '2012-01-28 19:35:07');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('59648b41-1e44-495d-8f02-df928600d68a', 'a8df22ad-c2a4-40b6-9939-852421d9b30e', '2015-07-21 22:55:19', '2015-07-22 01:16:40');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('90d89832-bd77-48b9-8422-5215c645883f', 'a8df22ad-c2a4-40b6-9939-852421d9b30e', '2015-04-12 09:15:33', '2015-04-12 10:50:03');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('c221e50b-6612-4472-ad12-d3ab445fec42', 'c257e6e1-fec9-443c-8e82-4917cf189ac5', '2015-01-15 15:36:13', '2015-01-15 17:02:38');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('6638bdae-425c-4a73-a21f-2f4b360d77ec', '61d28e64-e505-41a1-971c-53ec472252aa', '2009-08-21 09:59:51', '2009-08-22 15:03:32');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('d4acb7d3-c42c-45b7-8c52-5babc4614f4c', 'a32541ee-f83b-492c-b15f-4e8f1a1e0951', '2015-06-22 13:48:54', '2015-06-22 21:11:09');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('67ab5d5a-843f-46bb-a20b-5f0d0fda75e6', '50b7fec4-a416-44b4-a0be-c28d0f1c01ca', '2014-03-26 14:48:17', '2014-03-27 03:14:30');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('e87a2012-8393-4385-a6d0-5a6d41f86df0', 'e54872dc-3721-4437-b2af-71860e9fcb07', '2014-11-12 23:36:16', '2014-11-13 16:53:15');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES('59dbddc3-b65f-488e-8dfd-ee177f31aed1', '13da0c26-b8b5-4c76-8010-cee5fd95c5d9', '2013-02-16 06:52:34', '2013-02-17 01:20:20');
 
 
 --
@@ -1990,6 +2109,7 @@ INSERT INTO members (uuid, name, email, phone_number, last_jump, created_at, upd
 
 INSERT INTO schema_version (installed_rank, version, description, type, script, checksum, installed_by, installed_on, execution_time, success) VALUES (1, '1.0', 'Create table members', 'SQL', 'V1_0__Create_table_members.sql', 333059038, 'luskydive', '2016-08-10 22:08:39.045016', 29, true);
 INSERT INTO schema_version (installed_rank, version, description, type, script, checksum, installed_by, installed_on, execution_time, success) VALUES (2, '1.1', 'Create committee and raps course tables', 'SQL', 'V1_1__Create_committee_and_raps_course_tables.sql', -2057073705, 'luskydive', '2016-08-10 22:08:39.126118', 37, true);
+INSERT INTO schema_version (installed_rank, version, description, type, script, checksum, installed_by, installed_on, execution_time, success) VALUES (3, '1.2', 'Create api keys table', 'SQL', 'V1_2__Create_api_keys_table.sql', 2014026903, 'luskydive', '2016-08-21 18:24:01.480063', 24, true);
 
 
 --
@@ -1998,6 +2118,14 @@ INSERT INTO schema_version (installed_rank, version, description, type, script, 
 
 ALTER TABLE ONLY committee_members
     ADD CONSTRAINT committee_members_pkey PRIMARY KEY (uuid);
+
+
+--
+-- Name: api_keys_committee_member_uuid_fkey; Type: CONSTRAINT; Schema: public; Owner: luskydive
+--
+
+ALTER TABLE ONLY api_keys
+    ADD CONSTRAINT api_keys_committee_member_uuid_fkey FOREIGN KEY (committee_member_uuid) REFERENCES committee_members(uuid);
 
 
 --
