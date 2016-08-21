@@ -22,7 +22,9 @@ class TestSetup {
 function mockComp(): TestSetup {
   let keys = [];
   for (let key in Router.prototype) {
-    keys.push(key);
+    if (Router.prototype.hasOwnProperty(key)) {
+      keys.push(key);
+    }
   }
 
   let builder = new FormBuilder();
@@ -75,7 +77,7 @@ describe('Signup Alt Component', () => {
     let test = mockComp();
 
     test.component.signup({ name: SignupServiceStub.inUseName, email: SignupServiceStub.inUseEmail });
-    expect(test.component.errors[0].email).toEqual("The specified e-mail is in use");
+    expect(test.component.errors[0].email).toEqual('The specified e-mail is in use');
 
     expect(test.router.navigate).not.toHaveBeenCalled();
   });

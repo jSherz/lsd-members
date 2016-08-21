@@ -45,7 +45,7 @@ describe('Service: Month', () => {
       providers: [MonthService]
     });
 
-    jasmine.addMatchers(MOMENT_MATCHER)
+    jasmine.addMatchers(MOMENT_MATCHER);
   });
 
 });

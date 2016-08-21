@@ -1,8 +1,7 @@
-import { Subscription      } from 'rxjs';
-import { ActivatedRoute    } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
-import { HTTP_PROVIDERS    } from '@angular/http';
-import * as moment        from 'moment';
+import { Subscription                 } from 'rxjs';
+import { ActivatedRoute               } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import * as moment from 'moment';
 
 import {
   CourseService,
@@ -16,7 +15,7 @@ import {
   templateUrl: 'course-view.component.html',
   providers: [{ provide: CourseService, useClass: CourseServiceImpl }]
 })
-export class CourseViewComponent implements OnInit {
+export class CourseViewComponent implements OnInit, OnDestroy {
 
   /**
    * Subscribes to the current activated route and displays different courses as it changes.
@@ -27,9 +26,9 @@ export class CourseViewComponent implements OnInit {
    * The currently displayed course (if any).
    */
   private course: CourseWithOrganisers = new CourseWithOrganisers(
-    new Course("Loading", moment([1800, 0, 1]), "Loading", "Loading", 0),
-    new CommitteeMember("Loading", "Loading"),
-    new CommitteeMember("Loading", "Loading")
+    new Course('Loading', moment([1800, 0, 1]), 'Loading', 'Loading', 0),
+    new CommitteeMember('Loading', 'Loading'),
+    new CommitteeMember('Loading', 'Loading')
   );
 
   /**
@@ -128,7 +127,7 @@ export class CourseViewComponent implements OnInit {
    */
   private formatDate(input: moment.Moment) {
     if (input && input.format) {
-      return input.format('dddd, MMMM Do YYYY')
+      return input.format('dddd, MMMM Do YYYY');
     } else {
       return 'Unknown';
     }

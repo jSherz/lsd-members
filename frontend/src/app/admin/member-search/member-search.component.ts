@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {Observable} from "rxjs";
-import {SearchResult, MemberSearchService} from "./member-search.service";
+
+import { SearchResult, MemberSearchService } from './member-search.service';
 
 /**
  * Enables a user to search for a member and then select that member.

@@ -22,7 +22,9 @@ class TestSetup {
 function mockComp(): TestSetup {
   let keys = [];
   for (let key in Router.prototype) {
-    keys.push(key);
+    if (Router.prototype.hasOwnProperty(key)) {
+      keys.push(key);
+    }
   }
 
   let builder = new FormBuilder();
@@ -75,7 +77,7 @@ describe('SignupComponent', () => {
     let test = mockComp();
 
     test.component.signup({ name: SignupServiceStub.inUseName, phoneNumber: SignupServiceStub.inUsePhoneNumber });
-    expect(test.component.errors[0].phoneNumber).toEqual("The specified phone number is in use");
+    expect(test.component.errors[0].phoneNumber).toEqual('The specified phone number is in use');
 
     expect(test.router.navigate).not.toHaveBeenCalled();
   });

@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import {Http, Headers, RequestOptions, Response} from "@angular/http";
-import {Observable} from "rxjs";
-import {ErrorObservable} from "rxjs/observable/ErrorObservable";
+import { Injectable                              } from '@angular/core';
+import { Http, Headers, RequestOptions, Response } from '@angular/http';
+import { Observable                              } from 'rxjs';
+import { ErrorObservable                         } from 'rxjs/observable/ErrorObservable';
 
 export class SearchResult {
 

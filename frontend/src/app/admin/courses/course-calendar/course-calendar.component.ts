@@ -73,7 +73,7 @@ export class CourseCalendarComponent implements OnInit, OnDestroy {
    *
    * @param event
    */
-  private monthSelectionChanged(event) {
+  monthSelectionChanged(event) {
     let chosenMonth = moment(event.target.value);
 
     if (!chosenMonth.isSame(this.currentMonth)) {

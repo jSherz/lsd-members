@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
+import { Injectable                              } from '@angular/core';
+import { RequestOptions, Headers, Http, Response } from '@angular/http';
+import { Observable                              } from 'rxjs/Observable';
+import { ErrorObservable                         } from 'rxjs/observable/ErrorObservable';
 import * as moment from 'moment';
-import {RequestOptions, Headers, Http, Response} from '@angular/http';
-import {Observable} from 'rxjs/Observable';
-import {ErrorObservable} from "rxjs/observable/ErrorObservable";
 
 export class Course {
   uuid: String;
@@ -101,7 +101,7 @@ export class CourseServiceImpl extends CourseService {
 
   private coursesFindUrl = 'http://localhost:8080/api/v1/courses';
   private coursesGetUrl = 'http://localhost:8080/api/v1/courses/{{uuid}}';
-  private courseSpacesUrl = 'http://localhost:8080/api/v1/courses/{{uuid}}/spaces'
+  private courseSpacesUrl = 'http://localhost:8080/api/v1/courses/{{uuid}}/spaces';
 
   constructor(private http: Http) {
     super();
@@ -132,7 +132,7 @@ export class CourseServiceImpl extends CourseService {
    * @returns {undefined}
    */
   get(uuid: string): Observable<CourseWithOrganisers> {
-    return this.http.get(this.coursesGetUrl.replace("{{uuid}}", uuid))
+    return this.http.get(this.coursesGetUrl.replace('{{uuid}}', uuid))
       .map(this.extractJson)
       .catch(this.handleError);
   }
@@ -144,7 +144,7 @@ export class CourseServiceImpl extends CourseService {
    * @returns {undefined}
    */
   spaces(uuid: string): Observable<CourseSpaceWithMember[]> {
-    return this.http.get(this.courseSpacesUrl.replace("{{uuid}}", uuid))
+    return this.http.get(this.courseSpacesUrl.replace('{{uuid}}', uuid))
       .map(this.extractJson)
       .catch(this.handleError);
   }

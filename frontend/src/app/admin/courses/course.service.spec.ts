@@ -1,10 +1,10 @@
 /* tslint:disable:no-unused-variable */
 
-import { inject  } from '@angular/core/testing';
-import { TestBed } from '@angular/core/testing/test_bed';
+import { inject     } from '@angular/core/testing';
+import { TestBed    } from '@angular/core/testing/test_bed';
+import { HttpModule } from '@angular/http';
 
 import { CourseService, CourseServiceImpl } from './course.service';
-import {HttpModule} from "@angular/http";
 
 describe('Course Service', () => {
 
