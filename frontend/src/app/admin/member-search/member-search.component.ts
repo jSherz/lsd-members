@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, Output, EventEmitter} from '@angular/core';
 
 import { SearchResult, MemberSearchService } from './member-search.service';
 
@@ -43,6 +43,13 @@ export class MemberSearchComponent implements OnInit {
    */
   displayedSearchResults: SearchResult[] = [];
 
+  /**
+   * Used to send parent components selected member events.
+   *
+   * @type {EventEmitter}
+   */
+  @Output() memberSelected: EventEmitter<SearchResult> = new EventEmitter<SearchResult>();
+
   constructor(private searchService: MemberSearchService) { }
 
   ngOnInit() {
@@ -57,9 +64,13 @@ export class MemberSearchComponent implements OnInit {
     });
   }
 
-  selectResult(result) {
-    console.log('Selected: ');
-    console.log(result);
+  /**
+   * Called when the user clicks on a member. Emits an event to inform listening components that a member was chosen.
+   *
+   * @param result
+   */
+  searchResultSelected(result) {
+    this.memberSelected.emit(result);
   }
 
   /**

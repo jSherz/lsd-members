@@ -4,6 +4,11 @@ import { Observable                              } from 'rxjs';
 import { ErrorObservable                         } from 'rxjs/observable/ErrorObservable';
 
 
+export class CourseSpaceMemberResponse {
+  success: boolean;
+  error: string;
+}
+
 /**
  * A service for manipulating the spaces on a course.
  */
@@ -17,7 +22,7 @@ export abstract class CourseSpaceService {
    * @param uuid Course space UUID
    * @param memberUuid
    */
-  abstract addMember(uuid: string, memberUuid: string): Observable<string>
+  abstract addMember(uuid: string, memberUuid: string): Observable<CourseSpaceMemberResponse>
 
   /**
    * Remove a member from a space on a course.
@@ -27,15 +32,15 @@ export abstract class CourseSpaceService {
    * @param uuid Course space UUID
    * @param memberUuid
    */
-  abstract removeMember(uuid: string, memberUuid: string): Observable<string>
+  abstract removeMember(uuid: string, memberUuid: string): Observable<CourseSpaceMemberResponse>
 
 }
 
 @Injectable()
 export class CourseSpaceServiceImpl extends CourseSpaceService {
 
-  private addMemberUrl = 'http://localhost:8080/api/v1/course-spaces/add-member';
-  private removeMemberUrl = 'http://localhost:8080/api/v1/course-spaces/remove-member';
+  private addMemberUrl = 'http://localhost:8080/api/v1/course-spaces/{{uuid}}/add-member';
+  private removeMemberUrl = 'http://localhost:8080/api/v1/course-spaces/{{uuid}}/remove-member';
 
   constructor(private http: Http) {
     super();
@@ -49,13 +54,10 @@ export class CourseSpaceServiceImpl extends CourseSpaceService {
    * @param uuid Course space UUID
    * @param memberUuid
    */
-  addMember(uuid: string, memberUuid: string): Observable<string> {
-    let request = {
-      uuid: uuid,
-      memberUuid: memberUuid
-    };
+  addMember(uuid: string, memberUuid: string): Observable<CourseSpaceMemberResponse> {
+    let request = { memberUuid: memberUuid };
 
-    return this.postAsJson(this.addMemberUrl, request);
+    return this.postAsJson(this.addMemberUrl.replace('{{uuid}}', uuid), request);
   }
 
   /**
@@ -66,13 +68,10 @@ export class CourseSpaceServiceImpl extends CourseSpaceService {
    * @param uuid Course space UUID
    * @param memberUuid
    */
-  removeMember(uuid: string, memberUuid: string): Observable<string> {
-    let request = {
-      uuid: uuid,
-      memberUuid: memberUuid
-    };
+  removeMember(uuid: string, memberUuid: string): Observable<CourseSpaceMemberResponse> {
+    let request = { memberUuid: memberUuid };
 
-    return this.postAsJson(this.removeMemberUrl, request);
+    return this.postAsJson(this.removeMemberUrl.replace('{{uuid}}', uuid), request);
   }
 
   /**

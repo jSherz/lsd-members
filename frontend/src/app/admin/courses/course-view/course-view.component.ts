@@ -7,8 +7,9 @@ import {
   CourseService,
   Course,
   CourseSpaceWithMember,
-  CourseServiceImpl, CourseWithOrganisers, CommitteeMember
+  CourseWithOrganisers, CommitteeMember
 } from '../course.service';
+import { CourseSpaceService, CourseSpaceMemberResponse } from '../../course-spaces/course-spaces.service';
 
 @Component({
   selector: 'app-course-view',
@@ -42,7 +43,16 @@ export class CourseViewComponent implements OnInit, OnDestroy {
    */
   apiRequestFailed: boolean = false;
 
-  constructor(private route: ActivatedRoute, private service: CourseService) { }
+  /**
+   * The course that is being displayed (if loaded).
+   *
+   * @type {any}
+   */
+  currentCourseUuid: string = null;
+
+  constructor(private route: ActivatedRoute,
+              private service: CourseService,
+              private spaceService: CourseSpaceService) { }
 
   /**
    * Called when the component has been created.
@@ -69,6 +79,8 @@ export class CourseViewComponent implements OnInit, OnDestroy {
    * Retrieve information about the currently selected course ready to be rendered on the page.
    */
   private updateCourse(uuid: string) {
+    this.currentCourseUuid = uuid;
+
     this.service.get(uuid).subscribe(
       course => {
         // Ensure date is a moment
@@ -78,12 +90,19 @@ export class CourseViewComponent implements OnInit, OnDestroy {
       },
       error => {
         this.apiRequestFailed = true;
-        console.log('Failed to get course info:');
-        console.log(error);
+        console.error('Failed to get course info:');
+        console.error(error);
       }
     );
 
-    this.service.spaces(uuid).subscribe(
+    this.updateSpaces();
+  }
+
+  /**
+   * Load the list of spaces on this course from the API.
+   */
+  private updateSpaces() {
+    this.service.spaces(this.currentCourseUuid).subscribe(
       spaces => {
         this.spaces = spaces.map(space => {
           // Ensure createdAt is a moment
@@ -96,10 +115,40 @@ export class CourseViewComponent implements OnInit, OnDestroy {
       },
       error => {
         this.apiRequestFailed = true;
-        console.log('Failed to get course spaces:');
-        console.log(error);
+        console.error('Failed to get course spaces:');
+        console.error(error);
       }
     );
+  }
+
+  /**
+   * Add the specified member to the next free space on the course.
+   *
+   * Called by the MemberSearch component.
+   *
+   * @param event From search component
+   */
+  addMemberToCourse(event) {
+    let nextSpace = this.spaces.filter(space => space.member == null)[0];
+
+    if (nextSpace) {
+      this.spaceService.addMember(nextSpace.uuid, event.uuid).subscribe(
+        result => {
+          if (result.success) {
+            this.updateSpaces();
+          } else {
+            alert(this.translateError(result.error));
+          }
+        },
+        error => {
+          this.apiRequestFailed = true;
+          console.error('Failed to add member to course:');
+          console.error(error)
+        }
+      );
+    } else {
+      console.error('Unable to add member to this course - no spaces available.')
+    }
   }
 
   /**
@@ -107,7 +156,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
    *
    * @param status
    */
-  private translateStatus(status: number): string {
+  translateStatus(status: number): string {
     switch (status) {
       case 0:
         return 'Pending';
@@ -124,11 +173,27 @@ export class CourseViewComponent implements OnInit, OnDestroy {
    * @param input
    * @returns {any}
    */
-  private formatDate(input: moment.Moment) {
+  formatDate(input: moment.Moment) {
     if (input && input.format) {
       return input.format('dddd, MMMM Do YYYY');
     } else {
       return 'Unknown';
+    }
+  }
+
+  /**
+   * Turn an API error into a human friendly version.
+   *
+   * @param key
+   */
+  private translateError(key: string): string {
+    switch (key) {
+      case 'error.alreadyOnCourse':
+        return 'The selected member is already on this course.';
+      case 'error.spaceNotEmpty':
+        return 'A member is already on that course.';
+      default:
+        return 'An unknown error occurred.';
     }
   }
 
