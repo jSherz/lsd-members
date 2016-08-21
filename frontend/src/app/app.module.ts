@@ -20,6 +20,7 @@ import {SignupService, SignupServiceImpl} from "./signup/service/signup.service"
 import {ThankYouComponent} from "./signup/thank-you/thank-you.component";
 import {LocationStrategy, PathLocationStrategy} from "@angular/common";
 import {MemberSearchService, MemberSearchServiceImpl} from "./admin/member-search/member-search.service";
+import {CourseSpaceService, CourseSpaceServiceImpl} from "./admin/course-spaces/course-spaces.service";
 
 @NgModule({
   imports:      [
@@ -50,7 +51,8 @@ import {MemberSearchService, MemberSearchServiceImpl} from "./admin/member-searc
     FormBuilder,
     { provide: SignupService, useClass: SignupServiceImpl },
     { provide: LocationStrategy, useClass: PathLocationStrategy },
-    { provide: MemberSearchService, useClass: MemberSearchServiceImpl }
+    { provide: MemberSearchService, useClass: MemberSearchServiceImpl },
+    { provide: CourseSpaceService, useClass: CourseSpaceServiceImpl }
   ]
 })
 export class AppModule { }
