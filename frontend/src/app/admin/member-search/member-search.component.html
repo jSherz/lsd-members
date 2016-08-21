@@ -5,13 +5,17 @@
   </button>
 
   <ul id="member-search-results" *ngIf="hasSearched">
-    <li *ngIf="searchResults.length == 0">
+    <li *ngIf="displayedSearchResults.length == 0">
       No results found matching the given term.
     </li>
-    <li *ngFor="let result of searchResults">
+    <li *ngFor="let result of displayedSearchResults">
       <a href="#" (click)="$event.preventDefault(); selectResult(result)">
-        {{ result.name }} ({{ result.phoneNumber }} - {{ result.email }})
+        {{ result.name }} ({{ result.phoneNumber || 'None' }} - {{ result.email || 'None' }})
       </a>
     </li>
+
+    <button id="more-search-results-button" (click)="showMoreResults()" *ngIf="!this.allResultsDisplayed()">
+      Show more results
+    </button>
   </ul>
 </div>
