@@ -224,9 +224,33 @@ class Tables(protected val databaseService: DatabaseService) {
     def memberUuid: Rep[Option[UUID]] = column[Option[UUID]]("member_uuid")
 
     def course: ForeignKeyQuery[CoursesTable, Course] =
-      foreignKey("fk_course_spaces_course_uuid", courseUuid, Courses)(_.uuid, ForeignKeyAction.Cascade)
+      foreignKey("course_spaces_course_uuid_number_key", courseUuid, Courses)(_.uuid, ForeignKeyAction.Cascade)
 
     def * = (uuid.?, courseUuid, number, memberUuid) <> (CourseSpace.tupled, CourseSpace.unapply)
+
+  }
+
+  protected val ApiKeys: TableQuery[ApiKeysTable] = TableQuery[ApiKeysTable]
+
+  /**
+    * The Slick mapping for a committee member's API key.
+    *
+    * @param tag
+    */
+  protected class ApiKeysTable(tag: Tag) extends Table[ApiKey](tag, "api_keys") {
+
+    def uuid: Rep[UUID] = column[UUID]("uuid", O.PrimaryKey)
+
+    def committeeMemberUuid: Rep[UUID] = column[UUID]("committee_member_uuid")
+
+    def createdAt: Rep[Timestamp] = column[Timestamp]("created_at")
+
+    def expiresAt: Rep[Timestamp] = column[Timestamp]("expires_at")
+
+    def committeeMember: ForeignKeyQuery[CommitteeMemberTables, CommitteeMember] =
+      foreignKey("api_keys_committee_member_uuid_fkey", committeeMemberUuid, CommitteeMembers)(_.uuid, ForeignKeyAction.Cascade)
+
+    def * = (uuid, committeeMemberUuid, createdAt, expiresAt) <> (ApiKey.tupled, ApiKey.unapply)
 
   }
 
