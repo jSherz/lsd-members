@@ -70,6 +70,8 @@ export class MemberSearchComponent implements OnInit {
    * @param result
    */
   searchResultSelected(result) {
+    result.chosen = true;
+
     this.memberSelected.emit(result);
   }
 

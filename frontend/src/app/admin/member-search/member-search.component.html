@@ -9,7 +9,7 @@
       No results found matching the given term.
     </li>
     <li *ngFor="let result of displayedSearchResults">
-      <a href="#" (click)="$event.preventDefault(); searchResultSelected(result)">
+      <a href="#" (click)="$event.preventDefault(); searchResultSelected(result)" [ngClass]="{'chosen': result.chosen}">
         {{ result.name }} ({{ result.phoneNumber || 'None' }} - {{ result.email || 'None' }})
       </a>
     </li>
