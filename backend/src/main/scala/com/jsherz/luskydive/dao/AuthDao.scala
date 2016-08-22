@@ -25,12 +25,14 @@
 package com.jsherz.luskydive.dao
 
 import java.sql.Timestamp
-import java.util.UUID
+import java.time.LocalDateTime
+import java.util.{Calendar, UUID}
 
 import akka.event.LoggingAdapter
-import com.jsherz.luskydive.core.ApiKey
+import com.jsherz.luskydive.core.{ApiKey, CommitteeMember}
 import com.jsherz.luskydive.services.DatabaseService
 import com.jsherz.luskydive.util.FutureError._
+import com.jsherz.luskydive.util.EitherFutureExtensions._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scalaz.{-\/, \/, \/-}
@@ -64,6 +66,11 @@ class AuthDaoImpl(protected override val databaseService: DatabaseService)
   import driver.api._
 
   /**
+    * Number of hours an API key lasts for after being created or reissued.
+    */
+  val API_KEY_EXPIRES = 24
+
+  /**
     * Authenticate a user, either returning the Left(error) or Right(memberUuid).
     *
     * @param apiKey
@@ -77,23 +84,57 @@ class AuthDaoImpl(protected override val databaseService: DatabaseService)
 
     for {
       lookupResult <- lookup ifNone AuthDaoErrors.invalidApiKey
-    } yield {
-      lookupResult.flatMap {
-        case (foundApiKey, committeeMember) => {
-          // Ensure key hasn't expired
-          if (foundApiKey.expiresAt.after(time)) {
-            // Ensure committee member is allowed to login
-            if (!committeeMember.locked) {
-              \/-(committeeMember.uuid.get)
-            } else {
-              -\/(AuthDaoErrors.accountLocked)
-            }
+      validateResult <- Future(lookupResult.flatMap(validateKey(time)))
+      authResult <- validateResult withFutureF extendKeyExpiry(time)
+    } yield authResult
+  }
+
+  /**
+    * Test to see if the given API key is valid at the provided time.
+    *
+    * Checks that the key hasn't expired and the attached committee member hasn't been locked.
+    *
+    * @param time
+    * @param keyAndCommittee
+    * @return
+    */
+  private def validateKey(time: Timestamp)(keyAndCommittee: (ApiKey, CommitteeMember)): String \/ ApiKey = {
+    keyAndCommittee match {
+      case (apiKey, committeeMember) => {
+        // Ensure key hasn't expired
+        if (apiKey.expiresAt.after(time)) {
+          // Ensure committee member is allowed to login
+          if (!committeeMember.locked) {
+            \/-(apiKey)
           } else {
-            -\/(AuthDaoErrors.invalidApiKey)
+            -\/(AuthDaoErrors.accountLocked)
           }
+        } else {
+          -\/(AuthDaoErrors.invalidApiKey)
         }
       }
     }
+  }
+
+  /**
+    * Extend the given key's expiry date by the current time + X hours.
+    *
+    * @param time
+    * @param apiKey
+    * @return
+    */
+  private def extendKeyExpiry(time: Timestamp)(apiKey: ApiKey): Future[String \/ UUID] = {
+    val calendar = Calendar.getInstance()
+    calendar.setTime(time)
+    calendar.add(Calendar.HOUR, API_KEY_EXPIRES)
+
+    val newExpiry = new Timestamp(calendar.getTime.getTime)
+
+    db.run(
+      ApiKeys.filter(_.uuid === apiKey.uuid).map(_.expiresAt).update(newExpiry)
+    ).map {
+      _ => apiKey.committeeMemberUuid
+    } withServerError
   }
 
   /**

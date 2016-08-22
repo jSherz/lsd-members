@@ -80,11 +80,9 @@ class AuthDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       result.futureValue shouldEqual \/-(UUID.fromString("52abe905-4d2c-4f38-819c-fc6b5d6b851f"))
 
       val apiKey = dao.get(uuid).futureValue
+      val expectedExpiry = Timestamp.valueOf("2016-08-22 21:02:10")
 
-      val expectedExpiry = Timestamp.valueOf(LocalDateTime.now().plusHours(24)).getNanos
-      val diff = apiKey.get.expiresAt.getNanos
-
-      (Math.abs(diff) < 10) shouldBe true
+      apiKey.get.expiresAt shouldEqual expectedExpiry
     }
 
     "return Left(error.invalidApiKey) if the API key has expired" in {
