@@ -25,7 +25,6 @@
 package com.jsherz.luskydive.itest.dao
 
 import java.sql.Timestamp
-import java.time.LocalDateTime
 import java.util.UUID
 
 import akka.actor.ActorSystem
@@ -34,6 +33,7 @@ import com.jsherz.luskydive.core.ApiKey
 import com.jsherz.luskydive.dao._
 import com.jsherz.luskydive.itest.util.Util
 import org.scalatest.concurrent.ScalaFutures._
+import org.scalatest.time.{Seconds, Span}
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 
 import scalaz.{-\/, \/-}
@@ -42,6 +42,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class AuthDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
   private var dao: AuthDao = _
+
+  implicit val patienceConfig = PatienceConfig(scaled(Span(1, Seconds)))
 
   override protected def beforeAll(): Unit = {
     implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
@@ -105,8 +107,87 @@ class AuthDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
   }
 
+  "AuthDao#login" should {
+
+    "return Left(error.invalidEmailPass) if the e-mail does not exist" in {
+      val fakeEmails = Seq(
+        "amorissette@yahoo.com",
+        "nborer@yahoo.com",
+        "irolfson@gmail.com"
+      )
+
+      fakeEmails.foreach { email =>
+        val result = dao.login(email, email + "_Hunter2", testTime).futureValue
+
+        result shouldBe a[-\/[_]]
+        result.leftMap { error =>
+          error shouldEqual "error.invalidEmailPass"
+        }
+      }
+    }
+
+    "return Left(error.invalidEmailPass) if the e-mail is valid but the password is wrong" in {
+      val validEmails = Seq(
+        "davisjohn@hodge-davis.com",
+        "butlerlawrence@hotmail.com",
+        "jlambert@gutierrez-lester.com"
+      )
+
+      validEmails.foreach { email =>
+        val result = dao.login(email, email.reverse, testTime).futureValue
+
+        result shouldBe a[-\/[_]]
+        result.leftMap { error =>
+          error shouldEqual "error.invalidEmailPass"
+        }
+      }
+    }
+
+    "return Left(error.accountLocked) if the e-mail and password are valid but the account is locked" in {
+      val lockedAccounts = Seq(
+        "solisomar@gmail.com",
+        "probertson@hotmail.com",
+        "zamorajennifer@hotmail.com"
+      )
+
+      lockedAccounts.foreach { email =>
+        val result = dao.login(email, email + "_Hunter2", testTime).futureValue
+
+        result shouldBe a[-\/[_]]
+        result.leftMap { error =>
+          error shouldEqual "error.accountLocked"
+        }
+      }
+    }
+
+    "return Right(validUuid) if the e-mail and password are valid" in {
+      val validExamples = Map(
+        "5c1140a2-2fc4-48fb-b4c2-75a9399094c9" -> "brittney20@robinson.info",
+        "338fa63a-0486-469c-ba3f-737c0e8aafef" -> "crystalsmith@yahoo.com",
+        "ade89632-2ccd-4b9f-93f1-44f5adf9704c" -> "heather17@yahoo.com"
+      )
+
+      validExamples.foreach { case (memberUuid, email) =>
+        val result = dao.login(email, email + "_Hunter2", testTime).futureValue
+
+        result shouldBe a[\/-[_]]
+
+        // Now try and use the generated API key
+        result.map { apiKey =>
+          val authResult = dao.authenticate(apiKey, testTime).futureValue
+
+          authResult.isRight shouldEqual true
+          authResult.getOrElse(badUuid) shouldEqual UUID.fromString(memberUuid)
+        }
+      }
+    }
+
+  }
+
   private val testTime = {
     Timestamp.valueOf("2016-08-21 21:02:10")
   }
+
+  private val badUuid = UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
 
 }

@@ -25,14 +25,15 @@
 package com.jsherz.luskydive.dao
 
 import java.sql.Timestamp
-import java.time.LocalDateTime
 import java.util.{Calendar, UUID}
 
 import akka.event.LoggingAdapter
+import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.{ApiKey, CommitteeMember}
 import com.jsherz.luskydive.services.DatabaseService
-import com.jsherz.luskydive.util.FutureError._
 import com.jsherz.luskydive.util.EitherFutureExtensions._
+import com.jsherz.luskydive.util.FutureError._
+import com.jsherz.luskydive.util.PasswordHasher
 
 import scala.concurrent.{ExecutionContext, Future}
 import scalaz.{-\/, \/, \/-}
@@ -56,6 +57,16 @@ trait AuthDao {
     * @return
     */
   def get(apiKey: UUID): Future[Option[ApiKey]]
+
+  /**
+    * Attempt to authenticate a user and generate an API key for them.
+    *
+    * @param email
+    * @param password
+    * @param time
+    * @return An API key, if login succeeded
+    */
+  def login(email: String, password: String, time: Timestamp): Future[String \/ UUID]
 
 }
 
@@ -124,11 +135,7 @@ class AuthDaoImpl(protected override val databaseService: DatabaseService)
     * @return
     */
   private def extendKeyExpiry(time: Timestamp)(apiKey: ApiKey): Future[String \/ UUID] = {
-    val calendar = Calendar.getInstance()
-    calendar.setTime(time)
-    calendar.add(Calendar.HOUR, API_KEY_EXPIRES)
-
-    val newExpiry = new Timestamp(calendar.getTime.getTime)
+    val newExpiry = addHoursToTimestamp(time, API_KEY_EXPIRES)
 
     db.run(
       ApiKeys.filter(_.uuid === apiKey.uuid).map(_.expiresAt).update(newExpiry)
@@ -147,6 +154,85 @@ class AuthDaoImpl(protected override val databaseService: DatabaseService)
     db.run(ApiKeys.filter(_.uuid === apiKey).result.headOption)
   }
 
+  /**
+    * Attempt to authenticate a user and generate an API key for them.
+    *
+    * @param email
+    * @param password
+    * @param time
+    * @return An API key, if login succeeded
+    */
+  override def login(email: String, password: String, time: Timestamp): Future[String \/ UUID] = {
+    for {
+      committeeMember <- db.run(CommitteeMembers.filter(cm => cm.email === email).result.headOption)
+      passwordCheckResult <- Future(checkPasswordAndLocked(committeeMember, password))
+      apiKeyResult <- passwordCheckResult withFutureF generateApiKey(time)
+    } yield apiKeyResult.map(_.uuid)
+  }
+
+  /**
+    * Create a new [[Timestamp]] by adding a number of hours to an existing one.
+    *
+    * @param time
+    * @param hours
+    * @return
+    */
+  private def addHoursToTimestamp(time: Timestamp, hours: Int): Timestamp = {
+    val calendar = Calendar.getInstance()
+    calendar.setTime(time)
+    calendar.add(Calendar.HOUR, API_KEY_EXPIRES)
+
+    new Timestamp(calendar.getTime.getTime)
+  }
+
+  /**
+    * Ensure that:
+    *
+    * - maybeCommitteeMember is defined
+    * - the password given is correct
+    * - the committee member isn't locked
+    *
+    * @param maybeCommitteeMember
+    * @param password
+    * @return
+    */
+  private def checkPasswordAndLocked(maybeCommitteeMember: Option[CommitteeMember], password: String): String \/ CommitteeMember = {
+    maybeCommitteeMember match {
+      case Some(committeeMember) => {
+        PasswordHasher.verifyPassword(password, committeeMember.password, committeeMember.salt) match {
+          case true => {
+            if (committeeMember.locked) {
+              -\/(AuthDaoErrors.accountLocked)
+            } else {
+              \/-(committeeMember)
+            }
+          }
+          case false => -\/(AuthDaoErrors.invalidEmailPass)
+        }
+      }
+      case None => -\/(AuthDaoErrors.invalidEmailPass)
+    }
+  }
+
+  /**
+    * Generate a new API key that's valid for [[API_KEY_EXPIRES]] hours.
+    *
+    * @param time
+    * @param committeeMember
+    * @return
+    */
+  private def generateApiKey(time: Timestamp)(committeeMember: CommitteeMember): Future[String \/ ApiKey] = {
+    val key = Generators.randomBasedGenerator.generate
+    val createdAt = time
+    val expiresAt = addHoursToTimestamp(createdAt, API_KEY_EXPIRES)
+
+    val createdKey = ApiKey(key, committeeMember.uuid.get, createdAt, expiresAt)
+
+    db.run(
+      (ApiKeys += createdKey).map(_ => createdKey)
+    ) withServerError
+  }
+
 }
 
 object AuthDaoErrors {
@@ -156,5 +242,7 @@ object AuthDaoErrors {
   val accountLocked = "error.accountLocked"
 
   val internalService = "error.internalService"
+
+  val invalidEmailPass = "error.invalidEmailPass"
 
 }

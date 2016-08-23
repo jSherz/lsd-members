@@ -75,7 +75,7 @@ class PasswordHasherSpec extends WordSpec with Matchers {
       )
 
       incorrectExamples.foreach { case (password, hashAndSalt) =>
-        PasswordHasher.verifyPassword(password, hashAndSalt._2, hashAndSalt._1) shouldBe false
+        PasswordHasher.verifyPassword(password, hashAndSalt._1, hashAndSalt._2) shouldBe false
       }
     }
 
@@ -96,7 +96,7 @@ class PasswordHasherSpec extends WordSpec with Matchers {
       )
 
       validExamples.foreach { case (password, hashAndSalt) =>
-        PasswordHasher.verifyPassword(password, hashAndSalt._2, hashAndSalt._1) shouldBe true
+        PasswordHasher.verifyPassword(password, hashAndSalt._1, hashAndSalt._2) shouldBe true
       }
     }
 

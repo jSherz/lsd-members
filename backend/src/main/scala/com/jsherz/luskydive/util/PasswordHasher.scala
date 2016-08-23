@@ -75,7 +75,7 @@ object PasswordHasher {
     * @param correctHash
     * @return
     */
-  def verifyPassword(password: String, salt: String, correctHash: String): Boolean = {
+  def verifyPassword(password: String, correctHash: String, salt: String): Boolean = {
     var matches = true
 
     val hash = hashPassword(password, salt)
