@@ -6,12 +6,14 @@ import {
   CourseViewComponent,
   CourseAddComponent
 } from './courses';
+import { LoginComponent } from './login/login.component';
 
 export const AdminRoutes: Routes = [
   {
     path: 'admin',
     component: AdminBaseComponent,
     children: [
+      { path: 'login', component: LoginComponent },
       { path: 'courses/calendar/:year/:month', component: CourseCalendarComponent },
       { path: 'courses/calendar', component: CourseCalendarComponent },
       { path: 'courses/:uuid', component: CourseViewComponent },

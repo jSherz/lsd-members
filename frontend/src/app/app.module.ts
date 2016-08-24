@@ -23,6 +23,9 @@ import {MemberSearchService, MemberSearchServiceImpl} from "./admin/member-searc
 import {CourseSpaceService, CourseSpaceServiceImpl} from "./admin/course-spaces/course-spaces.service";
 import {CommitteeService, CommitteeServiceImpl} from "./admin/committee/committee.service";
 import {CourseService, CourseServiceImpl} from "./admin/courses/course.service";
+import {LoginServiceStub} from "./admin/login/login.service.stub";
+import {LoginService} from "./admin/login/login.service";
+import {LoginComponent} from "./admin/login/login.component";
 
 @NgModule({
   imports:      [
@@ -35,6 +38,7 @@ import {CourseService, CourseServiceImpl} from "./admin/courses/course.service";
     AppComponent,
 
     AdminBaseComponent,
+    LoginComponent,
     CourseAddComponent,
     TileComponent,
     CourseCalendarComponent,
@@ -56,7 +60,8 @@ import {CourseService, CourseServiceImpl} from "./admin/courses/course.service";
     { provide: MemberSearchService, useClass: MemberSearchServiceImpl },
     { provide: CourseService, useClass: CourseServiceImpl },
     { provide: CourseSpaceService, useClass: CourseSpaceServiceImpl },
-    { provide: CommitteeService, useClass: CommitteeServiceImpl }
+    { provide: CommitteeService, useClass: CommitteeServiceImpl },
+    { provide: LoginService, useClass: LoginServiceStub }
   ]
 })
 export class AppModule { }

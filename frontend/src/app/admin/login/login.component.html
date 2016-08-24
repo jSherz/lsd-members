@@ -1,0 +1,39 @@
+<div id="login-hero">
+  <div *ngIf="apiRequestFailed" class="form-field-error">
+    An unknown error occurred #sadtimes #turnitoffandonagain
+  </div>
+
+  <div id="login-form">
+    <form [formGroup]="loginForm">
+      <div>
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" formControlName="email" required value=""
+          placeholder="tyler@freestyler.org">
+
+        <div [hidden]="ctrlEmail.valid || ctrlEmail.untouched" class="form-field-error" id="email-form-field-error">
+          Please enter a valid e-mail
+        </div>
+
+        <div *ngIf="errors && errors.email" class="form-field-error">
+          {{translate(errors.email)}}
+        </div>
+      </div>
+
+      <div>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" formControlName="password" required value="">
+
+        <div [hidden]="ctrlPassword.valid || ctrlPassword.untouched" class="form-field-error" id="password-form-field-error">
+          Please enter your password
+        </div>
+
+        <div *ngIf="errors && errors.password" class="form-field-error">
+          {{translate(errors.password)}}
+        </div>
+      </div>
+
+      <button type="button" (click)="login(loginForm.value)" [disabled]="!loginForm.valid">Login</button>
+      <span [ngClass]="{visible: showThrobber}" class="throbber"></span>
+    </form>
+  </div>
+</div>
