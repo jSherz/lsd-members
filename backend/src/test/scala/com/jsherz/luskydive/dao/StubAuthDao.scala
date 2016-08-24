@@ -46,9 +46,9 @@ class StubAuthDao extends AuthDao {
     * @return
     */
   override def authenticate(apiKey: UUID, time: Timestamp): Future[\/[String, UUID]] = {
-    if (apiKey.equals(StubAuthDao.validApiKey) && time.equals(StubAuthDao.validTime)) {
+    if (apiKey.equals(StubAuthDao.validApiKey)) {
       Future(\/-(StubAuthDao.validMemberUuid))
-    } else if (apiKey.equals(StubAuthDao.invalidApiKey) && time.equals(StubAuthDao.invalidTime)) {
+    } else if (apiKey.equals(StubAuthDao.invalidApiKey)) {
       Future(-\/(AuthDaoErrors.invalidApiKey))
     } else {
       throw new RuntimeException("unknown value used with stub")
@@ -96,14 +96,12 @@ class StubAuthDao extends AuthDao {
 object StubAuthDao {
 
   val validApiKey = UUID.fromString("dfbb4f63-8082-4d4e-820e-46835223478b")
-  val validTime = Timestamp.valueOf("2016-08-24 17:57:46.000")
   val validMemberUuid = UUID.fromString("1fddbe40-cf0f-48d3-bd23-b564691001e5")
 
   val exampleApiKey = ApiKey(validApiKey, UUID.fromString("18cb4209-df83-4202-94fb-e6a2f7f92c8d"),
     Timestamp.valueOf("2017-04-09 10:15:09.141"), Timestamp.valueOf("2017-04-10 10:15:09.141"))
 
   val invalidApiKey = UUID.fromString("2bbd5d19-37f0-4801-b1f5-cf3c043b117f")
-  val invalidTime = Timestamp.valueOf("2015-01-11 21:09:19.141")
 
   val validEmail = "trainseveryday@gmail.com"
   val validPassword = "1jj1j18wfjjjaa"
