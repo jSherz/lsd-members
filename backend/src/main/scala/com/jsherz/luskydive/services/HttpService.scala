@@ -24,20 +24,25 @@
 
 package com.jsherz.luskydive.services
 
-import akka.http.scaladsl.model.headers
 import akka.http.scaladsl.model.headers.{HttpOrigin, HttpOriginRange}
 import akka.http.scaladsl.server.Directive0
 import akka.http.scaladsl.server.Directives._
 import ch.megard.akka.http.cors.CorsSettings
 import com.jsherz.luskydive.apis._
-import com.jsherz.luskydive.dao.{CommitteeMemberDao, CourseDao, CourseSpaceDao, MemberDao}
+import com.jsherz.luskydive.dao._
 
 import scala.concurrent.ExecutionContext
 
 /**
   * The holder of all configured routes.
   */
-class HttpService(memberDao: MemberDao, courseDao: CourseDao, committeeMemberDao: CommitteeMemberDao, courseSpaceDao: CourseSpaceDao)
+class HttpService(
+                   memberDao: MemberDao,
+                   courseDao: CourseDao,
+                   committeeMemberDao: CommitteeMemberDao,
+                   courseSpaceDao: CourseSpaceDao,
+                   authDao: AuthDao
+                 )
                  (implicit executionContext: ExecutionContext) {
 
   val signupRoutes = new SignupApi(memberDao)
@@ -50,13 +55,16 @@ class HttpService(memberDao: MemberDao, courseDao: CourseDao, committeeMemberDao
 
   val courseSpacesApi = new CourseSpacesApi(courseSpaceDao)
 
+  val loginApi = new LoginApi(authDao)
+
   val routes =
     (pathPrefix("api") & pathPrefix("v1")) {
       signupRoutes.route ~
       coursesRoutes.route ~
       courseSpacesApi.route ~
       committeeRoutes.route ~
-      memberRoutes.route
+      memberRoutes.route ~
+      loginApi.route
     }
 
 }

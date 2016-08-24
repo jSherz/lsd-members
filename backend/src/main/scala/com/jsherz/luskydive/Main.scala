@@ -28,7 +28,7 @@ import akka.actor.ActorSystem
 import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.Http
 import akka.stream.ActorMaterializer
-import com.jsherz.luskydive.dao.{CommitteeMemberDaoImpl, CourseDaoImpl, CourseSpaceDaoImpl, MemberDaoImpl}
+import com.jsherz.luskydive.dao._
 import com.jsherz.luskydive.services.{DatabaseService, HttpService}
 import com.jsherz.luskydive.util.Config
 import org.flywaydb.core.Flyway
@@ -57,14 +57,12 @@ object Main extends App with Config {
   flyway.migrate()
 
   val memberDao = new MemberDaoImpl(databaseService)
-
   val committeeMemberDao = new CommitteeMemberDaoImpl(databaseService)
-
   val courseSpaceDao = new CourseSpaceDaoImpl(databaseService)
-
   val courseDao = new CourseDaoImpl(databaseService, committeeMemberDao, courseSpaceDao)
+  val authDao = new AuthDaoImpl(databaseService)
 
-  val httpService = new HttpService(memberDao, courseDao, committeeMemberDao, courseSpaceDao)
+  val httpService = new HttpService(memberDao, courseDao, committeeMemberDao, courseSpaceDao, authDao)
 
   Http().bindAndHandle(httpService.routes, interface, port)
 
