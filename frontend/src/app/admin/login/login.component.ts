@@ -100,7 +100,7 @@ export class LoginComponent {
    */
   translate(key: string) {
     return {
-      'error.invalidUserPass': 'The e-mail or password you entered is invalid. Please try again.',
+      'error.invalidEmailPass': 'The e-mail or password you entered is invalid. Please try again.',
       'error.accountLocked': 'Your account has been disabled. Please contact an administrator.'
     }[key];
   }

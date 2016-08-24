@@ -24,7 +24,7 @@ import {CourseSpaceService, CourseSpaceServiceImpl} from "./admin/course-spaces/
 import {CommitteeService, CommitteeServiceImpl} from "./admin/committee/committee.service";
 import {CourseService, CourseServiceImpl} from "./admin/courses/course.service";
 import {LoginServiceStub} from "./admin/login/login.service.stub";
-import {LoginService} from "./admin/login/login.service";
+import {LoginService, LoginServiceImpl} from "./admin/login/login.service";
 import {LoginComponent} from "./admin/login/login.component";
 
 @NgModule({
@@ -61,7 +61,7 @@ import {LoginComponent} from "./admin/login/login.component";
     { provide: CourseService, useClass: CourseServiceImpl },
     { provide: CourseSpaceService, useClass: CourseSpaceServiceImpl },
     { provide: CommitteeService, useClass: CommitteeServiceImpl },
-    { provide: LoginService, useClass: LoginServiceStub }
+    { provide: LoginService, useClass: LoginServiceImpl }
   ]
 })
 export class AppModule { }
