@@ -31,10 +31,13 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.jsherz.luskydive.dao.StubCourseDao
 import com.jsherz.luskydive.json.CoursesJsonSupport
+import com.jsherz.luskydive.util.AuthenticationDirectives
 import org.mockito.Matchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.{never, verify}
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
+
+import scala.concurrent.ExecutionContext
 
 /**
   * Ensures the find one course endpoint function correctly.
@@ -43,6 +46,8 @@ class CoursesGetApiSpec extends WordSpec with Matchers with ScalatestRouteTest w
 
   import spray.json._
   import CoursesJsonSupport._
+
+  private implicit val authDirective = AuthenticationDirectives.allowAll
 
   private var dao = Mockito.spy(new StubCourseDao())
 
@@ -62,6 +67,15 @@ class CoursesGetApiSpec extends WordSpec with Matchers with ScalatestRouteTest w
   }
 
   "CoursesApi#get" should {
+
+    "requires authentication" in {
+      implicit val authDirective = AuthenticationDirectives.denyAll
+      route = new CoursesApi(dao).route
+
+      Get(validUrl) ~> Route.seal(route) ~> check {
+        response.status shouldEqual StatusCodes.Unauthorized
+      }
+    }
 
     "return method not allowed when used with anything other than GET" in {
       Seq(Post, Put, Delete, Patch).foreach { method =>

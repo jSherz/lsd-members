@@ -79,7 +79,7 @@ trait MemberDao {
 
 }
 
-case class MemberDaoImpl(override protected val databaseService: DatabaseService)
+class MemberDaoImpl(override protected val databaseService: DatabaseService)
                         (implicit ec: ExecutionContext, implicit val log: LoggingAdapter)
   extends Tables(databaseService) with MemberDao {
 

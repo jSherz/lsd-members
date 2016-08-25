@@ -45,14 +45,12 @@ class HttpService(
                  )
                  (implicit executionContext: ExecutionContext) {
 
+  implicit val auth = new ApiKeyAuthenticator(authDao).authenticateWithApiKey
+
   val signupRoutes = new SignupApi(memberDao)
-
   val coursesRoutes = new CoursesApi(courseDao)
-
   val committeeRoutes = new CommitteeMemberApi(committeeMemberDao)
-
   val memberRoutes = new MemberApi(memberDao)
-
   val courseSpacesApi = new CourseSpacesApi(courseSpaceDao)
 
   val loginApi = new LoginApi(authDao)

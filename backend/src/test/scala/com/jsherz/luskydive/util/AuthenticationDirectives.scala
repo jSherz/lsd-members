@@ -22,37 +22,38 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.apis
+package com.jsherz.luskydive.util
 
 import java.util.UUID
 
-import com.jsherz.luskydive.dao.CommitteeMemberDao
-import com.jsherz.luskydive.json.CommitteeMembersJsonSupport._
-import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server._
-import com.jsherz.luskydive.services.Cors.cors
-
-import scala.concurrent.ExecutionContext
+import akka.http.scaladsl.model.headers.HttpChallenge
+import akka.http.scaladsl.server.AuthenticationFailedRejection.CredentialsRejected
+import akka.http.scaladsl.server.{AuthenticationFailedRejection, Directive1}
+import akka.http.scaladsl.server.directives.BasicDirectives.provide
+import akka.http.scaladsl.server.directives.RouteDirectives._
 
 /**
-  * Used to retrieve information about committee members.
+  * Some dummy directives that can be used to test APIs that require authentication.
   */
-class CommitteeMemberApi(private val dao: CommitteeMemberDao)
-                        (implicit ec: ExecutionContext, authDirective: Directive1[UUID]) {
+object AuthenticationDirectives {
 
   /**
-    * Get currently active committee members.
+    * We don't use a "challenge" (as with HTTP Basic Auth) so provide an empty one.
     */
-  val activeRoute = (path("active") & cors) {
-    get {
-      authDirective { _ =>
-        complete(dao.active())
-      }
-    }
+  private val dummyChallenge = HttpChallenge("", None)
+
+  /**
+    * Allows any request, regardless of API key header.
+    */
+  val allowAll: Directive1[UUID] = {
+    provide(UUID.randomUUID())
   }
 
-  val route = pathPrefix("committee-members") {
-    activeRoute
+  /**
+    * Rejects any request, regardless of API key header.
+    */
+  val denyAll: Directive1[UUID] = {
+    reject(AuthenticationFailedRejection(CredentialsRejected, dummyChallenge))
   }
 
 }

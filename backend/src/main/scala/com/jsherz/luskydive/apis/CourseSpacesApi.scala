@@ -24,9 +24,11 @@
 
 package com.jsherz.luskydive.apis
 
+import java.util.UUID
+
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.PathMatchers.JavaUUID
-import akka.http.scaladsl.server.Route
+import akka.http.scaladsl.server._
 import com.jsherz.luskydive.dao.{CourseDao, CourseSpaceDao, CourseSpaceDaoErrors}
 import com.jsherz.luskydive.json._
 import com.jsherz.luskydive.services.Cors.cors
@@ -38,17 +40,20 @@ import scalaz.{-\/, \/-}
 /**
   * Used to retrieve and store course space information.
   */
-class CourseSpacesApi(private val dao: CourseSpaceDao)(implicit ec: ExecutionContext) {
+class CourseSpacesApi(private val dao: CourseSpaceDao)
+                     (implicit ec: ExecutionContext, authDirective: Directive1[UUID]) {
 
   import com.jsherz.luskydive.json.CourseSpacesJsonSupport._
 
   val addMemberRoute = path(JavaUUID / "add-member") { uuid =>
     cors {
       post {
-        entity(as[CourseSpaceMemberRequest]) { req =>
-          onSuccess(dao.addMember(uuid, req.memberUuid)) {
-            case \/-(uuid) => complete(CourseSpaceMemberResponse(true, None))
-            case -\/(error) => complete(CourseSpaceMemberResponse(false, Some(error)))
+        authDirective { _ =>
+          entity(as[CourseSpaceMemberRequest]) { req =>
+            onSuccess(dao.addMember(uuid, req.memberUuid)) {
+              case \/-(uuid) => complete(CourseSpaceMemberResponse(true, None))
+              case -\/(error) => complete(CourseSpaceMemberResponse(false, Some(error)))
+            }
           }
         }
       }
@@ -58,10 +63,12 @@ class CourseSpacesApi(private val dao: CourseSpaceDao)(implicit ec: ExecutionCon
   val removeMemberRoute = path(JavaUUID / "remove-member") { uuid =>
     cors {
       post {
-        entity(as[CourseSpaceMemberRequest]) { req =>
-          onSuccess(dao.removeMember(uuid, req.memberUuid)) {
-            case \/-(uuid) => complete(CourseSpaceMemberResponse(true, None))
-            case -\/(error) => complete(CourseSpaceMemberResponse(false, Some(error)))
+        authDirective { _ =>
+          entity(as[CourseSpaceMemberRequest]) { req =>
+            onSuccess(dao.removeMember(uuid, req.memberUuid)) {
+              case \/-(uuid) => complete(CourseSpaceMemberResponse(true, None))
+              case -\/(error) => complete(CourseSpaceMemberResponse(false, Some(error)))
+            }
           }
         }
       }

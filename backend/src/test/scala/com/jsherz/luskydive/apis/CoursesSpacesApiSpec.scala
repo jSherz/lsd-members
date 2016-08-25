@@ -32,10 +32,13 @@ import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.jsherz.luskydive.core.CourseSpace
 import com.jsherz.luskydive.dao.StubCourseDao
 import com.jsherz.luskydive.json.{CourseSpaceWithMember, CoursesJsonSupport}
+import com.jsherz.luskydive.util.AuthenticationDirectives
 import org.mockito.Matchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.{never, verify}
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
+
+import scala.concurrent.ExecutionContext
 
 /**
   * Ensures the course spaces endpoint function correctly.
@@ -44,6 +47,8 @@ class CoursesSpacesApiSpec extends WordSpec with Matchers with ScalatestRouteTes
 
   import CoursesJsonSupport._
   import spray.json._
+
+  private implicit val authDirective = AuthenticationDirectives.allowAll
 
   private var dao = Mockito.spy(new StubCourseDao())
 
@@ -66,6 +71,15 @@ class CoursesSpacesApiSpec extends WordSpec with Matchers with ScalatestRouteTes
   }
 
   "CoursesApi#spaces" should {
+
+    "requires authentication" in {
+      implicit val authDirective = AuthenticationDirectives.denyAll
+      route = new CoursesApi(dao).route
+
+      Get(validUrl) ~> Route.seal(route) ~> check {
+        response.status shouldEqual StatusCodes.Unauthorized
+      }
+    }
 
     "return method not allowed when used with anything other than GET" in {
       Seq(Post, Put, Delete, Patch).foreach { method =>

@@ -24,24 +24,26 @@
 
 package com.jsherz.luskydive.apis
 
-import java.sql.Date
-
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.jsherz.luskydive.dao.StubCommitteeMemberDao
-import org.mockito.Matchers._
+import com.jsherz.luskydive.util.AuthenticationDirectives
 import org.mockito.Mockito
 import org.mockito.Mockito._
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
+
+import scala.concurrent.ExecutionContext
 
 /**
   * Ensures the committee member endpoints function correctly.
   */
 class CommitteeMemberApiSpec extends WordSpec with Matchers with ScalatestRouteTest with BeforeAndAfter {
 
-  import spray.json._
   import com.jsherz.luskydive.json.CommitteeMembersJsonSupport._
+  import spray.json._
+
+  private implicit val authDirective = AuthenticationDirectives.allowAll
 
   private val url = "/committee-members/active"
 
@@ -55,6 +57,15 @@ class CommitteeMemberApiSpec extends WordSpec with Matchers with ScalatestRouteT
   }
 
   "CommitteeMemberApi#active" should {
+
+    "requires authentication" in {
+      implicit val authDirective = AuthenticationDirectives.denyAll
+      route = new CommitteeMemberApi(dao).route
+
+      Get(url) ~> Route.seal(route) ~> check {
+        response.status shouldEqual StatusCodes.Unauthorized
+      }
+    }
 
     "return method not allowed when used with anything other than GET" in {
       Seq(Post, Put, Delete, Patch).foreach { method =>

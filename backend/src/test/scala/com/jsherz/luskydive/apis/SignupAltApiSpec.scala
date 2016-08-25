@@ -30,15 +30,20 @@ import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.jsherz.luskydive.core.Member
 import com.jsherz.luskydive.dao.{MemberDao, StubMemberDao}
 import com.jsherz.luskydive.json.{SignupAltRequest, SignupJsonSupport, SignupResponse}
+import com.jsherz.luskydive.util.AuthenticationDirectives
 import org.mockito.Matchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.{never, verify}
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
 
+import scala.concurrent.ExecutionContext
+
 /**
   * Ensures the alternative sign-up endpoint functions correctly.
   */
 class SignupAltApiSpec extends WordSpec with Matchers with ScalatestRouteTest with BeforeAndAfter {
+
+  private implicit val authDirective = AuthenticationDirectives.allowAll
 
   private var dao: MemberDao = Mockito.spy(new StubMemberDao())
   private var route = new SignupApi(dao).route
@@ -53,6 +58,15 @@ class SignupAltApiSpec extends WordSpec with Matchers with ScalatestRouteTest wi
   }
 
   "SignupApi - alt" should {
+
+    "requires authentication" in {
+      implicit val authDirective = AuthenticationDirectives.denyAll
+      route = new SignupApi(dao).route
+
+      Post(url) ~> Route.seal(route) ~> check {
+        response.status shouldEqual StatusCodes.Unauthorized
+      }
+    }
 
     "return success with no errors if a valid username & e-mail are given" in {
       val name = "Tyler Davey"

@@ -24,6 +24,8 @@
 
 package com.jsherz.luskydive.apis
 
+import java.util.UUID
+
 import akka.http.scaladsl.model.StatusCodes
 import com.jsherz.luskydive.dao.{MemberDao, MemberDaoErrors}
 
@@ -38,21 +40,24 @@ import scalaz.{-\/, \/-}
 /**
   * Used to retrieve member information.
   */
-class MemberApi(private val memberDao: MemberDao)(implicit ec: ExecutionContext) {
+class MemberApi(private val memberDao: MemberDao)
+               (implicit ec: ExecutionContext, authDirective: Directive1[UUID]) {
 
   import com.jsherz.luskydive.json.MemberJsonSupport._
 
   val searchRoute = path("search") {
     cors {
       post {
-        entity(as[MemberSearchRequest]) { req =>
-          if (req.searchTerm.trim.length >= 3) {
-            onSuccess(memberDao.search(req.searchTerm)) {
-              case \/-(results) => complete(results)
-              case -\/(error) => complete(StatusCodes.InternalServerError, error)
+        authDirective { _ =>
+          entity(as[MemberSearchRequest]) { req =>
+            if (req.searchTerm.trim.length >= 3) {
+              onSuccess(memberDao.search(req.searchTerm)) {
+                case \/-(results) => complete(results)
+                case -\/(error) => complete(StatusCodes.InternalServerError, error)
+              }
+            } else {
+              complete(StatusCodes.BadRequest, MemberDaoErrors.invalidSearchTerm)
             }
-          } else {
-            complete(StatusCodes.BadRequest, MemberDaoErrors.invalidSearchTerm)
           }
         }
       }

@@ -31,10 +31,13 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.jsherz.luskydive.dao.{StubCourseDao, StubCourseSpaceDao}
 import com.jsherz.luskydive.json.{CourseSpaceMemberRequest, CourseSpaceMemberResponse}
+import com.jsherz.luskydive.util.AuthenticationDirectives
 import org.mockito.Matchers._
 import org.mockito.Mockito
 import org.mockito.Mockito._
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
+
+import scala.concurrent.ExecutionContext
 
 /**
   * Defines the behaviour of adding and removing members from a space.
@@ -42,6 +45,8 @@ import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
 class CourseSpacesMemberApiSpec extends WordSpec with Matchers with ScalatestRouteTest with BeforeAndAfter {
 
   import com.jsherz.luskydive.json.CourseSpacesJsonSupport._
+
+  private implicit val authDirective = AuthenticationDirectives.allowAll
 
   private var dao = Mockito.spy(new StubCourseSpaceDao())
 
@@ -68,6 +73,15 @@ class CourseSpacesMemberApiSpec extends WordSpec with Matchers with ScalatestRou
   }
 
   "CourseSpacesApi#addMember" should {
+
+    "requires authentication" in {
+      implicit val authDirective = AuthenticationDirectives.denyAll
+      route = new CourseSpacesApi(dao).route
+
+      Post(validAddUrl) ~> Route.seal(route) ~> check {
+        response.status shouldEqual StatusCodes.Unauthorized
+      }
+    }
 
     "return method not allowed for anything but POST" in {
       Seq(Get, Put, Delete, Patch).foreach { method =>
@@ -108,6 +122,15 @@ class CourseSpacesMemberApiSpec extends WordSpec with Matchers with ScalatestRou
   }
 
   "CourseSpaceApi#removeMember" should {
+
+    "requires authentication" in {
+      implicit val authDirective = AuthenticationDirectives.denyAll
+      route = new CourseSpacesApi(dao).route
+
+      Post(validRemoveUrl) ~> Route.seal(route) ~> check {
+        response.status shouldEqual StatusCodes.Unauthorized
+      }
+    }
 
     "return method not allowed for anything but POST" in {
       Seq(Get, Put, Delete, Patch).foreach { method =>

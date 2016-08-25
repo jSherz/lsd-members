@@ -32,17 +32,21 @@ import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.jsherz.luskydive.core.Course
 import com.jsherz.luskydive.dao.StubCourseDao
 import com.jsherz.luskydive.json.{CourseCreateRequest, CourseCreateResponse}
-import com.jsherz.luskydive.util.{DateUtil, Util}
+import com.jsherz.luskydive.util.{AuthenticationDirectives, DateUtil}
 import org.mockito.Matchers.any
 import org.mockito.{ArgumentCaptor, Mockito}
 import org.mockito.Mockito.{never, verify}
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
 import com.jsherz.luskydive.json.CoursesJsonSupport._
 
+import scala.concurrent.ExecutionContext
+
 /**
   * Ensures the create course endpoint function correctly.
   */
 class CoursesCreateApiSpec extends WordSpec with Matchers with ScalatestRouteTest with BeforeAndAfter {
+
+  private implicit val authDirective = AuthenticationDirectives.allowAll
 
   private var dao = Mockito.spy(new StubCourseDao())
 
@@ -56,6 +60,15 @@ class CoursesCreateApiSpec extends WordSpec with Matchers with ScalatestRouteTes
   }
 
   "CoursesApi#create" should {
+
+    "requires authentication" in {
+      implicit val authDirective = AuthenticationDirectives.denyAll
+      route = new CoursesApi(dao).route
+
+      Post(url) ~> Route.seal(route) ~> check {
+        response.status shouldEqual StatusCodes.Unauthorized
+      }
+    }
 
     "return method not allowed when used with anything other than POST" in {
       Seq(Get, Put, Delete, Patch).foreach { method =>

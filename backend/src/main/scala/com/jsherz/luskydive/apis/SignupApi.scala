@@ -25,8 +25,9 @@
 package com.jsherz.luskydive.apis
 
 import java.sql.Timestamp
+import java.util.UUID
 
-import akka.http.scaladsl.server.Route
+import akka.http.scaladsl.server.{Directive1, Route}
 import akka.http.scaladsl.server.Directives._
 import com.jsherz.luskydive.core.Member
 import com.jsherz.luskydive.dao.MemberDao
@@ -39,7 +40,8 @@ import scalaz.{Failure, Success}
 /**
   * The two methods of signing up new members at a fresher's fair (phone number or e-mail).
   */
-class SignupApi(private val memberDao: MemberDao)(implicit ec: ExecutionContext) {
+class SignupApi(private val memberDao: MemberDao)
+               (implicit ec: ExecutionContext, authDirective: Directive1[UUID]) {
 
   import SignupJsonSupport._
 
@@ -51,21 +53,23 @@ class SignupApi(private val memberDao: MemberDao)(implicit ec: ExecutionContext)
   private val signupRoute = path("sign-up") {
     cors {
       post {
-        entity(as[SignupRequest]) { req =>
-          complete {
-            req.validate() match {
-              case Success(phoneNumber) => {
-                memberDao.memberExists(Some(phoneNumber), None).map {
-                  case true => SignupResponse(false, Map("phoneNumber" -> "error.inUse"))
-                  case false => {
-                    val createdAt = currentTimestamp
-                    memberDao.create(Member(None, req.name, Some(phoneNumber), None, None, createdAt, createdAt))
+        authDirective { _ =>
+          entity(as[SignupRequest]) { req =>
+            complete {
+              req.validate() match {
+                case Success(phoneNumber) => {
+                  memberDao.memberExists(Some(phoneNumber), None).map {
+                    case true => SignupResponse(false, Map("phoneNumber" -> "error.inUse"))
+                    case false => {
+                      val createdAt = currentTimestamp
+                      memberDao.create(Member(None, req.name, Some(phoneNumber), None, None, createdAt, createdAt))
 
-                    SignupResponse(true, Map.empty)
+                      SignupResponse(true, Map.empty)
+                    }
                   }
                 }
+                case Failure(reason) => SignupResponse(false, reason.list.toList.toMap)
               }
-              case Failure(reason) => SignupResponse(false, reason.list.toList.toMap)
             }
           }
         }
@@ -81,21 +85,23 @@ class SignupApi(private val memberDao: MemberDao)(implicit ec: ExecutionContext)
   private val signupAltRoute = path("sign-up" / "alt") {
     cors {
       post {
-        entity(as[SignupAltRequest]) { req =>
-          complete {
-            req.validate() match {
-              case Success(_) => {
-                memberDao.memberExists(None, Some(req.email)).map {
-                  case true => SignupResponse(false, Map("email" -> "error.inUse"))
-                  case false => {
-                    val createdAt = currentTimestamp
-                    memberDao.create(Member(None, req.name, None, Some(req.email), None, createdAt, createdAt))
+        authDirective { _ =>
+          entity(as[SignupAltRequest]) { req =>
+            complete {
+              req.validate() match {
+                case Success(_) => {
+                  memberDao.memberExists(None, Some(req.email)).map {
+                    case true => SignupResponse(false, Map("email" -> "error.inUse"))
+                    case false => {
+                      val createdAt = currentTimestamp
+                      memberDao.create(Member(None, req.name, None, Some(req.email), None, createdAt, createdAt))
 
-                    SignupResponse(true, Map.empty)
+                      SignupResponse(true, Map.empty)
+                    }
                   }
                 }
+                case Failure(reason) => SignupResponse(false, reason.list.toList.toMap)
               }
-              case Failure(reason) => SignupResponse(false, reason.list.toList.toMap)
             }
           }
         }

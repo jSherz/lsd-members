@@ -32,10 +32,13 @@ import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.jsherz.luskydive.dao.StubMemberDao
 import com.jsherz.luskydive.json.MemberSearchRequest
 import com.jsherz.luskydive.json.MemberJsonSupport._
+import com.jsherz.luskydive.util.AuthenticationDirectives
 import org.mockito.Matchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.{never, verify}
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
+
+import scala.concurrent.ExecutionContext
 
 /**
   * Ensures the members endpoints function correctly.
@@ -44,6 +47,8 @@ class MemberApiSpec extends WordSpec with Matchers with ScalatestRouteTest with 
 
   import spray.json._
 
+  private implicit val authDirective = AuthenticationDirectives.allowAll
+
   private val dao = Mockito.spy(new StubMemberDao())
 
   private val route = new MemberApi(dao).route
@@ -51,6 +56,15 @@ class MemberApiSpec extends WordSpec with Matchers with ScalatestRouteTest with 
   private val searchUrl = "/members/search"
 
   "MembersApi#search" should {
+
+    "requires authentication" in {
+      implicit val authDirective = AuthenticationDirectives.denyAll
+      val route = new MemberApi(dao).route
+
+      Post(searchUrl) ~> Route.seal(route) ~> check {
+        response.status shouldEqual StatusCodes.Unauthorized
+      }
+    }
 
     "return method not allowed when used with anything other than POST" in {
       Seq(Get, Put, Delete, Patch).foreach { method =>
