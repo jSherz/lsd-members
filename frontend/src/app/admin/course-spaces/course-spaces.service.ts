@@ -1,7 +1,8 @@
-import { Injectable                              } from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
-import { Observable                              } from 'rxjs';
-import { ErrorObservable                         } from 'rxjs/observable/ErrorObservable';
+import { Injectable } from '@angular/core';
+import { Http       } from '@angular/http';
+import { Observable } from 'rxjs';
+
+import { BaseService, ApiKeyService } from '../../utils';
 
 
 export class CourseSpaceMemberResponse {
@@ -12,7 +13,11 @@ export class CourseSpaceMemberResponse {
 /**
  * A service for manipulating the spaces on a course.
  */
-export abstract class CourseSpaceService {
+export abstract class CourseSpaceService extends BaseService {
+
+  constructor(http: Http, apiKeyService: ApiKeyService) {
+    super(http, apiKeyService);
+  }
 
   /**
    * Add the specified member to a space on a course.
@@ -42,8 +47,8 @@ export class CourseSpaceServiceImpl extends CourseSpaceService {
   private addMemberUrl = 'http://localhost:8080/api/v1/course-spaces/{{uuid}}/add-member';
   private removeMemberUrl = 'http://localhost:8080/api/v1/course-spaces/{{uuid}}/remove-member';
 
-  constructor(private http: Http) {
-    super();
+  constructor(http: Http, apiKeyService: ApiKeyService) {
+    super(http, apiKeyService);
   }
 
   /**
@@ -57,7 +62,9 @@ export class CourseSpaceServiceImpl extends CourseSpaceService {
   addMember(uuid: string, memberUuid: string): Observable<CourseSpaceMemberResponse> {
     let request = { memberUuid: memberUuid };
 
-    return this.postAsJson(this.addMemberUrl.replace('{{uuid}}', uuid), request);
+    return this.post(this.addMemberUrl.replace('{{uuid}}', uuid), request)
+      .map(this.extractJson)
+      .catch(this.handleError);
   }
 
   /**
@@ -71,48 +78,7 @@ export class CourseSpaceServiceImpl extends CourseSpaceService {
   removeMember(uuid: string, memberUuid: string): Observable<CourseSpaceMemberResponse> {
     let request = { memberUuid: memberUuid };
 
-    return this.postAsJson(this.removeMemberUrl.replace('{{uuid}}', uuid), request);
-  }
-
-  /**
-   * Extract the JSON body of a response.
-   *
-   * @param res
-   * @returns
-   */
-  private extractJson(res: Response): string {
-    return res.json() || null;
-  }
-
-  /**
-   * Handle a generic error encountered when performing an AJAX request.
-   *
-   * @param err
-   * @param caught
-   * @returns {ErrorObservable}
-   */
-  private handleError<R, T>(err: any, caught: Observable<T>): ErrorObservable {
-    let errMsg = (err.message) ? err.message : err.status ? `${err.status} - ${err.statusText}` : 'Server error';
-    console.error(errMsg);
-
-    return Observable.throw(new Error(errMsg));
-  }
-
-  /**
-   * Build a post request to the given URL with the given data (serialized as JSON).
-   *
-   * The request is sent with a content type of 'application/json'.
-   *
-   * @param url
-   * @param data
-   * @returns {Observable<Response>}
-   */
-  private postAsJson(url: string, data: any) {
-    let body = JSON.stringify(data);
-    let headers = new Headers({ 'Content-Type': 'application/json' });
-    let options = new RequestOptions({ headers: headers });
-
-    return this.http.post(url, body, options)
+    return this.post(this.removeMemberUrl.replace('{{uuid}}', uuid), request)
       .map(this.extractJson)
       .catch(this.handleError);
   }
