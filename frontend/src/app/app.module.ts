@@ -26,6 +26,7 @@ import {CourseService, CourseServiceImpl} from "./admin/courses/course.service";
 import {LoginServiceStub} from "./admin/login/login.service.stub";
 import {LoginService, LoginServiceImpl} from "./admin/login/login.service";
 import {LoginComponent} from "./admin/login/login.component";
+import {ApiKeyService, ApiKeyServiceImpl} from "./utils/api-key.service";
 
 @NgModule({
   imports:      [
@@ -55,6 +56,7 @@ import {LoginComponent} from "./admin/login/login.component";
   ],
   providers: [
     FormBuilder,
+    { provide: ApiKeyService, useClass: ApiKeyServiceImpl },
     { provide: SignupService, useClass: SignupServiceImpl },
     { provide: LocationStrategy, useClass: PathLocationStrategy },
     { provide: MemberSearchService, useClass: MemberSearchServiceImpl },

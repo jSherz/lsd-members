@@ -7,15 +7,19 @@ import {
 import { Observable      } from 'rxjs';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
+import { ApiKeyService } from './api-key.service';
+
 /**
  * Basic methods shared across services.
  */
 export class BaseService {
 
   http: Http;
+  apiKeyService: ApiKeyService;
 
-  constructor(http: Http) {
+  constructor(http: Http, apiKeyService: ApiKeyService) {
     this.http = http;
+    this.apiKeyService = apiKeyService;
   }
 
   /**
@@ -54,7 +58,7 @@ export class BaseService {
    */
   protected post(url: string, data: any) {
     let body = JSON.stringify(data);
-    let headers = new Headers({ 'Content-Type': 'application/json', 'Api-Key': this.getApiKey() });
+    let headers = new Headers({ 'Content-Type': 'application/json', 'Api-Key': this.apiKeyService.getKey() });
     let options = new RequestOptions({ headers: headers });
 
     return this.http.post(url, body, options);
@@ -67,21 +71,10 @@ export class BaseService {
    * @returns {Observable<Response>}
    */
   protected get(url: string) {
-    let headers = new Headers({ 'Api-Key': this.getApiKey() });
+    let headers = new Headers({ 'Api-Key': this.apiKeyService.getKey() });
     let options = new RequestOptions({ headers: headers });
 
     return this.http.get(url, options);
-  }
-
-  /**
-   * Dummy method.
-   *
-   * TODO: Replace with the use of an API key service.
-   *
-   * @returns {string}
-   */
-  private getApiKey(): string {
-    return "94198f6b-8fd5-4d2d-a19e-b14e5b2bc167"
   }
 
 }

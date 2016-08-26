@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Http       } from '@angular/http';
 import { Observable } from 'rxjs';
 
-import { BaseService } from '../../utils/base.service';
+import { BaseService   } from '../../utils/base.service';
+import { ApiKeyService } from '../../utils/api-key.service';
 
 export class SearchResult {
 
@@ -24,8 +25,8 @@ export class SearchResult {
 
 export abstract class MemberSearchService extends BaseService {
 
-  constructor(http: Http) {
-    super(http);
+  constructor(http: Http, apiKeyService: ApiKeyService) {
+    super(http, apiKeyService);
   }
 
   abstract search(term: string): Observable<SearchResult[]>;
@@ -37,8 +38,8 @@ export class MemberSearchServiceImpl extends MemberSearchService {
 
   private memberSearchUrl = 'http://localhost:8080/api/v1/members/search';
 
-  constructor(http: Http) {
-    super(http);
+  constructor(http: Http, apiKeyService: ApiKeyService) {
+    super(http, apiKeyService);
   }
 
   search(term: string): Observable<SearchResult[]> {
