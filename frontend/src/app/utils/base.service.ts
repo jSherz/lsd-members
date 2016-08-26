@@ -12,7 +12,11 @@ import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
  */
 export class BaseService {
 
-  constructor(private http: Http) {}
+  http: Http;
+
+  constructor(http: Http) {
+    this.http = http;
+  }
 
   /**
    * Extract the JSON body of a response.

@@ -1,15 +1,22 @@
 /* tslint:disable:no-unused-variable */
 
-import { TestBed, inject } from '@angular/core/testing/test_bed';
+import { Http, HttpModule } from '@angular/http';
+import { TestBed, inject  } from '@angular/core/testing/test_bed';
 
 import { MemberSearchComponent } from './member-search.component';
-import { MemberSearchService   } from './member-search.service';
+import { MemberSearchService, MemberSearchServiceImpl } from './member-search.service';
 
 describe('Component: MemberSearch', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MemberSearchService, MemberSearchComponent]
+      imports: [
+        HttpModule
+      ],
+      providers: [
+        { provide: MemberSearchService, useClass: MemberSearchServiceImpl },
+        MemberSearchComponent
+      ]
     });
   });
 
