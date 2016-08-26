@@ -81,7 +81,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   private updateCourse(uuid: string) {
     this.currentCourseUuid = uuid;
 
-    this.service.get(uuid).subscribe(
+    this.service.getByUuid(uuid).subscribe(
       course => {
         // Ensure date is a moment
         course.course.date = moment(course.course.date);

@@ -1,13 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Http       } from '@angular/http';
 
-import { BaseService } from './base.service';
-
-export abstract class ApiKeyService extends BaseService {
-
-  constructor(http: Http) {
-    super(http);
-  }
+export abstract class ApiKeyService {
 
   abstract getKey(): string;
 
@@ -26,10 +19,6 @@ export abstract class ApiKeyService extends BaseService {
 export class ApiKeyServiceImpl extends ApiKeyService {
 
   private localStorageKey: string = "API_KEY";
-
-  constructor(http: Http) {
-    super(http);
-  }
 
   getKey(): string {
     return localStorage.getItem(this.localStorageKey);

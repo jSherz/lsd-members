@@ -3,6 +3,8 @@ import { RequestOptions, Headers, Http, Response } from '@angular/http';
 import { Observable                              } from 'rxjs/Observable';
 import { ErrorObservable                         } from 'rxjs/observable/ErrorObservable';
 import * as moment from 'moment';
+import { BaseService   } from '../../utils/base.service';
+import { ApiKeyService } from '../../utils/api-key.service';
 
 export class Course {
   uuid: String;
@@ -83,11 +85,15 @@ export class CourseSpaceWithMember {
 /**
  * Describes a service capable of retrieving course information.
  */
-export abstract class CourseService {
+export abstract class CourseService extends BaseService {
+
+  constructor(http: Http, apiKeyService: ApiKeyService) {
+    super(http, apiKeyService);
+  }
 
   abstract find(startDate: moment.Moment, endDate: moment.Moment): Observable<CourseWithNumSpaces[]>
 
-  abstract get(uuid: string): Observable<CourseWithOrganisers>
+  abstract getByUuid(uuid: string): Observable<CourseWithOrganisers>
 
   abstract spaces(uuid: string): Observable<CourseSpaceWithMember[]>
 
@@ -103,8 +109,8 @@ export class CourseServiceImpl extends CourseService {
   private coursesGetUrl = 'http://localhost:8080/api/v1/courses/{{uuid}}';
   private courseSpacesUrl = 'http://localhost:8080/api/v1/courses/{{uuid}}/spaces';
 
-  constructor(private http: Http) {
-    super();
+  constructor(http: Http, apiKeyService: ApiKeyService) {
+    super(http, apiKeyService);
   }
 
   /**
@@ -120,7 +126,7 @@ export class CourseServiceImpl extends CourseService {
       endDate: endDate.format('YYYY-MM-DD')
     };
 
-    return this.postAsJson(this.coursesFindUrl, body)
+    return this.post(this.coursesFindUrl, body)
       .map(this.extractJson)
       .catch(this.handleError);
   }
@@ -131,8 +137,8 @@ export class CourseServiceImpl extends CourseService {
    * @param uuid
    * @returns {undefined}
    */
-  get(uuid: string): Observable<CourseWithOrganisers> {
-    return this.http.get(this.coursesGetUrl.replace('{{uuid}}', uuid))
+  getByUuid(uuid: string): Observable<CourseWithOrganisers> {
+    return this.get(this.coursesGetUrl.replace('{{uuid}}', uuid))
       .map(this.extractJson)
       .catch(this.handleError);
   }
@@ -144,51 +150,9 @@ export class CourseServiceImpl extends CourseService {
    * @returns {undefined}
    */
   spaces(uuid: string): Observable<CourseSpaceWithMember[]> {
-    return this.http.get(this.courseSpacesUrl.replace('{{uuid}}', uuid))
+    return this.get(this.courseSpacesUrl.replace('{{uuid}}', uuid))
       .map(this.extractJson)
       .catch(this.handleError);
-  }
-
-  /**
-   * Extract the JSON body of a response.
-   *
-   * @param res
-   * @returns
-   */
-  private extractJson(res: Response): CourseWithNumSpaces[] {
-    let body = res.json();
-    return body || [];
-  }
-
-  /**
-   * Handle a generic error encountered when performing an AJAX request.
-   *
-   * @param err
-   * @param caught
-   * @returns {ErrorObservable}
-   */
-  private handleError<R, T>(err: any, caught: Observable<T>): ErrorObservable {
-    let errMsg = (err.message) ? err.message : err.status ? `${err.status} - ${err.statusText}` : 'Server error';
-    console.error(errMsg);
-
-    return Observable.throw(new Error(errMsg));
-  }
-
-  /**
-   * Build a post request to the given URL with the given data (serialized as JSON).
-   *
-   * The request is sent with a content type of 'application/json'.
-   *
-   * @param url
-   * @param data
-   * @returns {Observable<Response>}
-   */
-  private postAsJson(url: string, data: any) {
-    let body = JSON.stringify(data);
-    let headers = new Headers({ 'Content-Type': 'application/json' });
-    let options = new RequestOptions({ headers: headers });
-
-    return this.http.post(url, body, options);
   }
 
 }
