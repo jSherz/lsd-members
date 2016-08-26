@@ -150,9 +150,9 @@ describe('Component: CourseCalendar', () => {
 /**
  * A fake course service, used for testing.
  */
-export class StubCourseService implements CourseService {
+export class StubCourseService extends CourseService {
 
-  get(uuid: string): Observable<CourseWithOrganisers> {
+  getByUuid(uuid: string): Observable<CourseWithOrganisers> {
     return undefined;
   }
 
@@ -165,7 +165,9 @@ export class StubCourseService implements CourseService {
    *
    * @param courses
    */
-  constructor(private courses: CourseWithNumSpaces[]) {}
+  constructor(private courses: CourseWithNumSpaces[]) {
+    super(null, null);
+  }
 
   find(startDate: moment.Moment, endDate: moment.Moment): Observable<CourseWithNumSpaces[]> {
     return Observable.of(this.courses);
