@@ -1,8 +1,8 @@
-import { Injectable                              } from '@angular/core';
-import { RequestOptions, Headers, Http, Response } from '@angular/http';
-import { Observable                              } from 'rxjs/Observable';
-import { ErrorObservable                         } from 'rxjs/observable/ErrorObservable';
+import { Injectable } from '@angular/core';
+import { Http       } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
 import * as moment from 'moment';
+
 import { BaseService   } from '../../utils/base.service';
 import { ApiKeyService } from '../../utils/api-key.service';
 
