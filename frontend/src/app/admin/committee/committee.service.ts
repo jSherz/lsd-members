@@ -1,8 +1,9 @@
-import { Injectable      } from '@angular/core';
-import { Http            } from '@angular/http';
+import { Injectable } from '@angular/core';
+import { Http       } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
 
-import { Observable      } from 'rxjs/Observable';
-import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
+import { BaseService, ApiKeyService } from '../../utils';
+
 
 /**
  * A committee member with the bare minimum of information.
@@ -20,7 +21,11 @@ export class StrippedCommitteeMember {
 /**
  * A service that manages commmittee members
  */
-export abstract class CommitteeService {
+export abstract class CommitteeService extends BaseService {
+
+  constructor(http: Http, apiKeyService: ApiKeyService) {
+    super(http, apiKeyService);
+  }
 
   /**
    * Get any active committee members.
@@ -34,28 +39,14 @@ export class CommitteeServiceImpl extends CommitteeService {
 
   private committeeLookupUrl = 'http://localhost:8080/api/v1/committee-members/active';
 
-  constructor(private http: Http) {
-    super();
+  constructor(http: Http, apiKeyService: ApiKeyService) {
+    super(http, apiKeyService);
   }
 
   active(): Observable<StrippedCommitteeMember[]> {
-    return this.http.get(this.committeeLookupUrl)
-      .map(res => res.json() || {})
+    return this.get(this.committeeLookupUrl)
+      .map(this.extractJson)
       .catch(this.handleError);
-  }
-
-  /**
-   * Handle a generic error encountered when performing an AJAX request.
-   *
-   * @param err
-   * @param caught
-   * @returns {ErrorObservable}
-   */
-  private handleError<R, T>(err: any, caught: Observable<T>): ErrorObservable {
-    let errMsg = (err.message) ? err.message : err.status ? `${err.status} - ${err.statusText}` : 'Server error';
-    console.error(errMsg);
-
-    return Observable.throw(new Error(errMsg));
   }
 
 }
