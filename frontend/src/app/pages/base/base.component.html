@@ -1,0 +1,79 @@
+<div id="header">
+  <div id="header-logo">
+    <a href="/" title="Homepage">
+      <img src="/assets/images/header.png" alt="Leeds University Skydivers Logo" title="Leeds University Skydivers Logo">
+    </a>
+  </div>
+
+  <div id="header-title">
+    <h1>
+      <span class="lu">
+        Leeds Uni
+      </span>
+      Skydivers
+    </h1>
+
+    <div id="twitter-icon">
+      <a href="https://twitter.com/LeedsSkyDivers" title="Leeds Skydivers on Twitter">
+        <i class="fa fa-twitter-square"></i>
+      </a>
+    </div>
+
+    <div id="facebook-icon">
+      <a href="https://www.facebook.com/leedsuniskydivers" title="Leeds Skydivers on Facebook">
+        <i class="fa fa-facebook-square"></i>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div id="navbar">
+  <ul>
+    <li class="controls">
+      <a href="#">
+        <i class="fa fa-bars"></i>
+        <span>
+              Show menu
+            </span>
+      </a>
+    </li>
+
+    <page-nav-item href="/" linkText="Home"></page-nav-item>
+    <page-nav-item href="/about-the-club" linkText="About the club"></page-nav-item>
+    <page-nav-item href="/committee" linkText="Committee"></page-nav-item>
+    <page-nav-item href="/events" linkText="Events"></page-nav-item>
+    <page-nav-item href="/prices" linkText="Prices"></page-nav-item>
+    <page-nav-item href="/faq" linkText="FAQ"></page-nav-item>
+
+    <li>
+      <i class="separator fa fa-ellipsis-v"></i>
+    </li>
+
+    <li id="join-lsd-btn">
+      <a href="https://www.luu.org.uk/groups/skydiving/" linkText="Join Leeds Skydivers" class="join-lsd-btn">Join LSD</a>
+    </li>
+
+    <page-nav-item href="/contact" linkText="Contact"></page-nav-item>
+
+    <li>
+      <i class="separator fa fa-ellipsis-v"></i>
+    </li>
+  </ul>
+</div>
+
+<div id="content">
+  <div>
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+<div id="footer">
+  <div>
+    <p>
+      &copy;
+      2016
+      Leeds University Skydivers. Website sloppily hacked together by
+      <a href="http://jsherz.com">jSherz.</a> Powered by carrots.
+    </p>
+  </div>
+</div>

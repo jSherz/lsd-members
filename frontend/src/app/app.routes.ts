@@ -2,9 +2,10 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { SignupRoutes } from './signup/signup.routes';
 import { AdminRoutes  } from './admin/admin.routes';
+import { PageRoutes   } from './pages/page.routes';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/sign-up', terminal: true },
+  ...PageRoutes,
   ...SignupRoutes,
   ...AdminRoutes
 ];

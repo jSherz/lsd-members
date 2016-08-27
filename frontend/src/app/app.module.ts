@@ -27,6 +27,8 @@ import {LoginServiceStub} from "./admin/login/login.service.stub";
 import {LoginService, LoginServiceImpl} from "./admin/login/login.service";
 import {LoginComponent} from "./admin/login/login.component";
 import {ApiKeyService, ApiKeyServiceImpl} from "./utils/api-key.service";
+import { HomeComponent } from './pages/home/home.component';
+import { BaseComponent } from './pages/base/base.component';
 
 @NgModule({
   imports:      [
@@ -49,7 +51,11 @@ import {ApiKeyService, ApiKeyServiceImpl} from "./utils/api-key.service";
     SignupBaseComponent,
     SignupComponent,
     SignupAltComponent,
-    ThankYouComponent
+    ThankYouComponent,
+
+    HomeComponent,
+
+    BaseComponent
   ],
   bootstrap: [
     AppComponent

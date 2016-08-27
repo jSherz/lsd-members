@@ -1,0 +1,32 @@
+@import '../../../assets/css/bourbon/bourbon'
+@import '../../../assets/css/base/base'
+@import '../../../assets/css/neat/neat'
+@import '../../../assets/css/variables'
+
+// Intro snippet
+#intro-snippet
+  @include flash($notice-colour)
+  text-align: center
+  font-size: 2.5em
+  font-style: italic
+  margin-bottom: 1rem
+
+  p
+    margin: 0
+
+// Responsive video
+#frontpage-video
+  margin: auto
+  border: solid 0.1em $lsd_blue
+
+#frontpage-video-wrapper
+  position: relative
+  padding-bottom: 56.25%
+  height: 0
+
+  iframe
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
