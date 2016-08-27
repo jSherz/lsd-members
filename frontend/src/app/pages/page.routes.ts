@@ -4,7 +4,8 @@ import {
   BaseComponent,
   HomeComponent,
   AboutComponent,
-  ContactComponent
+  ContactComponent,
+  CommitteeComponent
 } from './index';
 
 export const PageRoutes: Routes = [
@@ -14,7 +15,8 @@ export const PageRoutes: Routes = [
     children: [
       { path: '', component: HomeComponent },
       { path: 'about-the-club', component: AboutComponent },
-      { path: 'contact', component: ContactComponent }
+      { path: 'contact', component: ContactComponent },
+      { path: 'committee', component: CommitteeComponent }
     ]
   }
 ];
