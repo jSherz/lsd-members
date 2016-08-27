@@ -29,6 +29,7 @@ import {LoginComponent} from "./admin/login/login.component";
 import {ApiKeyService, ApiKeyServiceImpl} from "./utils/api-key.service";
 import { HomeComponent } from './pages/home/home.component';
 import { BaseComponent } from './pages/base/base.component';
+import { AboutComponent } from './pages/about/about.component';
 
 @NgModule({
   imports:      [
@@ -55,7 +56,9 @@ import { BaseComponent } from './pages/base/base.component';
 
     HomeComponent,
 
-    BaseComponent
+    BaseComponent,
+
+    AboutComponent
   ],
   bootstrap: [
     AppComponent

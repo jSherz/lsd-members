@@ -2,7 +2,8 @@ import { Routes } from '@angular/router';
 
 import {
   BaseComponent,
-  HomeComponent
+  HomeComponent,
+  AboutComponent
 } from './index';
 
 export const PageRoutes: Routes = [
@@ -10,7 +11,8 @@ export const PageRoutes: Routes = [
     path: '',
     component: BaseComponent,
     children: [
-      { path: '', component: HomeComponent }
+      { path: '', component: HomeComponent },
+      { path: 'about-the-club', component: AboutComponent }
     ]
   }
 ];
