@@ -3,7 +3,8 @@ import { Routes } from '@angular/router';
 import {
   BaseComponent,
   HomeComponent,
-  AboutComponent
+  AboutComponent,
+  ContactComponent
 } from './index';
 
 export const PageRoutes: Routes = [
@@ -12,7 +13,8 @@ export const PageRoutes: Routes = [
     component: BaseComponent,
     children: [
       { path: '', component: HomeComponent },
-      { path: 'about-the-club', component: AboutComponent }
+      { path: 'about-the-club', component: AboutComponent },
+      { path: 'contact', component: ContactComponent }
     ]
   }
 ];

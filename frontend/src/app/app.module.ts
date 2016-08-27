@@ -30,6 +30,7 @@ import {ApiKeyService, ApiKeyServiceImpl} from "./utils/api-key.service";
 import { HomeComponent } from './pages/home/home.component';
 import { BaseComponent } from './pages/base/base.component';
 import { AboutComponent } from './pages/about/about.component';
+import { ContactComponent } from './pages/contact/contact.component';
 
 @NgModule({
   imports:      [
@@ -58,7 +59,9 @@ import { AboutComponent } from './pages/about/about.component';
 
     BaseComponent,
 
-    AboutComponent
+    AboutComponent,
+
+    ContactComponent
   ],
   bootstrap: [
     AppComponent
