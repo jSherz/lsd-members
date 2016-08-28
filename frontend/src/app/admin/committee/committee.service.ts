@@ -46,7 +46,7 @@ export class CommitteeServiceImpl extends CommitteeService {
   active(): Observable<StrippedCommitteeMember[]> {
     return this.get(this.committeeLookupUrl)
       .map(this.extractJson)
-      .catch(this.handleError);
+      .catch(this.handleError());
   }
 
 }

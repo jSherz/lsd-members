@@ -58,7 +58,7 @@ export class SignupServiceImpl extends SignupService {
   private doSignup(url: string, request: any): Observable<SignupResult> {
     return this.post(url, request)
       .map(this.extractJson)
-      .catch(this.handleError);
+      .catch(this.handleError());
   }
 
 }

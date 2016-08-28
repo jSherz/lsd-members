@@ -46,7 +46,7 @@ export class LoginServiceImpl extends LoginService {
 
     return this.post(this.loginUrl, body)
       .map(this.extractJson)
-      .catch(this.handleError);
+      .catch(this.handleError());
   }
 
 }

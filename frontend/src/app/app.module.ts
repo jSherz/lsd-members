@@ -7,6 +7,7 @@ import { HttpModule    } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { routing      } from './app.routes';
+import {CanActivateAdmin} from './admin/can-activate-admin';
 import {CourseAddComponent} from "./admin/courses/course-add/course-add.component";
 import {TileComponent} from "./admin/courses/course-calendar/tile/tile.component";
 import {CourseCalendarComponent} from "./admin/courses/course-calendar/course-calendar.component";
@@ -23,7 +24,6 @@ import {MemberSearchService, MemberSearchServiceImpl} from "./admin/member-searc
 import {CourseSpaceService, CourseSpaceServiceImpl} from "./admin/course-spaces/course-spaces.service";
 import {CommitteeService, CommitteeServiceImpl} from "./admin/committee/committee.service";
 import {CourseService, CourseServiceImpl} from "./admin/courses/course.service";
-import {LoginServiceStub} from "./admin/login/login.service.stub";
 import {LoginService, LoginServiceImpl} from "./admin/login/login.service";
 import {LoginComponent} from "./admin/login/login.component";
 import {ApiKeyService, ApiKeyServiceImpl} from "./utils/api-key.service";
@@ -80,7 +80,8 @@ import {
     { provide: CourseService, useClass: CourseServiceImpl },
     { provide: CourseSpaceService, useClass: CourseSpaceServiceImpl },
     { provide: CommitteeService, useClass: CommitteeServiceImpl },
-    { provide: LoginService, useClass: LoginServiceImpl }
+    { provide: LoginService, useClass: LoginServiceImpl },
+    CanActivateAdmin
   ]
 })
 export class AppModule { }

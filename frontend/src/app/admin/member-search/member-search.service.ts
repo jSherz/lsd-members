@@ -49,7 +49,7 @@ export class MemberSearchServiceImpl extends MemberSearchService {
 
     return this.post(this.memberSearchUrl, body)
       .map(this.extractJson)
-      .catch(this.handleError);
+      .catch(this.handleError());
   }
 
 }
