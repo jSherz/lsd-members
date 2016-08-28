@@ -33,6 +33,7 @@ import { AboutComponent } from './pages/about/about.component';
 import { ContactComponent } from './pages/contact/contact.component';
 import { CommitteeComponent } from './pages/committee/committee.component';
 import { FaqComponent } from './pages/faq/faq.component';
+import { PricesComponent } from './pages/prices/prices.component';
 
 @NgModule({
   imports:      [
@@ -67,7 +68,9 @@ import { FaqComponent } from './pages/faq/faq.component';
 
     CommitteeComponent,
 
-    FaqComponent
+    FaqComponent,
+
+    PricesComponent
   ],
   bootstrap: [
     AppComponent

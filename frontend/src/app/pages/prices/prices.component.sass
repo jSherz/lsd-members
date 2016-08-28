@@ -1,0 +1,51 @@
+@import '../../../assets/css/bourbon/bourbon'
+@import '../../../assets/css/base/base'
+@import '../../../assets/css/neat/neat'
+@import '../../../assets/css/variables'
+
+// Packages
+$packages-breakpoint: max-width 38em
+
+#packages li
+  border: solid 0.1em #eee
+  padding: 1em
+  margin-bottom: 0.5em
+
+  .package-info, .package-price
+    display: inline-block
+
+  .package-info
+    width: 85%
+    border-right: dotted 0.2em #fdda00
+
+  .package-price
+    width: 13%
+    margin-left: 1%
+    font-size: 1.5em
+    font-family: 'Patrick Hand SC', cursive
+    text-align: right
+    vertical-align: top
+
+  .requirements
+    @include flash($notice-colour)
+    margin: 1em 1.5em 1em 0
+    padding: 0.5em
+
+    @include media($packages-breakpoint)
+      margin: 0.5em
+
+
+  @include media($packages-breakpoint)
+    .package-info, .package-price
+      display: block !important
+      width: 100%
+
+    .package-info
+      border: 0
+
+    .package-price
+      font-weight: bold
+
+      &:before
+        content: '-- '
+        font-weight: normal
