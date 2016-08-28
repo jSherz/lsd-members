@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
+import {Router, NavigationStart} from '@angular/router';
 
 import { PageNavComponent } from './index';
 
@@ -13,7 +14,14 @@ export class BaseComponent {
 
   menuCollapsed = true;
 
-  constructor() { }
+  constructor(private router: Router) {
+    // Close menu when navigating
+    router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        this.menuCollapsed = true;
+      }
+    });
+  }
 
   toggleMenu() {
     this.menuCollapsed = this.menuCollapsed ? false : true;
