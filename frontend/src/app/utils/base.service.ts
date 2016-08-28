@@ -44,7 +44,9 @@ export class BaseService {
       let errMsg = (err.message) ? err.message : err.status ? `${err.status} - ${err.statusText}` : 'Server error';
       console.error(errMsg);
 
-      apiKeyService.setKey('');
+      if (err.status && err.status === 401) {
+        apiKeyService.setKey('');
+      }
 
       return Observable.throw(new Error(errMsg));
     };
