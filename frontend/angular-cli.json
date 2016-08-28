@@ -15,9 +15,7 @@
       "prefix": "app",
       "mobile": false,
       "styles": [],
-      "scripts": [
-        "application.css"
-      ],
+      "scripts": [],
       "environments": {
         "source": "environments/environment.ts",
         "prod": "environments/environment.prod.ts",
