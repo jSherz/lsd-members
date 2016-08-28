@@ -4,7 +4,6 @@ import { ROUTER_DIRECTIVES } from '@angular/router';
 @Component({
   selector: 'page-nav-item',
   templateUrl: 'page-nav.component.html',
-  styleUrls: ['page-nav.component.sass'],
   directives: [ROUTER_DIRECTIVES]
 })
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 import { PageNavComponent } from './index';
 
@@ -6,7 +6,8 @@ import { PageNavComponent } from './index';
   selector: 'app-base',
   templateUrl: 'base.component.html',
   styleUrls: ['base.component.sass'],
-  directives: [PageNavComponent]
+  directives: [PageNavComponent],
+  encapsulation: ViewEncapsulation.None
 })
 export class BaseComponent implements OnInit {
 
