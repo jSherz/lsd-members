@@ -5,7 +5,8 @@ import {
   HomeComponent,
   AboutComponent,
   ContactComponent,
-  CommitteeComponent
+  CommitteeComponent,
+  FaqComponent
 } from './index';
 
 export const PageRoutes: Routes = [
@@ -16,7 +17,8 @@ export const PageRoutes: Routes = [
       { path: '', component: HomeComponent },
       { path: 'about-the-club', component: AboutComponent },
       { path: 'contact', component: ContactComponent },
-      { path: 'committee', component: CommitteeComponent }
+      { path: 'committee', component: CommitteeComponent },
+      { path: 'faq', component: FaqComponent }
     ]
   }
 ];
