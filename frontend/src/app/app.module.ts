@@ -27,13 +27,15 @@ import {LoginServiceStub} from "./admin/login/login.service.stub";
 import {LoginService, LoginServiceImpl} from "./admin/login/login.service";
 import {LoginComponent} from "./admin/login/login.component";
 import {ApiKeyService, ApiKeyServiceImpl} from "./utils/api-key.service";
-import { HomeComponent } from './pages/home/home.component';
-import { BaseComponent } from './pages/base/base.component';
-import { AboutComponent } from './pages/about/about.component';
-import { ContactComponent } from './pages/contact/contact.component';
-import { CommitteeComponent } from './pages/committee/committee.component';
-import { FaqComponent } from './pages/faq/faq.component';
-import { PricesComponent } from './pages/prices/prices.component';
+import {
+  BaseComponent,
+  HomeComponent,
+  AboutComponent,
+  ContactComponent,
+  CommitteeComponent,
+  FaqComponent,
+  PricesComponent
+} from './pages';
 
 @NgModule({
   imports:      [
@@ -59,17 +61,11 @@ import { PricesComponent } from './pages/prices/prices.component';
     ThankYouComponent,
 
     HomeComponent,
-
     BaseComponent,
-
     AboutComponent,
-
     ContactComponent,
-
     CommitteeComponent,
-
     FaqComponent,
-
     PricesComponent
   ],
   bootstrap: [
