@@ -1,6 +1,7 @@
 <li>
   <i class="separator fa fa-ellipsis-v"></i>
 </li>
-<li>
+
+<li [ngClass]="{ visible: !collapsed }">
   <a [routerLink]="href" [innerText]="linkText" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"></a>
 </li>

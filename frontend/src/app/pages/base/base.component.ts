@@ -9,11 +9,14 @@ import { PageNavComponent } from './index';
   directives: [PageNavComponent],
   encapsulation: ViewEncapsulation.None
 })
-export class BaseComponent implements OnInit {
+export class BaseComponent {
+
+  menuCollapsed = true;
 
   constructor() { }
 
-  ngOnInit() {
+  toggleMenu() {
+    this.menuCollapsed = this.menuCollapsed ? false : true;
   }
 
 }

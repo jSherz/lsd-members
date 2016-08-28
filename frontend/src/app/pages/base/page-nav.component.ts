@@ -8,7 +8,11 @@ import { ROUTER_DIRECTIVES } from '@angular/router';
 })
 
 export class PageNavComponent {
-  @Input() href: String;
 
-  @Input() linkText: String;
+  @Input() href: string;
+
+  @Input() linkText: string;
+
+  @Input() collapsed: boolean;
+
 }
