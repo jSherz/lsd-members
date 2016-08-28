@@ -25,14 +25,14 @@ export class CommitteeComponent implements OnInit {
   }
 
   committeeMembers = [
-    new CommitteeMember('aucutt.jpg', 'Emily', 'Party Sec'),
-    new CommitteeMember('dickinson.jpg', 'Jim', 'Pineapple Sec'),
-    new CommitteeMember('mansfield.jpg', 'Becca', 'Captain'),
-    new CommitteeMember('priestley.jpg', 'Tyler', 'Triple Sec'),
-    new CommitteeMember('ravet_bailey.jpg', 'Tom', 'French Sec'),
-    new CommitteeMember('walkerj.jpg', 'Jack', 'Party Sec'),
-    new CommitteeMember('walker.jpg', 'Bethan', 'Party Sec'),
-    new CommitteeMember('sherwood_jones.jpg', 'James', 'Creator of Bugs'),
+    new CommitteeMember('emily.png', 'Emily', 'President'),
+    new CommitteeMember('will.png', 'Will', 'Vice-president'),
+    new CommitteeMember('angus.png', 'Angus', 'Treasurer'),
+    new CommitteeMember('jim.jpg', 'Jim', 'RAPS Secretary'),
+    new CommitteeMember('nathan.png', 'Nathan', 'Kit Secretary'),
+    new CommitteeMember('isabelle.png', 'Isabelle', 'Social Secretary #1'),
+    new CommitteeMember('georgia.png', 'Georgia', 'Social Secretary #2'),
+    new CommitteeMember('james.png', 'James', '"The website guy"'),
   ];
 
 }
