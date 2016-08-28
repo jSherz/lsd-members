@@ -24,8 +24,9 @@
 
 package com.jsherz.luskydive.services
 
+import akka.http.scaladsl.model.{HttpEntity, HttpResponse, StatusCodes}
 import akka.http.scaladsl.model.headers.{HttpOrigin, HttpOriginRange}
-import akka.http.scaladsl.server.Directive0
+import akka.http.scaladsl.server._
 import akka.http.scaladsl.server.Directives._
 import ch.megard.akka.http.cors.CorsSettings
 import com.jsherz.luskydive.apis._
@@ -56,13 +57,15 @@ class HttpService(
   val loginApi = new LoginApi(authDao)
 
   val routes =
-    (pathPrefix("api") & pathPrefix("v1")) {
-      signupRoutes.route ~
-      coursesRoutes.route ~
-      courseSpacesApi.route ~
-      committeeRoutes.route ~
-      memberRoutes.route ~
-      loginApi.route
+    handleRejections(Cors.rejectionHandler) {
+      (pathPrefix("api") & pathPrefix("v1") & Cors.cors) {
+        signupRoutes.route ~
+          coursesRoutes.route ~
+          courseSpacesApi.route ~
+          committeeRoutes.route ~
+          memberRoutes.route ~
+          loginApi.route
+      }
     }
 
 }
@@ -77,5 +80,20 @@ object Cors {
   ))
 
   def cors: Directive0 = ch.megard.akka.http.cors.CorsDirectives.corsDecorate(settings).map(_ ⇒ ())
+
+  /**
+    * Ensure that authentication errors still have the correct CORS headers.
+    *
+    * Otherwise, the AJAX frontend will not accept the request and will instead set it to a status code of 0 (failed).
+    */
+  val rejectionHandler = RejectionHandler.newBuilder()
+    .handle { case (AuthorizationFailedRejection | AuthenticationFailedRejection(_, _)) =>
+      cors {
+        complete {
+          HttpResponse(StatusCodes.Unauthorized, entity = HttpEntity("Authorization failed"))
+        }
+      }
+    }
+    .result()
 
 }

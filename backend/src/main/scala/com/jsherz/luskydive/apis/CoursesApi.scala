@@ -32,7 +32,6 @@ import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.{Course, CourseStatuses}
-import com.jsherz.luskydive.services.Cors.cors
 import com.jsherz.luskydive.dao.CourseDao
 import com.jsherz.luskydive.json.{CourseCreateRequest, CourseCreateResponse, CoursesJsonSupport, CoursesListRequest}
 
@@ -51,15 +50,13 @@ class CoursesApi(private val courseDao: CourseDao)
     * Shows the courses that are
     */
   val listRoute = pathEnd {
-    cors {
-      post {
-        authDirective { _ =>
-          entity(as[CoursesListRequest]) { req =>
-            if (req.endDate.before(req.startDate)) {
-              complete(StatusCodes.BadRequest, "endDate must be after startDate")
-            } else {
-              complete(courseDao.find(req.startDate, req.endDate))
-            }
+    post {
+      authDirective { _ =>
+        entity(as[CoursesListRequest]) { req =>
+          if (req.endDate.before(req.startDate)) {
+            complete(StatusCodes.BadRequest, "endDate must be after startDate")
+          } else {
+            complete(courseDao.find(req.startDate, req.endDate))
           }
         }
       }
@@ -67,41 +64,35 @@ class CoursesApi(private val courseDao: CourseDao)
   }
 
   val spacesRoute = path(JavaUUID / "spaces") { uuid =>
-    cors {
-      get {
-        authDirective { _ =>
-          onSuccess(courseDao.spaces(uuid)) {
-            complete(_)
-          }
+    get {
+      authDirective { _ =>
+        onSuccess(courseDao.spaces(uuid)) {
+          complete(_)
         }
       }
     }
   }
 
   val getRoute = path(JavaUUID) { uuid =>
-    cors {
-      get {
-        authDirective { _ =>
-          onSuccess(courseDao.get(uuid)) {
-            case Some(course) => complete(course)
-            case None => complete(StatusCodes.NotFound, "No course found with that UUID")
-          }
+    get {
+      authDirective { _ =>
+        onSuccess(courseDao.get(uuid)) {
+          case Some(course) => complete(course)
+          case None => complete(StatusCodes.NotFound, "No course found with that UUID")
         }
       }
     }
   }
 
   val createRoute = path("create") {
-    cors {
-      post {
-        authDirective { _ =>
-          entity(as[CourseCreateRequest]) { req =>
-            val (course, numSpaces) = createRequestToDaoFormat(req)
+    post {
+      authDirective { _ =>
+        entity(as[CourseCreateRequest]) { req =>
+          val (course, numSpaces) = createRequestToDaoFormat(req)
 
-            onSuccess(courseDao.create(course, numSpaces)) {
-              case \/-(courseUuid) => complete(CourseCreateResponse(true, None, Some(courseUuid)))
-              case -\/(error) => complete(CourseCreateResponse(false, Some(error), None))
-            }
+          onSuccess(courseDao.create(course, numSpaces)) {
+            case \/-(courseUuid) => complete(CourseCreateResponse(true, None, Some(courseUuid)))
+            case -\/(error) => complete(CourseCreateResponse(false, Some(error), None))
           }
         }
       }
