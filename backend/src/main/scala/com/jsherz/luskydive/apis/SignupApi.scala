@@ -51,25 +51,23 @@ class SignupApi(private val memberDao: MemberDao)
     * Requires a name and e-mail address.
     */
   private val signupRoute = path("sign-up") {
-    cors {
-      post {
-        authDirective { _ =>
-          entity(as[SignupRequest]) { req =>
-            complete {
-              req.validate() match {
-                case Success(phoneNumber) => {
-                  memberDao.memberExists(Some(phoneNumber), None).map {
-                    case true => SignupResponse(false, Map("phoneNumber" -> "error.inUse"))
-                    case false => {
-                      val createdAt = currentTimestamp
-                      memberDao.create(Member(None, req.name, Some(phoneNumber), None, None, createdAt, createdAt))
+    post {
+      authDirective { _ =>
+        entity(as[SignupRequest]) { req =>
+          complete {
+            req.validate() match {
+              case Success(phoneNumber) => {
+                memberDao.memberExists(Some(phoneNumber), None).map {
+                  case true => SignupResponse(false, Map("phoneNumber" -> "error.inUse"))
+                  case false => {
+                    val createdAt = currentTimestamp
+                    memberDao.create(Member(None, req.name, Some(phoneNumber), None, None, createdAt, createdAt))
 
-                      SignupResponse(true, Map.empty)
-                    }
+                    SignupResponse(true, Map.empty)
                   }
                 }
-                case Failure(reason) => SignupResponse(false, reason.list.toList.toMap)
               }
+              case Failure(reason) => SignupResponse(false, reason.list.toList.toMap)
             }
           }
         }

@@ -1,0 +1,21 @@
+<div id="members">
+  <h2>Committee</h2>
+
+  <p>
+    We're the guys &amp; gals that are here to get you in the air! Need to get in touch? <a [routerLink]="['/contact']">Contact us.</a>
+  </p>
+
+  <ul id="committee-list">
+    <li *ngFor="let committeeMember of committeeMembers">
+      <img src="/assets/images/committee/{{ committeeMember.imageUrl }}" title="{{ committeeMember.name }}" alt="{{ committeeMember.name }}">
+
+      <h3>
+        {{ committeeMember.name }}
+      </h3>
+
+      <p class="role">
+        {{ committeeMember.role }}
+      </p>
+    </li>
+  </ul>
+</div>

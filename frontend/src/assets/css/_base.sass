@@ -2,10 +2,7 @@
 @import 'neat/neat'
 @import 'base/base'
 @import 'font-awesome/font-awesome'
-
-$lsd-blue: #009dd9
-$lsd-yellow: #fdda00
-$lsd-red: #ea0005
+@import 'variables'
 
 @mixin error-box
   background: lighten($lsd-red, 40%)
@@ -20,7 +17,6 @@ body, input
 body
   background: url('/assets/images/bg-tile.png') repeat
   padding-top: 1.5em
-  letter-spacing: 0.07em
 
 form
   dd.info
@@ -32,6 +28,14 @@ form
     margin-bottom: 0.5em
     border-radius: 0.25em
     @include error-box
+
+a
+  color: lighten($lsd_blue, 10%)
+
+  @include transition(color 0.2s)
+
+  &:hover
+    color: darken($lsd_blue, 10%)
 
 // Source: http://refills.bourbon.io/components/
 .video-wrapper

@@ -7,6 +7,8 @@ import {
   CourseAddComponent
 } from './courses';
 import { LoginComponent } from './login/login.component';
+import { CanActivateAdmin } from './can-activate-admin';
+
 
 export const AdminRoutes: Routes = [
   {
@@ -14,10 +16,10 @@ export const AdminRoutes: Routes = [
     component: AdminBaseComponent,
     children: [
       { path: 'login', component: LoginComponent },
-      { path: 'courses/calendar/:year/:month', component: CourseCalendarComponent },
-      { path: 'courses/calendar', component: CourseCalendarComponent },
-      { path: 'courses/:uuid', component: CourseViewComponent },
-      { path: 'courses/add/:year/:month/:day', component: CourseAddComponent }
+      { path: 'courses/calendar/:year/:month', component: CourseCalendarComponent, canActivate: [CanActivateAdmin] },
+      { path: 'courses/calendar', component: CourseCalendarComponent, canActivate: [CanActivateAdmin] },
+      { path: 'courses/:uuid', component: CourseViewComponent, canActivate: [CanActivateAdmin] },
+      { path: 'courses/add/:year/:month/:day', component: CourseAddComponent, canActivate: [CanActivateAdmin] }
     ]
   }
 ];

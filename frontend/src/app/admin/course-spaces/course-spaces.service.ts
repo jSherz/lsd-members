@@ -64,7 +64,7 @@ export class CourseSpaceServiceImpl extends CourseSpaceService {
 
     return this.post(this.addMemberUrl.replace('{{uuid}}', uuid), request)
       .map(this.extractJson)
-      .catch(this.handleError);
+      .catch(this.handleError());
   }
 
   /**
@@ -80,7 +80,7 @@ export class CourseSpaceServiceImpl extends CourseSpaceService {
 
     return this.post(this.removeMemberUrl.replace('{{uuid}}', uuid), request)
       .map(this.extractJson)
-      .catch(this.handleError);
+      .catch(this.handleError());
   }
 
 }

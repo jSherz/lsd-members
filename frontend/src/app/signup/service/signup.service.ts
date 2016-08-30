@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import { BaseService, ApiKeyService } from '../../utils';
 
 export class SignupResult {
 
@@ -14,7 +15,11 @@ export class SignupResult {
 
 }
 
-export abstract class SignupService {
+export abstract class SignupService extends BaseService {
+
+  constructor(http: Http, apiKeyService: ApiKeyService) {
+    super(http, apiKeyService);
+  }
 
   abstract signup(name: string, phoneNumber?: string): Observable<SignupResult>;
 
@@ -28,8 +33,8 @@ export class SignupServiceImpl extends SignupService {
   private signupUrl: string = 'http://localhost:8080/api/v1/members/sign-up';
   private signupAltUrl: string = 'http://localhost:8080/api/v1/members/sign-up/alt';
 
-  constructor(private http: Http) {
-    super();
+  constructor(http: Http, apiKeyService: ApiKeyService) {
+    super(http, apiKeyService);
   }
 
   signup(name: string, phoneNumber: string): Observable<SignupResult> {
@@ -51,22 +56,9 @@ export class SignupServiceImpl extends SignupService {
   }
 
   private doSignup(url: string, request: any): Observable<SignupResult> {
-    let body = JSON.stringify(request);
-    let headers = new Headers({ 'Content-Type': 'application/json' });
-    let options = new RequestOptions({ headers: headers });
-
-    return this.http.post(url, body, options)
-      .map(res => res.json() || {})
-      .catch(this.handleError);
-  }
-
-  private handleError(error: any) {
-    // In a real world app, we might use a remote logging infrastructure
-    // We'd also dig deeper into the error to get a better message
-    let errMsg = (error.message) ? error.message :
-      error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-    console.error(errMsg); // log to console instead
-    return Observable.throw(errMsg);
+    return this.post(url, request)
+      .map(this.extractJson)
+      .catch(this.handleError());
   }
 
 }

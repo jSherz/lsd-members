@@ -7,6 +7,7 @@ import {
   Validators
 } from '@angular/forms';
 import { LoginService } from './login.service';
+import { ApiKeyService } from '../../utils/api-key.service';
 
 @Component({
   selector: 'login-component',
@@ -48,7 +49,10 @@ export class LoginComponent {
    * @param router
    * @param loginService
    */
-  constructor(private builder: FormBuilder, private router: Router, private loginService: LoginService) {
+  constructor(private builder: FormBuilder,
+              private router: Router,
+              private loginService: LoginService,
+              private apiKeyService: ApiKeyService) {
     this.ctrlEmail = new FormControl('', Validators.required);
     this.ctrlPassword = new FormControl('', Validators.required);
 
@@ -77,6 +81,8 @@ export class LoginComponent {
         this.showThrobber = false;
 
         if (result.success) {
+          this.apiKeyService.setKey(result.apiKey);
+
           this.router.navigate(['admin', 'courses', 'calendar']);
         } else {
           this.errors = result.errors;

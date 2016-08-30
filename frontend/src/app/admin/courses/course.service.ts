@@ -1,8 +1,8 @@
-import { Injectable                              } from '@angular/core';
-import { RequestOptions, Headers, Http, Response } from '@angular/http';
-import { Observable                              } from 'rxjs/Observable';
-import { ErrorObservable                         } from 'rxjs/observable/ErrorObservable';
+import { Injectable } from '@angular/core';
+import { Http       } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
 import * as moment from 'moment';
+
 import { BaseService   } from '../../utils/base.service';
 import { ApiKeyService } from '../../utils/api-key.service';
 
@@ -128,7 +128,7 @@ export class CourseServiceImpl extends CourseService {
 
     return this.post(this.coursesFindUrl, body)
       .map(this.extractJson)
-      .catch(this.handleError);
+      .catch(this.handleError());
   }
 
   /**
@@ -140,7 +140,7 @@ export class CourseServiceImpl extends CourseService {
   getByUuid(uuid: string): Observable<CourseWithOrganisers> {
     return this.get(this.coursesGetUrl.replace('{{uuid}}', uuid))
       .map(this.extractJson)
-      .catch(this.handleError);
+      .catch(this.handleError());
   }
 
   /**
@@ -152,7 +152,7 @@ export class CourseServiceImpl extends CourseService {
   spaces(uuid: string): Observable<CourseSpaceWithMember[]> {
     return this.get(this.courseSpacesUrl.replace('{{uuid}}', uuid))
       .map(this.extractJson)
-      .catch(this.handleError);
+      .catch(this.handleError());
   }
 
 }

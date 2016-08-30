@@ -1,0 +1,33 @@
+@import '../../../assets/css/bourbon/bourbon'
+@import '../../../assets/css/base/base'
+@import '../../../assets/css/neat/neat'
+@import '../../../assets/css/variables'
+
+#committee-list
+  li
+    display: inline-block
+    width: 30%
+    text-align: center
+    border: solid 0.1em #eee
+    padding: 1.7em 0.4em 1em 0.4em
+    margin: 0 1% 2em 1%
+
+    @include media(max-width 57em)
+      width: 47%
+
+    @include media(max-width 45em)
+      width: 100%
+
+  .role
+    color: #666
+    font-size: 1.2em
+    margin: 0
+
+  img
+    width: 90%
+    margin-bottom: 0.5em
+
+h3
+  letter-spacing: 0.1em
+  font-size: 2.4em
+  margin-bottom: 0

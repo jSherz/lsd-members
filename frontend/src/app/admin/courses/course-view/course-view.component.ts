@@ -9,7 +9,7 @@ import {
   CourseSpaceWithMember,
   CourseWithOrganisers, CommitteeMember
 } from '../course.service';
-import { CourseSpaceService, CourseSpaceMemberResponse } from '../../course-spaces/course-spaces.service';
+import { CourseSpaceService } from '../../course-spaces/course-spaces.service';
 
 @Component({
   selector: 'app-course-view',
@@ -143,11 +143,11 @@ export class CourseViewComponent implements OnInit, OnDestroy {
         error => {
           this.apiRequestFailed = true;
           console.error('Failed to add member to course:');
-          console.error(error)
+          console.error(error);
         }
       );
     } else {
-      console.error('Unable to add member to this course - no spaces available.')
+      console.error('Unable to add member to this course - no spaces available.');
     }
   }
 
@@ -168,9 +168,9 @@ export class CourseViewComponent implements OnInit, OnDestroy {
       error => {
         this.apiRequestFailed = true;
         console.error('Failed to remove member from course:');
-        console.error(error)
+        console.error(error);
       }
-    )
+    );
   }
 
   /**

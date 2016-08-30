@@ -20,7 +20,7 @@ export class LoginServiceStub extends LoginService {
   static apiFailPassword: string = 'P455w0rd';
 
   constructor() {
-    super();
+    super(null, null);
   }
 
   login(email: string, password: string): Observable<LoginResult> {

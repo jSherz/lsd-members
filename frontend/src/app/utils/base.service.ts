@@ -35,16 +35,23 @@ export class BaseService {
 
   /**
    * Handle a generic error encountered when performing an AJAX request.
-   *
-   * @param err
-   * @param caught
-   * @returns {ErrorObservable}
    */
-  protected handleError<R, T>(err: any, caught: Observable<T>): ErrorObservable {
-    let errMsg = (err.message) ? err.message : err.status ? `${err.status} - ${err.statusText}` : 'Server error';
-    console.error(errMsg);
+  protected handleError<R, T>() {
+    // We use a closure here to ensure that the reference to this.apiKeyService isn't lost when this error handler is used
+    let apiKeyService = this.apiKeyService;
 
-    return Observable.throw(new Error(errMsg));
+    let innerHandler = <R, T>(err: any, caught: Observable<T>): ErrorObservable => {
+      let errMsg = (err.message) ? err.message : err.status ? `${err.status} - ${err.statusText}` : 'Server error';
+      console.error(errMsg);
+
+      if (err.status && err.status === 401) {
+        apiKeyService.setKey('');
+      }
+
+      return Observable.throw(new Error(errMsg));
+    };
+
+    return innerHandler;
   }
 
   /**

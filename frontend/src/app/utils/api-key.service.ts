@@ -18,7 +18,7 @@ export abstract class ApiKeyService {
 @Injectable()
 export class ApiKeyServiceImpl extends ApiKeyService {
 
-  private localStorageKey: string = "API_KEY";
+  private localStorageKey: string = 'API_KEY';
 
   getKey(): string {
     return localStorage.getItem(this.localStorageKey);

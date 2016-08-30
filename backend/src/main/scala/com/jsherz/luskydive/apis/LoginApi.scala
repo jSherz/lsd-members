@@ -46,26 +46,24 @@ class LoginApi(private val dao: AuthDao)(implicit ec: ExecutionContext) {
   import com.jsherz.luskydive.json.LoginJsonSupport._
 
   val loginRoute = pathEnd {
-    cors {
-      post {
-        entity(as[LoginRequest]) { req =>
-          val time = new Timestamp(new Date().getTime)
-          val loginResult = dao.login(req.email, req.password, time)
+    post {
+      entity(as[LoginRequest]) { req =>
+        val time = new Timestamp(new Date().getTime)
+        val loginResult = dao.login(req.email, req.password, time)
 
-          onSuccess(loginResult) {
-            case \/-(uuid) => complete(LoginResponse(true, Map.empty, Some(uuid)))
-            case -\/(error) => {
-              if (AuthDaoErrors.invalidEmailPass.equals(error)) {
-                complete(LoginResponse(false, Map(
-                  "password" -> AuthDaoErrors.invalidEmailPass
-                ), None))
-              } else if (AuthDaoErrors.accountLocked.equals(error)) {
-                complete(LoginResponse(false, Map(
-                  "email" -> AuthDaoErrors.accountLocked
-                ), None))
-              } else {
-                complete(StatusCodes.InternalServerError, error)
-              }
+        onSuccess(loginResult) {
+          case \/-(uuid) => complete(LoginResponse(true, Map.empty, Some(uuid)))
+          case -\/(error) => {
+            if (AuthDaoErrors.invalidEmailPass.equals(error)) {
+              complete(LoginResponse(false, Map(
+                "password" -> AuthDaoErrors.invalidEmailPass
+              ), None))
+            } else if (AuthDaoErrors.accountLocked.equals(error)) {
+              complete(LoginResponse(false, Map(
+                "email" -> AuthDaoErrors.accountLocked
+              ), None))
+            } else {
+              complete(StatusCodes.InternalServerError, error)
             }
           }
         }

@@ -32,7 +32,7 @@ export abstract class LoginService extends BaseService {
 @Injectable()
 export class LoginServiceImpl extends LoginService {
 
-  loginUrl = "http://localhost:8080/api/v1/login";
+  loginUrl = 'http://localhost:8080/api/v1/login';
 
   constructor(http: Http, apiKeyService: ApiKeyService) {
     super(http, apiKeyService);
@@ -46,7 +46,7 @@ export class LoginServiceImpl extends LoginService {
 
     return this.post(this.loginUrl, body)
       .map(this.extractJson)
-      .catch(this.handleError);
+      .catch(this.handleError());
   }
 
 }
