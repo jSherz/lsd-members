@@ -108,29 +108,34 @@ class Tables(protected val databaseService: DatabaseService) {
   protected val TextMessages: TableQuery[TextMessagesTable] = TableQuery[TextMessagesTable]
 
   /**
-    * The Slick mapping for the text_messages table.
+    * The Slick mapping for text messages being sent to members.
     *
     * @param tag
     */
   protected class TextMessagesTable(tag: Tag) extends Table[TextMessage](tag, "text_messages") {
 
-    def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
+    def uuid: Rep[UUID] = column[UUID]("uuid", O.PrimaryKey)
 
-    def memberId: Rep[Int] = column[Int]("member_id")
+    def memberUuid: Rep[UUID] = column[UUID]("member_uuid")
+
+    def massTextUuid: Rep[Option[UUID]] = column[Option[UUID]]("mass_text_uuid")
+
+    def status: Rep[Short] = column[Short]("status")
 
     def toNumber: Rep[String] = column[String]("to_number", O.Length(MOBILE_NUMBER_FIELD_LENGTH, varying = true))
 
     def fromNumber: Rep[String] = column[String]("from_number", O.Length(MOBILE_NUMBER_FIELD_LENGTH, varying = true))
 
-    def sentDt: Rep[Option[Timestamp]] = column[Option[Timestamp]]("sent_dt")
-
-    def sentMsid: Rep[Option[String]] = column[Option[String]]("sent_msid")
-
-    def status: Rep[Short] = column[Short]("status")
-
     def message: Rep[String] = column[String]("message", O.Length(TEXT_MESSAGE_LENGTH, varying = true))
 
-    def * = (id.?, memberId, toNumber, fromNumber, sentDt, sentMsid, status, message) <> (TextMessage.tupled, TextMessage.unapply)
+    def externalId: Rep[Option[String]] = column[Option[String]]("external_id")
+
+    def createdAt: Rep[Timestamp] = column[Timestamp]("created_at")
+
+    def updatedAt: Rep[Timestamp] = column[Timestamp]("updated_at")
+
+    def * = (uuid.?, memberUuid, toNumber, fromNumber, status, toNumber, fromNumber, message, externalId, createdAt,
+      updatedAt) <> (TextMessage.tupled, TextMessage.unapply)
 
   }
 
@@ -159,6 +164,7 @@ class Tables(protected val databaseService: DatabaseService) {
 
   /**
     * The Slick mapping for committee members.
+    *
     * @param tag
     */
   protected class CommitteeMemberTables(tag: Tag) extends Table[CommitteeMember](tag, "committee_members") {

@@ -22,25 +22,49 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.core
+package com.jsherz.luskydive.itest.dao
 
-import java.sql.Timestamp
-import java.util.UUID
+import org.scalatest.{Matchers, WordSpec}
 
-/**
-  * A text message that will be or has been sent to a member.
-  */
-case class TextMessage(
-                        uuid: Option[UUID],
-                        memberUuid: UUID,
-                        massTextUuid: Option[UUID],
-                        status: Short,
-                        toNumber: String,
-                        fromNumber: String,
-                        message: String,
-                        // When the message is sent, this holds the external service's ID for the message
-                        // e.g. Twilio's "msid"
-                        externalId: Option[String],
-                        createdAt: Timestamp,
-                        updatedAt: Timestamp
-                      )
+
+class TextMessageDaoSpec extends WordSpec with Matchers {
+
+  "TextMessageDao#all" should {
+
+    "return text messages in the correct order" is (pending)
+
+  }
+
+  "TextMessageDao#get" should {
+
+    "return None if no message was found" is (pending)
+
+    "return Some(message) if a message was found" is (pending)
+
+  }
+
+  "TextMessageDao#insert" should {
+
+    "add the message with the correct information" is (pending)
+
+    "add messages with no associated mass text" is (pending)
+
+    "add messages with no associated external ID" is (pending)
+
+  }
+
+  "TextMessageDao#forMember" should {
+
+    "return the correct messages, in order, for a member" is (pending)
+
+    "return an empty list when the member does not exist" is (pending)
+
+  }
+
+  "TextMessageDao#update" should {
+
+    "update the correct record and only that record" is (pending)
+
+  }
+
+}
