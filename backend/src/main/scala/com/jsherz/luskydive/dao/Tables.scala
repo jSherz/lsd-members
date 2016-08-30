@@ -105,6 +105,27 @@ class Tables(protected val databaseService: DatabaseService) {
 
   }
 
+  protected val MassTexts: TableQuery[MassTextsTable] = TableQuery[MassTextsTable]
+
+  /**
+    * The Slick mapping for mass texts being sent to members.
+    *
+    * @param tag
+    */
+  protected class MassTextsTable(tag: Tag) extends Table[MassText](tag, "mass_texts") {
+
+    def uuid: Rep[UUID] = column[UUID]("uuid", O.PrimaryKey)
+
+    def committeeMemberUuid: Rep[UUID] = column[UUID]("committee_member_uuid")
+
+    def template: Rep[String] = column[String]("template")
+
+    def createdAt: Rep[Timestamp] = column[Timestamp]("created_at")
+
+    def * = (uuid.?, committeeMemberUuid, template, createdAt) <> (MassText.tupled, MassText.unapply)
+
+  }
+
   protected val TextMessages: TableQuery[TextMessagesTable] = TableQuery[TextMessagesTable]
 
   /**
@@ -134,7 +155,7 @@ class Tables(protected val databaseService: DatabaseService) {
 
     def updatedAt: Rep[Timestamp] = column[Timestamp]("updated_at")
 
-    def * = (uuid.?, memberUuid, toNumber, fromNumber, status, toNumber, fromNumber, message, externalId, createdAt,
+    def * = (uuid.?, memberUuid, massTextUuid, status, toNumber, fromNumber, message, externalId, createdAt,
       updatedAt) <> (TextMessage.tupled, TextMessage.unapply)
 
   }

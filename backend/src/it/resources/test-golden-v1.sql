@@ -85,6 +85,18 @@ CREATE TABLE courses (
 
 
 --
+-- Name: mass_texts; Type: TABLE; Schema: public; Owner: luskydive
+--
+
+CREATE TABLE mass_texts (
+    uuid uuid NOT NULL,
+    committee_member_uuid uuid NOT NULL,
+    template character varying(480) NOT NULL,
+    created_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+--
 -- Name: members; Type: TABLE; Schema: public; Owner: luskydive
 --
 
@@ -114,6 +126,24 @@ CREATE TABLE schema_version (
     installed_on timestamp without time zone DEFAULT now() NOT NULL,
     execution_time integer NOT NULL,
     success boolean NOT NULL
+);
+
+
+--
+-- Name: text_messages; Type: TABLE; Schema: public; Owner: luskydive
+--
+
+CREATE TABLE text_messages (
+    uuid uuid NOT NULL,
+    member_uuid uuid NOT NULL,
+    mass_text_uuid uuid,
+    status smallint NOT NULL,
+    to_number character varying(20) NOT NULL,
+    from_number character varying(20) NOT NULL,
+    message character varying(480) NOT NULL,
+    external_id character varying(100),
+    created_at timestamp without time zone DEFAULT now() NOT NULL,
+    updated_at timestamp without time zone DEFAULT now() NOT NULL
 );
 
 
@@ -2110,6 +2140,17 @@ INSERT INTO members (uuid, name, email, phone_number, last_jump, created_at, upd
 INSERT INTO schema_version (installed_rank, version, description, type, script, checksum, installed_by, installed_on, execution_time, success) VALUES (1, '1.0', 'Create table members', 'SQL', 'V1_0__Create_table_members.sql', 333059038, 'luskydive', '2016-08-10 22:08:39.045016', 29, true);
 INSERT INTO schema_version (installed_rank, version, description, type, script, checksum, installed_by, installed_on, execution_time, success) VALUES (2, '1.1', 'Create committee and raps course tables', 'SQL', 'V1_1__Create_committee_and_raps_course_tables.sql', -2057073705, 'luskydive', '2016-08-10 22:08:39.126118', 37, true);
 INSERT INTO schema_version (installed_rank, version, description, type, script, checksum, installed_by, installed_on, execution_time, success) VALUES (3, '1.2', 'Create api keys table', 'SQL', 'V1_2__Create_api_keys_table.sql', 2014026903, 'luskydive', '2016-08-21 18:24:01.480063', 24, true);
+
+
+--
+-- Data for Name: mass_texts; Type: TABLE DATA; Schema: public; Owner: luskydive_test
+--
+
+INSERT INTO mass_texts VALUES ('1503f286-f1d6-4908-9fef-c96cee1ba1a8', '9f036a07-605b-44e8-a262-d33e7fc73d5d', 'Hellooooo {{ name }} - how are you doing? Excited for skydiving? Check out our website!! - Reply "NOFUN" to stop these messages.', date '2015-10-01 17:45:10');
+INSERT INTO mass_texts VALUES ('6717e107-20bb-45da-af07-b5f392f88fdd', 'a8df22ad-c2a4-40b6-9939-852421d9b30e', 'Roll up, roll up {{ name }}, it''s time to get yourself down to our skydiving G.I.A.G - meet you there :D #excited #skydiving - Reply "NOFUN" to stop these messages.', date '2016-09-25 17:56:10.4415');
+INSERT INTO mass_texts VALUES ('0e02581c-df85-4200-bedd-55a667740486', '75f2bfee-8859-46a8-8c08-956c2162f5c3', 'Hey {{ name }}, you little early bird, you! Thank you for coming to see us at the freshers fair yesterday. See you all at the G.I.A.G - OR ELSE #skydiving #chick - Reply "NOFUN" to stop these messages.', date '2017-09-25 13:55:19.1412');
+INSERT INTO mass_texts VALUES ('7d06dd78-972b-48d6-a94d-edaaed565486', 'ade89632-2ccd-4b9f-93f1-44f5adf9704c', 'OK, look. {{ name }}, we need to talk. It''s been at least 3 days since you saw us at the freshers fair and you have STILL not signed up. Check us out on Facebook, Twitter, Instagram or the union page for more information :) I''m waiting........ PS: Skydiving is amazing (l0l) - Reply "NOFUN" to stop these messages.', date '2017-10-05 19:05:10.1122');
+INSERT INTO mass_texts VALUES ('1e435472-35b5-4117-a055-75d109290cbf', '329ad322-fe4a-4bdc-9c5b-030431766e36', 'Hello, {{ name }}. Is it me you''re looking for? Come and join us for a weekend of TONNES of fun. You, us and 13,500ft of AAAAAAHHHHHH... followed by you saying "OH MY THAT WAS THE BEST THING I''VE EVER DONE" and we''ll be like "YEAH, TOLD YOU SO" #freshers #skydiving #fun #anythingelseisboring #cancelyourplans - Reply "NOFUN" to stop these messages.', date '2017-10-01 17:59:41.5123');
 
 
 --

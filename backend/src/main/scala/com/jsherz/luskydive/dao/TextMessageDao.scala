@@ -73,7 +73,7 @@ class TextMessageDaoImpl(protected override val databaseService: DatabaseService
     * @param uuid
     * @return Left(error) or Right(Some(message) if found, otherwise None)
     */
-  def get(uuid: UUID): Future[Option[TextMessage]] = {
+  def get(uuid: UUID): Future[String \/ Option[TextMessage]] = {
     db.run(TextMessages.filter(_.uuid === uuid).result.headOption) withServerError
   }
 

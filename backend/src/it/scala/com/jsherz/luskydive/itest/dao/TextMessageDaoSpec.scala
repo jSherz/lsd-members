@@ -24,20 +24,49 @@
 
 package com.jsherz.luskydive.itest.dao
 
+import java.util.UUID
+
+import akka.actor.ActorSystem
+import akka.event.{Logging, LoggingAdapter}
+import com.jsherz.luskydive.core.TextMessage
+import com.jsherz.luskydive.dao.TextMessageDaoImpl
+import com.jsherz.luskydive.itest.util.Util
+import com.jsherz.luskydive.json.MemberSearchResult
 import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.concurrent.ScalaFutures._
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 
 class TextMessageDaoSpec extends WordSpec with Matchers {
 
+  implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
+  val dbService = Util.setupGoldTestDb()
+  val dao = new TextMessageDaoImpl(dbService)
+
   "TextMessageDao#all" should {
 
-    "return text messages in the correct order" is (pending)
+    "return text messages in the correct order" in {
+      val result = dao.all().futureValue
+
+      result.isRight shouldBe true
+      result.map { messages =>
+        messages shouldEqual Util.fixture[Vector[TextMessage]]("all.json")
+      }
+    }
 
   }
 
   "TextMessageDao#get" should {
 
-    "return None if no message was found" is (pending)
+    "return None if no message was found" in {
+      val result = dao.get(UUID.fromString("0deabe93-58da-448a-84ca-e6da03a07b66")).futureValue
+
+      result.isRight shouldBe true
+      result.map {
+        _ shouldBe None
+      }
+    }
 
     "return Some(message) if a message was found" is (pending)
 
