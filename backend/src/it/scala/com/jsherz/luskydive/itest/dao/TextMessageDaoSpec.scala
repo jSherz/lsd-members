@@ -34,6 +34,7 @@ import com.jsherz.luskydive.itest.util.Util
 import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.concurrent.ScalaFutures._
 import com.jsherz.luskydive.json.TextMessageJsonSupport._
+import org.scalatest.time.{Seconds, Span}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -47,6 +48,8 @@ class TextMessageDaoSpec extends WordSpec with Matchers {
   "TextMessageDao#all" should {
 
     "return text messages in the correct order" in {
+      implicit val patienceConfig = PatienceConfig(scaled(Span(1, Seconds)))
+
       val result = dao.all().futureValue
 
       result.isRight shouldBe true
