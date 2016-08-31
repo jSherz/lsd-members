@@ -2853,6 +2853,22 @@ ALTER TABLE ONLY schema_version
 
 
 --
+-- Name: mass_texts_pk; Type: CONSTRAINT; Schema: public; Owner: luskydive
+--
+
+ALTER TABLE ONLY mass_texts
+    ADD CONSTRAINT mass_texts_pk PRIMARY KEY (uuid);
+
+
+--
+-- Name: mass_texts_pk; Type: CONSTRAINT; Schema: public; Owner: luskydive
+--
+
+ALTER TABLE ONLY text_messages
+    ADD CONSTRAINT text_messages_pk PRIMARY KEY (uuid);
+
+
+--
 -- Name: schema_version_s_idx; Type: INDEX; Schema: public; Owner: luskydive
 --
 
@@ -2889,3 +2905,27 @@ ALTER TABLE ONLY courses
 
 ALTER TABLE ONLY courses
     ADD CONSTRAINT courses_secondary_organiser_uuid_fkey FOREIGN KEY (secondary_organiser_uuid) REFERENCES committee_members(uuid);
+
+
+--
+-- Name: mass_texts_committee_member_uuid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: luskydive
+--
+
+ALTER TABLE ONLY mass_texts
+    ADD CONSTRAINT mass_texts_committee_member_uuid_fkey FOREIGN KEY (committee_member_uuid) REFERENCES committee_members(uuid);
+
+
+--
+-- Name: text_messages_member_uuid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: luskydive
+--
+
+ALTER TABLE ONLY text_messages
+    ADD CONSTRAINT text_messages_member_uuid_fkey FOREIGN KEY (member_uuid) REFERENCES members(uuid);
+
+
+--
+-- Name: text_messages_mass_text_uuid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: luskydive
+--
+
+ALTER TABLE ONLY text_messages
+    ADD CONSTRAINT text_messages_mass_text_uuid_fkey FOREIGN KEY (mass_text_uuid) REFERENCES mass_texts(uuid);
