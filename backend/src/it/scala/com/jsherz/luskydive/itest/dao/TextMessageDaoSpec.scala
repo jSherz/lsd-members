@@ -87,11 +87,47 @@ class TextMessageDaoSpec extends WordSpec with Matchers {
 
   "TextMessageDao#insert" should {
 
-    "add the message with the correct information" is (pending)
+    "add the message with the correct information" in {
+      val text = Util.fixture[TextMessage]("valid_example.json")
+      val result = dao.insert(text).futureValue
 
-    "add messages with no associated mass text" is (pending)
+      result.isRight shouldBe true
+      result.map { uuid =>
+        Some(uuid) shouldEqual text.uuid
 
-    "add messages with no associated external ID" is (pending)
+        val created = dao.get(uuid).futureValue
+        created.isRight shouldBe true
+        created.map { _ shouldEqual Some(text) }
+      }
+    }
+
+    "add messages with no associated mass text" in {
+      val text = Util.fixture[TextMessage]("valid_no_mass_text.json")
+      val result = dao.insert(text).futureValue
+
+      result.isRight shouldBe true
+      result.map { uuid =>
+        Some(uuid) shouldEqual text.uuid
+
+        val created = dao.get(uuid).futureValue
+        created.isRight shouldBe true
+        created.map { _ shouldEqual Some(text) }
+      }
+    }
+
+    "add messages with no associated external ID" in {
+      val text = Util.fixture[TextMessage]("valid_no_external_id.json")
+      val result = dao.insert(text).futureValue
+
+      result.isRight shouldBe true
+      result.map { uuid =>
+        Some(uuid) shouldEqual text.uuid
+
+        val created = dao.get(uuid).futureValue
+        created.isRight shouldBe true
+        created.map { _ shouldEqual Some(text) }
+      }
+    }
 
   }
 
