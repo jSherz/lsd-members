@@ -31,9 +31,9 @@ import akka.event.{Logging, LoggingAdapter}
 import com.jsherz.luskydive.core.TextMessage
 import com.jsherz.luskydive.dao.TextMessageDaoImpl
 import com.jsherz.luskydive.itest.util.Util
-import com.jsherz.luskydive.json.MemberSearchResult
 import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.concurrent.ScalaFutures._
+import com.jsherz.luskydive.json.TextMessageJsonSupport._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -51,7 +51,10 @@ class TextMessageDaoSpec extends WordSpec with Matchers {
 
       result.isRight shouldBe true
       result.map { messages =>
-        messages shouldEqual Util.fixture[Vector[TextMessage]]("all.json")
+        val expected = Util.fixture[Vector[TextMessage]]("all.json")
+
+        messages.length shouldEqual expected.length
+        messages shouldEqual expected
       }
     }
 
@@ -68,7 +71,14 @@ class TextMessageDaoSpec extends WordSpec with Matchers {
       }
     }
 
-    "return Some(message) if a message was found" is (pending)
+    "return Some(message) if a message was found" in {
+      val result = dao.get(UUID.fromString("4f8ee40d-6721-4c70-b7c2-e966498947ab")).futureValue
+
+      result.isRight shouldBe true
+      result.map {
+        _ shouldBe Some(Util.fixture[TextMessage]("4f8ee40d.json"))
+      }
+    }
 
   }
 
