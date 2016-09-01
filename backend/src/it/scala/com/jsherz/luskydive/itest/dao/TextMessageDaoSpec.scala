@@ -133,9 +133,25 @@ class TextMessageDaoSpec extends WordSpec with Matchers {
 
   "TextMessageDao#forMember" should {
 
-    "return the correct messages, in order, for a member" is (pending)
+    "return the correct messages, in order, for a member" in {
+      val member = UUID.fromString("d99d8680-296a-40db-9788-b182ce3a6935")
+      val result = dao.forMember(member).futureValue
 
-    "return an empty list when the member does not exist" is (pending)
+      result.isRight shouldBe true
+      result.map { texts =>
+        texts shouldEqual Util.fixture[Vector[TextMessage]]("erik.json")
+      }
+    }
+
+    "return an empty list when the member does not exist" in {
+      val nonExistentMember = UUID.fromString("e3186d50-41ec-4c34-be95-edf808eeea40")
+      val result = dao.forMember(nonExistentMember).futureValue
+
+      result.isRight shouldBe true
+      result.map { texts =>
+        texts shouldBe empty
+      }
+    }
 
   }
 

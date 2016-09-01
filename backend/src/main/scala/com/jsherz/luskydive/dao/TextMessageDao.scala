@@ -94,7 +94,7 @@ class TextMessageDaoImpl(protected override val databaseService: DatabaseService
     * @return
     */
   def forMember(memberUuid: UUID): Future[String \/ Seq[TextMessage]] = {
-    db.run(TextMessages.filter(_.memberUuid === memberUuid).result) withServerError
+    db.run(TextMessages.filter(_.memberUuid === memberUuid).sortBy(_.updatedAt.desc).result) withServerError
   }
 
   /**

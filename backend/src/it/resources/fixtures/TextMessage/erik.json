@@ -1,0 +1,62 @@
+[
+  {
+    "uuid": "dbb1d69e-0451-415a-b74e-c934642a17b2",
+    "memberUuid": "d99d8680-296a-40db-9788-b182ce3a6935",
+    "massTextUuid": null,
+    "status": 1,
+    "toNumber": "+447838285436",
+    "fromNumber": "+447569214553",
+    "message": "Hello Erik. This is a further test message!",
+    "externalId": "TEXTMEISTER-5e45er6trtfgyuhiju7thu",
+    "createdAt": "2015-12-05 11:15:29.000000",
+    "updatedAt": "2015-12-05 11:16:07.000000"
+  },
+  {
+    "uuid": "e283eb32-f0cc-4a4c-8d60-7ca6bfb0a177",
+    "memberUuid": "d99d8680-296a-40db-9788-b182ce3a6935",
+    "massTextUuid": null,
+    "status": 1,
+    "toNumber": "+447838285436",
+    "fromNumber": "+447569214553",
+    "message": "Hello Erik. This is a further test message!",
+    "externalId": "TEXTMEISTER-u98yh899uuh12huey7u8ijnh1r",
+    "createdAt": "2015-12-04 10:27:11.000000",
+    "updatedAt": "2015-12-04 10:29:01.000000"
+  },
+  {
+    "uuid": "ac0d77ec-00af-4d4a-9636-67fa1d824d34",
+    "memberUuid": "d99d8680-296a-40db-9788-b182ce3a6935",
+    "massTextUuid": null,
+    "status": 1,
+    "toNumber": "+447838285436",
+    "fromNumber": "+447569214553",
+    "message": "Hello Erik. This is YET ANOTHER test message!",
+    "externalId": "TEXTMEISTER-1418uijui9okjhyu9i14914jn",
+    "createdAt": "2015-12-04 10:10:11.000000",
+    "updatedAt": "2015-12-04 10:10:25.000000"
+  },
+  {
+    "uuid": "57a87126-38a5-4c88-b008-16e7005f6500",
+    "memberUuid": "d99d8680-296a-40db-9788-b182ce3a6935",
+    "massTextUuid": null,
+    "status": 1,
+    "toNumber": "+447838285436",
+    "fromNumber": "+447569214553",
+    "message": "Hello Erik. This is a test message!",
+    "externalId": "TEXTMEISTER-19uh4jkwhdsgc89i1o324k2193j",
+    "createdAt": "2015-12-04 10:09:11.000000",
+    "updatedAt": "2015-12-04 10:09:13.000000"
+  },
+  {
+    "uuid": "2e38f540-d005-485d-a03b-aa958a640a3c",
+    "memberUuid": "d99d8680-296a-40db-9788-b182ce3a6935",
+    "massTextUuid": "1e435472-35b5-4117-a055-75d109290cbf",
+    "status": 1,
+    "toNumber": "+447838285436",
+    "fromNumber": "+447215123625",
+    "message": "Hello, Erik Johnson. Is it me you're looking for? Come and join us for a weekend of TONNES of fun. You, us and 13,500ft of AAAAAAHHHHHH... followed by you saying \"OH MY THAT WAS THE BEST THING I'VE EVER DONE\" and we'll be like \"YEAH, TOLD YOU SO\" #freshers #skydiving #fun #anythingelseisboring #cancelyourplans - Reply \"NOFUN\" to stop these messages.",
+    "externalId": "7a9b945c83788c828c80cde75dc00f06fa4260223831e83445637a87979f520d",
+    "createdAt": "2015-10-01 00:00:00.000000",
+    "updatedAt": "2015-10-01 01:59:59.434844"
+  }
+]
