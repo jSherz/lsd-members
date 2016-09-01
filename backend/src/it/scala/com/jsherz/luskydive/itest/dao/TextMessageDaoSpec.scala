@@ -157,7 +157,29 @@ class TextMessageDaoSpec extends WordSpec with Matchers {
 
   "TextMessageDao#update" should {
 
-    "update the correct record and only that record" is (pending)
+    "update a text message correctly" in {
+      val messageUuid = UUID.fromString("ac0d77ec-00af-4d4a-9636-67fa1d824d34")
+      val before = dao.get(messageUuid).futureValue
+
+      before.isRight shouldBe true
+      before.map { text =>
+        text shouldEqual Some(Util.fixture[TextMessage]("update_before.json"))
+      }
+
+      val expected = Util.fixture[TextMessage]("update_after.json")
+      val after = dao.update(expected).futureValue
+
+      after.isRight shouldBe true
+      after.map { numUpdated =>
+        numUpdated shouldBe 1
+      }
+
+      val doubleCheck = dao.get(messageUuid).futureValue
+      doubleCheck.isRight shouldBe true
+      doubleCheck.map { text =>
+        text shouldEqual Some(expected)
+      }
+    }
 
   }
 
