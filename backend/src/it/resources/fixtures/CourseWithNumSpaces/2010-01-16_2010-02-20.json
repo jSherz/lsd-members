@@ -12,6 +12,17 @@
   },
   {
     "course": {
+      "uuid": "45800e69-298f-4368-85b7-d3e1dfca71ea",
+      "secondaryOrganiserUuid": "8f41e284-20f3-4de8-96f2-5171569ecb75",
+      "date": "2010-01-21",
+      "status": 1,
+      "organiserUuid": "6d0520c0-8a0b-459a-bc2e-f1126dd848f3"
+    },
+    "totalSpaces": 7,
+    "spacesFree": 2
+  },
+  {
+    "course": {
       "uuid": "d3e121ee-9827-456a-a252-afbd4a618180",
       "date": "2010-02-09",
       "organiserUuid": "dbabfcc4-20e5-4a01-ae55-30149179179c",
@@ -30,16 +41,5 @@
     },
     "totalSpaces": 8,
     "spacesFree": 0
-  },
-  {
-    "course": {
-      "uuid": "45800e69-298f-4368-85b7-d3e1dfca71ea",
-      "secondaryOrganiserUuid": "8f41e284-20f3-4de8-96f2-5171569ecb75",
-      "date": "2010-01-21",
-      "status": 1,
-      "organiserUuid": "6d0520c0-8a0b-459a-bc2e-f1126dd848f3"
-    },
-    "totalSpaces": 7,
-    "spacesFree": 2
   }
 ]

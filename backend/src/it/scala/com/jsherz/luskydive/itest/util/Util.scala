@@ -28,6 +28,7 @@ import java.nio.file.Paths
 
 import com.jsherz.luskydive.Main._
 import com.jsherz.luskydive.services.DatabaseService
+import org.flywaydb.core.Flyway
 
 import scala.io.{Codec, Source}
 
@@ -41,13 +42,26 @@ object Util {
   implicit val codec: Codec = Codec.UTF8
 
   /**
-    * Load the golden database SQL file into our test database.
+    * Wipe the test database, run migrations and then load fresh test data.
     */
   def setupGoldTestDb(): DatabaseService = {
     implicit val codec = Codec.UTF8
-    val goldenSql = Source.fromURL(getClass.getResource("/test-golden-v1.sql")).mkString
+
+    val cleanupSql = Source.fromURL(getClass.getResource("/clean-test-db.sql")).mkString
+    val goldenSql = Source.fromURL(getClass.getResource("/test-data.sql")).mkString
 
     val service = new DatabaseService(dbUrl, dbUsername, dbPassword)
+
+    service
+      .db
+      .createSession
+      .conn
+      .prepareStatement(cleanupSql)
+      .execute()
+
+    val flyway = new Flyway()
+    flyway.setDataSource(dbUrl, dbUsername, dbPassword)
+    flyway.migrate()
 
     service
       .db
@@ -74,7 +88,7 @@ object Util {
     * @tparam T
     * @return
     */
-  def fixture[T :JsonReader](path: String)(implicit jsonFormat: JsonFormat[T], t: reflect.Manifest[T]): T = {
+  def fixture[T: JsonReader](path: String)(implicit jsonFormat: JsonFormat[T], t: reflect.Manifest[T]): T = {
     val fullPath = Paths.get("/fixtures", t.toString.split("\\.").last.replace("]", ""), path).toString
     val resourceUrl = getClass.getResource(fullPath)
     val raw = Source.fromURL(resourceUrl).mkString

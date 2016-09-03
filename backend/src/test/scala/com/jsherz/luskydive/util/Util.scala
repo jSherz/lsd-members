@@ -45,7 +45,7 @@ object Util {
     */
   def setupGoldTestDb(): DatabaseService = {
     implicit val codec = Codec.UTF8
-    val goldenSql = Source.fromURL(getClass.getResource("/test-golden-v1.sql")).mkString
+    val goldenSql = Source.fromURL(getClass.getResource("/test-data.sql")).mkString
 
     val service = new DatabaseService(dbUrl, dbUsername, dbPassword)
 
