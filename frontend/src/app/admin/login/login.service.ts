@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Http       } from '@angular/http';
 
-import { BaseService, ApiKeyService } from '../../utils';
+import { ApiKeyService, BaseService } from '../utils';
 
 
 export class LoginResult {

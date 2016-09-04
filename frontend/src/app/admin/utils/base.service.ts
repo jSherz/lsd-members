@@ -7,7 +7,7 @@ import {
 import { Observable      } from 'rxjs';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
-import { ApiKeyService } from './index';
+import { ApiKeyService } from './';
 
 /**
  * Basic methods shared across services.

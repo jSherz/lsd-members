@@ -3,8 +3,8 @@ import { Http       } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import * as moment from 'moment';
 
-import { BaseService   } from '../../utils/base.service';
-import { ApiKeyService } from '../../utils/api-key.service';
+import { BaseService   } from '../utils/base.service';
+import { ApiKeyService } from '../utils/api-key.service';
 
 export class Course {
   uuid: String;

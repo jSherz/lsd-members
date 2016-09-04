@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Http       } from '@angular/http';
 import { Observable } from 'rxjs';
 
-import { BaseService   } from '../../utils/base.service';
-import { ApiKeyService } from '../../utils/api-key.service';
+import { BaseService   } from '../utils/base.service';
+import { ApiKeyService } from '../utils/api-key.service';
 
 export class SearchResult {
 

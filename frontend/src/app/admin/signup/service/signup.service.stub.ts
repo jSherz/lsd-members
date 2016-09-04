@@ -1,4 +1,6 @@
-import { Observable                  } from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
+import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
+
 import { SignupResult, SignupService } from '../index';
 
 export class SignupServiceStub extends SignupService {
@@ -15,7 +17,7 @@ export class SignupServiceStub extends SignupService {
   static apiFailEmail: string = 'AmyFarrell@armyspy.com';
   static apiFailPhoneNumber: string = '07827651140';
 
-  signup(name: string, phoneNumber: string): Observable<SignupResult> {
+  signup(name: string, phoneNumber: string): Observable<SignupResult> | ErrorObservable {
     if (name === SignupServiceStub.validName && phoneNumber === SignupServiceStub.validPhoneNumber) {
       return Observable.of(new SignupResult(true, {}));
     } else if (name === SignupServiceStub.inUseName && phoneNumber === SignupServiceStub.inUsePhoneNumber) {
@@ -29,7 +31,7 @@ export class SignupServiceStub extends SignupService {
     }
   }
 
-  signupAlt(name: string, email: string): Observable<SignupResult> {
+  signupAlt(name: string, email: string): Observable<SignupResult> | ErrorObservable {
     if (name === SignupServiceStub.validName && email === SignupServiceStub.validEmail) {
       return Observable.of(new SignupResult(true, {}));
     } else if (name === SignupServiceStub.inUseName && email === SignupServiceStub.inUseEmail) {

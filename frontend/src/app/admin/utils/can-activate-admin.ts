@@ -2,7 +2,7 @@ import { CanActivate, RouterStateSnapshot, ActivatedRouteSnapshot, Router } from
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { ApiKeyService } from '../utils/api-key.service';
+import { ApiKeyService } from './api-key.service';
 
 
 @Injectable()

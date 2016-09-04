@@ -7,7 +7,7 @@ import {
   Validators
 } from '@angular/forms';
 import { LoginService } from './login.service';
-import { ApiKeyService } from '../../utils/api-key.service';
+import { ApiKeyService } from '../utils';
 
 @Component({
   selector: 'login-component',

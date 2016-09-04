@@ -7,19 +7,21 @@ import {
   Validators
 } from '@angular/forms';
 
-import { CustomValidators } from '../../utils';
-import { SignupService    } from '../service/signup.service';
+import { CustomValidators } from '../../../utils';
+import {
+  SignupService
+} from '../service/signup.service';
 
 @Component({
-  selector: 'signup-component',
-  templateUrl: 'signup.component.html'
+  selector: 'signup-alt-component',
+  templateUrl: 'signup-alt.component.html'
 })
-export class SignupComponent {
+export class SignupAltComponent {
 
   signupForm: FormGroup;
 
   ctrlName: FormControl;
-  ctrlPhoneNumber: FormControl;
+  ctrlEmail: FormControl;
 
   /**
    * Set when an API request fails.
@@ -44,7 +46,7 @@ export class SignupComponent {
   };
 
   /**
-   * Build the sign-up form, including setting up any validation.
+   * Build the sign-up form, including setting up validation.
    *
    * @param builder
    * @param router
@@ -52,27 +54,27 @@ export class SignupComponent {
    */
   constructor(private builder: FormBuilder, private router: Router, private signupService: SignupService) {
     this.ctrlName = new FormControl('', Validators.required);
-    this.ctrlPhoneNumber = new FormControl('', Validators.compose([Validators.required, CustomValidators.phoneNumber]));
+    this.ctrlEmail = new FormControl('', Validators.compose([Validators.required, CustomValidators.email]));
 
     this.signupForm = builder.group({
       name: this.ctrlName,
-      phoneNumber: this.ctrlPhoneNumber
+      email: this.ctrlEmail
     });
   }
 
   /**
-   * Attempt to sign-up a user by name and phone number.
+   * Attempt to sign-up a user by name and e-mail.
    *
    * Will show an error message if the API call fails or if it returns an error.
    *
    * Navigates to the "thank-you" page if signing up succeeds.
    *
-   * @param user (with params "name" and "phoneNumber")
+   * @param user
    */
   signup(user) {
     this.showThrobber = true;
 
-    this.signupService.signup(user.name, user.phoneNumber).subscribe(
+    this.signupService.signupAlt(user.name, user.email).subscribe(
       result => {
         // API request succeeded, check result
         this.apiRequestFailed = false;
@@ -102,7 +104,7 @@ export class SignupComponent {
    */
   translate(key: string) {
     return {
-      'error.inUse': 'This phone number is in use. Have you already signed up?'
+      'error.inUse': 'This e-mail is in use. Have you already signed up?'
     }[key];
   }
 

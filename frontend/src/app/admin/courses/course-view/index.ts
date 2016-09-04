@@ -1,1 +1,1 @@
-export * from './course-view.component';
+export { CourseViewComponent } from './course-view.component';

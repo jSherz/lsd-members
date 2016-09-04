@@ -1,5 +1,10 @@
-export * from './course-calendar/course-calendar.component';
-export * from './course-add/course-add.component';
-export * from './course-view/course-view.component';
-export * from './course.service';
-export * from './month.service';
+export { CourseAddComponent } from './course-add';
+export {
+  Tile,
+  TileService,
+  TileComponent,
+  CourseCalendarComponent
+} from './course-calendar';
+export { CourseViewComponent } from './course-view';
+export { CourseService, CourseServiceImpl } from './course.service';
+export { MonthService } from './month.service';

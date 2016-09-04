@@ -1,6 +1,6 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { NavComponent } from './utils/nav.component';
+import { NavComponent } from './admin/utils/nav.component';
 import './rxjs-operators';
 
 @Component({
