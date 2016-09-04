@@ -9,11 +9,11 @@ import {
   CourseViewComponent,
   CourseAddComponent,
   MassTextComponent,
+  SignupBaseComponent,
   SignupComponent,
   SignupAltComponent,
   ThankYouComponent
 } from './';
-import {SignupBaseComponent} from "./signup/signup-base.component";
 
 
 export const adminRoutes: Routes = [
