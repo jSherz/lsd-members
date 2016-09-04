@@ -26,6 +26,8 @@ import {
   CourseCalendarComponent,
   CourseViewComponent,
   MemberSearchComponent,
+  MassTextService,
+  MassTextServiceImpl,
   MassTextComponent,
   ApiKeyService,
   ApiKeyServiceImpl,
@@ -44,7 +46,8 @@ import {
   SignupAltComponent,
   ThankYouComponent
 } from './';
-import {adminRouting} from "./admin.routing";
+
+import { adminRouting } from './admin.routing';
 
 @NgModule({
   imports: [
@@ -81,6 +84,7 @@ import {adminRouting} from "./admin.routing";
     { provide: CourseSpaceService, useClass: CourseSpaceServiceImpl },
     { provide: CommitteeService, useClass: CommitteeServiceImpl },
     { provide: LoginService, useClass: LoginServiceImpl },
+    { provide: MassTextService, useClass: MassTextServiceImpl },
     CanActivateAdmin
   ]
 })

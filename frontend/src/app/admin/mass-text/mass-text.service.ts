@@ -1,8 +1,15 @@
 import { Injectable } from '@angular/core';
 
-@Injectable()
-export class MassTextService {
 
-  constructor() { }
+export abstract class MassTextService {
+}
+
+
+@Injectable()
+export class MassTextServiceImpl extends MassTextService {
+
+  constructor() {
+    super();
+  }
 
 }

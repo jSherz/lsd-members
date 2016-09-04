@@ -1,2 +1,2 @@
 export { MassTextComponent } from './mass-text.component';
-export { MassTextService } from './mass-text.service';
+export { MassTextService, MassTextServiceImpl } from './mass-text.service';

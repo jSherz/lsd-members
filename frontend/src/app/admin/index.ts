@@ -30,6 +30,7 @@ export {
 
 export {
   MassTextService,
+  MassTextServiceImpl,
   MassTextComponent
 } from './mass-text';
 

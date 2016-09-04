@@ -1,3 +1,57 @@
-<p>
-  mass-text works!
-</p>
+<div id="full-column">
+  <h2>Send a mass-text</h2>
+
+  <p>
+    Send out a mass text to users that joined between the given dates.
+  </p>
+
+  <div *ngIf="apiRequestFailed" class="form-field-error">
+    An unknown error occurred #sadtimes #turnitoffandonagain
+  </div>
+
+  <form [formGroup]="massTextForm">
+    <div>
+      <label for="start-date">Start date</label>
+      <input type="date" id="start-date" formControlName="startDate" required value="">
+
+      <div [hidden]="ctrlStartDate.valid || ctrlStartDate.untouched" class="form-field-error" id="start-date-form-field-error">
+        Please enter a valid start date
+      </div>
+    </div>
+
+    <div>
+      <label for="end-date">End date</label>
+      <input type="date" id="end-date" formControlName="endDate" required value="">
+
+      <div [hidden]="ctrlEndDate.valid || ctrlEndDate.untouched" class="form-field-error" id="end-date-form-field-error">
+        Please enter a valid end date
+      </div>
+    </div>
+
+    <div>
+      <label for="send-after-date">Send after</label>
+      <input type="datetime-local" id="send-after-date" formControlName="sendAfterDate" required value="">
+
+      <div [hidden]="ctrlSendAfterDate.valid || ctrlSendAfterDate.untouched" class="form-field-error" id="send-after-date-form-field-error">
+        Please enter a valid send after date
+      </div>
+    </div>
+
+    <div>
+      <label for="template">Template</label>
+      <textarea id="template" formControlName="template" required (keyup)="updateTemplate()"></textarea>
+
+      <p [ngClass]="{ 'too-many-chars': numCharsUsed > numCharsTotal }">
+        You've used <strong>{{ numCharsUsed }}</strong> out of <strong>{{ numCharsTotal }}</strong> available.
+      </p>
+    </div>
+
+    <div>
+      <h3>Preview</h3>
+      <div id="mass-text-preview">{{ preview }}</div>
+    </div>
+
+    <button type="button" (click)="sendText(massTextForm.value)" [disabled]="!massTextForm.valid">Send message</button>
+    <span [ngClass]="{visible: showThrobber}" class="throbber"></span>
+  </form>
+</div>
