@@ -13,6 +13,7 @@ import {
   SignupAltComponent,
   ThankYouComponent
 } from './';
+import {SignupBaseComponent} from "./signup/signup-base.component";
 
 
 export const adminRoutes: Routes = [
@@ -25,10 +26,16 @@ export const adminRoutes: Routes = [
       { path: 'courses/calendar', component: CourseCalendarComponent, canActivate: [CanActivateAdmin] },
       { path: 'courses/:uuid', component: CourseViewComponent, canActivate: [CanActivateAdmin] },
       { path: 'courses/add/:year/:month/:day', component: CourseAddComponent, canActivate: [CanActivateAdmin] },
-      { path: 'mass-text', component: MassTextComponent, canActivate: [CanActivateAdmin] },
-      { path: 'sign-up', component: SignupComponent },
-      { path: 'sign-up/alt', component: SignupAltComponent },
-      { path: 'sign-up/thank-you', component: ThankYouComponent }
+      { path: 'mass-text', component: MassTextComponent, canActivate: [CanActivateAdmin] }
+    ]
+  },
+  {
+    path: 'sign-up',
+    component: SignupBaseComponent,
+    children: [
+      { path: '', component: SignupComponent },
+      { path: 'alt', component: SignupAltComponent },
+      { path: 'thank-you', component: ThankYouComponent }
     ]
   }
 ];
