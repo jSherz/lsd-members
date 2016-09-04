@@ -31,7 +31,6 @@ import akka.http.scaladsl.server.PathMatchers.JavaUUID
 import akka.http.scaladsl.server._
 import com.jsherz.luskydive.dao.{CourseDao, CourseSpaceDao, CourseSpaceDaoErrors}
 import com.jsherz.luskydive.json._
-import com.jsherz.luskydive.services.Cors.cors
 
 import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}

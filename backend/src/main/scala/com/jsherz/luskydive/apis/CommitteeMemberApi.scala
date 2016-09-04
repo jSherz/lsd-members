@@ -30,7 +30,6 @@ import com.jsherz.luskydive.dao.CommitteeMemberDao
 import com.jsherz.luskydive.json.CommitteeMembersJsonSupport._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
-import com.jsherz.luskydive.services.Cors.cors
 
 import scala.concurrent.ExecutionContext
 
@@ -43,7 +42,7 @@ class CommitteeMemberApi(private val dao: CommitteeMemberDao)
   /**
     * Get currently active committee members.
     */
-  val activeRoute = (path("active") & cors) {
+  val activeRoute = path("active") {
     get {
       authDirective { _ =>
         complete(dao.active())

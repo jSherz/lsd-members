@@ -33,7 +33,6 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import com.jsherz.luskydive.dao.{AuthDao, AuthDaoErrors}
 import com.jsherz.luskydive.json.{LoginRequest, LoginResponse}
-import com.jsherz.luskydive.services.Cors.cors
 
 import scala.concurrent.ExecutionContext
 import scalaz.{-\/, \/-}

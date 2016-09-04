@@ -33,7 +33,6 @@ import scala.concurrent.ExecutionContext
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
 import com.jsherz.luskydive.json.MemberSearchRequest
-import com.jsherz.luskydive.services.Cors.cors
 
 import scalaz.{-\/, \/-}
 

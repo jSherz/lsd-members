@@ -32,7 +32,6 @@ import akka.http.scaladsl.server.Directives._
 import com.jsherz.luskydive.core.Member
 import com.jsherz.luskydive.dao.MemberDao
 import com.jsherz.luskydive.json.{SignupAltRequest, SignupJsonSupport, SignupRequest, SignupResponse}
-import com.jsherz.luskydive.services.Cors.cors
 
 import scala.concurrent.ExecutionContext
 import scalaz.{Failure, Success}
@@ -81,25 +80,23 @@ class SignupApi(private val memberDao: MemberDao)
     * Requires a name and phone number.
     */
   private val signupAltRoute = path("sign-up" / "alt") {
-    cors {
-      post {
-        authDirective { _ =>
-          entity(as[SignupAltRequest]) { req =>
-            complete {
-              req.validate() match {
-                case Success(_) => {
-                  memberDao.memberExists(None, Some(req.email)).map {
-                    case true => SignupResponse(false, Map("email" -> "error.inUse"))
-                    case false => {
-                      val createdAt = currentTimestamp
-                      memberDao.create(Member(None, req.name, None, Some(req.email), None, createdAt, createdAt))
+    post {
+      authDirective { _ =>
+        entity(as[SignupAltRequest]) { req =>
+          complete {
+            req.validate() match {
+              case Success(_) => {
+                memberDao.memberExists(None, Some(req.email)).map {
+                  case true => SignupResponse(false, Map("email" -> "error.inUse"))
+                  case false => {
+                    val createdAt = currentTimestamp
+                    memberDao.create(Member(None, req.name, None, Some(req.email), None, createdAt, createdAt))
 
-                      SignupResponse(true, Map.empty)
-                    }
+                    SignupResponse(true, Map.empty)
                   }
                 }
-                case Failure(reason) => SignupResponse(false, reason.list.toList.toMap)
               }
+              case Failure(reason) => SignupResponse(false, reason.list.toList.toMap)
             }
           }
         }
