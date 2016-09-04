@@ -127,7 +127,7 @@ export class CourseServiceImpl extends CourseService {
     };
 
     return this.post(this.coursesFindUrl, body)
-      .map(this.extractJson)
+      .map(r => this.extractJson<CourseWithNumSpaces[]>(r))
       .catch(this.handleError());
   }
 
@@ -139,7 +139,7 @@ export class CourseServiceImpl extends CourseService {
    */
   getByUuid(uuid: string): Observable<CourseWithOrganisers> {
     return this.get(this.coursesGetUrl.replace('{{uuid}}', uuid))
-      .map(this.extractJson)
+      .map(r => this.extractJson<CourseWithOrganisers>(r))
       .catch(this.handleError());
   }
 
@@ -151,7 +151,7 @@ export class CourseServiceImpl extends CourseService {
    */
   spaces(uuid: string): Observable<CourseSpaceWithMember[]> {
     return this.get(this.courseSpacesUrl.replace('{{uuid}}', uuid))
-      .map(this.extractJson)
+      .map(r => this.extractJson<CourseSpaceWithMember[]>(r))
       .catch(this.handleError());
   }
 

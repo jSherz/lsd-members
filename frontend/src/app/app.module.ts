@@ -2,7 +2,7 @@
 
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {FormsModule, FORM_PROVIDERS, FormBuilder} from '@angular/forms';
+import {FormsModule, FormBuilder, ReactiveFormsModule} from '@angular/forms';
 import { HttpModule    } from '@angular/http';
 
 import { AppComponent } from './app.component';
@@ -36,16 +36,21 @@ import {
   FaqComponent,
   PricesComponent
 } from './pages';
+import {NavComponent} from "./utils/nav.component";
+import {PageNavComponent} from "./pages/base/page-nav.component";
 
 @NgModule({
   imports:      [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule,
     routing
   ],
   declarations: [
     AppComponent,
+    NavComponent,
+    PageNavComponent,
 
     AdminBaseComponent,
     LoginComponent,

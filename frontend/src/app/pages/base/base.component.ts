@@ -1,13 +1,10 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import {Router, NavigationStart} from '@angular/router';
-
-import { PageNavComponent } from './index';
+import { Router, NavigationStart } from '@angular/router';
 
 @Component({
   selector: 'app-base',
   templateUrl: 'base.component.html',
   styleUrls: ['base.component.sass'],
-  directives: [PageNavComponent],
   encapsulation: ViewEncapsulation.None
 })
 export class BaseComponent {

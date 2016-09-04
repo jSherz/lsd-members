@@ -7,25 +7,19 @@ import {
   FormControl,
   FormBuilder,
   FormGroup,
-  Validators,
-  REACTIVE_FORM_DIRECTIVES
+  Validators
 } from '@angular/forms';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
 
 import {
   CommitteeService,
-  CommitteeServiceImpl,
   StrippedCommitteeMember
 } from '../../committee/committee.service';
 
 @Component({
   selector: 'course-add-component',
-  templateUrl: 'course-add.component.html',
-  directives: [ REACTIVE_FORM_DIRECTIVES ],
-  providers: [
-    { provide: CommitteeService, useClass: CommitteeServiceImpl }
-  ]
+  templateUrl: 'course-add.component.html'
 })
 export class CourseAddComponent implements OnInit, OnDestroy {
 
@@ -120,7 +114,7 @@ export class CourseAddComponent implements OnInit, OnDestroy {
         if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
           // Convert 1 indexed month to 0 indexed for momentjs / JS
           let zeroIndexedMonth: number = month - 1;
-          this.ctrlDate.updateValue(moment([year, zeroIndexedMonth, day]).format('YYYY-MM-DD'));
+          this.ctrlDate.setValue(moment([year, zeroIndexedMonth, day]).format('YYYY-MM-DD'));
         }
       });
   }

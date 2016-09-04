@@ -1,10 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { ROUTER_DIRECTIVES } from '@angular/router';
 
 @Component({
   selector: 'page-nav-item',
-  templateUrl: 'page-nav.component.html',
-  directives: [ROUTER_DIRECTIVES]
+  templateUrl: 'page-nav.component.html'
 })
 
 export class PageNavComponent {

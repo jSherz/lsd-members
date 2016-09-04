@@ -1,10 +1,8 @@
-import { Component, Input } from '@angular/core';
-import { ROUTER_DIRECTIVES } from '@angular/router';
+import { Input, Component } from '@angular/core';
 
 @Component({
   selector: 'nav-item',
-  templateUrl: './nav.component.html',
-  directives: [ROUTER_DIRECTIVES]
+  templateUrl: './nav.component.html'
 })
 
 export class NavComponent {

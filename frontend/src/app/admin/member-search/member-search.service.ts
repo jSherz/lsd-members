@@ -48,7 +48,7 @@ export class MemberSearchServiceImpl extends MemberSearchService {
     };
 
     return this.post(this.memberSearchUrl, body)
-      .map(this.extractJson)
+      .map(r => this.extractJson<SearchResult[]>(r))
       .catch(this.handleError());
   }
 
