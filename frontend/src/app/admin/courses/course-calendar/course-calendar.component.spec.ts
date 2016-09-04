@@ -4,7 +4,7 @@ import {
   ActivatedRoute,
   Params, UrlSegment, Router
 } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/esm/testing/router_testing_module';
+import { RouterTestingModule } from '@angular/router/testing/router_testing_module';
 import { TestBed, inject     } from '@angular/core/testing/test_bed';
 
 import * as moment from 'moment';

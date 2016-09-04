@@ -48,6 +48,7 @@ export class LoginComponent {
    * @param builder
    * @param router
    * @param loginService
+   * @param apiKeyService
    */
   constructor(private builder: FormBuilder,
               private router: Router,
