@@ -224,6 +224,17 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       }
     }
 
+    "return a match on any of name or e-mail (case insensitive)" in {
+      val testCases = Map(
+        "BrUcE" -> Util.fixture[Vector[MemberSearchResult]]("bruce.json"),
+        "aleXANdra" -> Util.fixture[Vector[MemberSearchResult]]("alexandra.json")
+      )
+
+      testCases.foreach {
+        case (term, expected) => dao.search(term).futureValue shouldEqual \/-(expected)
+      }
+    }
+
   }
 
 }

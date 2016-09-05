@@ -139,15 +139,15 @@ class MemberDaoImpl(override protected val databaseService: DatabaseService)
     val termTrimmed = term.trim
 
     if (termTrimmed.length >= 3) {
-      val formattedTerm = '%' + termTrimmed + '%'
+      val formattedTerm = '%' + termTrimmed.toLowerCase + '%'
 
       val query = db.run(
         Members.filter(member =>
           // Match on any of name, phone or e-mail
-          (member.name like formattedTerm) ||
+          (member.name.toLowerCase like formattedTerm) ||
             (member.phoneNumber like formattedTerm) ||
-            (member.email like formattedTerm)
-        ).result.map(_.map { rawMember =>
+            (member.email.toLowerCase like formattedTerm)
+        ).sortBy(_.name).result.map(_.map { rawMember =>
           MemberSearchResult(rawMember.uuid, rawMember.name, rawMember.phoneNumber, rawMember.email)
         })
       )
