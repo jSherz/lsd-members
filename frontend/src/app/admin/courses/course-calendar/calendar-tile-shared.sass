@@ -1,0 +1,17 @@
+$tile-borders: solid 0.05em #ccc
+$tile-width: 7
+$today-colour: #cae8ff
+$other-month-colour: #AAA
+
+.sl-course-calendar-tile, #sl-course-calendar-header > div
+  width: 100% / $tile-width
+  height: 5em
+  border: $tile-borders
+  display: block
+  float: left
+  padding: 1em
+  margin: 0
+  color: #000
+
+  @include media(max-width 64em)
+    padding: 0.5em

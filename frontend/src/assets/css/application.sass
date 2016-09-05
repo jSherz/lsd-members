@@ -15,36 +15,6 @@
       @include span-columns(12)
       @include shift(0)
 
-nav
-  text-align: right
-
-  li
-    display: inline-block
-
-    a
-      padding: 0.5em 1em
-      display: inline-block
-
-      &:hover
-        background-color: lighten($lsd-blue, 50%)
-        color: #000
-
-      &.active
-        background-color: $lsd-blue
-        color: white
-
-        &:hover
-          background-color: $lsd-blue
-          color: white
-
-
-  @media(max-width: 45em)
-    ul
-       margin-bottom: 1em
-
-  @media(max-width: 45em)
-     display: none
-
 #intro-hero
   padding: 2em
   border: solid 0.2em $lsd-blue

@@ -1,0 +1,44 @@
+@import '../../../../../assets/css/bourbon/bourbon'
+@import '../../../../../assets/css/base/base'
+@import '../../../../../assets/css/neat/neat'
+@import '../../../../../assets/css/variables'
+@import '../calendar-tile-shared'
+
+.sl-course-calendar-tile
+  &:hover
+    background-color: #fbffc6
+    color: #000
+
+  @include media(max-width 50em)
+    border: solid 0.05em #ccc
+    height: 4em
+    padding: 0.3em
+
+  &.tile-other-month
+    background-color: $other-month-colour
+
+    &:hover
+      background-color: darken($other-month-colour, 15%)
+
+  &.tile-today
+    background-color: $today-colour
+
+    &:hover
+      background-color: darken($today-colour, 15%)
+
+.sl-course-calendar-tile-info
+  padding: 0.3em
+  border-radius: 0.5em
+  font-size: 0.8em
+  background-color: #eee
+  text-align: center
+
+  &.course-full
+    background-color: #ffaea7
+
+  &.course-spaces
+    background-color: #c6ffc1
+
+  @include media(max-width 50em)
+    .course-word-spaces
+      display: none

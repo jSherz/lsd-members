@@ -9,7 +9,8 @@ import { SearchResult, MemberSearchService } from './member-search.service';
  */
 @Component({
   selector: 'lsd-member-search',
-  templateUrl: 'member-search.component.html'
+  templateUrl: 'member-search.component.html',
+  styleUrls: ['member-search.component.sass']
 })
 export class MemberSearchComponent implements OnInit {
 

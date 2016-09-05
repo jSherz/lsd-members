@@ -1,3 +1,8 @@
+@import '../../assets/css/bourbon/bourbon'
+@import '../../assets/css/base/base'
+@import '../../assets/css/neat/neat'
+@import '../../assets/css/variables'
+
 code
   font-size: 0.8em
   background-color: #ccc
@@ -14,52 +19,12 @@ code
   nav
     text-align: right
 
-    li
-      display: inline-block
-
-      a
-        padding: 0.5em 1em
-        display: inline-block
-
-        &:hover
-          background-color: lighten($lsd-blue, 50%)
-          color: #000
-
-      &.active
-        a
-          background-color: $lsd-blue
-          color: white
-
-          &:hover
-            background-color: $lsd-blue
-            color: white
+    @media(max-width: 45em)
+      ul
+        margin-bottom: 1em
 
   #nav-container
     @include span-columns(12)
-
-#left-column
-  @include span-columns(4)
-  border: solid 0.15em $lsd-blue
-
-#middle-column
-  @include span-columns(4)
-  border: solid 0.15em $lsd-yellow
-
-#right-column
-  @include span-columns(4)
-  border: solid 0.15em $lsd-red
-    @include omega()
-
-#left-column, #middle-column, #right-column, #full-column
-  background: white
-  padding: 0.8rem
-  border-radius: 0.4rem
-
-  h2
-    margin-bottom: 0.1em
-
-#full-column
-  @include span-columns(12)
 
 .content
   background: white
@@ -131,7 +96,3 @@ hr
 
   dd
     margin-right: 1em
-
-@import 'admin/static_line_course'
-@import 'admin/static_line_course_calendar'
-@import 'admin/member_search'

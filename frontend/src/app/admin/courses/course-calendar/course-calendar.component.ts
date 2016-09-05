@@ -13,7 +13,8 @@ import {
 @Component({
   selector: 'course-calendar-component',
   templateUrl: 'course-calendar.component.html',
-  providers: [MonthService, TileService,  { provide: CourseService, useClass: CourseServiceImpl }]
+  providers: [MonthService, TileService,  { provide: CourseService, useClass: CourseServiceImpl }],
+  styleUrls: ['course-calendar.component.sass']
 })
 export class CourseCalendarComponent implements OnInit, OnDestroy {
 

@@ -11,7 +11,8 @@ import { ApiKeyService } from '../utils';
 
 @Component({
   selector: 'login-component',
-  templateUrl: 'login.component.html'
+  templateUrl: 'login.component.html',
+  styleUrls: ['login.component.sass']
 })
 export class LoginComponent {
 

@@ -4,7 +4,8 @@ import { Tile } from './tile.service';
 
 @Component({
   selector: 'calendar-tile',
-  templateUrl: 'tile.component.html'
+  templateUrl: 'tile.component.html',
+  styleUrls: ['tile.component.sass']
 })
 export class TileComponent {
 

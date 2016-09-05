@@ -19,7 +19,8 @@ import {
 
 @Component({
   selector: 'course-add-component',
-  templateUrl: 'course-add.component.html'
+  templateUrl: 'course-add.component.html',
+  styleUrls: ['course-add.component.sass']
 })
 export class CourseAddComponent implements OnInit, OnDestroy {
 

@@ -13,7 +13,8 @@ import { CourseSpaceService } from '../../course-spaces/course-spaces.service';
 
 @Component({
   selector: 'app-course-view',
-  templateUrl: 'course-view.component.html'
+  templateUrl: 'course-view.component.html',
+  styleUrls: ['course-view.component.sass']
 })
 export class CourseViewComponent implements OnInit, OnDestroy {
 

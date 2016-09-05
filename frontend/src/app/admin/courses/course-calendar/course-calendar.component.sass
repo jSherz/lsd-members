@@ -1,0 +1,71 @@
+@import '../../../../assets/css/bourbon/bourbon'
+@import '../../../../assets/css/base/base'
+@import '../../../../assets/css/neat/neat'
+@import '../../../../assets/css/variables'
+@import 'calendar-tile-shared'
+
+
+#sl-course-calendar-container
+  @include span-columns(12)
+  background: white
+  padding: 0.8rem
+  border-radius: 0.4rem
+
+h2
+  margin-bottom: 0.1em
+
+#sl-course-calendar
+  margin-top: 0.7em
+  border: $tile-borders
+  background: #fff
+
+#sl-course-calendar-header > div
+  text-align: center
+  background-color: lighten($lsd-blue, 50%)
+  font-weight: bold
+
+  .short-form
+    display: none
+
+  @include media(max-width 55em)
+    .full-form
+      display: none
+
+    .short-form
+      display: inline
+
+.sl-course-calendar-navigation
+  text-align: center
+  padding: 0.3em
+  margin-top: 0.5em
+  background-color: lighten($lsd-yellow, 35%)
+
+.sl-course-calendar-nav-left, #sl-course-calendar-filter, .sl-course-calendar-nav-right
+  display: inline-block
+
+.sl-course-calendar-nav-left, .sl-course-calendar-nav-right
+  font-size: 2em
+
+.sl-course-calendar-nav-left
+  float: left
+  margin: 0.1em 0 0 0.4em
+
+.sl-course-calendar-nav-right
+  float: right
+  margin: 0.1em 0.4em 0 0
+
+#sl-course-calendar-filter
+  label, select, button
+    display: inline-block
+    margin: 0 0.2em
+
+  label, select
+    margin-top: 0.4em
+
+  button
+    padding: 0.3em
+    font-size: 0.9em
+    margin-bottom: 0.3em
+
+#calendar-filter-month
+  width: auto
