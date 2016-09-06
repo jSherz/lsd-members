@@ -29,7 +29,7 @@ import java.util.UUID
 
 import com.jsherz.luskydive.core._
 import com.jsherz.luskydive.services.DatabaseService
-import slick.lifted.{ForeignKey, ForeignKeyQuery}
+import slick.lifted.ForeignKeyQuery
 
 /**
   * All of the database tables, modelled as Slick objects.
