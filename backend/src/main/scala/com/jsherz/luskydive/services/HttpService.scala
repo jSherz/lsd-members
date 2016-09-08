@@ -42,7 +42,8 @@ class HttpService(
                    courseDao: CourseDao,
                    committeeMemberDao: CommitteeMemberDao,
                    courseSpaceDao: CourseSpaceDao,
-                   authDao: AuthDao
+                   authDao: AuthDao,
+                   massTextDao: MassTextDao
                  )
                  (implicit executionContext: ExecutionContext) {
 
@@ -53,6 +54,7 @@ class HttpService(
   val committeeRoutes = new CommitteeMemberApi(committeeMemberDao)
   val memberRoutes = new MemberApi(memberDao)
   val courseSpacesApi = new CourseSpacesApi(courseSpaceDao)
+  val massTextApi = new MassTextApi(massTextDao)
 
   val loginApi = new LoginApi(authDao)
 
@@ -64,7 +66,8 @@ class HttpService(
           courseSpacesApi.route ~
           committeeRoutes.route ~
           memberRoutes.route ~
-          loginApi.route
+          loginApi.route ~
+          massTextApi.route
       }
     }
 
