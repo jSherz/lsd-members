@@ -28,12 +28,14 @@ import java.util.UUID
 
 import akka.actor.ActorSystem
 import akka.event.{Logging, LoggingAdapter}
+import com.jsherz.luskydive.core.{MassText, TextMessage}
 import com.jsherz.luskydive.dao._
 import com.jsherz.luskydive.itest.util.Util
 import com.jsherz.luskydive.itest.util.DateUtil
 import org.scalatest.concurrent.ScalaFutures._
 import org.scalatest.time.{Seconds, Span}
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
+import com.jsherz.luskydive.json.MassTextsJsonSupport._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scalaz.{-\/, \/-}
@@ -41,6 +43,7 @@ import scalaz.{-\/, \/-}
 class MassTextDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
   private var dao: MassTextDao = _
+  private var textMessageDao: TextMessageDao = _
 
   implicit val patienceConfig = PatienceConfig(scaled(Span(1, Seconds)))
 
@@ -49,9 +52,29 @@ class MassTextDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
     val dbService = Util.setupGoldTestDb()
 
     dao = new MassTextDaoImpl(dbService)
+    textMessageDao = new TextMessageDaoImpl(dbService)
   }
 
-  "MassTextDaoSpec#filterCount" should {
+  "MassTextDao#get" should {
+
+    "return None if the given UUID does not exist" in {
+      val result = dao.get(UUID.fromString("318edeb0-f8cd-49fe-a581-1d03252f390e")).futureValue
+
+      result shouldEqual \/-(None)
+    }
+
+    "return Some(massText) if the given UUID matches a mass text" in {
+      val result = dao.get(UUID.fromString("0e02581c-df85-4200-bedd-55a667740486")).futureValue
+
+      result.isRight shouldBe true
+      result.map {
+        _ shouldEqual Some(Util.fixture[MassText]("0e02581c.json"))
+      }
+    }
+
+  }
+
+  "MassTextDao#filterCount" should {
 
     "return 0 if no members are matched between the given dates" in {
       val result = dao.filterCount(DateUtil.makeDate(1850, 1, 1), DateUtil.makeDate(1851, 1, 1)).futureValue

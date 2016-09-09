@@ -24,8 +24,10 @@
 
 package com.jsherz.luskydive.dao
 
-import java.sql.Date
+import java.sql.{Date, Timestamp}
+import java.util.UUID
 
+import com.jsherz.luskydive.core.MassText
 import com.jsherz.luskydive.util.{DateUtil, Errors}
 
 import scala.concurrent.Future
@@ -33,6 +35,32 @@ import scalaz.{-\/, \/, \/-}
 
 
 class StubMassTextDao extends MassTextDao {
+
+  /**
+    * Get the mass text with the given UUID.
+    *
+    * @param uuid
+    * @return
+    */
+  override def get(uuid: UUID): Future[String \/ Option[MassText]] = {
+    if (StubMassTextDao.existsMassTextUuid.equals(uuid)) {
+      Future.successful(\/-(
+        Some(MassText(
+          Some(UUID.fromString("b1266b65-40b2-4874-a551-854bf2e2ef26")),
+          UUID.fromString("a8df22ad-c2a4-40b6-9939-852421d9b30e"),
+          "Roll up, roll up {{ name }}, it's time to get yourself down to our skydiving G.I.A.G - meet you there :D " +
+            "#excited #skydiving - Reply \"NOFUN\" to stop these messages.",
+          Timestamp.valueOf("2012-09-25 00:00:00.000000")
+        )))
+      )
+    } else if (StubMassTextDao.unknownMassTextUuid.equals(uuid)) {
+      Future.successful(\/-(None))
+    } else if (StubMassTextDao.serverErrorMassTextUuid.equals(uuid)) {
+      Future.successful(-\/(Errors.internalServer))
+    } else {
+      throw new RuntimeException("unknown uuid used with stub")
+    }
+  }
 
   /**
     * Get the number of members that joined between the given dates.

@@ -44,3 +44,11 @@ case class TextMessage(
                         createdAt: Timestamp,
                         updatedAt: Timestamp
                       )
+
+object TextMessageStatuses {
+
+  val Pending = 0
+  val Sent = 1
+  val Error = 2
+
+}

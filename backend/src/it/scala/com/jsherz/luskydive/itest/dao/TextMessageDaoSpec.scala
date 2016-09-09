@@ -183,4 +183,26 @@ class TextMessageDaoSpec extends WordSpec with Matchers {
 
   }
 
+  "TextMessageDao#forMassText" should {
+
+    "return an empty list for a text that doesn't exist" in {
+      val result = dao.forMassText(UUID.fromString("9fd555aa-6f51-4989-8355-5ac6bf726a96")).futureValue
+
+      result.isRight shouldBe true
+      result.map {
+        _ shouldEqual Seq.empty
+      }
+    }
+
+    "return the correct mass texts, ordered by updated at desc" in {
+      val result = dao.forMassText(UUID.fromString("1503f286-f1d6-4908-9fef-c96cee1ba1a8")).futureValue
+
+      result.isRight shouldBe true
+      result.map {
+        _ shouldEqual Util.fixture[Vector[TextMessage]]("for_mass_text.json")
+      }
+    }
+
+  }
+
 }

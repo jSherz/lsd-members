@@ -25,18 +25,29 @@
 package com.jsherz.luskydive.dao
 
 import java.sql.{Date, Timestamp}
+import java.util.UUID
 
 import akka.event.LoggingAdapter
+import com.fasterxml.uuid.Generators
+import com.jsherz.luskydive.core.{MassText, Member, TextMessage, TextMessageStatuses}
 import com.jsherz.luskydive.services.DatabaseService
 import com.jsherz.luskydive.util.FutureError._
 
 import scala.concurrent.{ExecutionContext, Future}
-import scalaz.{-\/, \/}
+import scalaz.{-\/, \/, \/-}
 
 /**
   * Handles recording text messages being sent to many members.
   */
 trait MassTextDao {
+
+  /**
+    * Get the mass text with the given UUID.
+    *
+    * @param uuid
+    * @return
+    */
+  def get(uuid: UUID): Future[String \/ Option[MassText]]
 
   /**
     * Get the number of members that joined between the given dates.
@@ -57,6 +68,16 @@ class MassTextDaoImpl(protected override val databaseService: DatabaseService)
   extends Tables(databaseService) with MassTextDao {
 
   import driver.api._
+
+  /**
+    * Get the mass text with the given UUID.
+    *
+    * @param uuid
+    * @return
+    */
+  override def get(uuid: UUID): Future[String \/ Option[MassText]] = {
+    db.run(MassTexts.filter(_.uuid === uuid).result.headOption) withServerError
+  }
 
   /**
     * Get the number of members that joined between the given dates.
@@ -90,5 +111,7 @@ object MassTextDaoErrors {
   val endDateBeforeStartDate = "error.endDateBeforeStartDate"
 
   val endDateStartDateSame = "error.endDateStartDateSame"
+
+  val noMembersMatched = "error.noMembersMatched"
 
 }

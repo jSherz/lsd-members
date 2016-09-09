@@ -47,6 +47,8 @@ trait TextMessageDao {
 
   def update(textMessage: TextMessage): Future[String \/ Int]
 
+  def forMassText(massTextUuid: UUID): Future[String \/ Seq[TextMessage]]
+
 }
 
 /**
@@ -105,6 +107,21 @@ class TextMessageDaoImpl(protected override val databaseService: DatabaseService
     */
   def update(textMessage: TextMessage): Future[String \/ Int] = {
     db.run(TextMessages.filter(_.uuid === textMessage.uuid).update(textMessage)) withServerError
+  }
+
+  /**
+    * Get all of the text messages that were sent for a mass text.
+    *
+    * @param massTextUuid
+    * @return
+    */
+  override def forMassText(massTextUuid: UUID): Future[String \/ Seq[TextMessage]] = {
+    db.run(
+      TextMessages
+        .filter(_.massTextUuid === massTextUuid)
+        .sortBy(_.updatedAt.desc)
+        .result
+    ) withServerError
   }
 
 }
