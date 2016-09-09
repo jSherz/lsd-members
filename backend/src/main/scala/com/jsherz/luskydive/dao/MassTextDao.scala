@@ -32,6 +32,8 @@ import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.{MassText, Member, TextMessage, TextMessageStatuses}
 import com.jsherz.luskydive.services.DatabaseService
 import com.jsherz.luskydive.util.FutureError._
+import com.jsherz.luskydive.util.EitherFutureExtensions._
+import com.jsherz.luskydive.util.TextMessageUtil
 
 import scala.concurrent.{ExecutionContext, Future}
 import scalaz.{-\/, \/, \/-}
@@ -57,6 +59,20 @@ trait MassTextDao {
     * @return
     */
   def filterCount(startDate: Date, endDate: Date): Future[String \/ Int]
+
+  /**
+    * Send out a mass text message to members that joined between the given dates.
+    *
+    * Use [[filterCount()]] to determine how many members would be contacted.
+    *
+    * @param sender    Committee member that's sending this text
+    * @param startDate Start date (inclusive)
+    * @param endDate   End date (exclusive)
+    * @param template  Template of the message to send
+    * @param createdAt Time the mass text was sent
+    * @return UUID of created mass text
+    */
+  def send(sender: UUID, startDate: Date, endDate: Date, template: String, createdAt: Timestamp): Future[String \/ UUID]
 
 }
 
@@ -92,16 +108,92 @@ class MassTextDaoImpl(protected override val databaseService: DatabaseService)
     } else if (endDate.before(startDate)) {
       Future.successful(-\/(MassTextDaoErrors.endDateBeforeStartDate))
     } else {
-      val startTimestamp = new Timestamp(startDate.getTime)
-      val endTimestamp = new Timestamp(endDate.getTime)
-
       db.run(
-        Members.filter { m =>
-          m.createdAt >= startTimestamp &&
-            m.createdAt < endTimestamp
-        }.countDistinct.result
+        membersCreatedBetween(startDate, endDate).countDistinct.result
       ) withServerError
     }
+  }
+
+  /**
+    * Send out a mass text message to members that joined between the given dates.
+    *
+    * Use [[filterCount()]] to determine how many members would be contacted.
+    *
+    * @param sender    Committee member that's sending this text
+    * @param startDate Start date (inclusive)
+    * @param endDate   End date (exclusive)
+    * @param template  Template of the message to send
+    * @return UUID of created mass text
+    */
+  override def send(sender: UUID, startDate: Date, endDate: Date, template: String, createdAt: Timestamp): Future[String \/ UUID] = {
+    if (startDate.equals(endDate)) {
+      Future.successful(-\/(MassTextDaoErrors.endDateStartDateSame))
+    } else if (endDate.before(startDate)) {
+      Future.successful(-\/(MassTextDaoErrors.endDateBeforeStartDate))
+    } else {
+      val futureMembers: Future[Seq[Member]] = db.run(membersCreatedBetween(startDate, endDate).result)
+
+      futureMembers.flatMap { members =>
+        if (members.isEmpty) {
+          Future.successful(-\/(MassTextDaoErrors.noMembersMatched))
+        } else {
+          for {
+            massTextUuid <- create(sender, template, createdAt).withServerError
+            createTexts <- massTextUuid withFutureF { uuid =>
+              val membersWithPhoneNumbers = members.filter(_.phoneNumber.isDefined)
+
+              db.run(
+                DBIO.sequence(
+                  membersWithPhoneNumbers.map(member => addTextMessage(member, template, uuid, createdAt))
+                )
+              ) withServerError
+            }
+          } yield {
+            massTextUuid
+          }
+        }
+      }
+    }
+  }
+
+  private def membersCreatedBetween(startDate: Date, endDate: Date) = {
+    val startTimestamp = new Timestamp(startDate.getTime)
+    val endTimestamp = new Timestamp(endDate.getTime)
+
+    Members.filter { m =>
+      m.createdAt >= startTimestamp &&
+        m.createdAt < endTimestamp
+    }
+  }
+
+  private def create(committeeMemberUuid: UUID, template: String, createdAt: Timestamp): Future[UUID] = {
+    val massText = MassText(
+      Some(Generators.randomBasedGenerator.generate),
+      committeeMemberUuid,
+      template,
+      createdAt
+    )
+
+    db.run((MassTexts returning MassTexts.map(_.uuid)) += massText)
+  }
+
+  private def addTextMessage(member: Member, template: String, massTextUuid: UUID, createdAt: Timestamp) = {
+    val message = TextMessageUtil.parseTemplate(template, member.name)
+
+    val textMessage = TextMessage(
+      Some(Generators.randomBasedGenerator.generate),
+      member.uuid.get,
+      Some(massTextUuid),
+      TextMessageStatuses.Pending,
+      member.phoneNumber.get,
+      "PENDING", // TODO: Replace with optional type
+      message,
+      None,
+      createdAt,
+      createdAt
+    )
+
+    (TextMessages returning TextMessages.map(_.uuid)) += textMessage
   }
 
 }

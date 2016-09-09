@@ -79,9 +79,27 @@ class StubMassTextDao extends MassTextDao {
     }
   }
 
+  /**
+    * Send out a mass text message to members that joined between the given dates.
+    *
+    * Use [[filterCount()]] to determine how many members would be contacted.
+    *
+    * @param sender    Committee member that's sending this text
+    * @param startDate Start date (inclusive)
+    * @param endDate   End date (exclusive)
+    * @param template  Template of the message to send
+    * @param createdAt The time that the mass text was created
+    * @return UUID of created mass text
+    */
+  override def send(sender: UUID, startDate: Date, endDate: Date, template: String, createdAt: Timestamp): Future[String \/ UUID] = ???
+
 }
 
 object StubMassTextDao {
+
+  val existsMassTextUuid = UUID.fromString("b1266b65-40b2-4874-a551-854bf2e2ef26")
+  val unknownMassTextUuid = UUID.fromString("37360e5d-d443-47cc-a367-49e9519e1a8a")
+  val serverErrorMassTextUuid = UUID.fromString("c1ff0cbb-2d96-4d47-b026-fffa89d968a2")
 
   val validStartDate = DateUtil.makeDate(2016, 8, 1)
   val validEndDate = DateUtil.makeDate(2016, 9, 1)

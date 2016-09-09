@@ -47,8 +47,8 @@ case class TextMessage(
 
 object TextMessageStatuses {
 
-  val Pending = 0
-  val Sent = 1
-  val Error = 2
+  val Pending: Short = 0
+  val Sent: Short = 1
+  val Error: Short = 2
 
 }
