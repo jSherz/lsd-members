@@ -10,7 +10,7 @@
 
     <div id="sl-course-calendar-filter">
       <label for="calendar-filter-month">Month</label>
-      <select id="calendar-filter-month" name="calendar-filter-month" (value)="currentMonth.format('YYYY - MMMM')" (change)="monthSelectionChanged($event)">
+      <select id="calendar-filter-month" name="calendar-filter-month" [ngModel]="currentMonth.format('YYYY-MM-DD')" (change)="monthSelectionChanged($event)">
         <option *ngFor="let month of months" [value]="month.format('YYYY-MM-DD')">
           {{month.format('YYYY - MMMM')}}
         </option>
