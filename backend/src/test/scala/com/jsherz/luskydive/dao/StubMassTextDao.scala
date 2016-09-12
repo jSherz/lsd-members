@@ -28,7 +28,7 @@ import java.sql.{Date, Timestamp}
 import java.util.UUID
 
 import com.jsherz.luskydive.core.MassText
-import com.jsherz.luskydive.util.{DateUtil, Errors}
+import com.jsherz.luskydive.util.{AuthenticationDirectives, DateUtil, Errors}
 
 import scala.concurrent.Future
 import scalaz.{-\/, \/, \/-}
@@ -91,7 +91,15 @@ class StubMassTextDao extends MassTextDao {
     * @param createdAt The time that the mass text was created
     * @return UUID of created mass text
     */
-  override def send(sender: UUID, startDate: Date, endDate: Date, template: String, createdAt: Timestamp): Future[String \/ UUID] = ???
+  override def send(sender: UUID, startDate: Date, endDate: Date, template: String, createdAt: Timestamp): Future[String \/ UUID] = {
+    if (StubMassTextDao.validSenderTemplate.equals(template)) {
+      Future.successful(\/-(StubMassTextDao.validCreatedUuid))
+    } else if (StubMassTextDao.serverErrorTemplate.equals(template)) {
+      Future.successful(-\/(MassTextDaoErrors.noMembersMatched))
+    } else {
+      throw new RuntimeException("unknown template used with stub")
+    }
+  }
 
 }
 
@@ -107,5 +115,9 @@ object StubMassTextDao {
 
   val serverErrorStartDate = DateUtil.makeDate(2015, 9, 1)
   val serverErrorEndDate = DateUtil.makeDate(2015, 10, 1)
+
+  val validSenderTemplate = "Hello, {{ name }}!"
+  val serverErrorTemplate = "What is the meaning of life, {{ name }}?"
+  val validCreatedUuid = UUID.fromString("c754de69-d62b-44a8-bc41-db7b78d49eca")
 
 }

@@ -27,19 +27,21 @@ package com.jsherz.luskydive.apis
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import com.jsherz.luskydive.dao.StubMassTextDao
-import com.jsherz.luskydive.json.{TryFilterRequest, TryFilterResponse}
+import com.jsherz.luskydive.dao.{MassTextDaoErrors, StubMassTextDao}
+import com.jsherz.luskydive.json.{MassTextSendRequest, MassTextSendResponse, TryFilterRequest, TryFilterResponse}
 import com.jsherz.luskydive.util.{AuthenticationDirectives, Errors}
 import org.mockito.Mockito._
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
 import com.jsherz.luskydive.json.MassTextsJsonSupport._
+import org.mockito.Matchers.any
 
 
 class MassTextApiSpec extends WordSpec with Matchers with ScalatestRouteTest with BeforeAndAfter {
 
   private implicit val authDirective = AuthenticationDirectives.allowAll
 
-  private val url = "/mass-texts/try-filter"
+  private val tryFilterUrl = "/mass-texts/try-filter"
+  private val sendUrl = "/mass-texts/send"
 
   "MassTextApi#try-filter" should {
 
@@ -47,7 +49,7 @@ class MassTextApiSpec extends WordSpec with Matchers with ScalatestRouteTest wit
       implicit val authDirective = AuthenticationDirectives.denyAll
       val route = new MassTextApi(new StubMassTextDao()).route
 
-      Post(url) ~> Route.seal(route) ~> check {
+      Post(tryFilterUrl) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.Unauthorized
       }
     }
@@ -57,7 +59,7 @@ class MassTextApiSpec extends WordSpec with Matchers with ScalatestRouteTest wit
       val dao = spy(new StubMassTextDao())
       val route = new MassTextApi(dao).route
 
-      Post(url, request) ~> route ~> check {
+      Post(tryFilterUrl, request) ~> route ~> check {
         response.status shouldEqual StatusCodes.OK
         responseAs[TryFilterResponse].success shouldEqual true
         responseAs[TryFilterResponse].error shouldBe None
@@ -72,13 +74,97 @@ class MassTextApiSpec extends WordSpec with Matchers with ScalatestRouteTest wit
       val dao = spy(new StubMassTextDao())
       val route = new MassTextApi(dao).route
 
-      Post(url, request) ~> route ~> check {
+      Post(tryFilterUrl, request) ~> route ~> check {
         response.status shouldEqual StatusCodes.OK
         responseAs[TryFilterResponse].success shouldEqual false
         responseAs[TryFilterResponse].error shouldEqual Some(Errors.internalServer)
         responseAs[TryFilterResponse].numMembers shouldBe None
 
         verify(dao).filterCount(StubMassTextDao.serverErrorStartDate, StubMassTextDao.serverErrorEndDate)
+      }
+    }
+
+  }
+
+  "MassTextApi#send" should {
+
+    "requires authentication" in {
+      implicit val authDirective = AuthenticationDirectives.denyAll
+      val route = new MassTextApi(new StubMassTextDao()).route
+
+      Post(sendUrl) ~> Route.seal(route) ~> check {
+        response.status shouldEqual StatusCodes.Unauthorized
+      }
+    }
+
+    "returns the correct response when sending the message succeeds" in {
+      // Dates here are irrelevant
+      val request = MassTextSendRequest(StubMassTextDao.validStartDate, StubMassTextDao.validEndDate,
+        StubMassTextDao.validSenderTemplate, "Hello, Joe Bloggs!")
+      val dao = spy(new StubMassTextDao())
+      val route = new MassTextApi(dao).route
+
+      Post(sendUrl, request) ~> route ~> check {
+        val t = responseAs[MassTextSendResponse]
+        response.status shouldEqual StatusCodes.OK
+        responseAs[MassTextSendResponse].success shouldEqual true
+        responseAs[MassTextSendResponse].error shouldBe None
+        responseAs[MassTextSendResponse].uuid shouldEqual Some(StubMassTextDao.validCreatedUuid)
+
+        verify(dao).send(
+          any(),
+          org.mockito.Matchers.eq(StubMassTextDao.validStartDate),
+          org.mockito.Matchers.eq(StubMassTextDao.validEndDate),
+          org.mockito.Matchers.eq("Hello, {{ name }}!"),
+          any()
+        )
+      }
+    }
+
+    "returns the correct error response when sending the message fails" in {
+      val request = MassTextSendRequest(StubMassTextDao.validStartDate, StubMassTextDao.validEndDate,
+        StubMassTextDao.serverErrorTemplate, "What is the meaning of life, Joe Bloggs?")
+      val dao = spy(new StubMassTextDao())
+      val route = new MassTextApi(dao).route
+
+      Post(sendUrl, request) ~> route ~> check {
+        response.status shouldEqual StatusCodes.OK
+        responseAs[MassTextSendResponse].success shouldEqual false
+        responseAs[MassTextSendResponse].error shouldEqual Some(MassTextDaoErrors.noMembersMatched)
+        responseAs[MassTextSendResponse].uuid shouldBe None
+
+        verify(dao).send(any(), any(), any(), any(), any())
+      }
+    }
+
+    "returns an error when the template and expected rendered version don't match" in {
+      val request = MassTextSendRequest(StubMassTextDao.validStartDate, StubMassTextDao.validEndDate,
+        "Hello, {{ name }}!", "Hello, Bloggs!")
+      val dao = spy(new StubMassTextDao())
+      val route = new MassTextApi(dao).route
+
+      Post(sendUrl, request) ~> route ~> check {
+        response.status shouldEqual StatusCodes.OK
+        responseAs[MassTextSendResponse].success shouldEqual false
+        responseAs[MassTextSendResponse].error shouldEqual Some(MassTextApiErrors.templateRenderMismatch)
+        responseAs[MassTextSendResponse].uuid shouldBe None
+
+        verify(dao, never()).send(any(), any(), any(), any(), any())
+      }
+    }
+
+    "returns an error when the template is blank" in {
+      val request = MassTextSendRequest(StubMassTextDao.validStartDate, StubMassTextDao.validEndDate, "", "")
+      val dao = spy(new StubMassTextDao())
+      val route = new MassTextApi(dao).route
+
+      Post(sendUrl, request) ~> route ~> check {
+        response.status shouldEqual StatusCodes.OK
+        responseAs[MassTextSendResponse].success shouldEqual false
+        responseAs[MassTextSendResponse].error shouldEqual Some(MassTextApiErrors.blankTemplate)
+        responseAs[MassTextSendResponse].uuid shouldBe None
+
+        verify(dao, never()).send(any(), any(), any(), any(), any())
       }
     }
 

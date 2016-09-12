@@ -25,6 +25,7 @@
 package com.jsherz.luskydive.json
 
 import java.sql.Date
+import java.util.UUID
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import com.jsherz.luskydive.core.{MassText, TextMessage}
@@ -36,6 +37,10 @@ case class TryFilterRequest(startDate: Date, endDate: Date)
 
 case class TryFilterResponse(success: Boolean, numMembers: Option[Int], error: Option[String])
 
+case class MassTextSendRequest(startDate: Date, endDate: Date, template: String, expectedRendered: String)
+
+case class MassTextSendResponse(success: Boolean, error: Option[String], uuid: Option[UUID])
+
 object MassTextsJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
 
   implicit val DateFormat = DateJsonFormat
@@ -45,5 +50,7 @@ object MassTextsJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val tryFilterResponseFormat = jsonFormat3(TryFilterResponse)
   implicit val massTextFormat = jsonFormat4(MassText)
   implicit val textMessageFormat = jsonFormat10(TextMessage)
+  implicit val massTextSendRequestFormat = jsonFormat4(MassTextSendRequest)
+  implicit val massTextSendResponseFormat = jsonFormat3(MassTextSendResponse)
 
 }

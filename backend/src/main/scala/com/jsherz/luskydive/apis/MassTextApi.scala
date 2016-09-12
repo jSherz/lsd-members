@@ -24,15 +24,18 @@
 
 package com.jsherz.luskydive.apis
 
+import java.sql.Timestamp
+import java.time.LocalDateTime
 import java.util.UUID
 
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
-import com.jsherz.luskydive.dao.MassTextDao
+import com.jsherz.luskydive.dao.{MassTextDao, MassTextDaoErrors}
 import com.jsherz.luskydive.json.MassTextsJsonSupport._
-import com.jsherz.luskydive.json.{TryFilterRequest, TryFilterResponse}
+import com.jsherz.luskydive.json.{MassTextSendRequest, MassTextSendResponse, TryFilterRequest, TryFilterResponse}
+import com.jsherz.luskydive.util.TextMessageUtil
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scalaz.{-\/, \/-}
 
 /**
@@ -40,6 +43,8 @@ import scalaz.{-\/, \/-}
   */
 class MassTextApi(private val dao: MassTextDao)
                  (implicit ec: ExecutionContext, authDirective: Directive1[UUID]) {
+
+  val exampleName = "Joe Bloggs"
 
   /**
     * Try out a filter (start and end date) to see how many members would be returned if a mass text was sent with those
@@ -54,8 +59,34 @@ class MassTextApi(private val dao: MassTextDao)
     }
   }
 
-  val route = pathPrefix("mass-texts") {
-    tryFilterRoute
+  val sendRoute = (path("send") & post & authDirective & entity(as[MassTextSendRequest])) { (sender, request) =>
+    val rendered = TextMessageUtil.parseTemplate(request.template, exampleName)
+
+    if (request.template.isEmpty) {
+      complete(MassTextSendResponse(success = false, Some(MassTextApiErrors.blankTemplate), None))
+    } else if (!rendered.equals(request.expectedRendered)) {
+      complete(MassTextSendResponse(success = false, Some(MassTextApiErrors.templateRenderMismatch), None))
+    } else {
+      val result = dao.send(sender, request.startDate, request.endDate, request.template, Timestamp.valueOf(LocalDateTime.now))
+
+      onSuccess(result) {
+        case \/-(uuid) => complete(MassTextSendResponse(success = true, None, Some(uuid)))
+        case -\/(error) => complete(MassTextSendResponse(success = false, Some(error), None))
+      }
+    }
   }
+
+  val route = pathPrefix("mass-texts") {
+    tryFilterRoute ~
+      sendRoute
+  }
+
+}
+
+object MassTextApiErrors {
+
+  val blankTemplate = "error.blankTemplate"
+
+  val templateRenderMismatch = "error.templateRenderMismatch"
 
 }
