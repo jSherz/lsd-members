@@ -24,8 +24,8 @@ export const adminRoutes: Routes = [
       { path: 'login', component: LoginComponent },
       { path: 'courses/calendar/:year/:month', component: CourseCalendarComponent, canActivate: [CanActivateAdmin] },
       { path: 'courses/calendar', component: CourseCalendarComponent, canActivate: [CanActivateAdmin] },
-      { path: 'courses/:uuid', component: CourseViewComponent, canActivate: [CanActivateAdmin] },
       { path: 'courses/add', component: CourseAddComponent, canActivate: [CanActivateAdmin] },
+      { path: 'courses/:uuid', component: CourseViewComponent, canActivate: [CanActivateAdmin] },
       { path: 'mass-text', component: MassTextComponent, canActivate: [CanActivateAdmin] }
     ]
   },
