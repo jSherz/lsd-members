@@ -3,5 +3,5 @@
 </li>
 
 <li [ngClass]="{ visible: !collapsed }">
-  <a [routerLink]="href" [innerText]="linkText" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"></a>
+  <a [routerLink]="href" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">{{ linkText }}</a>
 </li>
