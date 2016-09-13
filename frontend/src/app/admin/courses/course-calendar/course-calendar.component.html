@@ -1,6 +1,12 @@
 <div id="sl-course-calendar-container">
   <h2>Static line course calendar</h2>
 
+  <p>
+    <a id="add-course-btn" [routerLink]="['/admin', 'courses', 'add']">
+      <i class="fa fa-plus-circle"></i> New course
+    </a>
+  </p>
+
   <div class="sl-course-calendar-navigation">
     <div class="sl-course-calendar-nav-left">
       <a [routerLink]="['/admin/courses/calendar', previousMonth.year(), previousMonth.month() + 1]">
