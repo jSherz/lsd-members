@@ -1,9 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
-  Router,
-  ActivatedRoute
-} from '@angular/router';
-import {
   FormControl,
   FormBuilder,
   FormGroup,
@@ -70,21 +66,13 @@ export class CourseAddComponent implements OnInit, OnDestroy {
   private committeeMembersSub: Subscription;
 
   /**
-   * Reference is kept so we can clean it up when this component is destroyed.
-   */
-  private routeSub: Subscription;
-
-  /**
    * Build the course add form, including setting up any validation.
    *
    * @param builder
-   * @param router
    * @param service
-   * @param route
    */
-  constructor(private builder: FormBuilder, private router: Router, private service: CommitteeService,
-              private route: ActivatedRoute) {
-    this.ctrlDate = new FormControl('', Validators.required);
+  constructor(private builder: FormBuilder, private service: CommitteeService) {
+    this.ctrlDate = new FormControl(moment().format('YYYY-MM-DD'), Validators.required);
     this.ctrlOrganiser = new FormControl('', Validators.required);
     this.ctrlSecondaryOrganiser = new FormControl('');
     this.ctrlNumSpaces = new FormControl('8', Validators.required);
@@ -105,24 +93,10 @@ export class CourseAddComponent implements OnInit, OnDestroy {
         console.log('Failed to get committee members: ' + error);
       }
     );
-
-    this.routeSub = this.route.params
-      .subscribe(params => {
-        let year: number = +params['year'];
-        let month: number = +params['month'];
-        let day: number = +params['day'];
-
-        if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
-          // Convert 1 indexed month to 0 indexed for momentjs / JS
-          let zeroIndexedMonth: number = month - 1;
-          this.ctrlDate.setValue(moment([year, zeroIndexedMonth, day]).format('YYYY-MM-DD'));
-        }
-      });
   }
 
   ngOnDestroy(): any {
     this.committeeMembersSub.unsubscribe();
-    this.routeSub.unsubscribe();
   }
 
 }
