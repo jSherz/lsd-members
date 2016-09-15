@@ -51,7 +51,7 @@
       <div id="mass-text-preview">{{ preview }}</div>
     </div>
 
-    <button type="button" (click)="sendText(massTextForm.value)" [disabled]="!massTextForm.valid">Send message</button>
+    <button type="button" (click)="send(massTextForm.value)" [disabled]="!massTextForm.valid">Send message</button>
     <span [ngClass]="{visible: showThrobber}" class="throbber"></span>
   </form>
 </div>

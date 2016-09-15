@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {
   FormGroup,
   FormControl,
   FormBuilder,
   Validators
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import {Router} from '@angular/router';
 import * as moment from 'moment';
 
-import { MassTextService } from './mass-text.service';
+import {MassTextService} from './mass-text.service';
 
 
 @Component({
@@ -73,6 +73,11 @@ export class MassTextComponent implements OnInit {
   numCharsTotal = this.maxTextLength;
 
   /**
+   * Any error returned by the API.
+   */
+  error: string = null;
+
+  /**
    * Build the course add form, including setting up any validation.
    *
    * @param builder
@@ -106,6 +111,31 @@ export class MassTextComponent implements OnInit {
 
   ngOnInit() {
     this.updateTemplate();
+  }
+
+  send(data) {
+    this.showThrobber = true;
+
+    this.service.send(data.startDate, data.endDate, data.template, this.preview).subscribe(
+      result => {
+        // API request succeeded, check result
+        this.apiRequestFailed = false;
+        this.showThrobber = false;
+
+        if (result.success) {
+          this.router.navigate(['courses', 'calendar']);
+        } else {
+          this.error = result.error;
+        }
+      },
+      error => {
+        // API request failed, show generic error
+        console.log('Sending mass text failed: ' + error);
+
+        this.apiRequestFailed = true;
+        this.showThrobber = false;
+      }
+    );
   }
 
   /**
