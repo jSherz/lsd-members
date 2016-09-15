@@ -24,14 +24,14 @@
 
 package com.jsherz.luskydive.util
 
-import scala.util.matching.Regex
-
 /**
   * Utilities for sending text messages.
   */
 object TextMessageUtil {
 
   private val namePattern = "\\{\\{ *name *\\}\\}".r
+
+  val optOut = " - Reply 'NOFUN' to stop these messages"
 
   /**
     * Parse handlebars-ish name tags in a template.
@@ -43,7 +43,7 @@ object TextMessageUtil {
     * @return
     */
   def parseTemplate(template: String, name: String): String = {
-    namePattern replaceAllIn(template, name)
+    (namePattern replaceAllIn(template, name)) + optOut
   }
 
 }

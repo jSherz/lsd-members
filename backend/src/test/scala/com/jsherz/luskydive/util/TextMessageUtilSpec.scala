@@ -36,13 +36,13 @@ class TextMessageUtilSpec extends WordSpec with Matchers {
     "not match any tags that aren't name" in {
       val result = TextMessageUtil.parseTemplate("{{ names }}", "Jonathan")
 
-      result shouldEqual "{{ names }}"
+      result shouldEqual "{{ names }}" + TextMessageUtil.optOut
     }
 
     "replace the name tag multiple times" in {
       val result = TextMessageUtil.parseTemplate("Hello, {{ name }}. Your name is {{ name}}!", "Michelle")
 
-      result shouldEqual "Hello, Michelle. Your name is Michelle!"
+      result shouldEqual "Hello, Michelle. Your name is Michelle!" + TextMessageUtil.optOut
     }
 
     "replace tags with spaces around the word 'name'" in {
@@ -51,7 +51,7 @@ class TextMessageUtilSpec extends WordSpec with Matchers {
       examples.foreach { example =>
         val result = TextMessageUtil.parseTemplate(example, "Sharon")
 
-        result shouldEqual "Sharon"
+        result shouldEqual "Sharon" + TextMessageUtil.optOut
       }
     }
 
