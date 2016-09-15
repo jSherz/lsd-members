@@ -144,11 +144,12 @@ class MemberDaoImpl(override protected val databaseService: DatabaseService)
       val query = db.run(
         Members.filter(member =>
           // Match on any of name, phone or e-mail
-          (member.name.toLowerCase like formattedTerm) ||
+          (member.firstName.toLowerCase like formattedTerm) ||
+            (member.lastName.toLowerCase like formattedTerm) ||
             (member.phoneNumber like formattedTerm) ||
             (member.email.toLowerCase like formattedTerm)
-        ).sortBy(_.name).result.map(_.map { rawMember =>
-          MemberSearchResult(rawMember.uuid, rawMember.name, rawMember.phoneNumber, rawMember.email)
+        ).sortBy(m => (m.lastName, m.firstName)).result.map(_.map { rawMember =>
+          MemberSearchResult(rawMember.uuid, rawMember.firstName, rawMember.lastName, rawMember.phoneNumber, rawMember.email)
         })
       )
 

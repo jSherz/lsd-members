@@ -89,7 +89,9 @@ class Tables(protected val databaseService: DatabaseService) {
 
     def uuid: Rep[UUID] = column[UUID]("uuid", O.PrimaryKey)
 
-    def name: Rep[String] = column[String]("name", O.Length(NAME_FIELD_LENGTH, varying = true))
+    def firstName: Rep[String] = column[String]("first_name", O.Length(NAME_FIELD_LENGTH, varying = true))
+
+    def lastName: Rep[Option[String]] = column[Option[String]]("last_name", O.Length(NAME_FIELD_LENGTH, varying = true))
 
     def phoneNumber: Rep[Option[String]] = column[Option[String]]("phone_number")
 
@@ -101,7 +103,7 @@ class Tables(protected val databaseService: DatabaseService) {
 
     def updatedAt: Rep[Timestamp] = column[Timestamp]("updated_at")
 
-    def * = (uuid.?, name, phoneNumber, email, lastJump, createdAt, updatedAt) <> (Member.tupled, Member.unapply)
+    def * = (uuid.?, firstName, lastName, phoneNumber, email, lastJump, createdAt, updatedAt) <> (Member.tupled, Member.unapply)
 
   }
 

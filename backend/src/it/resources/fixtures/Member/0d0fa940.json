@@ -1,6 +1,7 @@
 {
   "uuid": "0d0fa940-6d3f-45f9-9be0-07b08ec4e240",
-  "name": "Melissa Moss",
+  "firstName": "Melissa",
+  "lastName": "Moss",
   "email": "harperlaura@gonzales.biz",
   "phoneNumber": "+447597372200",
   "lastJump": "2016-07-25",

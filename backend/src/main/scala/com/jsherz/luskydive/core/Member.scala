@@ -31,12 +31,13 @@ import java.util.UUID
   * The main member class, representing a person that has provided us with a phone number or e-mail address.
   *
   * @param uuid        Unique ID
-  * @param name        Peron's (first) name
+  * @param firstName   First name
+  * @param lastName    Last name
   * @param phoneNumber Phone number
   * @param email       E-mail address
   * @param lastJump    The date the member last jumped, if applicable
   * @param createdAt   When the member was created
   * @param updatedAt   When the member's record was last updated
   */
-case class Member(uuid: Option[UUID], name: String, phoneNumber: Option[String], email: Option[String], lastJump: Option[Date],
-                  createdAt: Timestamp, updatedAt: Timestamp)
+case class Member(uuid: Option[UUID], firstName: String, lastName: Option[String], phoneNumber: Option[String],
+                  email: Option[String], lastJump: Option[Date], createdAt: Timestamp, updatedAt: Timestamp)

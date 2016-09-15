@@ -5,7 +5,8 @@
     "number": 1,
     "member": {
       "uuid": "7c8ca533-50c1-4279-a9c9-cb5f2dcd863a",
-      "name": "Jessica Savage",
+      "firstName": "Jessica",
+      "lastName": "Savage",
       "createdAt": "2010-01-18 15:43:16.0"
     }
   },
@@ -25,7 +26,8 @@
     "number": 4,
     "member": {
       "uuid": "9a6fb698-3e33-4aa5-a83b-18701cf702e1",
-      "name": "Anthony Sawyer",
+      "firstName": "Anthony",
+      "lastName": "Sawyer",
       "createdAt": "2010-03-08 10:35:06.0"
     }
   },
@@ -35,7 +37,8 @@
     "number": 5,
     "member": {
       "uuid": "7c54400d-76e7-42bd-80c5-2f319ee9e669",
-      "name": "Alicia Schroeder",
+      "firstName": "Alicia",
+      "lastName": "Schroeder",
       "createdAt": "2009-01-29 00:21:04.0"
     }
   },
@@ -45,7 +48,8 @@
     "number": 6,
     "member": {
       "uuid": "359a2d69-f07d-4564-a62e-ee1fa5f3ef3f",
-      "name": "Damon Moore",
+      "firstName": "Damon",
+      "lastName": "Moore",
       "createdAt": "2009-08-04 00:13:28.0"
     }
   },
@@ -60,7 +64,8 @@
     "number": 8,
     "member": {
       "uuid": "cf20f34e-d358-4e88-b68c-2f183e4fea39",
-      "name": "Dylan Foster",
+      "firstName": "Dylan",
+      "lastName": "Foster",
       "createdAt": "2008-12-27 05:07:29.0"
     }
   }

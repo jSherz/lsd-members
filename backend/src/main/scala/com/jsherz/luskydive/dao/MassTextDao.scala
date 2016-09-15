@@ -178,7 +178,7 @@ class MassTextDaoImpl(protected override val databaseService: DatabaseService)
   }
 
   private def addTextMessage(member: Member, template: String, massTextUuid: UUID, createdAt: Timestamp) = {
-    val message = TextMessageUtil.parseTemplate(template, member.name)
+    val message = TextMessageUtil.parseTemplate(template, member.firstName)
 
     val textMessage = TextMessage(
       Some(Generators.randomBasedGenerator.generate),

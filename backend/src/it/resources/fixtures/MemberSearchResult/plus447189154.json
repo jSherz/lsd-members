@@ -1,7 +1,8 @@
 [
   {
     "uuid": "1be5676c-c540-43c5-ab00-08ad2d532b5e",
-    "name": "Robert Walsh",
+    "firstName": "Robert",
+    "lastName": "Walsh",
     "email": "ucrawford@whitehead-madden.biz",
     "phoneNumber": "+447189154323"
   }

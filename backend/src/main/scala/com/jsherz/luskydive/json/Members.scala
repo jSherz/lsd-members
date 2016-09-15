@@ -39,8 +39,8 @@ object MemberJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val UuidFormat = UuidJsonFormat
   implicit val DateFormat = DateJsonFormat
   implicit val TimestampFormat = TimestampJsonFormat
-  implicit val MemberFormat = jsonFormat7(Member)
-  implicit val MemberSearchResultFormat = jsonFormat4(MemberSearchResult)
+  implicit val MemberFormat = jsonFormat8(Member)
+  implicit val MemberSearchResultFormat = jsonFormat5(MemberSearchResult)
   implicit val MemberSearchRequestFormat = jsonFormat1(MemberSearchRequest)
 
 }
@@ -56,8 +56,10 @@ case class MemberSearchRequest(searchTerm: String)
   * Useful information about a member to return from a search.
   *
   * @param uuid
-  * @param name
+  * @param firstName
+  * @param lastName
   * @param phoneNumber
   * @param email
   */
-case class MemberSearchResult(uuid: Option[UUID], name: String, phoneNumber: Option[String], email: Option[String])
+case class MemberSearchResult(uuid: Option[UUID], firstName: String, lastName: Option[String], phoneNumber: Option[String],
+                              email: Option[String])

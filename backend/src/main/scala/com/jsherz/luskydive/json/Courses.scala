@@ -42,7 +42,7 @@ object CoursesJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val CourseFormat = jsonFormat5(Course)
   implicit val CourseWithOrganisersFormat = jsonFormat3(CourseWithOrganisers)
   implicit val CourseWithNumSpacesFormat = jsonFormat3(CourseWithNumSpaces)
-  implicit val StrippedMemberFormat = jsonFormat3(StrippedMember)
+  implicit val StrippedMemberFormat = jsonFormat4(StrippedMember)
   implicit val CourseSpaceWithMemberFormat = jsonFormat4(CourseSpaceWithMember)
   implicit val CourseCreateRequestFormat = jsonFormat4(CourseCreateRequest)
   implicit val CourseCreateResponseFormat = jsonFormat3(CourseCreateResponse)
@@ -57,9 +57,9 @@ case class CoursesListRequest(startDate: Date, endDate: Date)
 /**
   * A course with some information about the spaces on it.
   *
-  * @param course The course
+  * @param course      The course
   * @param totalSpaces Course capacity
-  * @param spacesFree Number of available spaces
+  * @param spacesFree  Number of available spaces
   */
 case class CourseWithNumSpaces(course: Course, totalSpaces: Int, spacesFree: Int)
 
@@ -67,10 +67,11 @@ case class CourseWithNumSpaces(course: Course, totalSpaces: Int, spacesFree: Int
   * A member stripped of most personal info.
   *
   * @param uuid
-  * @param name
+  * @param firstName
+  * @param lastName
   * @param createdAt The date the member joined
   */
-case class StrippedMember(uuid: Option[UUID], name: String, createdAt: Timestamp)
+case class StrippedMember(uuid: Option[UUID], firstName: String, lastName: Option[String], createdAt: Timestamp)
 
 /**
   * A course space, including stripped member.
