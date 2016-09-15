@@ -98,7 +98,7 @@ export class MassTextComponent implements OnInit {
   }
 
   updateTemplate() {
-    this.preview = this.replaceNameInMessage(this.ctrlTemplate.value, 'Joe Bloggs') + this.optOut;
+    this.preview = this.replaceNameInMessage(this.ctrlTemplate.value, 'Mary') + this.optOut;
 
     this.numCharsUsed = this.replaceNameInMessage(this.ctrlTemplate.value, this.exampleLongName).length +
       this.optOut.length;

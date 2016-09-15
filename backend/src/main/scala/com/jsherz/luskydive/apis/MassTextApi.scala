@@ -44,7 +44,7 @@ import scalaz.{-\/, \/-}
 class MassTextApi(private val dao: MassTextDao)
                  (implicit ec: ExecutionContext, authDirective: Directive1[UUID]) {
 
-  val exampleName = "Joe Bloggs"
+  val exampleName = "Mary"
 
   /**
     * Try out a filter (start and end date) to see how many members would be returned if a mass text was sent with those

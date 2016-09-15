@@ -100,7 +100,7 @@ class MassTextApiSpec extends WordSpec with Matchers with ScalatestRouteTest wit
     "returns the correct response when sending the message succeeds" in {
       // Dates here are irrelevant
       val request = MassTextSendRequest(StubMassTextDao.validStartDate, StubMassTextDao.validEndDate,
-        StubMassTextDao.validSenderTemplate, "Hello, Joe Bloggs!")
+        StubMassTextDao.validSenderTemplate, "Hello, Mary!")
       val dao = spy(new StubMassTextDao())
       val route = new MassTextApi(dao).route
 
@@ -123,7 +123,7 @@ class MassTextApiSpec extends WordSpec with Matchers with ScalatestRouteTest wit
 
     "returns the correct error response when sending the message fails" in {
       val request = MassTextSendRequest(StubMassTextDao.validStartDate, StubMassTextDao.validEndDate,
-        StubMassTextDao.serverErrorTemplate, "What is the meaning of life, Joe Bloggs?")
+        StubMassTextDao.serverErrorTemplate, "What is the meaning of life, Mary?")
       val dao = spy(new StubMassTextDao())
       val route = new MassTextApi(dao).route
 
