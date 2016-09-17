@@ -36,8 +36,13 @@ import java.util.UUID
   * @param phoneNumber Phone number
   * @param email       E-mail address
   * @param lastJump    The date the member last jumped, if applicable
+  * @param weight      Weight in kilograms
+  * @param height      Height in centimeters
+  * @param driver      Is the member a driver?
+  * @param organiser   Does the member help organise static line courses?
   * @param createdAt   When the member was created
   * @param updatedAt   When the member's record was last updated
   */
 case class Member(uuid: Option[UUID], firstName: String, lastName: Option[String], phoneNumber: Option[String],
-                  email: Option[String], lastJump: Option[Date], createdAt: Timestamp, updatedAt: Timestamp)
+                  email: Option[String], lastJump: Option[Date], weight: Option[Short], height: Option[Short],
+                  driver: Boolean, organiser: Boolean, createdAt: Timestamp, updatedAt: Timestamp)

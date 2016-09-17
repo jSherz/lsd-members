@@ -99,11 +99,20 @@ class Tables(protected val databaseService: DatabaseService) {
 
     def lastJump: Rep[Option[Date]] = column[Option[Date]]("last_jump")
 
+    def weight: Rep[Option[Short]] = column[Option[Short]]("weight")
+
+    def height: Rep[Option[Short]] = column[Option[Short]]("height")
+
+    def driver: Rep[Boolean] = column[Boolean]("driver")
+
+    def organiser: Rep[Boolean] = column[Boolean]("organiser")
+
     def createdAt: Rep[Timestamp] = column[Timestamp]("created_at")
 
     def updatedAt: Rep[Timestamp] = column[Timestamp]("updated_at")
 
-    def * = (uuid.?, firstName, lastName, phoneNumber, email, lastJump, createdAt, updatedAt) <> (Member.tupled, Member.unapply)
+    def * = (uuid.?, firstName, lastName, phoneNumber, email, lastJump,
+      weight, height, driver, organiser, createdAt, updatedAt) <> (Member.tupled, Member.unapply)
 
   }
 

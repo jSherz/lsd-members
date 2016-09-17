@@ -60,7 +60,8 @@ class SignupApi(private val memberDao: MemberDao)
                   case true => SignupResponse(false, Map("phoneNumber" -> "error.inUse"))
                   case false => {
                     val createdAt = currentTimestamp
-                    memberDao.create(Member(None, req.name, None, Some(phoneNumber), None, None, createdAt, createdAt))
+                    memberDao.create(Member(None, req.name, None, Some(phoneNumber), None, None, None, None, false,
+                      false, createdAt, createdAt))
 
                     SignupResponse(true, Map.empty)
                   }
@@ -90,7 +91,8 @@ class SignupApi(private val memberDao: MemberDao)
                   case true => SignupResponse(false, Map("email" -> "error.inUse"))
                   case false => {
                     val createdAt = currentTimestamp
-                    memberDao.create(Member(None, req.name, None, None, Some(req.email), None, createdAt, createdAt))
+                    memberDao.create(Member(None, req.name, None, None, Some(req.email), None, None, None, false, false,
+                      createdAt, createdAt))
 
                     SignupResponse(true, Map.empty)
                   }
