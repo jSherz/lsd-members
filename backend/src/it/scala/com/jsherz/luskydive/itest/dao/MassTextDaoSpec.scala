@@ -88,7 +88,7 @@ class MassTextDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
     "return the correct number of members, filtered correctly" in {
       val examples = Map(
-        (DateUtil.makeDate(2008, 12, 13), DateUtil.makeDate(2010, 4, 12)) -> 156,
+        (DateUtil.makeDate(2008, 12, 13), DateUtil.makeDate(2010, 4, 12)) -> 174,
         (DateUtil.makeDate(2009, 11, 16), DateUtil.makeDate(2009, 11, 17)) -> 2
       )
 
