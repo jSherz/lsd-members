@@ -22,7 +22,6 @@ import {
   PricesComponent,
   PageNavComponent
 } from './pages';
-import { AdminModule } from './admin/admin.module';
 
 @NgModule({
   imports:      [
@@ -30,8 +29,7 @@ import { AdminModule } from './admin/admin.module';
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
-    routing,
-    AdminModule
+    routing
   ],
   declarations: [
     AppComponent,

@@ -18,7 +18,7 @@ import {
 
 export const adminRoutes: Routes = [
   {
-    path: 'admin',
+    path: '',
     component: AdminBaseComponent,
     children: [
       { path: 'login', component: LoginComponent },

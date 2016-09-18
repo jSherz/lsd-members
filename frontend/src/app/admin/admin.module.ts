@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 
 import {
@@ -52,7 +51,6 @@ import { adminRouting } from './admin.routing';
 @NgModule({
   imports: [
     CommonModule,
-    BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
