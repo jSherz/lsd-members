@@ -28,7 +28,7 @@ import java.util.UUID
 
 import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.Member
-import com.jsherz.luskydive.itest.util.Util
+import com.jsherz.luskydive.util.Util
 import com.jsherz.luskydive.json.MemberSearchResult
 import com.jsherz.luskydive.json.MemberJsonSupport._
 import com.jsherz.luskydive.util.Errors
