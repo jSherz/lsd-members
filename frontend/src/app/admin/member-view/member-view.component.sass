@@ -1,0 +1,28 @@
+@import '../../../assets/css/bourbon/bourbon'
+@import '../../../assets/css/base/base'
+@import '../../../assets/css/neat/neat'
+@import '../../../assets/css/variables'
+
+#member-view
+  @include span-columns(12)
+  background: white
+  padding: 0.8rem
+  border-radius: 0.4rem
+
+  h2
+    margin-bottom: 0.1em
+
+dt, dd
+  display: block
+  float: left
+  padding: 0.2em
+  margin-bottom: 0.5em
+
+dt
+  clear: left
+  background-color: #eeeeee
+  border-radius: 0.5em
+  margin-right: 0.5em
+
+dd
+  border-bottom: 0.1em dotted #ccc

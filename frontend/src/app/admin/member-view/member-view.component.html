@@ -1,0 +1,44 @@
+<div id="member-view">
+  <h2>Member view</h2>
+
+  <dl *ngIf="member">
+    <dt title="A unique identifier for this member.">UUID</dt>
+    <dd>{{ member.uuid }}</dd>
+
+    <dt>First name</dt>
+    <dd>{{ member.firstName }}</dd>
+
+    <dt>Last name</dt>
+    <dd>{{ member.lastName }}</dd>
+
+    <dt title="Member's mobile phone number.">Phone number</dt>
+    <dd>{{ member.phoneNumber || 'Unknown' }}</dd>
+
+    <dt>E-mail</dt>
+    <dd>{{ member.email || 'Unknown' }}</dd>
+
+    <dt title="The last (known) date this member jumped.">Last jump</dt>
+    <dd *ngIf="member.lastJump">{{ member.lastJump.format('YYYY-MM-DD') }}</dd>
+    <dd *ngIf="member.lastJump == undefined">Unknown</dd>
+
+    <dt title="Weight in kilograms.">Weight (kg)</dt>
+    <dd>{{ member.weight || 'Unknown' }}</dd>
+
+    <dt title="Height in centimeters.">Height (cm)</dt>
+    <dd>{{ member.height || 'Unknown' }}</dd>
+
+    <dt title="Does this member drive for the club?">Driver</dt>
+    <dd>{{ member.driver ? 'Yes' : 'No' }}</dd>
+
+    <dt title="Does this member help to organise static line courses?">Organiser</dt>
+    <dd>{{ member.organiser ? 'Yes' : 'No' }}</dd>
+
+    <dt title="The date & time this member's record was created.">Created at</dt>
+    <dd>{{ member.createdAt.format('MMMM Do YYYY, h:mm:ss a') }}</dd>
+
+    <dt title="The date & time this member's record was last updated.">Organiser</dt>
+    <dd>{{ member.updatedAt.format('MMMM Do YYYY, h:mm:ss a') }}</dd>
+  </dl>
+
+  <p *ngIf="member == undefined">Loading...</p>
+</div>

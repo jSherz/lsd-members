@@ -41,6 +41,12 @@ export {
 } from './member-search';
 
 export {
+  MemberViewService,
+  MemberViewServiceImpl,
+  MemberViewComponent
+} from './member-view';
+
+export {
   SignupService,
   SignupServiceImpl,
   SignupBaseComponent,
@@ -49,7 +55,9 @@ export {
   ThankYouComponent
 } from './signup';
 
-export { AdminBaseComponent } from './admin-base.component';
+export {
+  AdminBaseComponent
+} from './admin-base.component';
 
 export {
   ApiKeyService,

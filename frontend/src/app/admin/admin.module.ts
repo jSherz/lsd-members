@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HttpModule } from '@angular/http';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {HttpModule} from '@angular/http';
 
 import {
   LocationStrategy,
@@ -34,6 +34,7 @@ import {
   SignupServiceImpl,
   MemberSearchService,
   MemberSearchServiceImpl,
+  MemberViewComponent,
   CourseService,
   CourseServiceImpl,
   CourseSpaceService,
@@ -43,10 +44,13 @@ import {
   SignupBaseComponent,
   SignupComponent,
   SignupAltComponent,
-  ThankYouComponent
+  ThankYouComponent,
+  MemberViewServiceImpl,
+  MemberViewService
 } from './';
 
-import { adminRouting } from './admin.routing';
+import {adminRouting} from './admin.routing';
+import {} from "./member-view/member-view.service";
 
 @NgModule({
   imports: [
@@ -69,21 +73,24 @@ import { adminRouting } from './admin.routing';
     SignupBaseComponent,
     SignupComponent,
     SignupAltComponent,
-    ThankYouComponent
+    ThankYouComponent,
+    MemberViewComponent
   ],
   bootstrap: [],
   providers: [
     FormBuilder,
-    { provide: ApiKeyService, useClass: ApiKeyServiceImpl },
-    { provide: SignupService, useClass: SignupServiceImpl },
-    { provide: LocationStrategy, useClass: PathLocationStrategy },
-    { provide: MemberSearchService, useClass: MemberSearchServiceImpl },
-    { provide: CourseService, useClass: CourseServiceImpl },
-    { provide: CourseSpaceService, useClass: CourseSpaceServiceImpl },
-    { provide: CommitteeService, useClass: CommitteeServiceImpl },
-    { provide: LoginService, useClass: LoginServiceImpl },
-    { provide: MassTextService, useClass: MassTextServiceImpl },
+    {provide: ApiKeyService, useClass: ApiKeyServiceImpl},
+    {provide: SignupService, useClass: SignupServiceImpl},
+    {provide: LocationStrategy, useClass: PathLocationStrategy},
+    {provide: MemberSearchService, useClass: MemberSearchServiceImpl},
+    {provide: CourseService, useClass: CourseServiceImpl},
+    {provide: CourseSpaceService, useClass: CourseSpaceServiceImpl},
+    {provide: CommitteeService, useClass: CommitteeServiceImpl},
+    {provide: LoginService, useClass: LoginServiceImpl},
+    {provide: MassTextService, useClass: MassTextServiceImpl},
+    {provide: MemberViewService, useClass: MemberViewServiceImpl},
     CanActivateAdmin
   ]
 })
-export class AdminModule { }
+export class AdminModule {
+}
