@@ -31,6 +31,7 @@ import com.jsherz.luskydive.core.Member
 import com.jsherz.luskydive.itest.util.Util
 import com.jsherz.luskydive.json.MemberSearchResult
 import com.jsherz.luskydive.json.MemberJsonSupport._
+import com.jsherz.luskydive.util.Errors
 
 import scala.concurrent.{ExecutionContext, Future}
 import scalaz.{-\/, \/, \/-}
@@ -67,7 +68,19 @@ class StubMemberDao()(implicit val ec: ExecutionContext) extends MemberDao {
     * @param uuid
     * @return
     */
-  override def get(uuid: UUID): Future[Option[Member]] = Future(None)
+  override def get(uuid: UUID): Future[String \/ Option[Member]] = {
+    Future.successful {
+      if (StubMemberDao.getExistsUuid.equals(uuid)) {
+        \/-(Some(StubMemberDao.getExistsMember))
+      } else if (StubMemberDao.getNotFoundUuid.equals(uuid)) {
+        \/-(None)
+      } else if (StubMemberDao.getErrorUuid.equals(uuid)) {
+        -\/(Errors.internalServer)
+      } else {
+        throw new RuntimeException("unknown uuid used with stub")
+      }
+    }
+  }
 
   /**
     * Perform a search for members by matching on names, phone numbers and e-mails.
@@ -96,5 +109,10 @@ object StubMemberDao {
   val existsEmail = "IsaacBurgess@jourrapide.com"
 
   val searchResults = Util.fixture[Seq[MemberSearchResult]]("example.json")
+
+  val getExistsUuid = UUID.fromString("6d9db71d-d910-4993-bdff-d5301664d5b2")
+  val getExistsMember = Util.fixture[Member]("6d9db71d.json")
+  val getErrorUuid = UUID.fromString("6c4b9c7f-0e08-42b9-bc99-4dd72d099497")
+  val getNotFoundUuid = UUID.fromString("323f8275-f5c8-407a-adc2-d7a0ddb420a1")
 
 }

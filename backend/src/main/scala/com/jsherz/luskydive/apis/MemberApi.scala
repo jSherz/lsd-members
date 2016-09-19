@@ -32,6 +32,7 @@ import com.jsherz.luskydive.dao.{MemberDao, MemberDaoErrors}
 import scala.concurrent.ExecutionContext
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
+import com.jsherz.luskydive.core.Member
 import com.jsherz.luskydive.json.MemberSearchRequest
 
 import scalaz.{-\/, \/-}
@@ -61,8 +62,23 @@ class MemberApi(private val memberDao: MemberDao)
     }
   }
 
+  val getRoute = (path(JavaUUID) & get & authDirective) { (memberUuid, _) =>
+    val lookup = memberDao.get(memberUuid)
+
+    onSuccess(lookup) {
+      case \/-(maybeMember: Option[Member]) => {
+        maybeMember match {
+          case Some(member: Member) => complete(member)
+          case None => complete(StatusCodes.NotFound, "Member not found")
+        }
+      }
+      case -\/(error) => complete(StatusCodes.InternalServerError, error)
+    }
+  }
+
   val route: Route = pathPrefix("members") {
-    searchRoute
+    searchRoute ~
+      getRoute
   }
 
 }

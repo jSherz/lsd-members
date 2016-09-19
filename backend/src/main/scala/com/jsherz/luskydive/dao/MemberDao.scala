@@ -67,7 +67,7 @@ trait MemberDao {
     * @param uuid
     * @return
     */
-  def get(uuid: UUID): Future[Option[Member]]
+  def get(uuid: UUID): Future[String \/ Option[Member]]
 
   /**
     * Perform a search for members by matching on names, phone numbers and e-mails.
@@ -123,8 +123,8 @@ class MemberDaoImpl(override protected val databaseService: DatabaseService)
     * @param uuid
     * @return
     */
-  override def get(uuid: UUID): Future[Option[Member]] = {
-    db.run(Members.filter(_.uuid === uuid).result.headOption)
+  override def get(uuid: UUID): Future[String \/ Option[Member]] = {
+    db.run(Members.filter(_.uuid === uuid).result.headOption) withServerError
   }
 
   /**

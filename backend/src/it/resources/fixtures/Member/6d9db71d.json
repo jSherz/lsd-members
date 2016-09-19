@@ -1,0 +1,14 @@
+{
+  "uuid": "6d9db71d-d910-4993-bdff-d5301664d5b2",
+  "firstName": "Clayton",
+  "lastName": "Brady",
+  "email": "wgaines@higgins-roberts.com",
+  "phoneNumber": "+447149274758",
+  "lastJump": "2009-10-08",
+  "weight": 75,
+  "height": 175,
+  "driver": true,
+  "organiser": false,
+  "createdAt": "2011-11-10 16:04:22.000000",
+  "updatedAt": "2012-07-01 12:53:52.000000"
+}

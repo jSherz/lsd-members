@@ -25,17 +25,19 @@
 package com.jsherz.luskydive.apis
 
 import java.sql.Date
+import java.util.UUID
 
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
+import com.jsherz.luskydive.core.Member
 import com.jsherz.luskydive.dao.StubMemberDao
 import com.jsherz.luskydive.json.MemberSearchRequest
 import com.jsherz.luskydive.json.MemberJsonSupport._
 import com.jsherz.luskydive.util.AuthenticationDirectives
 import org.mockito.Matchers.any
 import org.mockito.Mockito
-import org.mockito.Mockito.{never, verify}
+import org.mockito.Mockito.{never, verify, times}
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
 
 import scala.concurrent.ExecutionContext
@@ -49,24 +51,28 @@ class MemberApiSpec extends WordSpec with Matchers with ScalatestRouteTest with 
 
   private implicit val authDirective = AuthenticationDirectives.allowAll
 
-  private val dao = Mockito.spy(new StubMemberDao())
-
-  private val route = new MemberApi(dao).route
-
   private val searchUrl = "/members/search"
+  private val getUrl = "/members/" + StubMemberDao.getExistsUuid.toString
+  private val getUrlNotFound = "/members/" + StubMemberDao.getNotFoundUuid.toString
+  private val getUrlError = "/members/" + StubMemberDao.getErrorUuid.toString
+
+  trait Fixtured {
+    val dao = Mockito.spy(new StubMemberDao())
+    val route = new MemberApi(dao).route
+  }
 
   "MembersApi#search" should {
 
-    "requires authentication" in {
+    "require authentication" in new Fixtured {
       implicit val authDirective = AuthenticationDirectives.denyAll
-      val route = new MemberApi(dao).route
+      override val route = new MemberApi(dao).route
 
       Post(searchUrl) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.Unauthorized
       }
     }
 
-    "return method not allowed when used with anything other than POST" in {
+    "return method not allowed when used with anything other than POST" in new Fixtured {
       Seq(Get, Put, Delete, Patch).foreach { method =>
         method(searchUrl) ~> Route.seal(route) ~> check {
           response.status shouldEqual StatusCodes.MethodNotAllowed
@@ -76,7 +82,7 @@ class MemberApiSpec extends WordSpec with Matchers with ScalatestRouteTest with 
       verify(dao, never()).search(any[String])
     }
 
-    "return bad request if the search term provided is under three characters" in {
+    "return bad request if the search term provided is under three characters" in new Fixtured {
       val invalidSearchTerms = Seq(
         """{"searchTerm":" aa   "}""",
         """{"searchTerm":"da"}""",
@@ -94,7 +100,7 @@ class MemberApiSpec extends WordSpec with Matchers with ScalatestRouteTest with 
       verify(dao, never()).search(any[String])
     }
 
-    "return the correct results" in {
+    "return the correct results" in new Fixtured {
       val request = MemberSearchRequest("foobar")
       val expected = StubMemberDao.searchResults
 
@@ -104,6 +110,57 @@ class MemberApiSpec extends WordSpec with Matchers with ScalatestRouteTest with 
       }
 
       verify(dao).search("foobar")
+    }
+
+  }
+
+  "MemberApi#get" should {
+
+    "require authentication" in new Fixtured {
+      implicit val authDirective = AuthenticationDirectives.denyAll
+      override val route = new MemberApi(dao).route
+
+      Get(getUrl) ~> Route.seal(route) ~> check {
+        response.status shouldEqual StatusCodes.Unauthorized
+      }
+
+      verify(dao, never()).get(any[UUID])
+    }
+
+    "return method not allowed when used with anything other than GET" in new Fixtured {
+      Seq(Post, Put, Delete, Patch).foreach { method =>
+        method(getUrl) ~> Route.seal(route) ~> check {
+          response.status shouldEqual StatusCodes.MethodNotAllowed
+        }
+      }
+
+      verify(dao, never()).get(any[UUID])
+    }
+
+    "return the member when one is found" in new Fixtured {
+      Get(getUrl) ~> route ~> check {
+        response.status shouldEqual StatusCodes.OK
+
+        responseAs[Member] shouldEqual StubMemberDao.getExistsMember
+      }
+
+      verify(dao, times(1)).get(StubMemberDao.getExistsUuid)
+    }
+
+    "return 404 when the member is not found" in new Fixtured {
+      Get(getUrlNotFound) ~> route ~> check {
+        response.status shouldEqual StatusCodes.NotFound
+
+        responseAs[String] shouldEqual "Member not found"
+      }
+
+      verify(dao, times(1)).get(StubMemberDao.getNotFoundUuid)
+    }
+
+    "return 500 when the lookup fails" in new Fixtured {
+      Get(getUrlError) ~> route ~> check {
+        response.status shouldEqual StatusCodes.InternalServerError
+      }
     }
 
   }
