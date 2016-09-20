@@ -79,7 +79,7 @@ export class SignupComponent {
         this.showThrobber = false;
 
         if (result.success) {
-          this.router.navigate(['sign-up', 'thank-you']);
+          this.router.navigate(['admin', 'sign-up', 'thank-you']);
         } else {
           this.errors = result.errors;
         }
