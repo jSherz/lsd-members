@@ -41,7 +41,7 @@
           {{ space.number }}
         </td>
         <td class="sl-course-students-name" *ngIf="space.member">
-          {{ space.member?.name }}
+          {{ space.member?.firstName }} {{ space.member?.lastName }}
         </td>
         <td class="sl-course-students-name" colspan="6" *ngIf="!space.member">
           N/A
@@ -59,7 +59,9 @@
           <i class="fa fa-times" aria-hidden="true" style="color: red;"></i>
         </td>
         <td class="sl-course-students-options" *ngIf="space.member">
-          <button type="button" title="Contact student" class="sl-course-students-contact"><i class="fa fa-phone" aria-hidden="true"></i></button>
+          <a [routerLink]="['/admin', 'members', space.member.uuid]" title="View member information" id="sl-course-students-view-member" class="button">
+            <i class="fa fa-info" aria-hidden="true"></i>
+          </a>
           <button type="button" title="Edit member information" class="sl-course-students-edit-member"><i class="fa fa-pencil" aria-hidden="true"></i></button>
           <button type="button" class="btn-warning sl-course-students-remove" title="Remove from course" (click)="removeMemberFromCourse(space)">
             <i class="fa fa-trash-o"></i>

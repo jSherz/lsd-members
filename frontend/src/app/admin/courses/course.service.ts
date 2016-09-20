@@ -57,12 +57,14 @@ export class CourseWithOrganisers {
 }
 
 export class StrippedMember {
-  name: string;
+  firstName: string;
+  lastName: string;
   uuid: string;
   createdAt: moment.Moment;
 
-  constructor (name: string, uuid: string, createdAt: moment.Moment) {
-    this.name = name;
+  constructor (firstName: string, lastName: string, uuid: string, createdAt: moment.Moment) {
+    this.firstName = firstName;
+    this.lastName = lastName;
     this.uuid = uuid;
     this.createdAt = createdAt;
   }
