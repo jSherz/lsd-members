@@ -33,7 +33,7 @@ import com.jsherz.luskydive.core.Member
 import com.jsherz.luskydive.dao.MemberDao
 import com.jsherz.luskydive.json.{SignupAltRequest, SignupJsonSupport, SignupRequest, SignupResponse}
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scalaz.{Failure, Success}
 
 /**
@@ -49,29 +49,26 @@ class SignupApi(private val memberDao: MemberDao)
     *
     * Requires a name and e-mail address.
     */
-  private val signupRoute = path("sign-up") {
-    post {
-      authDirective { _ =>
-        entity(as[SignupRequest]) { req =>
-          complete {
-            req.validate() match {
-              case Success(phoneNumber) => {
-                memberDao.memberExists(Some(phoneNumber), None).map {
-                  case true => SignupResponse(false, Map("phoneNumber" -> "error.inUse"))
-                  case false => {
-                    val createdAt = currentTimestamp
-                    memberDao.create(Member(None, req.name, None, Some(phoneNumber), None, None, None, None, false,
-                      false, createdAt, createdAt))
+  private val signupRoute = (path("sign-up") & post & authDirective & entity(as[SignupRequest])) { (_, req) =>
+    req.validate() match {
+      case Success(phoneNumber) => {
+        val createAction = memberDao.memberExists(Some(phoneNumber), None).flatMap {
+          case true => Future.successful(SignupResponse(false, Map("phoneNumber" -> "error.inUse")))
+          case false => {
+            val createdAt = currentTimestamp()
+            val member = Member(None, req.name, None, Some(phoneNumber), None, None, None, None, false, false, createdAt, createdAt)
 
-                    SignupResponse(true, Map.empty)
-                  }
-                }
-              }
-              case Failure(reason) => SignupResponse(false, reason.list.toList.toMap)
+            memberDao.create(member).map { _ =>
+              SignupResponse(true, Map.empty)
             }
           }
         }
+
+        onSuccess(createAction) { result =>
+          complete(result)
+        }
       }
+      case Failure(reason) => complete(SignupResponse(false, reason.list.toList.toMap))
     }
   }
 
@@ -80,29 +77,26 @@ class SignupApi(private val memberDao: MemberDao)
     *
     * Requires a name and phone number.
     */
-  private val signupAltRoute = path("sign-up" / "alt") {
-    post {
-      authDirective { _ =>
-        entity(as[SignupAltRequest]) { req =>
-          complete {
-            req.validate() match {
-              case Success(_) => {
-                memberDao.memberExists(None, Some(req.email)).map {
-                  case true => SignupResponse(false, Map("email" -> "error.inUse"))
-                  case false => {
-                    val createdAt = currentTimestamp
-                    memberDao.create(Member(None, req.name, None, None, Some(req.email), None, None, None, false, false,
-                      createdAt, createdAt))
+  private val signupAltRoute = (path("sign-up" / "alt") & post & authDirective & entity(as[SignupAltRequest])) { (_, req) =>
+    req.validate() match {
+      case Success(_) => {
+        val createAction = memberDao.memberExists(None, Some(req.email)).flatMap {
+          case true => Future.successful(SignupResponse(false, Map("email" -> "error.inUse")))
+          case false => {
+            val createdAt = currentTimestamp()
+            val member = Member(None, req.name, None, None, Some(req.email), None, None, None, false, false, createdAt, createdAt)
 
-                    SignupResponse(true, Map.empty)
-                  }
-                }
-              }
-              case Failure(reason) => SignupResponse(false, reason.list.toList.toMap)
+            memberDao.create(member).map { _ =>
+              SignupResponse(true, Map.empty)
             }
           }
         }
+
+        onSuccess(createAction) { result =>
+          complete(result)
+        }
       }
+      case Failure(reason) => complete(SignupResponse(false, reason.list.toList.toMap))
     }
   }
 
