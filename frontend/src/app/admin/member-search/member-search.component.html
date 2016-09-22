@@ -10,7 +10,7 @@
     </li>
     <li *ngFor="let result of displayedSearchResults">
       <a href="#" (click)="$event.preventDefault(); searchResultSelected(result)" [ngClass]="{'chosen': result.chosen}">
-        {{ result.name }} ({{ result.phoneNumber || 'None' }} - {{ result.email || 'None' }})
+        {{ result.firstName }} {{ result.lastName }} ({{ result.phoneNumber || 'None' }} - {{ result.email || 'None' }})
       </a>
     </li>
 
