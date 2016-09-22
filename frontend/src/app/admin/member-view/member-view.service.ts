@@ -37,6 +37,33 @@ export class Member {
   }
 }
 
+export class TextMessage {
+  uuid: string;
+  memberUuid: string;
+  massTextUuid: string;
+  status: number;
+  toNumber: string;
+  fromNumber: string;
+  message: string;
+  externalId: string;
+  createdAt: moment.Moment;
+  updatedAt: moment.Moment;
+
+  constructor(uuid: string, memberUuid: string, massTextUuid: string, status: number, toNumber: string, fromNumber: string,
+              message: string, externalId: string, createdAt: moment.Moment, updatedAt: moment.Moment) {
+    this.uuid = uuid;
+    this.memberUuid = memberUuid;
+    this.massTextUuid = massTextUuid;
+    this.status = status;
+    this.toNumber = toNumber;
+    this.fromNumber = fromNumber;
+    this.message = message;
+    this.externalId = externalId;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+  }
+}
+
 export abstract class MemberViewService extends BaseService {
 
   constructor(http: Http, apiKeyService: ApiKeyService) {
@@ -45,19 +72,22 @@ export abstract class MemberViewService extends BaseService {
 
   abstract getMember(uuid: string): Observable<Member>
 
+  abstract getTextMessages(uuid: string): Observable<TextMessage[]>
+
 }
 
 @Injectable()
 export class MemberViewServiceImpl extends MemberViewService {
 
-  private url = 'http://localhost:8080/api/v1/members/{{uuid}}';
+  private getUrl = 'http://localhost:8080/api/v1/members/{{uuid}}';
+  private textMessagesUrl = this.getUrl + '/text-messages';
 
   constructor(http: Http, apiKeyService: ApiKeyService) {
     super(http, apiKeyService);
   }
 
   getMember(uuid: string): Observable<Member> {
-    return this.get(this.url.replace('{{uuid}}', uuid))
+    return this.get(this.getUrl.replace('{{uuid}}', uuid))
       .map(r => {
         let rawMember = this.extractJson<Member>(r);
 
@@ -66,6 +96,21 @@ export class MemberViewServiceImpl extends MemberViewService {
         rawMember.updatedAt = rawMember.updatedAt == null ? null : moment(rawMember.updatedAt);
 
         return rawMember;
+      })
+      .catch(this.handleError());
+  }
+
+  getTextMessages(uuid: string): Observable<TextMessage[]> {
+    return this.get(this.textMessagesUrl.replace('{{uuid}}', uuid))
+      .map(r => {
+        let rawMessages = this.extractJson<TextMessage[]>(r);
+
+        return rawMessages.map(message => {
+          message.createdAt = message.createdAt == null ? null : moment(message.createdAt);
+          message.updatedAt = message.updatedAt == null ? null : moment(message.updatedAt);
+
+          return message;
+        });
       })
       .catch(this.handleError());
   }

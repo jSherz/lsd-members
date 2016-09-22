@@ -3,6 +3,13 @@
 @import '../../../assets/css/neat/neat'
 @import '../../../assets/css/variables'
 
+dt, dd
+  display: block
+  float: left
+
+dt
+  clear: left
+
 #member-view
   @include span-columns(12)
   background: white
@@ -12,17 +19,36 @@
   h2
     margin-bottom: 0.1em
 
-dt, dd
-  display: block
-  float: left
-  padding: 0.2em
-  margin-bottom: 0.5em
+  #member-info
+    dt, dd
+      padding: 0.2em
+      margin-bottom: 0.5em
 
-dt
+    dt
+      background-color: #eeeeee
+      border-radius: 0.5em
+      margin-right: 0.5em
+
+    dd
+      border-bottom: 0.1em dotted #ccc
+
+h3
   clear: left
-  background-color: #eeeeee
-  border-radius: 0.5em
-  margin-right: 0.5em
 
-dd
-  border-bottom: 0.1em dotted #ccc
+#member-texts
+  li
+    margin-bottom: 1em
+
+  dt, dd
+    margin-bottom: 0.2em
+
+  dd.text-message-content
+    width: 100%
+    padding: 0.5em
+    background: #eee
+
+  dt:after
+    content: ':'
+
+  dt
+    margin-right: 0.7em

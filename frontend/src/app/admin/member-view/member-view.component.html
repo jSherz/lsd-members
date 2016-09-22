@@ -1,7 +1,7 @@
 <div id="member-view">
   <h2>Member view</h2>
 
-  <dl *ngIf="member">
+  <dl *ngIf="member" id="member-info">
     <dt title="A unique identifier for this member.">UUID</dt>
     <dd>{{ member.uuid }}</dd>
 
@@ -39,6 +39,32 @@
     <dt title="The date & time this member's record was last updated.">Organiser</dt>
     <dd>{{ member.updatedAt.format('MMMM Do YYYY, h:mm:ss a') }}</dd>
   </dl>
+
+  <h3 *ngIf="member">Text messages</h3>
+
+  <ul id="member-texts" *ngIf="textMessages">
+    <li *ngFor="let textMessage of textMessages">
+      <dl>
+        <dt>Status</dt>
+        <dd>{{ parseStatus(textMessage.status) }}</dd>
+
+        <dt>To</dt>
+        <dd>{{ textMessage.toNumber }}</dd>
+
+        <dt>From</dt>
+        <dd>{{ textMessage.fromNumber }}</dd>
+
+        <dt>Message</dt>
+        <dd class="text-message-content">{{ textMessage.message }}</dd>
+      </dl>
+
+      <div style="clear: left"></div>
+    </li>
+  </ul>
+
+  <p *ngIf="member && (textMessages == undefined || textMessages.length == 0)">
+    No text messages have been sent or received to / from this member.
+  </p>
 
   <p *ngIf="member == undefined">Loading...</p>
 </div>
