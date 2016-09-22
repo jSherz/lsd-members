@@ -34,7 +34,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
 import com.jsherz.luskydive.core.{Member, TextMessage}
 import com.jsherz.luskydive.json.MemberSearchRequest
-import com.jsherz.luskydive.json.TextMessageJsonSupport._
+import com.jsherz.luskydive.json.MemberJsonSupport._
 
 import scalaz.{-\/, \/-}
 
@@ -44,8 +44,6 @@ import scalaz.{-\/, \/-}
 class MemberApi(private val memberDao: MemberDao,
                 private val textMessageDao: TextMessageDao)
                (implicit ec: ExecutionContext, authDirective: Directive1[UUID]) {
-
-  import com.jsherz.luskydive.json.MemberJsonSupport._
 
   val searchRoute = path("search") {
     post {
