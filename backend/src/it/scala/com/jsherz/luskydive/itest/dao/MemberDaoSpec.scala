@@ -119,7 +119,7 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       result.futureValue shouldBe None
     }
 
-    "generates a valid UUID (if not supplied) and inserts a member with the correct information" in {
+    "generate a valid UUID (if not supplied) and inserts a member with the correct information" in {
       val createdAt = Timestamp.valueOf("2009-01-20 10:19:59.10101")
       val updatedAt = Timestamp.valueOf("2009-01-21 18:10:10.123814")
 
@@ -132,7 +132,7 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       result.isDefined shouldBe true
 
       val foundMember = dao.get(result.get)
-      foundMember.futureValue shouldBe Some(member.copy(uuid = Some(result.get)))
+      foundMember.futureValue shouldBe \/-(Some(member.copy(uuid = Some(result.get))))
     }
 
     "uses the supplied UUID (if provided) and inserts a member with the correct information" in {
@@ -148,7 +148,7 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       result.isDefined shouldBe true
 
       val foundMember = dao.get(result.get)
-      foundMember.futureValue shouldBe Some(member)
+      foundMember.futureValue shouldBe \/-(Some(member))
     }
 
     "generates a different UUID with each creation" in {
@@ -186,13 +186,13 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
     "return None if the member was not found" in {
       val member = dao.get(UUID.fromString("d8418dda-aed4-4e58-9dc1-38a8ea720120"))
 
-      member.futureValue shouldBe None
+      member.futureValue shouldBe \/-(None)
     }
 
     "return Some(member) if a valid UUID was given" in {
       val member = dao.get(UUID.fromString("0d0fa940-6d3f-45f9-9be0-07b08ec4e240"))
 
-      member.futureValue shouldEqual Some(Util.fixture[Member]("0d0fa940.json"))
+      member.futureValue shouldEqual \/-(Some(Util.fixture[Member]("0d0fa940.json")))
     }
 
   }
