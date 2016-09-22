@@ -27,20 +27,22 @@ package com.jsherz.luskydive.apis
 import java.util.UUID
 
 import akka.http.scaladsl.model.StatusCodes
-import com.jsherz.luskydive.dao.{MemberDao, MemberDaoErrors}
+import com.jsherz.luskydive.dao.{MemberDao, MemberDaoErrors, TextMessageDao}
 
 import scala.concurrent.ExecutionContext
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
-import com.jsherz.luskydive.core.Member
+import com.jsherz.luskydive.core.{Member, TextMessage}
 import com.jsherz.luskydive.json.MemberSearchRequest
+import com.jsherz.luskydive.json.TextMessageJsonSupport._
 
 import scalaz.{-\/, \/-}
 
 /**
   * Used to retrieve member information.
   */
-class MemberApi(private val memberDao: MemberDao)
+class MemberApi(private val memberDao: MemberDao,
+                private val textMessageDao: TextMessageDao)
                (implicit ec: ExecutionContext, authDirective: Directive1[UUID]) {
 
   import com.jsherz.luskydive.json.MemberJsonSupport._
@@ -76,9 +78,17 @@ class MemberApi(private val memberDao: MemberDao)
     }
   }
 
+  val textMessagesRoute = (path(JavaUUID / "text-messages") & get & authDirective) { (memberUuid, _) =>
+    onSuccess(textMessageDao.forMember(memberUuid)) {
+      case \/-(textMessages: Seq[TextMessage]) => complete(textMessages)
+      case -\/(error) => complete(StatusCodes.InternalServerError, error)
+    }
+  }
+
   val route: Route = pathPrefix("members") {
     searchRoute ~
-      getRoute
+      getRoute ~
+      textMessagesRoute
   }
 
 }

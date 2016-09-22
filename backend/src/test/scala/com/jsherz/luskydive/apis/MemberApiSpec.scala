@@ -24,20 +24,19 @@
 
 package com.jsherz.luskydive.apis
 
-import java.sql.Date
 import java.util.UUID
 
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import com.jsherz.luskydive.core.Member
-import com.jsherz.luskydive.dao.StubMemberDao
+import com.jsherz.luskydive.core.{Member, TextMessage}
+import com.jsherz.luskydive.dao.{StubMemberDao, StubTextMessageDao}
 import com.jsherz.luskydive.json.MemberSearchRequest
 import com.jsherz.luskydive.json.MemberJsonSupport._
 import com.jsherz.luskydive.util.AuthenticationDirectives
 import org.mockito.Matchers.any
 import org.mockito.Mockito
-import org.mockito.Mockito.{never, verify, times}
+import org.mockito.Mockito.{never, times, verify}
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
 
 import scala.concurrent.ExecutionContext
@@ -55,17 +54,21 @@ class MemberApiSpec extends WordSpec with Matchers with ScalatestRouteTest with 
   private val getUrl = "/members/" + StubMemberDao.getExistsUuid.toString
   private val getUrlNotFound = "/members/" + StubMemberDao.getNotFoundUuid.toString
   private val getUrlError = "/members/" + StubMemberDao.getErrorUuid.toString
+  private val textMessagesUrl = s"/members/${StubTextMessageDao.forMemberUuid}/text-messages"
+  private val textMessagesNotFoundUrl = s"/members/${StubTextMessageDao.forMemberNotFoundUuid}/text-messages"
+  private val textMessagesErrorUrl = s"/members/${StubTextMessageDao.forMemberErrorUuid}/text-messages"
 
   trait Fixtured {
     val dao = Mockito.spy(new StubMemberDao())
-    val route = new MemberApi(dao).route
+    val textMessageDao = Mockito.spy(new StubTextMessageDao())
+    val route = new MemberApi(dao, textMessageDao).route
   }
 
   "MembersApi#search" should {
 
     "require authentication" in new Fixtured {
       implicit val authDirective = AuthenticationDirectives.denyAll
-      override val route = new MemberApi(dao).route
+      override val route = new MemberApi(dao, textMessageDao).route
 
       Post(searchUrl) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.Unauthorized
@@ -118,7 +121,7 @@ class MemberApiSpec extends WordSpec with Matchers with ScalatestRouteTest with 
 
     "require authentication" in new Fixtured {
       implicit val authDirective = AuthenticationDirectives.denyAll
-      override val route = new MemberApi(dao).route
+      override val route = new MemberApi(dao, textMessageDao).route
 
       Get(getUrl) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.Unauthorized
@@ -159,6 +162,53 @@ class MemberApiSpec extends WordSpec with Matchers with ScalatestRouteTest with 
 
     "return 500 when the lookup fails" in new Fixtured {
       Get(getUrlError) ~> route ~> check {
+        response.status shouldEqual StatusCodes.InternalServerError
+      }
+    }
+
+  }
+
+  "MemberApi#textMessages" should {
+
+    "require authentication" in new Fixtured {
+      implicit val authDirective = AuthenticationDirectives.denyAll
+      override val route = new MemberApi(dao, textMessageDao).route
+
+      Get(textMessagesUrl) ~> Route.seal(route) ~> check {
+        response.status shouldEqual StatusCodes.Unauthorized
+      }
+
+      verify(textMessageDao, never()).forMember(any[UUID])
+    }
+
+    "return method not allowed when used with anything other than GET" in new Fixtured {
+      Seq(Post, Put, Delete, Patch).foreach { method =>
+        method(textMessagesUrl) ~> Route.seal(route) ~> check {
+          response.status shouldEqual StatusCodes.MethodNotAllowed
+        }
+      }
+
+      verify(textMessageDao, never()).forMember(any[UUID])
+    }
+
+    "return the correct text messages if the member UUID is a match" in new Fixtured {
+      Get(textMessagesUrl) ~> route ~> check {
+        response.status shouldEqual StatusCodes.OK
+
+        responseAs[Seq[TextMessage]] shouldEqual StubTextMessageDao.forMember
+      }
+    }
+
+    "return an empty list if the member doesn't exist" in new Fixtured {
+      Get(textMessagesNotFoundUrl) ~> route ~> check {
+        response.status shouldEqual StatusCodes.OK
+
+        responseAs[Seq[TextMessage]] shouldEqual Seq.empty
+      }
+    }
+
+    "return 500 when the lookup fails" in new Fixtured {
+      Get(textMessagesErrorUrl) ~> route ~> check {
         response.status shouldEqual StatusCodes.InternalServerError
       }
     }
