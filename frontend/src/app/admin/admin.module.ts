@@ -34,6 +34,7 @@ import {
   SignupServiceImpl,
   MemberSearchService,
   MemberSearchServiceImpl,
+  MemberLookupComponent,
   MemberViewComponent,
   CourseService,
   CourseServiceImpl,
@@ -50,7 +51,6 @@ import {
 } from './';
 
 import {adminRouting} from './admin.routing';
-import {} from "./member-view/member-view.service";
 
 @NgModule({
   imports: [
@@ -74,7 +74,8 @@ import {} from "./member-view/member-view.service";
     SignupComponent,
     SignupAltComponent,
     ThankYouComponent,
-    MemberViewComponent
+    MemberViewComponent,
+    MemberLookupComponent
   ],
   bootstrap: [],
   providers: [

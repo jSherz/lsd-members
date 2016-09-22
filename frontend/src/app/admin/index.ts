@@ -37,7 +37,8 @@ export {
 export {
   MemberSearchService,
   MemberSearchServiceImpl,
-  MemberSearchComponent
+  MemberSearchComponent,
+  MemberLookupComponent
 } from './member-search';
 
 export {

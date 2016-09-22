@@ -13,7 +13,8 @@ import {
   SignupComponent,
   SignupAltComponent,
   ThankYouComponent,
-  MemberViewComponent
+  MemberViewComponent,
+  MemberLookupComponent
 } from './';
 
 
@@ -28,6 +29,7 @@ export const adminRoutes: Routes = [
       {path: 'courses/add', component: CourseAddComponent, canActivate: [CanActivateAdmin]},
       {path: 'courses/:uuid', component: CourseViewComponent, canActivate: [CanActivateAdmin]},
       {path: 'mass-text', component: MassTextComponent, canActivate: [CanActivateAdmin]},
+      {path: 'members/lookup', component: MemberLookupComponent, canActivate: [CanActivateAdmin]},
       {path: 'members/:uuid', component: MemberViewComponent, canActivate: [CanActivateAdmin]}
     ]
   },
