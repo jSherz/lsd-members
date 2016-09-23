@@ -77,10 +77,18 @@ trait MemberDao {
     */
   def search(term: String): Future[String \/ Seq[MemberSearchResult]]
 
+  /**
+    * Look for a member with the given phone number.
+    *
+    * @param phoneNumber
+    * @return
+    */
+  def forPhoneNumber(phoneNumber: String): Future[String \/ Option[Member]]
+
 }
 
 class MemberDaoImpl(override protected val databaseService: DatabaseService)
-                        (implicit ec: ExecutionContext, implicit val log: LoggingAdapter)
+                   (implicit ec: ExecutionContext, implicit val log: LoggingAdapter)
   extends Tables(databaseService) with MemberDao {
 
   import driver.api._
@@ -157,6 +165,16 @@ class MemberDaoImpl(override protected val databaseService: DatabaseService)
     } else {
       Future(-\/(MemberDaoErrors.invalidSearchTerm))
     }
+  }
+
+  /**
+    * Look for a member with the given phone number.
+    *
+    * @param phoneNumber
+    * @return
+    */
+  override def forPhoneNumber(phoneNumber: String): Future[String \/ Option[Member]] = {
+    db.run(Members.filter(_.phoneNumber === phoneNumber).result.headOption) withServerError
   }
 
 }

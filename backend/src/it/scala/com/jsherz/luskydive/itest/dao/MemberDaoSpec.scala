@@ -240,4 +240,22 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
   }
 
+  "MemberDao#forPhoneNumber" should {
+
+    "return Right(Some(member)) if a member exists with the phone number" in {
+      val member = dao.forPhoneNumber("+447526188767").futureValue
+
+      member.isRight shouldBe true
+      member.map(_ shouldEqual Some(Util.fixture[Member]("e5b8abf1.json")))
+    }
+
+    "return Right(None) if a member isn't found with the given phone number" in {
+      val member = dao.forPhoneNumber("+447888888888").futureValue
+
+      member.isRight shouldBe true
+      member.map(_ shouldEqual None)
+    }
+
+  }
+
 }

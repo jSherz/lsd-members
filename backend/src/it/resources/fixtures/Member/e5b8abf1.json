@@ -1,0 +1,12 @@
+{
+  "uuid": "e5b8abf1-1fa3-4a77-86f7-13d253884c25",
+  "firstName": "Chad",
+  "lastName": "Poole",
+  "email": "robertodonnell@hotmail.com",
+  "phoneNumber": "+447526188767",
+  "lastJump": "2014-07-03",
+  "driver": true,
+  "organiser": false,
+  "createdAt": "2009-12-13 21:04:05.000000",
+  "updatedAt": "2011-01-16 17:02:28.000000"
+}
