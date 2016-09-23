@@ -87,6 +87,9 @@ lazy val root = (project in file("."))
         // Phone number parsing
         "com.googlecode.libphonenumber" % "libphonenumber" % "7.4.1",
 
+        // Sending & receiving SMS
+        "com.twilio.sdk" % "twilio" % "7.0.0-rc-27",
+
         // Testing frameworks
         "org.scalactic" %% "scalactic"    % "2.2.6",
         "org.scalatest" %% "scalatest"    % "2.2.6"   % "it,test",
