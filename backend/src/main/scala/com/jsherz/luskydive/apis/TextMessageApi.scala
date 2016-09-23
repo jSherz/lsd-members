@@ -28,7 +28,6 @@ import akka.http.scaladsl.model.StatusCodes
 
 import scala.concurrent.ExecutionContext
 import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server._
 import com.jsherz.luskydive.dao.TextMessageDao
 
 /**
