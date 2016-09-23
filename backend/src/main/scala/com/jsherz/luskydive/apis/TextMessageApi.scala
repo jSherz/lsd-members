@@ -22,26 +22,32 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.util
+package com.jsherz.luskydive.apis
 
-import com.typesafe.config.ConfigFactory
+import akka.http.scaladsl.model.StatusCodes
+
+import scala.concurrent.ExecutionContext
+import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.server._
+import com.jsherz.luskydive.dao.TextMessageDao
 
 /**
-  * The application configuration, as read from resources/application.conf.
+  * Handles querying of text messages & incoming messages delivered by a provider.
   */
-trait Config {
+class TextMessageApi(val textMessageDao: TextMessageDao,
+                     val validApiKey: String)
+                    (implicit ec: ExecutionContext) {
 
-  private val config = ConfigFactory.load()
-  private val configHttp = config.getConfig("http")
-  private val configDb = config.getConfig("database")
+  val receiveRoute = (path("receive" / Remaining) & post) { (apiKey: String) =>
+    if (apiKey.isEmpty || !validApiKey.equals(apiKey)) {
+      complete(StatusCodes.Unauthorized, "Unauthorized.")
+    } else {
+      complete("OK")
+    }
+  }
 
-  val interface = configHttp.getString("interface")
-  val port = configHttp.getInt("port")
-
-  val dbUrl = configDb.getString("url")
-  val dbUsername = configDb.getString("username")
-  val dbPassword = configDb.getString("password")
-
-  val textMessageReceiveApiKey = config.getString("text_message_receive_api_key")
+  val route = pathPrefix("text-messages") {
+    receiveRoute
+  }
 
 }

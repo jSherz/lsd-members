@@ -65,7 +65,7 @@ object Main extends App with Config {
   val textMessageDao = new TextMessageDaoImpl(databaseService)
 
   val httpService = new HttpService(memberDao, courseDao, committeeMemberDao, courseSpaceDao, authDao, massTextDao,
-    textMessageDao)
+    textMessageDao, textMessageReceiveApiKey)
 
   Http().bindAndHandle(httpService.routes, interface, port)
 

@@ -24,18 +24,47 @@
 
 package com.jsherz.luskydive.apis
 
+import akka.http.scaladsl.model.StatusCodes
+import akka.http.scaladsl.server.Route
+import akka.http.scaladsl.testkit.ScalatestRouteTest
+import com.jsherz.luskydive.dao.StubTextMessageDao
 import org.scalatest.{Matchers, WordSpec}
 
 
-class TextMessageApiSpec extends WordSpec with Matchers {
+class TextMessageApiSpec extends WordSpec with Matchers with ScalatestRouteTest {
 
-  "TextMessageApiReceive" should {
+  trait Fixtured {
+    val validApiKey = "1248ytyghbjiytrfdcgvhiuojknygt6r5"
 
-    "not require the standard API key authentication" is pending
+    val dao = new StubTextMessageDao()
+    val route = new TextMessageApi(dao, validApiKey).route
+  }
 
-    "reject requests without a receiving secret" is pending
+  "TextMessageApi#receive" should {
 
-    "reject requests with an invalid receiving secret" is pending
+    "not require the standard API key authentication" in new Fixtured {
+      Post("/text-messages/receive/" + validApiKey) ~> Route.seal(route) ~> check {
+        response.status shouldBe StatusCodes.OK
+      }
+    }
+
+    "reject requests without a receiving secret" in new Fixtured {
+      Post("/text-messages/receive/") ~> Route.seal(route) ~> check {
+        response.status shouldBe StatusCodes.Unauthorized
+        responseAs[String] shouldEqual "Unauthorized."
+      }
+
+      Post("/text-messages/receive") ~> Route.seal(route) ~> check {
+        response.status shouldBe StatusCodes.NotFound
+      }
+    }
+
+    "reject requests with an invalid receiving secret" in new Fixtured {
+      Post("/text-messages/receive/asdf598y7ghbjnoi9u8y7ghb") ~> Route.seal(route) ~> check {
+        response.status shouldBe StatusCodes.Unauthorized
+        responseAs[String] shouldEqual "Unauthorized."
+      }
+    }
 
     "accept and save text messages with the correct information" is pending
 
