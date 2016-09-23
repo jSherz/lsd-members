@@ -189,6 +189,7 @@ class MassTextDaoImpl(protected override val databaseService: DatabaseService)
       "PENDING", // TODO: Replace with optional type
       message,
       None,
+      fromMember = false,
       createdAt,
       createdAt
     )

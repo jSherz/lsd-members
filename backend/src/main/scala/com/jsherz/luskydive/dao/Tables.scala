@@ -162,11 +162,13 @@ class Tables(protected val databaseService: DatabaseService) {
 
     def externalId: Rep[Option[String]] = column[Option[String]]("external_id")
 
+    def fromMember: Rep[Boolean] = column[Boolean]("from_member")
+
     def createdAt: Rep[Timestamp] = column[Timestamp]("created_at")
 
     def updatedAt: Rep[Timestamp] = column[Timestamp]("updated_at")
 
-    def * = (uuid.?, memberUuid, massTextUuid, status, toNumber, fromNumber, message, externalId, createdAt,
+    def * = (uuid.?, memberUuid, massTextUuid, status, toNumber, fromNumber, message, externalId, fromMember, createdAt,
       updatedAt) <> (TextMessage.tupled, TextMessage.unapply)
 
   }

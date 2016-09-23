@@ -8,6 +8,7 @@
     "fromNumber": "PENDING",
     "message": "Hello, Lance. How are you?! - Reply 'NOFUN' to stop these messages",
     "externalId": null,
+    "fromMember": false,
     "createdAt": "2016-09-09 21:50:55.000000",
     "updatedAt": "2016-09-09 21:50:55.000000"
   },
@@ -20,6 +21,7 @@
     "fromNumber": "PENDING",
     "message": "Hello, Jennifer. How are you?! - Reply 'NOFUN' to stop these messages",
     "externalId": null,
+    "fromMember": false,
     "createdAt": "2016-09-09 21:50:55.000000",
     "updatedAt": "2016-09-09 21:50:55.000000"
   },
@@ -32,6 +34,7 @@
     "fromNumber": "PENDING",
     "message": "Hello, Nicole. How are you?! - Reply 'NOFUN' to stop these messages",
     "externalId": null,
+    "fromMember": false,
     "createdAt": "2016-09-09 21:50:55.000000",
     "updatedAt": "2016-09-09 21:50:55.000000"
   },
@@ -44,6 +47,7 @@
     "fromNumber": "PENDING",
     "message": "Hello, Luke. How are you?! - Reply 'NOFUN' to stop these messages",
     "externalId": null,
+    "fromMember": false,
     "createdAt": "2016-09-09 21:50:55.000000",
     "updatedAt": "2016-09-09 21:50:55.000000"
   },
@@ -56,6 +60,7 @@
     "fromNumber": "PENDING",
     "message": "Hello, Kristen. How are you?! - Reply 'NOFUN' to stop these messages",
     "externalId": null,
+    "fromMember": false,
     "createdAt": "2016-09-09 21:50:55.000000",
     "updatedAt": "2016-09-09 21:50:55.000000"
   },
@@ -68,6 +73,7 @@
     "fromNumber": "PENDING",
     "message": "Hello, Ronald. How are you?! - Reply 'NOFUN' to stop these messages",
     "externalId": null,
+    "fromMember": false,
     "createdAt": "2016-09-09 21:50:55.000000",
     "updatedAt": "2016-09-09 21:50:55.000000"
   },
@@ -80,6 +86,7 @@
     "fromNumber": "PENDING",
     "message": "Hello, Melissa. How are you?! - Reply 'NOFUN' to stop these messages",
     "externalId": null,
+    "fromMember": false,
     "createdAt": "2016-09-09 21:50:55.000000",
     "updatedAt": "2016-09-09 21:50:55.000000"
   },
@@ -92,6 +99,7 @@
     "fromNumber": "PENDING",
     "message": "Hello, Miranda. How are you?! - Reply 'NOFUN' to stop these messages",
     "externalId": null,
+    "fromMember": false,
     "createdAt": "2016-09-09 21:50:55.000000",
     "updatedAt": "2016-09-09 21:50:55.000000"
   },
@@ -104,6 +112,7 @@
     "fromNumber": "PENDING",
     "message": "Hello, Diana. How are you?! - Reply 'NOFUN' to stop these messages",
     "externalId": null,
+    "fromMember": false,
     "createdAt": "2016-09-09 21:50:55.000000",
     "updatedAt": "2016-09-09 21:50:55.000000"
   },
@@ -116,6 +125,7 @@
     "fromNumber": "PENDING",
     "message": "Hello, Carolyn. How are you?! - Reply 'NOFUN' to stop these messages",
     "externalId": null,
+    "fromMember": false,
     "createdAt": "2016-09-09 21:50:55.000000",
     "updatedAt": "2016-09-09 21:50:55.000000"
   },
@@ -128,6 +138,7 @@
     "fromNumber": "PENDING",
     "message": "Hello, Clayton. How are you?! - Reply 'NOFUN' to stop these messages",
     "externalId": null,
+    "fromMember": false,
     "createdAt": "2016-09-09 21:50:55.000000",
     "updatedAt": "2016-09-09 21:50:55.000000"
   },
@@ -140,6 +151,7 @@
     "fromNumber": "PENDING",
     "message": "Hello, Amy. How are you?! - Reply 'NOFUN' to stop these messages",
     "externalId": null,
+    "fromMember": false,
     "createdAt": "2016-09-09 21:50:55.000000",
     "updatedAt": "2016-09-09 21:50:55.000000"
   }

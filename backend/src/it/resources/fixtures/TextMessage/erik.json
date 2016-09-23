@@ -8,6 +8,7 @@
     "fromNumber": "+447569214553",
     "message": "Hello Erik. This is a further test message!",
     "externalId": "TEXTMEISTER-5e45er6trtfgyuhiju7thu",
+    "fromMember": false,
     "createdAt": "2015-12-05 11:15:29.000000",
     "updatedAt": "2015-12-05 11:16:07.000000"
   },
@@ -20,6 +21,7 @@
     "fromNumber": "+447569214553",
     "message": "Hello Erik. This is a further test message!",
     "externalId": "TEXTMEISTER-u98yh899uuh12huey7u8ijnh1r",
+    "fromMember": false,
     "createdAt": "2015-12-04 10:27:11.000000",
     "updatedAt": "2015-12-04 10:29:01.000000"
   },
@@ -32,6 +34,7 @@
     "fromNumber": "+447569214553",
     "message": "Hello Erik. This is YET ANOTHER test message!",
     "externalId": "TEXTMEISTER-1418uijui9okjhyu9i14914jn",
+    "fromMember": false,
     "createdAt": "2015-12-04 10:10:11.000000",
     "updatedAt": "2015-12-04 10:10:25.000000"
   },
@@ -44,6 +47,7 @@
     "fromNumber": "+447569214553",
     "message": "Hello Erik. This is a test message!",
     "externalId": "TEXTMEISTER-19uh4jkwhdsgc89i1o324k2193j",
+    "fromMember": false,
     "createdAt": "2015-12-04 10:09:11.000000",
     "updatedAt": "2015-12-04 10:09:13.000000"
   },
@@ -56,6 +60,7 @@
     "fromNumber": "+447215123625",
     "message": "Hello, Erik Johnson. Is it me you're looking for? Come and join us for a weekend of TONNES of fun. You, us and 13,500ft of AAAAAAHHHHHH... followed by you saying \"OH MY THAT WAS THE BEST THING I'VE EVER DONE\" and we'll be like \"YEAH, TOLD YOU SO\" #freshers #skydiving #fun #anythingelseisboring #cancelyourplans - Reply \"NOFUN\" to stop these messages.",
     "externalId": "7a9b945c83788c828c80cde75dc00f06fa4260223831e83445637a87979f520d",
+    "fromMember": false,
     "createdAt": "2015-10-01 00:00:00.000000",
     "updatedAt": "2015-10-01 01:59:59.434844"
   }

@@ -7,6 +7,7 @@
   "fromNumber": "+447569214553",
   "message": "Hello Erik. This is YET ANOTHER test message!",
   "externalId": "TEXTMEISTER-1418uijui9okjhyu9i14914jn",
+  "fromMember": false,
   "createdAt": "2015-12-04 10:10:11.000000",
   "updatedAt": "2015-12-04 10:10:25.000000"
 }

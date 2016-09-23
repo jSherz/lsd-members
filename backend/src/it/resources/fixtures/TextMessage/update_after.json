@@ -7,6 +7,7 @@
   "fromNumber": "+447709483887",
   "message": "This text message has been modified! :O",
   "externalId": "AUTO-TEXT-SERVICE-11110001231841248",
+  "fromMember": true,
   "createdAt": "2016-09-01 08:30:01.000000",
   "updatedAt": "2016-09-01 08:30:59.141"
 }

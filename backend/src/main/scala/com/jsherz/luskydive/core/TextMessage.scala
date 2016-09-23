@@ -41,6 +41,7 @@ case class TextMessage(
                         // When the message is sent, this holds the external service's ID for the message
                         // e.g. Twilio's "msid"
                         externalId: Option[String],
+                        fromMember: Boolean,
                         createdAt: Timestamp,
                         updatedAt: Timestamp
                       )

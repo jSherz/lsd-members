@@ -42,7 +42,7 @@ object MemberJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val MemberFormat = jsonFormat12(Member)
   implicit val MemberSearchResultFormat = jsonFormat5(MemberSearchResult)
   implicit val MemberSearchRequestFormat = jsonFormat1(MemberSearchRequest)
-  implicit val textMessageFormat = jsonFormat10(TextMessage)
+  implicit val textMessageFormat = jsonFormat11(TextMessage)
 
 }
 

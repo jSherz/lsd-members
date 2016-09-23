@@ -49,7 +49,7 @@ object MassTextsJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val tryFilterRequestFormat = jsonFormat2(TryFilterRequest)
   implicit val tryFilterResponseFormat = jsonFormat3(TryFilterResponse)
   implicit val massTextFormat = jsonFormat4(MassText)
-  implicit val textMessageFormat = jsonFormat10(TextMessage)
+  implicit val textMessageFormat = jsonFormat11(TextMessage)
   implicit val massTextSendRequestFormat = jsonFormat4(MassTextSendRequest)
   implicit val massTextSendResponseFormat = jsonFormat3(MassTextSendResponse)
 

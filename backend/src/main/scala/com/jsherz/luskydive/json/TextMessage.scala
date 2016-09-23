@@ -34,6 +34,6 @@ object TextMessageJsonSupport extends DefaultJsonProtocol with SprayJsonSupport 
 
   implicit val UuidFormat = UuidJsonFormat
   implicit val TimestampFormat = TimestampJsonFormat
-  implicit val TextMessageFormat = jsonFormat10(TextMessage)
+  implicit val TextMessageFormat = jsonFormat11(TextMessage)
 
 }
