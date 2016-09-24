@@ -56,12 +56,7 @@ lazy val root = (project in file("."))
     libraryDependencies ++= {
       Seq(
         // Utils
-        "com.google.guava" %  "guava"       % "19.0",
-        "org.scalaz"       %% "scalaz-core" % "7.2.4",
-
-        // DI
-        "org.scaldi"         %% "scaldi"          % scaldiV,
-        "org.scaldi"         %% "scaldi-akka"     % scaldiV,
+        "org.scalaz" %% "scalaz-core" % "7.2.4",
 
         // Web framework
         "com.typesafe.akka" %% "akka-actor"                        % akkaV,
@@ -73,9 +68,6 @@ lazy val root = (project in file("."))
         "com.typesafe.akka" %% "akka-http-experimental"            % akkaV,
         "com.typesafe.akka" %% "akka-http-spray-json-experimental" % akkaV,
         "ch.megard" %% "akka-http-cors" % "0.1.4",
-
-        "io.dropwizard.metrics" % "metrics-core" % metricsV,
-        "io.dropwizard.metrics" % "metrics-healthchecks" % metricsV,
 
         // Logging
         "ch.qos.logback" % "logback-classic" % "1.1.3",
