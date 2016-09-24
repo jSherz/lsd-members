@@ -117,6 +117,8 @@ class TextMessageApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
         message.fromNumber shouldEqual StubMemberDao.forPhoneNumber
         message.externalId shouldEqual Some("SMf35b148y12h123412jdf87sdf7sdfhhu")
         message.message shouldEqual "Hello, world!"
+        message.fromMember shouldBe true
+        message.massTextUuid shouldBe None
 
         response.status shouldBe StatusCodes.OK
         response.entity.contentType shouldEqual ContentTypes.`text/xml(UTF-8)`

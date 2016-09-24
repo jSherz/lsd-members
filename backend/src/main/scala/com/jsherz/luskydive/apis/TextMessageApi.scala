@@ -106,7 +106,7 @@ class TextMessageApi(val textMessageDao: TextMessageDao,
       from,
       body,
       Some(externalSid),
-      fromMember = false,
+      fromMember = true,
       now,
       now
     )
