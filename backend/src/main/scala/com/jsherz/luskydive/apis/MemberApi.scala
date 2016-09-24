@@ -60,7 +60,7 @@ class MemberApi(private val memberDao: MemberDao,
               }
             }
           } else {
-            log.info(s"Search request too small: '${req.searchTerm}")
+            log.info(s"Search request too small: '${req.searchTerm}'")
 
             complete(StatusCodes.BadRequest, MemberDaoErrors.invalidSearchTerm)
           }
