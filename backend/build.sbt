@@ -50,6 +50,9 @@ lazy val root = (project in file("."))
 
     wartremoverErrors ++= Warts.all,
 
+    mainClass in (Compile, run) := Some("com.jsherz.luskydive.Main"),
+    mainClass in assembly := Some("com.jsherz.luskydive.Main"),
+
     libraryDependencies ++= {
       Seq(
         // Utils

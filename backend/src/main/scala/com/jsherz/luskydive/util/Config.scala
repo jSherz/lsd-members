@@ -34,6 +34,7 @@ trait Config {
   private val config = ConfigFactory.load()
   private val configHttp = config.getConfig("http")
   private val configDb = config.getConfig("database")
+  private val configTwilio = config.getConfig("twilio")
 
   val interface = configHttp.getString("interface")
   val port = configHttp.getInt("port")
@@ -43,5 +44,9 @@ trait Config {
   val dbPassword = configDb.getString("password")
 
   val textMessageReceiveApiKey = config.getString("text_message_receive_api_key")
+
+  val twilioAccountSid = configTwilio.getString("account_sid")
+  val twilioAuthToken = configTwilio.getString("auth_token")
+  val twilioMessagingServiceSid = configTwilio.getString("messaging_service_sid")
 
 }
