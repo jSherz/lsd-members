@@ -29,17 +29,15 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 import akka.event.LoggingAdapter
-import akka.http.scaladsl.model.StatusCodes
-
-import scala.concurrent.{ExecutionContext, Future}
+import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse, StatusCodes}
 import akka.http.scaladsl.server.Directives._
 import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.{Member, TextMessage, TextMessageStatuses}
 import com.jsherz.luskydive.dao.{MemberDao, TextMessageDao}
-import com.jsherz.luskydive.json.TextMessageJsonSupport._
 import com.jsherz.luskydive.util.EitherFutureExtensions._
 
-import scalaz.{-\/, \/, \/-}
+import scala.concurrent.{ExecutionContext, Future}
+import scalaz.{-\/, \/-}
 
 
 /**
@@ -84,7 +82,7 @@ class TextMessageApi(val textMessageDao: TextMessageDao,
         }
 
         onSuccess(lookupAndInsert) {
-          case \/-(uuid) => complete(uuid)
+          case \/-(uuid) => complete(HttpResponse(entity = HttpEntity(ContentTypes.`text/xml(UTF-8)`, uuid)))
           case -\/(TextMessageApiErrors.receiveMemberNotFound) => complete(StatusCodes.NotFound, TextMessageApiErrors.receiveMemberNotFound)
           case -\/(error) => complete(StatusCodes.InternalServerError, error)
         }

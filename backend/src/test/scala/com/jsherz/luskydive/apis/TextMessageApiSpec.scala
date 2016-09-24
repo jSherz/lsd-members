@@ -26,7 +26,8 @@ package com.jsherz.luskydive.apis
 
 import akka.actor.ActorSystem
 import akka.event.{Logging, LoggingAdapter}
-import akka.http.scaladsl.model.{FormData, StatusCodes, Uri}
+import akka.http.scaladsl.model.headers.HttpEncodings
+import akka.http.scaladsl.model.{ContentTypes, FormData, StatusCodes, Uri}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.jsherz.luskydive.core.{TextMessage, TextMessageStatuses}
@@ -117,6 +118,8 @@ class TextMessageApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
         message.externalId shouldEqual Some("SMf35b148y12h123412jdf87sdf7sdfhhu")
         message.message shouldEqual "Hello, world!"
 
+        response.status shouldBe StatusCodes.OK
+        response.entity.contentType shouldEqual ContentTypes.`text/xml(UTF-8)`
         responseAs[String] shouldEqual "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!-- Recorded as " + message.uuid.get + " --><Response></Response>"
       }
     }
