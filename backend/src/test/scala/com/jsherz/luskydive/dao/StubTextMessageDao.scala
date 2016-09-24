@@ -26,6 +26,7 @@ package com.jsherz.luskydive.dao
 
 import java.util.UUID
 
+import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.TextMessage
 import com.jsherz.luskydive.util.Util
 import com.jsherz.luskydive.json.TextMessageJsonSupport._
@@ -42,7 +43,9 @@ class StubTextMessageDao extends TextMessageDao {
 
   override def get(uuid: UUID): Future[\/[String, Option[TextMessage]]] = ???
 
-  override def insert(textMessage: TextMessage): Future[\/[String, UUID]] = ???
+  override def insert(textMessage: TextMessage): Future[\/[String, UUID]] = {
+    Future.successful(\/-(textMessage.uuid.get))
+  }
 
   override def forMember(memberUuid: UUID): Future[String \/ Seq[TextMessage]] = {
     Future.successful {

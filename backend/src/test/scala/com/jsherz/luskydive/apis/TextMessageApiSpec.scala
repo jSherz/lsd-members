@@ -24,26 +24,50 @@
 
 package com.jsherz.luskydive.apis
 
+import akka.actor.ActorSystem
+import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import com.jsherz.luskydive.dao.StubTextMessageDao
+import com.jsherz.luskydive.core.{TextMessage, TextMessageStatuses}
+import com.jsherz.luskydive.dao.{MemberDao, StubMemberDao, StubTextMessageDao, TextMessageDao}
+import org.mockito.{ArgumentCaptor, Mockito}
+import org.mockito.Mockito.{never, verify}
+import org.mockito.Matchers.any
 import org.scalatest.{Matchers, WordSpec}
+
+import scala.concurrent.ExecutionContext
 
 
 class TextMessageApiSpec extends WordSpec with Matchers with ScalatestRouteTest {
 
-  trait Fixtured {
-    val validApiKey = "1248ytyghbjiytrfdcgvhiuojknygt6r5"
+  val validApiKey = "1248ytyghbjiytrfdcgvhiuojknygt6r5"
+  val validReceiveUrl = s"/text-messages/receive/${validApiKey}?SmsMessageSid=SM11h1f5jasfh782y35hdfw235jhdf" +
+    s"h51j&NumMedia=0&ToCity=&FromZip=&SmsSid=SMr1j54i1j4124ujijdfu235jkksjf914j&FromState=&SmsStatus=received&Fr" +
+    s"omCity=&Body=Hello,+world!&FromCountry=GB&To=%2B447123123123&MessagingServiceSid=MG1247yg12b7814hj8y124hjr7" +
+    s"814jns71&ToZip=&NumSegments=1&MessageSid=SMf35b148y12h123412jdf87sdf7sdfhhu&AccountSid=AC123u12312421471287" +
+    s"3jaksd815hsfyu&From=%2B447881072696&ApiVersion=2010-04-01"
 
-    val dao = new StubTextMessageDao()
-    val route = new TextMessageApi(dao, validApiKey).route
+  trait Fixtured {
+    implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
+
+    val memberDao: MemberDao = Mockito.spy(new StubMemberDao())
+    val dao: TextMessageDao = Mockito.spy(new StubTextMessageDao())
+    val route = new TextMessageApi(dao, memberDao, validApiKey).route
   }
 
   "TextMessageApi#receive" should {
 
+    "return method not allowed when used with anything other than POST" in new Fixtured {
+      Seq(Get, Put, Delete, Patch).foreach { method =>
+        method(validReceiveUrl) ~> Route.seal(route) ~> check {
+          response.status shouldEqual StatusCodes.MethodNotAllowed
+        }
+      }
+    }
+
     "not require the standard API key authentication" in new Fixtured {
-      Post("/text-messages/receive/" + validApiKey) ~> Route.seal(route) ~> check {
+      Post(validReceiveUrl) ~> Route.seal(route) ~> check {
         response.status shouldBe StatusCodes.OK
       }
     }
@@ -66,7 +90,80 @@ class TextMessageApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
       }
     }
 
-    "accept and save text messages with the correct information" is pending
+    "accept and save text messages with the correct information" in new Fixtured {
+      Post(validReceiveUrl) ~> route ~> check {
+        val messageCaptor = ArgumentCaptor.forClass[TextMessage](TextMessage.getClass.asInstanceOf[Class[TextMessage]])
+        verify(dao).insert(messageCaptor.capture())
+        verify(memberDao).forPhoneNumber("+447881072696")
+        verify(memberDao, never()).create(any())
+
+        val message = messageCaptor.getAllValues.get(0)
+
+        message.status shouldEqual TextMessageStatuses.Received
+        message.toNumber shouldEqual "+447123123123"
+        message.fromNumber shouldEqual StubMemberDao.forPhoneNumber
+        message.externalId shouldEqual Some("SMf35b148y12h123412jdf87sdf7sdfhhu")
+        message.message shouldEqual "Hello, world!"
+
+        responseAs[String] shouldEqual "\"" + message.uuid.get + "\""
+      }
+    }
+
+    "return 404 if no member is found with that phone number" in new Fixtured {
+      Post(s"/text-messages/receive/${validApiKey}?ToCountry=GB&ToState=&SmsMessageSid=SM11h1f5jasfh782y35hdfw235jhdf" +
+        s"h51j&NumMedia=0&ToCity=&FromZip=&SmsSid=SMr1j54i1j4124ujijdfu235jkksjf914j&FromState=&SmsStatus=received&Fr" +
+        s"omCity=&Body=Hello,+world!&FromCountry=GB&To=%2B447123123123&MessagingServiceSid=MG1247yg12b7814hj8y124hjr7" +
+        s"814jns71&ToZip=&NumSegments=1&MessageSid=SMf35b148y12h123412jdf87sdf7sdfhhu&AccountSid=AC123u12312421471287" +
+        s"3jaksd815hsfyu&From=%2B447810000001&ApiVersion=2010-04-01") ~> route ~> check {
+
+        response.status shouldEqual StatusCodes.NotFound
+        responseAs[String] shouldEqual TextMessageApiErrors.receiveMemberNotFound
+      }
+    }
+
+    "return bad request if the To is missing" in new Fixtured {
+      Post(s"/text-messages/receive/${validApiKey}?SmsMessageSid=SM11h1f5jasfh782y35hdfw235jhdf" +
+        s"h51j&NumMedia=0&ToCity=&FromZip=&SmsSid=SMr1j54i1j4124ujijdfu235jkksjf914j&FromState=&SmsStatus=received&Fr" +
+        s"omCity=&Body=Hello,+world!&FromCountry=GB&MessagingServiceSid=MG1247yg12b7814hj8y124hjr7" +
+        s"814jns71&ToZip=&NumSegments=1&MessageSid=SMf35b148y12h123412jdf87sdf7sdfhhu&AccountSid=AC123u12312421471287" +
+        s"3jaksd815hsfyu&From=%2B447881072696&ApiVersion=2010-04-01") ~> route ~> check {
+
+        response.status shouldEqual StatusCodes.BadRequest
+      }
+    }
+
+    "return bad request if the From is missing" in new Fixtured {
+      Post(s"/text-messages/receive/${validApiKey}?SmsMessageSid=SM11h1f5jasfh782y35hdfw235jhdf" +
+        s"h51j&NumMedia=0&ToCity=&FromZip=&SmsSid=SMr1j54i1j4124ujijdfu235jkksjf914j&FromState=&SmsStatus=received&Fr" +
+        s"omCity=&Body=Hello,+world!&FromCountry=GB&To=%2B447123123123&MessagingServiceSid=MG1247yg12b7814hj8y124hjr7" +
+        s"814jns71&ToZip=&NumSegments=1&MessageSid=SMf35b148y12h123412jdf87sdf7sdfhhu&AccountSid=AC123u12312421471287" +
+        s"3jaksd815hsfyu&ApiVersion=2010-04-01") ~> route ~> check {
+
+        response.status shouldEqual StatusCodes.BadRequest
+      }
+    }
+
+    "return bad request if the Body is missing" in new Fixtured {
+      Post(s"/text-messages/receive/${validApiKey}?SmsMessageSid=SM11h1f5jasfh782y35hdfw235jhdf" +
+        s"h51j&NumMedia=0&ToCity=&FromZip=&SmsSid=SMr1j54i1j4124ujijdfu235jkksjf914j&FromState=&SmsStatus=received&Fr" +
+        s"omCity=&FromCountry=GB&To=%2B447123123123&MessagingServiceSid=MG1247yg12b7814hj8y124hjr7" +
+        s"814jns71&ToZip=&NumSegments=1&MessageSid=SMf35b148y12h123412jdf87sdf7sdfhhu&AccountSid=AC123u12312421471287" +
+        s"3jaksd815hsfyu&From=%2B447881072696&ApiVersion=2010-04-01") ~> route ~> check {
+
+        response.status shouldEqual StatusCodes.BadRequest
+      }
+    }
+
+    "return bad request if the MessageSid is missing" in new Fixtured {
+      Post(s"/text-messages/receive/${validApiKey}?SmsMessageSid=SM11h1f5jasfh782y35hdfw235jhdf" +
+        s"h51j&NumMedia=0&ToCity=&FromZip=&SmsSid=SMr1j54i1j4124ujijdfu235jkksjf914j&FromState=&SmsStatus=received&Fr" +
+        s"omCity=&Body=Hello,+world!&FromCountry=GB&To=%2B447123123123&MessagingServiceSid=MG1247yg12b7814hj8y124hjr7" +
+        s"814jns71&ToZip=&NumSegments=1&AccountSid=AC123u12312421471287" +
+        s"3jaksd815hsfyu&From=%2B447881072696&ApiVersion=2010-04-01") ~> route ~> check {
+
+        response.status shouldEqual StatusCodes.BadRequest
+      }
+    }
 
   }
 

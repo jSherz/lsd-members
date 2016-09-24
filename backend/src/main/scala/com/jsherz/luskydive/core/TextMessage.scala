@@ -51,5 +51,6 @@ object TextMessageStatuses {
   val Pending: Short = 0
   val Sent: Short = 1
   val Error: Short = 2
+  val Received: Short = 3
 
 }

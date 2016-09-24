@@ -1,0 +1,12 @@
+{
+  "uuid": "a70dba8b-8f00-4e39-a558-0858308dd1ba",
+  "firstName": "Joshua",
+  "lastName": "Lamb",
+  "email": "dcooper@hotmail.com",
+  "phoneNumber": "+447881072696",
+  "lastJump": "2010-04-17",
+  "driver": false,
+  "organiser": false,
+  "createdAt": "2016-06-12 13:53:07.000000",
+  "updatedAt": "2016-07-21 01:44:55.000000"
+}

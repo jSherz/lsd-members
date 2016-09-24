@@ -98,6 +98,26 @@ class StubMemberDao()(implicit val ec: ExecutionContext) extends MemberDao {
     }
   }
 
+  /**
+    * Look for a member with the given phone number.
+    *
+    * @param phoneNumber
+    * @return
+    */
+  override def forPhoneNumber(phoneNumber: String): Future[String \/ Option[Member]] = {
+    Future.successful {
+      if (StubMemberDao.forPhoneNumber.equals(phoneNumber)) {
+        \/-(Some(StubMemberDao.forPhoneNumberMember))
+      } else if (StubMemberDao.forPhoneNumberNotFound.equals(phoneNumber)) {
+        \/-(None)
+      } else if (StubMemberDao.forPhoneNumberError.equals(phoneNumber)) {
+        -\/(Errors.internalServer)
+      } else {
+        throw new RuntimeException("unknown phone number used with stub")
+      }
+    }
+  }
+
 }
 
 object StubMemberDao {
@@ -114,5 +134,10 @@ object StubMemberDao {
   val getExistsMember = Util.fixture[Member]("6d9db71d.json")
   val getErrorUuid = UUID.fromString("6c4b9c7f-0e08-42b9-bc99-4dd72d099497")
   val getNotFoundUuid = UUID.fromString("323f8275-f5c8-407a-adc2-d7a0ddb420a1")
+
+  val forPhoneNumber = "+447881072696"
+  val forPhoneNumberNotFound = "+447810000001"
+  val forPhoneNumberError = "+447111999111"
+  val forPhoneNumberMember = Util.fixture[Member]("a70dba8b.json")
 
 }

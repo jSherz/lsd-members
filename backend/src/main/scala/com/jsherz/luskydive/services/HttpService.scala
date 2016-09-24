@@ -24,6 +24,7 @@
 
 package com.jsherz.luskydive.services
 
+import akka.event.LoggingAdapter
 import akka.http.scaladsl.model.{HttpEntity, HttpResponse, StatusCodes}
 import akka.http.scaladsl.model.headers.{HttpOrigin, HttpOriginRange}
 import akka.http.scaladsl.server._
@@ -47,7 +48,8 @@ class HttpService(
                    textMessageDao: TextMessageDao,
                    textMessageReceiveApiKey: String
                  )
-                 (implicit executionContext: ExecutionContext) {
+                 (implicit executionContext: ExecutionContext,
+                  loggingAdapter: LoggingAdapter) {
 
   implicit val auth = new ApiKeyAuthenticator(authDao).authenticateWithApiKey
 
@@ -57,7 +59,7 @@ class HttpService(
   val memberRoutes = new MemberApi(memberDao, textMessageDao)
   val courseSpacesApi = new CourseSpacesApi(courseSpaceDao)
   val massTextApi = new MassTextApi(massTextDao)
-  val textMessageApi = new TextMessageApi(textMessageDao, textMessageReceiveApiKey)
+  val textMessageApi = new TextMessageApi(textMessageDao, memberDao, textMessageReceiveApiKey)
 
   val loginApi = new LoginApi(authDao)
 
