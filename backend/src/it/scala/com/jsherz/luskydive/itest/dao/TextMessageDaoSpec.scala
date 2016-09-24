@@ -205,4 +205,18 @@ class TextMessageDaoSpec extends WordSpec with Matchers {
 
   }
 
+  "TextMessageDao#toSend" should {
+
+    "return all text messages that are pending being sent" in {
+      val result = dao.toSend().futureValue
+      val expected = Util.fixture[Vector[TextMessage]]("to_send.json")
+
+      result.isRight shouldBe true
+      result.map {
+        _ should contain theSameElementsAs expected
+      }
+    }
+
+  }
+
 }

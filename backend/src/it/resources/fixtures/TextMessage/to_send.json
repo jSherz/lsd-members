@@ -1,0 +1,41 @@
+[
+  {
+    "uuid": "ac0d77ec-00af-4d4a-9636-67fa1d824d34",
+    "memberUuid": "8486f376-a02d-49e6-92b3-27b6d74c6c83",
+    "massTextUuid": null,
+    "status": 0,
+    "toNumber": "+447724295351",
+    "fromNumber": "+447709483887",
+    "message": "This text message has been modified! :O",
+    "externalId": "AUTO-TEXT-SERVICE-11110001231841248",
+    "createdAt": "2016-09-01 08:30:01.000000",
+    "updatedAt": "2016-09-01 08:30:59.141000",
+    "fromMember": true
+  },
+  {
+    "uuid": "5c8ebb07-29c4-4d16-9e1a-5977f299f449",
+    "memberUuid": "08251854-1d98-4fe9-a7f0-e34b9eb6dceb",
+    "massTextUuid": null,
+    "status": 0,
+    "toNumber": "+447292322247",
+    "fromNumber": "+447809362194",
+    "message": "ALAN! ALAN! ALAN! ALAN! ALAN! ALAN! Oh, it's Michael Garcia. Hey you. Come skydiving this weekned? Contact us on our Facebook page to book a course. - Reply \"NOFUN\" to stop these messages.",
+    "externalId": "57c203e0f92c05ee00202d0614a8a435d6f28d6da99dff71c6731ffee0247906",
+    "createdAt": "2015-10-01 00:00:00.000000",
+    "updatedAt": "2015-10-01 00:54:13.042899",
+    "fromMember": false
+  },
+  {
+    "uuid": "a7de8fd7-15a5-4a02-8fea-8b664637ddab",
+    "memberUuid": "a46170b4-1019-4bdc-a08a-25c8561bd29c",
+    "massTextUuid": "1e435472-35b5-4117-a055-75d109290cbf",
+    "status": 0,
+    "toNumber": "+447298461646",
+    "fromNumber": "+447809362194",
+    "message": "Hello, Lindsey Campbell. Is it me you're looking for? Come and join us for a weekend of TONNES of fun. You, us and 13,500ft of AAAAAAHHHHHH... followed by you saying \"OH MY THAT WAS THE BEST THING I'VE EVER DONE\" and we'll be like \"YEAH, TOLD YOU SO\" #freshers #skydiving #fun #anythingelseisboring #cancelyourplans - Reply \"NOFUN\" to stop these messages.",
+    "externalId": null,
+    "createdAt": "2015-10-01 00:00:00.000000",
+    "updatedAt": "2015-10-01 01:54:42.421830",
+    "fromMember": false
+  }
+]

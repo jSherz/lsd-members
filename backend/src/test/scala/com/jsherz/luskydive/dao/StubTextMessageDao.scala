@@ -65,6 +65,8 @@ class StubTextMessageDao extends TextMessageDao {
 
   override def forMassText(massTextUuid: UUID): Future[\/[String, Seq[TextMessage]]] = ???
 
+  override def toSend(): Future[\/[String, Seq[TextMessage]]] = ???
+
 }
 
 object StubTextMessageDao {

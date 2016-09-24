@@ -27,7 +27,7 @@ package com.jsherz.luskydive.dao
 import java.util.UUID
 
 import akka.event.LoggingAdapter
-import com.jsherz.luskydive.core.TextMessage
+import com.jsherz.luskydive.core.{TextMessage, TextMessageStatuses}
 import com.jsherz.luskydive.services.DatabaseService
 import com.jsherz.luskydive.util.FutureError._
 
@@ -48,6 +48,8 @@ trait TextMessageDao {
   def update(textMessage: TextMessage): Future[String \/ Int]
 
   def forMassText(massTextUuid: UUID): Future[String \/ Seq[TextMessage]]
+
+  def toSend(): Future[String \/ Seq[TextMessage]]
 
 }
 
@@ -120,6 +122,20 @@ class TextMessageDaoImpl(protected override val databaseService: DatabaseService
       TextMessages
         .filter(_.massTextUuid === massTextUuid)
         .sortBy(_.updatedAt.desc)
+        .result
+    ) withServerError
+  }
+
+  /**
+    * Get all text messages that are waiting to be sent.
+    *
+    * @return
+    */
+  override def toSend(): Future[\/[String, Seq[TextMessage]]] = {
+    db.run(
+      TextMessages
+        .filter(_.status === TextMessageStatuses.Pending)
+        .sortBy(m => (m.createdAt.asc, m.updatedAt.asc))
         .result
     ) withServerError
   }
