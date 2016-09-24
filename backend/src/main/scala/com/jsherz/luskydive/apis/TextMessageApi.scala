@@ -70,7 +70,7 @@ class TextMessageApi(val textMessageDao: TextMessageDao,
                   case \/-(uuid) => {
                     log.info(s"Text message with SID ${externalSid} saved for member ${member.uuid.get}")
 
-                    \/-(uuid)
+                    \/-(s"""<?xml version="1.0" encoding="UTF-8"?><!-- Recorded as ${message.uuid.get.toString} --><Response></Response>""")
                   }
                   case -\/(error) => {
                     log.error("Failed to insert text message: " + error)

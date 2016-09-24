@@ -105,7 +105,7 @@ class TextMessageApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
         message.externalId shouldEqual Some("SMf35b148y12h123412jdf87sdf7sdfhhu")
         message.message shouldEqual "Hello, world!"
 
-        responseAs[String] shouldEqual "\"" + message.uuid.get + "\""
+        responseAs[String] shouldEqual "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!-- Recorded as " + message.uuid.get + " --><Response></Response>"
       }
     }
 
