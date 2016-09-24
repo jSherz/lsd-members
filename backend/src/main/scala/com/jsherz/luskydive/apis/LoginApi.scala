@@ -28,6 +28,7 @@ import java.sql.Timestamp
 import java.time.LocalDateTime
 import java.util.Date
 
+import akka.event.LoggingAdapter
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
@@ -40,7 +41,7 @@ import scalaz.{-\/, \/-}
 /**
   * Used to authenticate users.
   */
-class LoginApi(private val dao: AuthDao)(implicit ec: ExecutionContext) {
+class LoginApi(private val dao: AuthDao)(implicit ec: ExecutionContext, log: LoggingAdapter) {
 
   import com.jsherz.luskydive.json.LoginJsonSupport._
 
@@ -54,14 +55,16 @@ class LoginApi(private val dao: AuthDao)(implicit ec: ExecutionContext) {
           case \/-(uuid) => complete(LoginResponse(true, Map.empty, Some(uuid)))
           case -\/(error) => {
             if (AuthDaoErrors.invalidEmailPass.equals(error)) {
-              complete(LoginResponse(false, Map(
-                "password" -> AuthDaoErrors.invalidEmailPass
-              ), None))
+              log.info(s"Login failed - invalid e-mail '${req.email}' or password.")
+
+              complete(LoginResponse(false, Map("password" -> AuthDaoErrors.invalidEmailPass), None))
             } else if (AuthDaoErrors.accountLocked.equals(error)) {
-              complete(LoginResponse(false, Map(
-                "email" -> AuthDaoErrors.accountLocked
-              ), None))
+              log.info(s"Login failed - account '${req.email}' is locked.")
+
+              complete(LoginResponse(false, Map("email" -> AuthDaoErrors.accountLocked), None))
             } else {
+              log.error("Login failed: " + error)
+
               complete(StatusCodes.InternalServerError, error)
             }
           }

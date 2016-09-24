@@ -24,6 +24,8 @@
 
 package com.jsherz.luskydive.apis
 
+import akka.actor.ActorSystem
+import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
@@ -44,6 +46,7 @@ class CommitteeMemberApiSpec extends WordSpec with Matchers with ScalatestRouteT
   import spray.json._
 
   private implicit val authDirective = AuthenticationDirectives.allowAll
+  implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
 
   private val url = "/committee-members/active"
 

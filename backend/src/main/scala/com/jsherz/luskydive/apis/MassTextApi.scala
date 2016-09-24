@@ -28,6 +28,7 @@ import java.sql.Timestamp
 import java.time.LocalDateTime
 import java.util.UUID
 
+import akka.event.LoggingAdapter
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
 import com.jsherz.luskydive.dao.{MassTextDao, MassTextDaoErrors}
@@ -42,7 +43,7 @@ import scalaz.{-\/, \/-}
   * Used to send out a text message to many members.
   */
 class MassTextApi(private val dao: MassTextDao)
-                 (implicit ec: ExecutionContext, authDirective: Directive1[UUID]) {
+                 (implicit ec: ExecutionContext, authDirective: Directive1[UUID], log: LoggingAdapter) {
 
   val exampleName = "Mary"
 
@@ -55,7 +56,11 @@ class MassTextApi(private val dao: MassTextDao)
 
     onSuccess(result) {
       case \/-(count: Int) => complete(TryFilterResponse(success = true, Some(count), None))
-      case -\/(error: String) => complete(TryFilterResponse(success = false, None, Some(error)))
+      case -\/(error: String) => {
+        log.error("Trying a filter for mass texting failed: " + error)
+
+        complete(TryFilterResponse(success = false, None, Some(error)))
+      }
     }
   }
 
@@ -63,15 +68,24 @@ class MassTextApi(private val dao: MassTextDao)
     val rendered = TextMessageUtil.parseTemplate(request.template, exampleName)
 
     if (request.template.isEmpty) {
+      log.info("Mass text send attempt made with no template.")
+
       complete(MassTextSendResponse(success = false, Some(MassTextApiErrors.blankTemplate), None))
     } else if (!rendered.equals(request.expectedRendered)) {
+      log.info(s"Mass text send attempt made with mismatched template / render. Template was '${request.template}', " +
+        s"expected (from user) was '${request.expectedRendered}', we expected '${rendered}'.")
+
       complete(MassTextSendResponse(success = false, Some(MassTextApiErrors.templateRenderMismatch), None))
     } else {
       val result = dao.send(sender, request.startDate, request.endDate, request.template, Timestamp.valueOf(LocalDateTime.now))
 
       onSuccess(result) {
         case \/-(uuid) => complete(MassTextSendResponse(success = true, None, Some(uuid)))
-        case -\/(error) => complete(MassTextSendResponse(success = false, Some(error), None))
+        case -\/(error) => {
+          log.error("Failed to send mass text: " + error)
+
+          complete(MassTextSendResponse(success = false, Some(error), None))
+        }
       }
     }
   }

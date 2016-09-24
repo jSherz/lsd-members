@@ -27,6 +27,7 @@ package com.jsherz.luskydive.apis
 import java.sql.Timestamp
 import java.util.{Date, UUID}
 
+import akka.event.LoggingAdapter
 import akka.http.scaladsl.model.headers.HttpChallenge
 import akka.http.scaladsl.server.AuthenticationFailedRejection.{CredentialsMissing, CredentialsRejected}
 import akka.http.scaladsl.server.{AuthenticationFailedRejection, Directive1}
@@ -38,7 +39,8 @@ import scalaz.{-\/, \/-}
 /**
   * Provides a directive that will authenticate users with their API key.
   */
-class ApiKeyAuthenticator(authDao: AuthDao) {
+class ApiKeyAuthenticator(authDao: AuthDao)
+                         (implicit log: LoggingAdapter) {
 
   import BasicDirectives._
   import HeaderDirectives._
@@ -68,9 +70,17 @@ class ApiKeyAuthenticator(authDao: AuthDao) {
 
           onSuccess(authDao.authenticate(apiKey, time)).flatMap {
             case \/-(memberUuid) => provide(memberUuid)
-            case -\/(_) => reject(AuthenticationFailedRejection(CredentialsRejected, dummyChallenge))
+            case -\/(_) => {
+              log.info("Auth failed - invalid API key: " + apiKey)
+
+              reject(AuthenticationFailedRejection(CredentialsRejected, dummyChallenge))
+            }
           }
-        case None => reject(AuthenticationFailedRejection(CredentialsMissing, dummyChallenge))
+        case None => {
+          log.info("Auth failed - no API key.")
+
+          reject(AuthenticationFailedRejection(CredentialsMissing, dummyChallenge))
+        }
       }
     }
   }

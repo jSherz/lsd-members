@@ -27,6 +27,7 @@ package com.jsherz.luskydive.apis
 import java.sql.Timestamp
 import java.util.UUID
 
+import akka.event.LoggingAdapter
 import akka.http.scaladsl.server.{Directive1, Route}
 import akka.http.scaladsl.server.Directives._
 import com.jsherz.luskydive.core.Member
@@ -40,7 +41,7 @@ import scalaz.{Failure, Success}
   * The two methods of signing up new members at a fresher's fair (phone number or e-mail).
   */
 class SignupApi(private val memberDao: MemberDao)
-               (implicit ec: ExecutionContext, authDirective: Directive1[UUID]) {
+               (implicit ec: ExecutionContext, authDirective: Directive1[UUID], log: LoggingAdapter) {
 
   import SignupJsonSupport._
 
@@ -59,6 +60,8 @@ class SignupApi(private val memberDao: MemberDao)
             val member = Member(None, req.name, None, Some(phoneNumber), None, None, None, None, false, false, createdAt, createdAt)
 
             memberDao.create(member).map { _ =>
+              log.info(s"Signed up member with name '${req.name}' and phone number '${req.phoneNumber}'.")
+
               SignupResponse(true, Map.empty)
             }
           }
@@ -68,7 +71,11 @@ class SignupApi(private val memberDao: MemberDao)
           complete(result)
         }
       }
-      case Failure(reason) => complete(SignupResponse(false, reason.list.toList.toMap))
+      case Failure(reason) => {
+        log.info("Member sign-up validation error: " + reason.list.toString)
+
+        complete(SignupResponse(false, reason.list.toList.toMap))
+      }
     }
   }
 
@@ -87,6 +94,8 @@ class SignupApi(private val memberDao: MemberDao)
             val member = Member(None, req.name, None, None, Some(req.email), None, None, None, false, false, createdAt, createdAt)
 
             memberDao.create(member).map { _ =>
+              log.info(s"Signed up member with name '${req.name}' and e-mail '${req.email}'.")
+
               SignupResponse(true, Map.empty)
             }
           }
@@ -96,7 +105,11 @@ class SignupApi(private val memberDao: MemberDao)
           complete(result)
         }
       }
-      case Failure(reason) => complete(SignupResponse(false, reason.list.toList.toMap))
+      case Failure(reason) => {
+        log.info("Member alt sign-up validation error: " + reason.list.toString)
+
+        complete(SignupResponse(false, reason.list.toList.toMap))
+      }
     }
   }
 

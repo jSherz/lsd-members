@@ -24,6 +24,8 @@
 
 package com.jsherz.luskydive.apis
 
+import akka.actor.ActorSystem
+import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
@@ -44,6 +46,7 @@ import scala.concurrent.ExecutionContext
 class SignupApiSpec extends WordSpec with Matchers with ScalatestRouteTest with BeforeAndAfter {
 
   private implicit val authDirective = AuthenticationDirectives.allowAll
+  implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
 
   private var dao: MemberDao = Mockito.spy(new StubMemberDao())
   private var route = new SignupApi(dao).route

@@ -26,6 +26,7 @@ package com.jsherz.luskydive.apis
 
 import java.util.UUID
 
+import akka.event.LoggingAdapter
 import akka.http.scaladsl.model.StatusCodes
 import com.jsherz.luskydive.dao.{MemberDao, MemberDaoErrors, TextMessageDao}
 
@@ -43,7 +44,7 @@ import scalaz.{-\/, \/-}
   */
 class MemberApi(private val memberDao: MemberDao,
                 private val textMessageDao: TextMessageDao)
-               (implicit ec: ExecutionContext, authDirective: Directive1[UUID]) {
+               (implicit ec: ExecutionContext, authDirective: Directive1[UUID], log: LoggingAdapter) {
 
   val searchRoute = path("search") {
     post {
@@ -52,9 +53,15 @@ class MemberApi(private val memberDao: MemberDao,
           if (req.searchTerm.trim.length >= 3) {
             onSuccess(memberDao.search(req.searchTerm)) {
               case \/-(results) => complete(results)
-              case -\/(error) => complete(StatusCodes.InternalServerError, error)
+              case -\/(error) => {
+                log.error("Failed to perform member search" + error)
+
+                complete(StatusCodes.InternalServerError, error)
+              }
             }
           } else {
+            log.info(s"Search request too small: '${req.searchTerm}")
+
             complete(StatusCodes.BadRequest, MemberDaoErrors.invalidSearchTerm)
           }
         }
@@ -69,7 +76,11 @@ class MemberApi(private val memberDao: MemberDao,
       case \/-(maybeMember: Option[Member]) => {
         maybeMember match {
           case Some(member: Member) => complete(member)
-          case None => complete(StatusCodes.NotFound, "Member not found")
+          case None => {
+            log.info(s"Could not get member with UUID '${memberUuid}'")
+
+            complete(StatusCodes.NotFound, "Member not found")
+          }
         }
       }
       case -\/(error) => complete(StatusCodes.InternalServerError, error)

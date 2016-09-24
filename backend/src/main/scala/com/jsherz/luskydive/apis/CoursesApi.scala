@@ -26,6 +26,7 @@ package com.jsherz.luskydive.apis
 
 import java.util.UUID
 
+import akka.event.LoggingAdapter
 import akka.http.scaladsl.server.{Directive1, Route}
 import akka.http.scaladsl.server.PathMatchers.JavaUUID
 import akka.http.scaladsl.model.StatusCodes
@@ -42,7 +43,7 @@ import scalaz.{-\/, \/-}
   * Used to retrieve and store course information.
   */
 class CoursesApi(private val courseDao: CourseDao)
-                (implicit ec: ExecutionContext, authDirective: Directive1[UUID]) {
+                (implicit ec: ExecutionContext, authDirective: Directive1[UUID], log: LoggingAdapter) {
 
   import CoursesJsonSupport._
 
@@ -54,6 +55,8 @@ class CoursesApi(private val courseDao: CourseDao)
       authDirective { _ =>
         entity(as[CoursesListRequest]) { req =>
           if (req.endDate.before(req.startDate)) {
+            log.info("Bad course list request - endDate before startDate")
+
             complete(StatusCodes.BadRequest, "endDate must be after startDate")
           } else {
             complete(courseDao.find(req.startDate, req.endDate))
@@ -78,7 +81,11 @@ class CoursesApi(private val courseDao: CourseDao)
       authDirective { _ =>
         onSuccess(courseDao.get(uuid)) {
           case Some(course) => complete(course)
-          case None => complete(StatusCodes.NotFound, "No course found with that UUID")
+          case None => {
+            log.info(s"Could not get course with UUID ${uuid} - not found.")
+
+            complete(StatusCodes.NotFound, "No course found with that UUID")
+          }
         }
       }
     }
@@ -92,7 +99,11 @@ class CoursesApi(private val courseDao: CourseDao)
 
           onSuccess(courseDao.create(course, numSpaces)) {
             case \/-(courseUuid) => complete(CourseCreateResponse(true, None, Some(courseUuid)))
-            case -\/(error) => complete(CourseCreateResponse(false, Some(error), None))
+            case -\/(error) => {
+              log.error("Failed to create course: " + error)
+
+              complete(CourseCreateResponse(false, Some(error), None))
+            }
           }
         }
       }
@@ -101,9 +112,9 @@ class CoursesApi(private val courseDao: CourseDao)
 
   val route: Route = pathPrefix("courses") {
     listRoute ~
-    spacesRoute ~
-    getRoute ~
-    createRoute
+      spacesRoute ~
+      getRoute ~
+      createRoute
   }
 
   /**
@@ -118,7 +129,7 @@ class CoursesApi(private val courseDao: CourseDao)
     (
       Course(Some(uuid), req.date, req.organiserUuid, req.secondaryOrganiserUuid, CourseStatuses.PENDING),
       req.numSpaces
-    )
+      )
   }
 
 }

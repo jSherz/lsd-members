@@ -26,6 +26,8 @@ package com.jsherz.luskydive.apis
 
 import java.util.UUID
 
+import akka.actor.ActorSystem
+import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
@@ -49,6 +51,7 @@ class MemberApiSpec extends WordSpec with Matchers with ScalatestRouteTest with 
   import spray.json._
 
   private implicit val authDirective = AuthenticationDirectives.allowAll
+  implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
 
   private val searchUrl = "/members/search"
   private val getUrl = "/members/" + StubMemberDao.getExistsUuid.toString

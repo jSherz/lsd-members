@@ -26,6 +26,8 @@ package com.jsherz.luskydive.apis
 
 import java.util.UUID
 
+import akka.actor.ActorSystem
+import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.model.headers.RawHeader
 import akka.http.scaladsl.model.{HttpHeader, HttpRequest, StatusCodes}
 import akka.http.scaladsl.server.Route
@@ -39,6 +41,8 @@ import org.scalatest.{Matchers, WordSpec}
   * Ensures the authentication directive works correctly and gracefully handles failure.
   */
 class ApiKeyAuthenticatorSpec extends WordSpec with Matchers with ScalatestRouteTest {
+
+  implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
 
   private val dao = Mockito.spy(new StubAuthDao())
 
