@@ -26,7 +26,7 @@ package com.jsherz.luskydive.apis
 
 import akka.actor.ActorSystem
 import akka.event.{Logging, LoggingAdapter}
-import akka.http.scaladsl.model.StatusCodes
+import akka.http.scaladsl.model.{FormData, StatusCodes, Uri}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.jsherz.luskydive.core.{TextMessage, TextMessageStatuses}
@@ -42,11 +42,23 @@ import scala.concurrent.ExecutionContext
 class TextMessageApiSpec extends WordSpec with Matchers with ScalatestRouteTest {
 
   val validApiKey = "1248ytyghbjiytrfdcgvhiuojknygt6r5"
-  val validReceiveUrl = s"/text-messages/receive/${validApiKey}?SmsMessageSid=SM11h1f5jasfh782y35hdfw235jhdf" +
-    s"h51j&NumMedia=0&ToCity=&FromZip=&SmsSid=SMr1j54i1j4124ujijdfu235jkksjf914j&FromState=&SmsStatus=received&Fr" +
-    s"omCity=&Body=Hello,+world!&FromCountry=GB&To=%2B447123123123&MessagingServiceSid=MG1247yg12b7814hj8y124hjr7" +
-    s"814jns71&ToZip=&NumSegments=1&MessageSid=SMf35b148y12h123412jdf87sdf7sdfhhu&AccountSid=AC123u12312421471287" +
-    s"3jaksd815hsfyu&From=%2B447881072696&ApiVersion=2010-04-01"
+  val validReceiveUrl = s"/text-messages/receive/${validApiKey}"
+
+  val validReceiveRequest = FormData(
+    "SmsMessageSid" -> "SM11h1f5jasfh782y35hdfw235jhdfh51j", "NumMedia" -> "0", "ToCity" -> "", "FromZip" -> "",
+    "SmsSid" -> "SMr1j54i1j4124ujijdfu235jkksjf914j", "FromState" -> "", "SmsStatus" -> "received",
+    "FromCity" -> "", "Body" -> "Hello, world!", "FromCountry" -> "GB", "To" -> "+447123123123",
+    "MessagingServiceSid" -> "MG1247yg12b7814hj8y124hjr7814jns71", "ToZip" -> "", "NumSegments" -> "1",
+    "MessageSid" -> "SMf35b148y12h123412jdf87sdf7sdfhhu", "AccountSid" -> "AC123u123124214712873jaksd815hsfyu",
+    "From" -> "+447881072696", "ApiVersion" -> "2010-04-01"
+  )
+
+  val memberNotFoundReceiveRequest = FormData(validReceiveRequest.fields.toMap + ("From" -> "+447810000001"))
+
+  val noToReceiveRequest = FormData(validReceiveRequest.fields.toMap - "To")
+  val noFromReceiveRequest = FormData(validReceiveRequest.fields.toMap - "From")
+  val noBodyReceiveRequest = FormData(validReceiveRequest.fields.toMap - "Body")
+  val noMessageSidReceiveRequest = FormData(validReceiveRequest.fields.toMap - "MessageSid")
 
   trait Fixtured {
     implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
@@ -67,31 +79,31 @@ class TextMessageApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
     }
 
     "not require the standard API key authentication" in new Fixtured {
-      Post(validReceiveUrl) ~> Route.seal(route) ~> check {
+      Post(validReceiveUrl, validReceiveRequest) ~> Route.seal(route) ~> check {
         response.status shouldBe StatusCodes.OK
       }
     }
 
     "reject requests without a receiving secret" in new Fixtured {
-      Post("/text-messages/receive/") ~> Route.seal(route) ~> check {
+      Post("/text-messages/receive/", validReceiveRequest) ~> Route.seal(route) ~> check {
         response.status shouldBe StatusCodes.Unauthorized
         responseAs[String] shouldEqual "Unauthorized."
       }
 
-      Post("/text-messages/receive") ~> Route.seal(route) ~> check {
+      Post("/text-messages/receive", validReceiveRequest) ~> Route.seal(route) ~> check {
         response.status shouldBe StatusCodes.NotFound
       }
     }
 
     "reject requests with an invalid receiving secret" in new Fixtured {
-      Post("/text-messages/receive/asdf598y7ghbjnoi9u8y7ghb") ~> Route.seal(route) ~> check {
+      Post("/text-messages/receive/asdf598y7ghbjnoi9u8y7ghb", validReceiveRequest) ~> Route.seal(route) ~> check {
         response.status shouldBe StatusCodes.Unauthorized
         responseAs[String] shouldEqual "Unauthorized."
       }
     }
 
     "accept and save text messages with the correct information" in new Fixtured {
-      Post(validReceiveUrl) ~> route ~> check {
+      Post(validReceiveUrl, validReceiveRequest) ~> route ~> check {
         val messageCaptor = ArgumentCaptor.forClass[TextMessage](TextMessage.getClass.asInstanceOf[Class[TextMessage]])
         verify(dao).insert(messageCaptor.capture())
         verify(memberDao).forPhoneNumber("+447881072696")
@@ -110,57 +122,32 @@ class TextMessageApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
     }
 
     "return 404 if no member is found with that phone number" in new Fixtured {
-      Post(s"/text-messages/receive/${validApiKey}?ToCountry=GB&ToState=&SmsMessageSid=SM11h1f5jasfh782y35hdfw235jhdf" +
-        s"h51j&NumMedia=0&ToCity=&FromZip=&SmsSid=SMr1j54i1j4124ujijdfu235jkksjf914j&FromState=&SmsStatus=received&Fr" +
-        s"omCity=&Body=Hello,+world!&FromCountry=GB&To=%2B447123123123&MessagingServiceSid=MG1247yg12b7814hj8y124hjr7" +
-        s"814jns71&ToZip=&NumSegments=1&MessageSid=SMf35b148y12h123412jdf87sdf7sdfhhu&AccountSid=AC123u12312421471287" +
-        s"3jaksd815hsfyu&From=%2B447810000001&ApiVersion=2010-04-01") ~> route ~> check {
-
+      Post(validReceiveUrl, memberNotFoundReceiveRequest) ~> route ~> check {
         response.status shouldEqual StatusCodes.NotFound
         responseAs[String] shouldEqual TextMessageApiErrors.receiveMemberNotFound
       }
     }
 
     "return bad request if the To is missing" in new Fixtured {
-      Post(s"/text-messages/receive/${validApiKey}?SmsMessageSid=SM11h1f5jasfh782y35hdfw235jhdf" +
-        s"h51j&NumMedia=0&ToCity=&FromZip=&SmsSid=SMr1j54i1j4124ujijdfu235jkksjf914j&FromState=&SmsStatus=received&Fr" +
-        s"omCity=&Body=Hello,+world!&FromCountry=GB&MessagingServiceSid=MG1247yg12b7814hj8y124hjr7" +
-        s"814jns71&ToZip=&NumSegments=1&MessageSid=SMf35b148y12h123412jdf87sdf7sdfhhu&AccountSid=AC123u12312421471287" +
-        s"3jaksd815hsfyu&From=%2B447881072696&ApiVersion=2010-04-01") ~> route ~> check {
-
+      Post(validReceiveUrl, noToReceiveRequest) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.BadRequest
       }
     }
 
     "return bad request if the From is missing" in new Fixtured {
-      Post(s"/text-messages/receive/${validApiKey}?SmsMessageSid=SM11h1f5jasfh782y35hdfw235jhdf" +
-        s"h51j&NumMedia=0&ToCity=&FromZip=&SmsSid=SMr1j54i1j4124ujijdfu235jkksjf914j&FromState=&SmsStatus=received&Fr" +
-        s"omCity=&Body=Hello,+world!&FromCountry=GB&To=%2B447123123123&MessagingServiceSid=MG1247yg12b7814hj8y124hjr7" +
-        s"814jns71&ToZip=&NumSegments=1&MessageSid=SMf35b148y12h123412jdf87sdf7sdfhhu&AccountSid=AC123u12312421471287" +
-        s"3jaksd815hsfyu&ApiVersion=2010-04-01") ~> route ~> check {
-
+      Post(validReceiveUrl, noFromReceiveRequest) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.BadRequest
       }
     }
 
     "return bad request if the Body is missing" in new Fixtured {
-      Post(s"/text-messages/receive/${validApiKey}?SmsMessageSid=SM11h1f5jasfh782y35hdfw235jhdf" +
-        s"h51j&NumMedia=0&ToCity=&FromZip=&SmsSid=SMr1j54i1j4124ujijdfu235jkksjf914j&FromState=&SmsStatus=received&Fr" +
-        s"omCity=&FromCountry=GB&To=%2B447123123123&MessagingServiceSid=MG1247yg12b7814hj8y124hjr7" +
-        s"814jns71&ToZip=&NumSegments=1&MessageSid=SMf35b148y12h123412jdf87sdf7sdfhhu&AccountSid=AC123u12312421471287" +
-        s"3jaksd815hsfyu&From=%2B447881072696&ApiVersion=2010-04-01") ~> route ~> check {
-
+      Post(validReceiveUrl, noBodyReceiveRequest) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.BadRequest
       }
     }
 
     "return bad request if the MessageSid is missing" in new Fixtured {
-      Post(s"/text-messages/receive/${validApiKey}?SmsMessageSid=SM11h1f5jasfh782y35hdfw235jhdf" +
-        s"h51j&NumMedia=0&ToCity=&FromZip=&SmsSid=SMr1j54i1j4124ujijdfu235jkksjf914j&FromState=&SmsStatus=received&Fr" +
-        s"omCity=&Body=Hello,+world!&FromCountry=GB&To=%2B447123123123&MessagingServiceSid=MG1247yg12b7814hj8y124hjr7" +
-        s"814jns71&ToZip=&NumSegments=1&AccountSid=AC123u12312421471287" +
-        s"3jaksd815hsfyu&From=%2B447881072696&ApiVersion=2010-04-01") ~> route ~> check {
-
+      Post(validReceiveUrl, noMessageSidReceiveRequest) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.BadRequest
       }
     }

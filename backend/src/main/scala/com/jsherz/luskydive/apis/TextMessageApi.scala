@@ -51,55 +51,44 @@ class TextMessageApi(val textMessageDao: TextMessageDao,
                     (implicit val ec: ExecutionContext,
                      implicit val log: LoggingAdapter) {
 
-  val receiveRoute = (path("receive" / Remaining) & post & parameterMap) { (apiKey: String, params: Map[String, String]) =>
-    if (apiKey.isEmpty || !validApiKey.equals(apiKey)) {
-      complete(StatusCodes.Unauthorized, "Unauthorized.")
-    } else {
-      log.info("Received message with params: " + params.toString)
+  val receiveRoute = (path("receive" / Remaining) & post & formFields('To, 'From, 'Body, 'MessageSid)) {
+    (apiKey: String, to: String, from: String, body: String, externalSid: String) =>
+      if (apiKey.isEmpty || !validApiKey.equals(apiKey)) {
+        complete(StatusCodes.Unauthorized, "Unauthorized.")
+      } else {
+        // Find member and, if found, insert text message
+        val lookupAndInsert = memberDao.forPhoneNumber(from).flatMap {
+          _ withFutureF {
+            case Some(member: Member) => {
+              val message = buildMessage(member.uuid.get, to, from, body, externalSid)
 
-      (params.get("To"), params.get("From"), params.get("Body"), params.get("MessageSid")) match {
-        // Ensure all parameters were specified
-        case (Some(to), Some(from), Some(body), Some(externalSid)) => {
-          // Find member and, if found, insert text message
-          val lookupAndInsert = memberDao.forPhoneNumber(from).flatMap {
-            _ withFutureF {
-              case Some(member: Member) => {
-                val message = buildMessage(member.uuid.get, to, from, body, externalSid)
+              textMessageDao.insert(message).map {
+                case \/-(uuid) => {
+                  log.info(s"Text message with SID ${externalSid} saved for member ${member.uuid.get}")
 
-                textMessageDao.insert(message).map {
-                  case \/-(uuid) => {
-                    log.info(s"Text message with SID ${externalSid} saved for member ${member.uuid.get}")
+                  \/-(s"""<?xml version="1.0" encoding="UTF-8"?><!-- Recorded as ${message.uuid.get.toString} --><Response></Response>""")
+                }
+                case -\/(error) => {
+                  log.error("Failed to insert text message: " + error)
 
-                    \/-(s"""<?xml version="1.0" encoding="UTF-8"?><!-- Recorded as ${message.uuid.get.toString} --><Response></Response>""")
-                  }
-                  case -\/(error) => {
-                    log.error("Failed to insert text message: " + error)
-
-                    -\/(error)
-                  }
+                  -\/(error)
                 }
               }
-              case None => {
-                log.info(s"No member found with the phone number ${from} - not saving.")
+            }
+            case None => {
+              log.info(s"No member found with the phone number ${from} - not saving message ${body}.")
 
-                Future.successful(-\/(TextMessageApiErrors.receiveMemberNotFound))
-              }
+              Future.successful(-\/(TextMessageApiErrors.receiveMemberNotFound))
             }
           }
-
-          onSuccess(lookupAndInsert) {
-            case \/-(uuid) => complete(uuid)
-            case -\/(TextMessageApiErrors.receiveMemberNotFound) => complete(StatusCodes.NotFound, TextMessageApiErrors.receiveMemberNotFound)
-            case -\/(error) => complete(StatusCodes.InternalServerError, error)
-          }
         }
-        case _ => {
-          log.error("Rejecting message - no To, From, Body or MessageSid.")
 
-          complete(StatusCodes.BadRequest, TextMessageApiErrors.receiveMissingParams)
+        onSuccess(lookupAndInsert) {
+          case \/-(uuid) => complete(uuid)
+          case -\/(TextMessageApiErrors.receiveMemberNotFound) => complete(StatusCodes.NotFound, TextMessageApiErrors.receiveMemberNotFound)
+          case -\/(error) => complete(StatusCodes.InternalServerError, error)
         }
       }
-    }
   }
 
   val route = pathPrefix("text-messages") {
