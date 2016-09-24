@@ -46,6 +46,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
       case 0: return 'Pending';
       case 1: return 'Sent';
       case 2: return 'Error';
+      case 3: return 'Received';
       default: return 'Unknown (' + statusId + ')';
     }
   }
