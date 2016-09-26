@@ -7,7 +7,7 @@ import {
   CourseService,
   Course,
   CourseSpaceWithMember,
-  CourseWithOrganisers, CommitteeMember
+  CourseWithOrganisers, CommitteeMember, StrippedMember
 } from '../course.service';
 import { CourseSpaceService } from '../../course-spaces/course-spaces.service';
 
@@ -106,9 +106,16 @@ export class CourseViewComponent implements OnInit, OnDestroy {
     this.service.spaces(this.currentCourseUuid).subscribe(
       spaces => {
         this.spaces = spaces.map(space => {
-          // Ensure createdAt is a moment
+          // Rebuild member to ensure it has the correct instance methods
           if (space.member) {
-            space.member.createdAt = moment(space.member.createdAt);
+            space.member = new StrippedMember(
+              space.member.firstName,
+              space.member.lastName,
+              space.member.uuid,
+              space.member.weight,
+              space.member.height,
+              moment(space.member.createdAt)
+            );
           }
 
           return space;
