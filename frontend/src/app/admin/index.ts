@@ -35,6 +35,12 @@ export {
 } from './mass-text';
 
 export {
+  MemberEditService,
+  MemberEditServiceImpl,
+  MemberEditComponent
+} from './member-edit';
+
+export {
   MemberSearchService,
   MemberSearchServiceImpl,
   MemberSearchComponent,

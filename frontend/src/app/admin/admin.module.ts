@@ -47,7 +47,10 @@ import {
   SignupAltComponent,
   ThankYouComponent,
   MemberViewServiceImpl,
-  MemberViewService
+  MemberViewService,
+  MemberEditComponent,
+  MemberEditService,
+  MemberEditServiceImpl
 } from './';
 
 import {adminRouting} from './admin.routing';
@@ -75,7 +78,8 @@ import {adminRouting} from './admin.routing';
     SignupAltComponent,
     ThankYouComponent,
     MemberViewComponent,
-    MemberLookupComponent
+    MemberLookupComponent,
+    MemberEditComponent
   ],
   bootstrap: [],
   providers: [
@@ -90,6 +94,7 @@ import {adminRouting} from './admin.routing';
     {provide: LoginService, useClass: LoginServiceImpl},
     {provide: MassTextService, useClass: MassTextServiceImpl},
     {provide: MemberViewService, useClass: MemberViewServiceImpl},
+    {provide: MemberEditService, useClass: MemberEditServiceImpl},
     CanActivateAdmin
   ]
 })

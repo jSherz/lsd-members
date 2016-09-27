@@ -72,6 +72,23 @@ export class BaseService {
   }
 
   /**
+   * Build a PUT request to the given URL with the given data (serialized as JSON).
+   *
+   * The request is sent with a content type of 'application/json'.
+   *
+   * @param url
+   * @param data
+   * @returns {Observable<Response>}
+   */
+  protected put(url: string, data: any) {
+    let body = JSON.stringify(data);
+    let headers = new Headers({ 'Content-Type': 'application/json', 'Api-Key': this.apiKeyService.getKey() });
+    let options = new RequestOptions({ headers: headers });
+
+    return this.http.put(url, body, options);
+  }
+
+  /**
    * Send a GET request.
    *
    * @param url
