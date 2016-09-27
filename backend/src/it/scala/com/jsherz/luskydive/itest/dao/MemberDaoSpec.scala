@@ -258,4 +258,22 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
   }
 
+  "MemberDao#update" should {
+
+    "update a member correctly" in {
+      val memberWithDiffInfo = Util.fixture[Member]("update_diff_info.json")
+
+      val result = dao.update(memberWithDiffInfo).futureValue
+
+      result.isRight shouldBe true
+      result.map(_ shouldEqual memberWithDiffInfo)
+
+      val doubleCheck = dao.get(memberWithDiffInfo.uuid.get).futureValue
+
+      doubleCheck.isRight shouldBe true
+      doubleCheck.map(_ shouldEqual Some(memberWithDiffInfo))
+    }
+
+  }
+
 }

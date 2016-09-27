@@ -1,0 +1,14 @@
+{
+  "uuid": "1f390207-5d92-4e56-828b-0c229c92f21a",
+  "firstName": "Christopher",
+  "lastName": "Reese",
+  "email": "kellyadkins@vang.com",
+  "phoneNumber": "+447466192599",
+  "lastJump": "2011-09-28",
+  "weight": 80,
+  "height": 186,
+  "driver": false,
+  "organiser": false,
+  "createdAt": "2012-10-15 10:01:12.000000",
+  "updatedAt": "2015-12-11 02:32:48.000000"
+}

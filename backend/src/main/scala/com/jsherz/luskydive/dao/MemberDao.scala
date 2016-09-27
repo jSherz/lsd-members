@@ -85,6 +85,14 @@ trait MemberDao {
     */
   def forPhoneNumber(phoneNumber: String): Future[String \/ Option[Member]]
 
+  /**
+    * Update a member's information.
+    *
+    * @param member
+    * @return
+    */
+  def update(member: Member): Future[String \/ Member]
+
 }
 
 class MemberDaoImpl(override protected val databaseService: DatabaseService)
@@ -175,6 +183,16 @@ class MemberDaoImpl(override protected val databaseService: DatabaseService)
     */
   override def forPhoneNumber(phoneNumber: String): Future[String \/ Option[Member]] = {
     db.run(Members.filter(_.phoneNumber === phoneNumber).result.headOption) withServerError
+  }
+
+  /**
+    * Update a member's information.
+    *
+    * @param member
+    * @return
+    */
+  override def update(member: Member): Future[String \/ Member] = {
+    db.run(Members.filter(_.uuid === member.uuid).update(member)).map(_ => member) withServerError
   }
 
 }

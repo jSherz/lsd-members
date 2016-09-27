@@ -118,6 +118,24 @@ class StubMemberDao()(implicit val ec: ExecutionContext) extends MemberDao {
     }
   }
 
+  /**
+    * Update a member's information.
+    *
+    * @param member
+    * @return
+    */
+  override def update(member: Member): Future[\/[String, Member]] = {
+    Future.successful {
+      if (member.uuid.contains(StubMemberDao.updateUuid)) {
+        \/-(member)
+      } else if (member.uuid.contains(StubMemberDao.updateErrorUuid)) {
+        -\/(Errors.internalServer)
+      } else {
+        throw new RuntimeException("unknown uuid used with stub")
+      }
+    }
+  }
+
 }
 
 object StubMemberDao {
@@ -139,5 +157,8 @@ object StubMemberDao {
   val forPhoneNumberNotFound = "+447810000001"
   val forPhoneNumberError = "+447111999111"
   val forPhoneNumberMember = Util.fixture[Member]("a70dba8b.json")
+
+  val updateUuid = UUID.fromString("1f390207-5d92-4e56-828b-0c229c92f21a")
+  val updateErrorUuid = UUID.fromString("c740a4dc-b190-4aba-9f9e-5a1b93c581b1")
 
 }

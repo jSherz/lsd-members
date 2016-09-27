@@ -87,6 +87,17 @@ class MemberApi(private val memberDao: MemberDao,
     }
   }
 
+  val updateRoute = (path(JavaUUID) & put & authDirective & entity(as[Member])) { (memberUuid, _, member) =>
+    if (member.uuid.contains(memberUuid)) {
+      onSuccess(memberDao.update(member)) {
+        case \/-(returnedMember) => complete(returnedMember)
+        case -\/(error) => complete(StatusCodes.InternalServerError, error)
+      }
+    } else {
+      complete(StatusCodes.BadRequest, MemberApiErrors.uuidUrlBodyMismatch)
+    }
+  }
+
   val textMessagesRoute = (path(JavaUUID / "text-messages") & get & authDirective) { (memberUuid, _) =>
     onSuccess(textMessageDao.forMember(memberUuid)) {
       case \/-(textMessages: Seq[TextMessage]) => complete(textMessages)
@@ -97,7 +108,14 @@ class MemberApi(private val memberDao: MemberDao,
   val route: Route = pathPrefix("members") {
     searchRoute ~
       getRoute ~
-      textMessagesRoute
+      textMessagesRoute ~
+      updateRoute
   }
+
+}
+
+object MemberApiErrors {
+
+  val uuidUrlBodyMismatch = "error.uuidUrlBodyMismatch"
 
 }

@@ -35,7 +35,7 @@ import com.jsherz.luskydive.core.{Member, TextMessage}
 import com.jsherz.luskydive.dao.{StubMemberDao, StubTextMessageDao}
 import com.jsherz.luskydive.json.MemberSearchRequest
 import com.jsherz.luskydive.json.MemberJsonSupport._
-import com.jsherz.luskydive.util.AuthenticationDirectives
+import com.jsherz.luskydive.util.{AuthenticationDirectives, Errors, Util}
 import org.mockito.Matchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.{never, times, verify}
@@ -60,6 +60,11 @@ class MemberApiSpec extends WordSpec with Matchers with ScalatestRouteTest with 
   private val textMessagesUrl = s"/members/${StubTextMessageDao.forMemberUuid}/text-messages"
   private val textMessagesNotFoundUrl = s"/members/${StubTextMessageDao.forMemberNotFoundUuid}/text-messages"
   private val textMessagesErrorUrl = s"/members/${StubTextMessageDao.forMemberErrorUuid}/text-messages"
+  private val updateUrl = s"/members/${StubMemberDao.updateUuid}"
+  private val updateWrongMemberUrl = "/members/45da34bc-01f0-4b88-b822-fb9b07a64c10"
+  private val updateMember = Util.fixture[Member]("1f390207.json")
+  private val updateErrorUrl = s"/members/${StubMemberDao.updateErrorUuid}"
+  private val updateErrorMember = Util.fixture[Member]("c740a4dc.json")
 
   trait Fixtured {
     val dao = Mockito.spy(new StubMemberDao())
@@ -184,8 +189,8 @@ class MemberApiSpec extends WordSpec with Matchers with ScalatestRouteTest with 
       verify(textMessageDao, never()).forMember(any[UUID])
     }
 
-    "return method not allowed when used with anything other than GET" in new Fixtured {
-      Seq(Post, Put, Delete, Patch).foreach { method =>
+    "return method not allowed when used with anything other than GET or PUT" in new Fixtured {
+      Seq(Post, Delete, Patch).foreach { method =>
         method(textMessagesUrl) ~> Route.seal(route) ~> check {
           response.status shouldEqual StatusCodes.MethodNotAllowed
         }
@@ -213,6 +218,56 @@ class MemberApiSpec extends WordSpec with Matchers with ScalatestRouteTest with 
     "return 500 when the lookup fails" in new Fixtured {
       Get(textMessagesErrorUrl) ~> route ~> check {
         response.status shouldEqual StatusCodes.InternalServerError
+      }
+    }
+
+  }
+
+  "MemberApi#update" should {
+
+    "require authentication" in new Fixtured {
+      implicit val authDirective = AuthenticationDirectives.denyAll
+      override val route = new MemberApi(dao, textMessageDao).route
+
+      Get(updateUrl) ~> Route.seal(route) ~> check {
+        response.status shouldEqual StatusCodes.Unauthorized
+      }
+
+      verify(dao, never()).update(any[Member])
+    }
+
+    "return method not allowed when used with anything other than PUT or GET" in new Fixtured {
+      Seq(Post, Delete, Patch).foreach { method =>
+        method(updateUrl) ~> Route.seal(route) ~> check {
+          response.status shouldEqual StatusCodes.MethodNotAllowed
+        }
+      }
+
+      verify(dao, never()).update(any[Member])
+    }
+
+    "return bad request if the UUID in the URL and member record don't match" in new Fixtured {
+      Put(updateWrongMemberUrl, updateMember) ~> Route.seal(route) ~> check {
+        response.status shouldEqual StatusCodes.BadRequest
+        responseAs[String] shouldEqual MemberApiErrors.uuidUrlBodyMismatch
+      }
+
+      verify(dao, never()).update(any[Member])
+    }
+
+    "update the member correctly" in new Fixtured {
+      Put(updateUrl, updateMember) ~> route ~> check {
+        response.status shouldEqual StatusCodes.OK
+        responseAs[Member] shouldEqual updateMember
+      }
+
+      verify(dao).update(updateMember)
+    }
+
+    "return an error with the correct status" in new Fixtured {
+      Put(updateErrorUrl, updateErrorMember) ~> Route.seal(route) ~> check {
+        response.status shouldEqual StatusCodes.InternalServerError
+        responseAs[String] shouldEqual Errors.internalServer
       }
     }
 
