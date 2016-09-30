@@ -26,19 +26,21 @@
     &:hover
       background-color: darken($today-colour, 15%)
 
-.sl-course-calendar-tile-info
+a
+  display: inline-block
+  width: 100%
   padding: 0.3em
   border-radius: 0.5em
   font-size: 0.8em
   background-color: #eee
   text-align: center
 
-  &.course-full
-    background-color: #ffaea7
+div.course-full a
+  background-color: #ffaea7
 
-  &.course-spaces
+div.course-spaces a
     background-color: #c6ffc1
 
-  @include media(max-width 50em)
-    .course-word-spaces
-      display: none
+@include media(max-width 50em)
+  .course-word-spaces
+    display: none
