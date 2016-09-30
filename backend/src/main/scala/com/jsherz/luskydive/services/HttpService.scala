@@ -25,6 +25,7 @@
 package com.jsherz.luskydive.services
 
 import akka.event.LoggingAdapter
+import akka.http.scaladsl.model.HttpMethods._
 import akka.http.scaladsl.model.{HttpEntity, HttpResponse, StatusCodes}
 import akka.http.scaladsl.model.headers.{HttpOrigin, HttpOriginRange}
 import akka.http.scaladsl.server._
@@ -86,7 +87,7 @@ object Cors {
     HttpOrigin("https://dev.leedsskydivers.com"),
     HttpOrigin("https://www.leedsskydivers.com"),
     HttpOrigin("https://leedsskydivers.com")
-  ))
+  ), allowedMethods = scala.collection.immutable.Seq(GET, PUT, POST, HEAD, OPTIONS))
 
   def cors: Directive0 = ch.megard.akka.http.cors.CorsDirectives.corsDecorate(settings).map(_ ⇒ ())
 
