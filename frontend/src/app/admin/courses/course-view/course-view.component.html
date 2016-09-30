@@ -24,47 +24,52 @@
 
   <table id="sl-course-students">
     <thead>
-      <tr>
-        <th id="sl-course-students-number">#</th>
-        <th id="sl-course-students-name">Name</th>
-        <th id="sl-course-students-date-joined">Date joined</th>
-        <th id="sl-course-students-info-complete">Info complete</th>
-        <th id="sl-course-students-deposit-paid">Deposit paid</th>
-        <th id="sl-course-students-options">Options</th>
-      </tr>
+    <tr>
+      <th id="sl-course-students-number">#</th>
+      <th id="sl-course-students-name">Name</th>
+      <th id="sl-course-students-date-joined">Date joined</th>
+      <th id="sl-course-students-info-complete">Info complete</th>
+      <th id="sl-course-students-deposit-paid">Deposit paid</th>
+      <th id="sl-course-students-options">Options</th>
+    </tr>
     </thead>
 
     <tbody>
-      <tr *ngFor="let space of spaces">
-        <td class="sl-course-students-number">
-          {{ space.number }}
-        </td>
-        <td class="sl-course-students-name" *ngIf="space.member">
-          {{ space.member?.firstName }} {{ space.member?.lastName }}
-        </td>
-        <td class="sl-course-students-name" colspan="5" *ngIf="!space.member">
-          N/A
-        </td>
-        <td class="sl-course-students-date-joined" *ngIf="space.member">
-          {{ space.member?.createdAt?.format('YYYY-MM-DD') || '' }}
-        </td>
-        <td class="sl-course-students-info-complete" *ngIf="space.member">
-          <i class="fa fa-check" aria-hidden="true" style="color: green;" *ngIf="space.member.infoComplete()"></i>
-          <i class="fa fa-times" aria-hidden="true" style="color: red;" *ngIf="!space.member.infoComplete()"></i>
-        </td>
-        <td class="sl-course-students-deposit-paid" *ngIf="space.member">
-          <i class="fa fa-question" aria-hidden="true" style="color: orange;"></i>
-        </td>
-        <td class="sl-course-students-options" *ngIf="space.member">
-          <a [routerLink]="['/admin', 'members', space.member.uuid]" title="View member information" id="sl-course-students-view-member" class="button">
-            <i class="fa fa-info" aria-hidden="true"></i>
-          </a>
-          <button type="button" title="Edit member information" class="sl-course-students-edit-member"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-          <button type="button" class="btn-warning sl-course-students-remove" title="Remove from course" (click)="removeMemberFromCourse(space)">
-            <i class="fa fa-trash-o"></i>
-          </button>
-        </td>
-      </tr>
+    <tr *ngFor="let space of spaces">
+      <td class="sl-course-students-number">
+        {{ space.number }}
+      </td>
+      <td class="sl-course-students-name" *ngIf="space.member">
+        {{ space.member?.firstName }} {{ space.member?.lastName }}
+      </td>
+      <td class="sl-course-students-name" colspan="5" *ngIf="!space.member">
+        N/A
+      </td>
+      <td class="sl-course-students-date-joined" *ngIf="space.member">
+        {{ space.member?.createdAt?.format('YYYY-MM-DD') || '' }}
+      </td>
+      <td class="sl-course-students-info-complete" *ngIf="space.member">
+        <i class="fa fa-check" aria-hidden="true" style="color: green;" *ngIf="space.member.infoComplete()"></i>
+        <i class="fa fa-times" aria-hidden="true" style="color: red;" *ngIf="!space.member.infoComplete()"></i>
+      </td>
+      <td class="sl-course-students-deposit-paid" *ngIf="space.member">
+        <i class="fa fa-question" aria-hidden="true" style="color: orange;"></i>
+      </td>
+      <td class="sl-course-students-options" *ngIf="space.member">
+        <a [routerLink]="['/admin', 'members', space.member.uuid]" title="View member information"
+           class="sl-course-students-view-member button">
+          <i class="fa fa-info" aria-hidden="true"></i>
+        </a>
+        <a [routerLink]="['/admin', 'members', space.member.uuid, 'edit']" title="Edit member information"
+           class="sl-course-students-edit-member button">
+          <i class="fa fa-pencil" aria-hidden="true"></i>
+        </a>
+        <button type="button" class="btn-warning sl-course-students-remove" title="Remove from course"
+                (click)="removeMemberFromCourse(space)">
+          <i class="fa fa-trash-o"></i>
+        </button>
+      </td>
+    </tr>
     </tbody>
   </table>
 
