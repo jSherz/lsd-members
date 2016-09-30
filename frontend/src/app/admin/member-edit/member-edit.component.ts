@@ -106,11 +106,7 @@ export class MemberEditComponent implements OnInit, OnDestroy {
       result => {
         this.showThrobber = false;
 
-        if (result.success) {
-          this.router.navigate(['/admin', 'members', this.member.uuid]);
-        } else {
-          this.error = result.error;
-        }
+        this.router.navigate(['/admin', 'members', this.member.uuid]);
       },
       error => {
         this.showThrobber = false;
