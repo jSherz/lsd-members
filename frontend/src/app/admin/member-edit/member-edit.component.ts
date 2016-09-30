@@ -99,8 +99,8 @@ export class MemberEditComponent implements OnInit, OnDestroy {
 
     let memberData = this.memberForm.value;
     memberData.uuid = this.member.uuid;
-    memberData.createdAt = this.member.createdAt;
-    memberData.updatedAt = moment();
+    memberData.createdAt = this.member.createdAt.format('YYYY-MM-DD hh:mm:ss');
+    memberData.updatedAt = moment().format('YYYY-MM-DD hh:mm:ss');
 
     this.service.editMember(memberData).subscribe(
       result => {
