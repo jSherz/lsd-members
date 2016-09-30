@@ -84,7 +84,7 @@ export class MemberEditComponent implements OnInit, OnDestroy {
       this.ctrlLastName.setValue(member.lastName);
       this.ctrlPhoneNumber.setValue(member.phoneNumber);
       this.ctrlEmail.setValue(member.email);
-      this.ctrlLastJump.setValue(member.lastJump);
+      this.ctrlLastJump.setValue(member.lastJump ? member.lastJump.format('YYYY-MM-DD') : null);
       this.ctrlWeight.setValue(member.weight);
       this.ctrlHeight.setValue(member.height);
       this.ctrlDriver.setValue(member.driver);
