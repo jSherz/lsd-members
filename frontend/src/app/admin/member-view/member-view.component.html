@@ -1,6 +1,13 @@
 <div id="member-view">
   <h2>Member view</h2>
 
+  <p *ngIf="member">
+    <a [routerLink]="['/admin', 'members', member.uuid, 'edit']" id="member-edit-btn" title="Edit member information"
+       class="button">
+      <i class="fa fa-pencil" aria-hidden="true"></i> Edit
+    </a>
+  </p>
+
   <dl *ngIf="member" id="member-info">
     <dt title="A unique identifier for this member.">UUID</dt>
     <dd>{{ member.uuid }}</dd>
