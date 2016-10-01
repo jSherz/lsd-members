@@ -1,6 +1,6 @@
 # Leeds University Skydivers - Management system
 
-Tasks are managed with [WeKan](https://kanban.leedsskydivers.com/b/FHFfXLrDmeAXarfA3/lsd-members).
+*TODO:* Proper testing, proper build & deploy process.
 
 ## Frontend
 
