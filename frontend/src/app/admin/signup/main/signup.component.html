@@ -4,7 +4,7 @@
   </div>
 
   <div id="sign-up-form">
-    <form [formGroup]="signupForm">
+    <form [formGroup]="signupForm" (submit)="signup(signupForm.value)">
       <div>
         <label for="name">Name</label>
         <input type="text" id="name" name="name" formControlName="name" required value=""
@@ -33,7 +33,7 @@
         </div>
       </div>
 
-      <button type="button" (click)="signup(signupForm.value)" [disabled]="!signupForm.valid">Sign me up!</button>
+      <button type="submit" [disabled]="!signupForm.valid">Sign me up!</button>
       <span [ngClass]="{visible: showThrobber}" class="throbber"></span>
     </form>
   </div>

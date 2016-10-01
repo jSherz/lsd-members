@@ -6,7 +6,7 @@
   </div>
 
   <div id="login-form">
-    <form [formGroup]="loginForm">
+    <form [formGroup]="loginForm" (submit)="login(loginForm.value)">
       <div>
         <label for="email">E-mail</label>
         <input type="email" id="email" name="email" formControlName="email" required value=""
@@ -34,7 +34,7 @@
         </div>
       </div>
 
-      <button type="button" (click)="login(loginForm.value)" [disabled]="!loginForm.valid">Login</button>
+      <button type="submit" [disabled]="!loginForm.valid">Login</button>
       <span [ngClass]="{visible: showThrobber}" class="throbber"></span>
     </form>
   </div>

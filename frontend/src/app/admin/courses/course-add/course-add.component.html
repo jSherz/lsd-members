@@ -10,7 +10,7 @@
     An unknown error occurred #sadtimes #turnitoffandonagain
   </div>
 
-  <form [formGroup]="courseForm">
+  <form [formGroup]="courseForm" (submit)="createCourse(courseForm.value)">
     <div>
       <label for="date">Date</label>
       <input type="date" id="date" formControlName="date" required value="">
@@ -48,7 +48,7 @@
       </div>
     </div>
 
-    <button type="button" (click)="createCourse(courseForm.value)" [disabled]="!courseForm.valid">Create course</button>
+    <button type="submit" [disabled]="!courseForm.valid">Create course</button>
     <span [ngClass]="{visible: showThrobber}" class="throbber"></span>
   </form>
 </div>
