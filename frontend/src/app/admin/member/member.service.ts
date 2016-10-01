@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {BaseService} from '../utils/base.service';
 import {Observable} from 'rxjs';
 import * as moment from 'moment';
-import {Http} from "@angular/http";
-import {ApiKeyService} from "../utils/api-key.service";
+import {Http} from '@angular/http';
+import {ApiKeyService} from '../utils/api-key.service';
 
 export class Member {
   uuid: string;
@@ -64,7 +64,35 @@ export class TextMessage {
   }
 }
 
-export abstract class MemberViewService extends BaseService {
+export class SearchResult {
+
+  uuid: string;
+  name: string;
+  phoneNumber: string;
+  email: string;
+  chosen: boolean;
+
+  constructor(uuid, name, phoneNumber, email) {
+    this.uuid = uuid;
+    this.name = name;
+    this.phoneNumber = phoneNumber;
+    this.email = email;
+    this.chosen = false;
+  }
+
+}
+
+export class MemberEditResult {
+  success: boolean;
+  error: string;
+
+  constructor(success: boolean, error: string) {
+    this.success = success;
+    this.error = error;
+  }
+}
+
+export abstract class MemberService extends BaseService {
 
   constructor(http: Http, apiKeyService: ApiKeyService) {
     super(http, apiKeyService);
@@ -74,13 +102,20 @@ export abstract class MemberViewService extends BaseService {
 
   abstract getTextMessages(uuid: string): Observable<TextMessage[]>
 
+  abstract search(term: string): Observable<SearchResult[]>
+
+  abstract editMember(member: Member): Observable<MemberEditResult>
+
 }
 
 @Injectable()
-export class MemberViewServiceImpl extends MemberViewService {
+export class MemberServiceImpl extends MemberService {
 
-  private getUrl = 'http://localhost:8080/api/v1/members/{{uuid}}';
+  private baseUrl = 'http://localhost:8080/api/v1/';
+  private getUrl = this.baseUrl + 'members/{{uuid}}';
   private textMessagesUrl = this.getUrl + '/text-messages';
+  private memberSearchUrl = this.baseUrl + 'members/search';
+  private editUrl = this.baseUrl + 'members/{{uuid}}';
 
   constructor(http: Http, apiKeyService: ApiKeyService) {
     super(http, apiKeyService);
@@ -112,6 +147,21 @@ export class MemberViewServiceImpl extends MemberViewService {
           return message;
         });
       })
+      .catch(this.handleError());
+  }
+
+  search(term: string): Observable<SearchResult[]> {
+    let body = {
+      searchTerm: term
+    };
+
+    return this.post(this.memberSearchUrl, body)
+      .map(r => this.extractJson<SearchResult[]>(r))
+      .catch(this.handleError());
+  }
+
+  editMember(member: Member): Observable<MemberEditResult> {
+    return this.put(this.editUrl.replace('{{uuid}}', member.uuid), member)
       .catch(this.handleError());
   }
 

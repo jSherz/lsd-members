@@ -4,9 +4,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {FormBuilder, Validators, FormControl, FormGroup} from '@angular/forms';
 import * as moment from 'moment';
 
-import {MemberEditService, Member, MemberEditResult} from './member-edit.service';
-import {MemberViewService} from '../member-view';
-import {CustomValidators} from '../../utils/custom-validators';
+import {MemberService, Member} from '../member.service';
+import {CustomValidators} from '../../../utils/custom-validators';
 
 @Component({
   selector: 'app-member-edit',
@@ -50,8 +49,7 @@ export class MemberEditComponent implements OnInit, OnDestroy {
   error: string;
 
   constructor(private builder: FormBuilder,
-              private service: MemberEditService, // TODO: Refactor as one MemberService
-              private viewService: MemberViewService,
+              private service: MemberService,
               private route: ActivatedRoute,
               private router: Router) {
     this.ctrlFirstName = new FormControl('', Validators.required);
@@ -78,7 +76,7 @@ export class MemberEditComponent implements OnInit, OnDestroy {
   }
 
   showMember(uuid: string) {
-    this.viewService.getMember(uuid).subscribe(member => {
+    this.service.getMember(uuid).subscribe(member => {
       // TODO: Replace with setting form value
       this.ctrlFirstName.setValue(member.firstName);
       this.ctrlLastName.setValue(member.lastName);

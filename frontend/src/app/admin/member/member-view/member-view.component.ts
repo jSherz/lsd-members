@@ -3,7 +3,7 @@ import {Subscription} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import * as moment from 'moment';
 
-import {MemberViewService, Member, TextMessage} from './member-view.service';
+import {MemberService, Member, TextMessage} from '../member.service';
 
 @Component({
   selector: 'app-member-view',
@@ -18,7 +18,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
 
   private textMessages: TextMessage[] = [];
 
-  constructor(private service: MemberViewService,
+  constructor(private service: MemberService,
               private route: ActivatedRoute) {
   }
 

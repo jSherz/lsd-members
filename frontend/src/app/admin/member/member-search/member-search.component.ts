@@ -1,6 +1,6 @@
 import {Component, OnInit, Output, EventEmitter} from '@angular/core';
 
-import { SearchResult, MemberSearchService } from './member-search.service';
+import {SearchResult, MemberService} from '../member.service';
 
 /**
  * Enables a user to search for a member and then select that member.
@@ -51,7 +51,8 @@ export class MemberSearchComponent implements OnInit {
    */
   @Output() memberSelected: EventEmitter<SearchResult> = new EventEmitter<SearchResult>();
 
-  constructor(private searchService: MemberSearchService) { }
+  constructor(private service: MemberService) {
+  }
 
   ngOnInit() {
   }
@@ -59,7 +60,7 @@ export class MemberSearchComponent implements OnInit {
   performSearch() {
     this.hasSearched = true;
 
-    this.searchService.search(this.searchTerm).subscribe(results => {
+    this.service.search(this.searchTerm).subscribe(results => {
       this.searchResults = results;
       this.displayedSearchResults = results.slice(0, this.displayPerLoad);
     });

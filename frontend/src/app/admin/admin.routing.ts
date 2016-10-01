@@ -14,9 +14,9 @@ import {
   SignupAltComponent,
   ThankYouComponent,
   MemberViewComponent,
-  MemberLookupComponent
+  MemberLookupComponent,
+  MemberEditComponent
 } from './';
-import {MemberEditComponent} from './member-edit/member-edit.component';
 
 
 export const adminRoutes: Routes = [

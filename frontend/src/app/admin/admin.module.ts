@@ -32,8 +32,8 @@ import {
   ApiKeyServiceImpl,
   SignupService,
   SignupServiceImpl,
-  MemberSearchService,
-  MemberSearchServiceImpl,
+  MemberService,
+  MemberServiceImpl,
   MemberLookupComponent,
   MemberViewComponent,
   CourseService,
@@ -46,11 +46,7 @@ import {
   SignupComponent,
   SignupAltComponent,
   ThankYouComponent,
-  MemberViewServiceImpl,
-  MemberViewService,
-  MemberEditComponent,
-  MemberEditService,
-  MemberEditServiceImpl
+  MemberEditComponent
 } from './';
 
 import {adminRouting} from './admin.routing';
@@ -87,14 +83,12 @@ import {adminRouting} from './admin.routing';
     {provide: ApiKeyService, useClass: ApiKeyServiceImpl},
     {provide: SignupService, useClass: SignupServiceImpl},
     {provide: LocationStrategy, useClass: PathLocationStrategy},
-    {provide: MemberSearchService, useClass: MemberSearchServiceImpl},
     {provide: CourseService, useClass: CourseServiceImpl},
     {provide: CourseSpaceService, useClass: CourseSpaceServiceImpl},
     {provide: CommitteeService, useClass: CommitteeServiceImpl},
     {provide: LoginService, useClass: LoginServiceImpl},
     {provide: MassTextService, useClass: MassTextServiceImpl},
-    {provide: MemberViewService, useClass: MemberViewServiceImpl},
-    {provide: MemberEditService, useClass: MemberEditServiceImpl},
+    {provide: MemberService, useClass: MemberServiceImpl},
     CanActivateAdmin
   ]
 })
