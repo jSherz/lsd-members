@@ -9,7 +9,7 @@
     An unknown error occurred #sadtimes #turnitoffandonagain
   </div>
 
-  <form [formGroup]="massTextForm">
+  <form [formGroup]="massTextForm" (submit)="send(massTextForm.value)">
     <div>
       <label for="start-date">Start date</label>
       <input type="date" id="start-date" formControlName="startDate" required value="">
@@ -51,7 +51,7 @@
       <div id="mass-text-preview">{{ preview }}</div>
     </div>
 
-    <button type="button" (click)="send(massTextForm.value)" [disabled]="!massTextForm.valid">Send message</button>
+    <button type="submit" [disabled]="!massTextForm.valid">Send message</button>
     <span [ngClass]="{visible: showThrobber}" class="throbber"></span>
   </form>
 </div>
