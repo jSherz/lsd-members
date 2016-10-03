@@ -1,15 +1,20 @@
-import { Subscription                 } from 'rxjs';
-import { ActivatedRoute               } from '@angular/router';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {Subscription} from 'rxjs';
+import {ActivatedRoute} from '@angular/router';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import * as moment from 'moment';
 
+import {CourseService} from '../course.service';
+
 import {
-  CourseService,
   Course,
+  CommitteeMember,
+  StrippedMember,
   CourseSpaceWithMember,
-  CourseWithOrganisers, CommitteeMember, StrippedMember
-} from '../course.service';
-import { CourseSpaceService } from '../../course-spaces/course-spaces.service';
+  CourseWithOrganisers
+} from '../model';
+
+import {CourseSpaceService} from '../../course-spaces/course-spaces.service';
+
 
 @Component({
   selector: 'app-course-view',
@@ -53,7 +58,8 @@ export class CourseViewComponent implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute,
               private service: CourseService,
-              private spaceService: CourseSpaceService) { }
+              private spaceService: CourseSpaceService) {
+  }
 
   /**
    * Called when the component has been created.

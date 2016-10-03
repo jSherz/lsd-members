@@ -5,93 +5,14 @@ import * as moment from 'moment';
 
 import {BaseService} from '../utils/base.service';
 import {ApiKeyService} from '../utils/api-key.service';
-import {CourseCreateRequest, CourseCreateResponse} from './model';
+import {
+  CourseCreateRequest,
+  CourseCreateResponse,
+  CourseWithNumSpaces,
+  CourseWithOrganisers,
+  CourseSpaceWithMember
+} from './model';
 
-export class Course {
-  uuid: String;
-  date: moment.Moment;
-  organiserUuid: String;
-  secondaryOrganiserUuid: String;
-  status: number;
-
-  constructor(uuid: String, date: moment.Moment, organiserUuid: String, secondaryOrganiserUuid: String, status: number) {
-    this.uuid = uuid;
-    this.date = date;
-    this.organiserUuid = organiserUuid;
-    this.secondaryOrganiserUuid = secondaryOrganiserUuid;
-    this.status = status;
-  }
-}
-
-export class CourseWithNumSpaces {
-  course: Course;
-  totalSpaces: number;
-  spacesFree: number;
-
-  constructor(course: Course, totalSpaces: number, spacesFree: number) {
-    this.course = course;
-    this.totalSpaces = totalSpaces;
-    this.spacesFree = spacesFree;
-  }
-}
-
-export class CommitteeMember {
-  name: string;
-  uuid: string;
-
-  constructor(name: string, uuid: string) {
-    this.name = name;
-    this.uuid = uuid;
-  }
-}
-
-export class CourseWithOrganisers {
-  course: Course;
-  organiser: CommitteeMember;
-  secondaryOrganiser: CommitteeMember;
-
-  constructor(course: Course, organiser: CommitteeMember, secondaryOrganiser: CommitteeMember) {
-    this.course = course;
-    this.organiser = organiser;
-    this.secondaryOrganiser = secondaryOrganiser;
-  }
-}
-
-export class StrippedMember {
-  firstName: string;
-  lastName: string;
-  uuid: string;
-  weight: number;
-  height: number;
-  createdAt: moment.Moment;
-
-  constructor(firstName: string, lastName: string, uuid: string, weight: number, height: number, createdAt: moment.Moment) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.uuid = uuid;
-    this.weight = weight;
-    this.height = height;
-    this.createdAt = createdAt;
-  }
-
-  infoComplete() {
-    return this.firstName != null && this.lastName != null && this.weight != null && this.height != null;
-  }
-}
-
-export class CourseSpaceWithMember {
-  uuid: string;
-  courseUuid: string;
-  number: number;
-  member: StrippedMember;
-
-  constructor(uuid: string, courseUuid: string, number: number, member: StrippedMember) {
-    this.uuid = uuid;
-    this.courseUuid = courseUuid;
-    this.number = number;
-    this.member = member;
-  }
-}
 
 /**
  * Describes a service capable of retrieving course information.

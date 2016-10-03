@@ -1,14 +1,16 @@
 import {Component, OnInit, OnDestroy}      from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription}      from 'rxjs/Subscription';
+
 import * as moment         from 'moment';
 import {MonthService}      from '../month.service';
 import {Tile, TileService} from './tile/tile.service';
+import {CourseWithNumSpaces} from '../model';
 import {
   CourseService,
-  CourseWithNumSpaces,
   CourseServiceImpl
 } from '../course.service';
+
 
 @Component({
   selector: 'course-calendar-component',

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import * as moment from 'moment';
-import {CourseWithNumSpaces} from '../../course.service';
+import {CourseWithNumSpaces} from '../../model';
 
 export const TILES_PER_CALENDAR = 42;
 

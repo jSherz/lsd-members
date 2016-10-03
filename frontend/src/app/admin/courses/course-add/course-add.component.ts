@@ -1,20 +1,22 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
+import {Router} from '@angular/router'
+import {Subscription} from 'rxjs';
+import * as moment from 'moment';
+
 import {
   FormControl,
   FormBuilder,
   FormGroup,
   Validators
 } from '@angular/forms';
-import * as moment from 'moment';
-import {Subscription} from 'rxjs';
 
 import {
   CommitteeService,
   StrippedCommitteeMember
 } from '../../committee/committee.service';
-import {Course, CourseService} from '../course.service';
-import {Router} from '@angular/router'
-import {CourseCreateRequest} from "../model/course-create-request";
+
+import {CourseService} from '../course.service';
+import {CourseCreateRequest} from '../model';
 
 @Component({
   selector: 'course-add-component',
