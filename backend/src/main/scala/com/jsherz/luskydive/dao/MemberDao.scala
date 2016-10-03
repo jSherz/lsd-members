@@ -35,7 +35,7 @@ import com.jsherz.luskydive.util.FutureError
 import com.jsherz.luskydive.util.FutureError._
 
 import scala.concurrent.{ExecutionContext, Future}
-import scalaz.{-\/, \/}
+import scalaz.{-\/, \/, \/-}
 
 /**
   * Data Access Object to retrieve and store Member information.
@@ -59,7 +59,7 @@ trait MemberDao {
     * @param member
     * @return UUID if creation succeeded
     */
-  def create(member: Member): Future[Option[UUID]]
+  def create(member: Member): Future[String \/ UUID]
 
   /**
     * Get a member with the provided UUID.
@@ -123,13 +123,13 @@ class MemberDaoImpl(override protected val databaseService: DatabaseService)
     * @param member
     * @return UUID if creation succeeded
     */
-  override def create(member: Member): Future[Option[UUID]] = {
+  override def create(member: Member): Future[String \/ UUID] = {
     val uuid = member.uuid.getOrElse(Generators.randomBasedGenerator().generate())
 
     if (member.phoneNumber.isDefined || member.email.isDefined) {
-      db.run((Members returning Members.map(_.uuid)) += member.copy(uuid = Some(uuid))).map(Some(_))
+      db.run((Members returning Members.map(_.uuid)) += member.copy(uuid = Some(uuid))) withServerError
     } else {
-      Future(None)
+      Future.successful(-\/(MemberDaoErrors.noPhoneNumberOrEmail))
     }
   }
 
@@ -200,5 +200,6 @@ class MemberDaoImpl(override protected val databaseService: DatabaseService)
 object MemberDaoErrors {
 
   val invalidSearchTerm = "error.invalidSearchTerm"
+  val noPhoneNumberOrEmail = "error.noPhoneNumberOrEmail"
 
 }

@@ -109,14 +109,14 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
   "MemberDao#create" should {
 
-    "return None if no phone number or e-mail was supplied" in {
+    "return Left(error) if no phone number or e-mail was supplied" in {
       val createdAt = Timestamp.valueOf("2016-08-13 21:13:37.10101")
       val updatedAt = Timestamp.valueOf("2016-08-13 21:14:10.00101")
 
       val member = Member(None, "Tegan", Some("Harper"), None, None, None, None, None, false, false, createdAt, updatedAt)
       val result = dao.create(member)
 
-      result.futureValue shouldBe None
+      result.futureValue shouldBe -\/(MemberDaoErrors.noPhoneNumberOrEmail)
     }
 
     "generate a valid UUID (if not supplied) and inserts a member with the correct information" in {
@@ -129,10 +129,12 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       val futureResult = dao.create(member)
       val result = futureResult.futureValue
 
-      result.isDefined shouldBe true
+      result.isRight shouldBe true
 
-      val foundMember = dao.get(result.get)
-      foundMember.futureValue shouldBe \/-(Some(member.copy(uuid = Some(result.get))))
+      result.map { uuid =>
+        val foundMember = dao.get(uuid)
+        foundMember.futureValue shouldBe \/-(Some(member.copy(uuid = Some(uuid))))
+      }
     }
 
     "uses the supplied UUID (if provided) and inserts a member with the correct information" in {
@@ -145,10 +147,12 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       val futureResult = dao.create(member)
       val result = futureResult.futureValue
 
-      result.isDefined shouldBe true
+      result.isRight shouldBe true
 
-      val foundMember = dao.get(result.get)
-      foundMember.futureValue shouldBe \/-(Some(member))
+      result.map { uuid =>
+        val foundMember = dao.get(uuid)
+        foundMember.futureValue shouldBe \/-(Some(member))
+      }
     }
 
     "generates a different UUID with each creation" in {
@@ -165,9 +169,9 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       val memberBUuid = dao.create(memberB).futureValue
       val memberCUuid = dao.create(memberC).futureValue
 
-      memberAUuid shouldNot be(None)
-      memberBUuid shouldNot be(None)
-      memberCUuid shouldNot be(None)
+      memberAUuid.isRight shouldBe true
+      memberBUuid.isRight shouldBe true
+      memberCUuid.isRight shouldBe true
 
       memberAUuid shouldNot equal(memberBUuid)
       memberAUuid shouldNot equal(memberCUuid)
