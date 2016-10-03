@@ -58,8 +58,14 @@ class StubMemberDao()(implicit val ec: ExecutionContext) extends MemberDao {
     * @param member
     * @return
     */
-  override def create(member: Member): Future[Option[UUID]] = {
-    Future(Some(Generators.randomBasedGenerator().generate()))
+  override def create(member: Member): Future[String \/ UUID] = {
+    Future.successful {
+      member.uuid match {
+        case Some(StubMemberDao.createErrorUuid) => -\/(Errors.internalServer)
+        case Some(uuid) => \/-(uuid)
+        case None => \/-(Generators.randomBasedGenerator().generate())
+      }
+    }
   }
 
   /**
@@ -160,5 +166,7 @@ object StubMemberDao {
 
   val updateUuid = UUID.fromString("1f390207-5d92-4e56-828b-0c229c92f21a")
   val updateErrorUuid = UUID.fromString("c740a4dc-b190-4aba-9f9e-5a1b93c581b1")
+
+  val createErrorUuid = UUID.fromString("92dd62ad-aed6-4287-9f45-970322cc0ca5")
 
 }

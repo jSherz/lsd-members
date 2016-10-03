@@ -24,6 +24,7 @@
 
 package com.jsherz.luskydive.apis
 
+import java.sql.Timestamp
 import java.util.UUID
 
 import akka.event.LoggingAdapter
@@ -33,6 +34,7 @@ import com.jsherz.luskydive.dao.{MemberDao, MemberDaoErrors, TextMessageDao}
 import scala.concurrent.ExecutionContext
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
+import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.{Member, TextMessage}
 import com.jsherz.luskydive.json.MemberSearchRequest
 import com.jsherz.luskydive.json.MemberJsonSupport._
@@ -105,11 +107,19 @@ class MemberApi(private val memberDao: MemberDao,
     }
   }
 
+  val createRoute = (path("create") & post & authDirective & entity(as[Member])) { (_, member) =>
+    onSuccess(memberDao.create(member)) {
+      case \/-(uuid) => complete(uuid)
+      case -\/(error) => complete(StatusCodes.InternalServerError, error)
+    }
+  }
+
   val route: Route = pathPrefix("members") {
     searchRoute ~
       getRoute ~
       textMessagesRoute ~
-      updateRoute
+      updateRoute ~
+      createRoute
   }
 
 }

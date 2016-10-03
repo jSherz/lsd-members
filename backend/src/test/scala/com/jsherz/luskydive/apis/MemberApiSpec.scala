@@ -35,7 +35,7 @@ import com.jsherz.luskydive.core.{Member, TextMessage}
 import com.jsherz.luskydive.dao.{StubMemberDao, StubTextMessageDao}
 import com.jsherz.luskydive.json.MemberSearchRequest
 import com.jsherz.luskydive.json.MemberJsonSupport._
-import com.jsherz.luskydive.util.{AuthenticationDirectives, Errors, Util}
+import com.jsherz.luskydive.util.{AuthenticationDirectives, DateUtil, Errors, Util}
 import org.mockito.Matchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.{never, times, verify}
@@ -65,6 +65,13 @@ class MemberApiSpec extends WordSpec with Matchers with ScalatestRouteTest with 
   private val updateMember = Util.fixture[Member]("1f390207.json")
   private val updateErrorUrl = s"/members/${StubMemberDao.updateErrorUuid}"
   private val updateErrorMember = Util.fixture[Member]("c740a4dc.json")
+  private val createMemberUrl = "/members/create"
+
+  // TODO: Move to fixture?
+  private val exampleUuid = UUID.fromString("a9e6ba54-2040-4060-9297-2f40a64e388c")
+  private val exampleMember = Member(Some(exampleUuid), "Lance", Some("Scott"), Some("+447802070397"),
+    Some("nathansmith@tucker-estes.com"), Some(DateUtil.makeDate(2012, 12, 24)), None, None, false, false,
+    DateUtil.makeTimestamp(2008, 11, 14), DateUtil.makeTimestamp(2016, 1, 29))
 
   trait Fixtured {
     val dao = Mockito.spy(new StubMemberDao())
@@ -266,6 +273,47 @@ class MemberApiSpec extends WordSpec with Matchers with ScalatestRouteTest with 
 
     "return an error with the correct status" in new Fixtured {
       Put(updateErrorUrl, updateErrorMember) ~> Route.seal(route) ~> check {
+        response.status shouldEqual StatusCodes.InternalServerError
+        responseAs[String] shouldEqual Errors.internalServer
+      }
+    }
+
+  }
+
+  "MemberApi#create" should {
+
+    "require authentication" in new Fixtured {
+      implicit val authDirective = AuthenticationDirectives.denyAll
+      override val route = new MemberApi(dao, textMessageDao).route
+
+      Post(createMemberUrl) ~> Route.seal(route) ~> check {
+        response.status shouldEqual StatusCodes.Unauthorized
+      }
+
+      verify(dao, never()).create(any[Member])
+    }
+
+    "return method not allowed when used with anything other than POST" in new Fixtured {
+      Seq(Get, Put, Delete, Patch).foreach { method =>
+        method(createMemberUrl) ~> Route.seal(route) ~> check {
+          response.status shouldEqual StatusCodes.MethodNotAllowed
+        }
+      }
+
+      verify(dao, never()).create(any[Member])
+    }
+
+    "creates a member correctly" in new Fixtured {
+      Post(createMemberUrl, exampleMember) ~> route ~> check {
+        response.status shouldEqual StatusCodes.OK
+        responseAs[UUID] shouldEqual exampleUuid
+      }
+    }
+
+    "return the correct error code and message when creating a member fails" in new Fixtured {
+      val errorMember = exampleMember.copy(uuid = Some(StubMemberDao.createErrorUuid))
+
+      Post(createMemberUrl, errorMember) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.InternalServerError
         responseAs[String] shouldEqual Errors.internalServer
       }
