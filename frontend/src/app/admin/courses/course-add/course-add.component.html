@@ -11,6 +11,10 @@
   </div>
 
   <form [formGroup]="courseForm" (submit)="createCourse(courseForm.value)">
+    <div *ngIf="errors && errors.general" class="form-field-error">
+      {{translate(errors.general)}}
+    </div>
+
     <div>
       <label for="date">Date</label>
       <input type="date" id="date" formControlName="date" required value="">
@@ -23,7 +27,7 @@
     <div>
       <label for="organiser">Organiser</label>
       <select id="organiser" formControlName="organiser" required>
-        <option *ngFor="let committee of committeeMembers">{{ committee.name }}</option>
+        <option *ngFor="let committee of committeeMembers" value="{{ committee.uuid }}">{{ committee.name }}</option>
       </select>
     </div>
 
@@ -31,7 +35,7 @@
       <label for="secondaryOrganiser">Secondary organiser</label>
       <select id="secondaryOrganiser" formControlName="secondaryOrganiser">
         <option>- None -</option>
-        <option *ngFor="let committee of committeeMembers">{{ committee.name }}</option>
+        <option *ngFor="let committee of committeeMembers" value="{{ committee.uuid }}">{{ committee.name }}</option>
       </select>
     </div>
 

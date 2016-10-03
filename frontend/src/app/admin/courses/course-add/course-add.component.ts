@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {
   FormControl,
   FormBuilder,
@@ -6,12 +6,15 @@ import {
   Validators
 } from '@angular/forms';
 import * as moment from 'moment';
-import { Subscription } from 'rxjs';
+import {Subscription} from 'rxjs';
 
 import {
   CommitteeService,
   StrippedCommitteeMember
 } from '../../committee/committee.service';
+import {Course, CourseService} from '../course.service';
+import {Router} from '@angular/router'
+import {CourseCreateRequest} from "../model/course-create-request";
 
 @Component({
   selector: 'course-add-component',
@@ -70,8 +73,11 @@ export class CourseAddComponent implements OnInit, OnDestroy {
    *
    * @param builder
    * @param service
+   * @param committeeService
+   * @param router
    */
-  constructor(private builder: FormBuilder, private service: CommitteeService) {
+  constructor(private builder: FormBuilder, private service: CourseService, private committeeService: CommitteeService,
+              private router: Router) {
     this.ctrlDate = new FormControl(moment().format('YYYY-MM-DD'), Validators.required);
     this.ctrlOrganiser = new FormControl('', Validators.required);
     this.ctrlSecondaryOrganiser = new FormControl('');
@@ -86,7 +92,7 @@ export class CourseAddComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.committeeMembersSub = this.service.active().subscribe(
+    this.committeeMembersSub = this.committeeService.active().subscribe(
       committee => this.committeeMembers = committee,
       error => {
         this.apiRequestFailed = true;
@@ -97,6 +103,29 @@ export class CourseAddComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): any {
     this.committeeMembersSub.unsubscribe();
+  }
+
+  createCourse(formData: any) {
+    let request = new CourseCreateRequest(
+      moment(formData.date),
+      formData.organiser,
+      formData.secondaryOrganiser == null || formData.secondaryOrganiser == '' ? null : formData.secondaryOrganiser,
+      parseInt(formData.numSpaces)
+    );
+
+    this.service.create(request).subscribe(
+      result => {
+        if (result.success) {
+          this.router.navigate(['/admin', 'courses', result.uuid]);
+        } else {
+          this.errors['general'] = result.error;
+        }
+      },
+      error => {
+        this.apiRequestFailed = true;
+        console.log('Failed to create course: ' + error);
+      }
+    );
   }
 
 }

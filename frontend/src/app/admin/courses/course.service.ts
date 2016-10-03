@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
-import { Http       } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import {Injectable} from '@angular/core';
+import {Http} from '@angular/http';
+import {Observable} from 'rxjs/Observable';
 import * as moment from 'moment';
 
-import { BaseService   } from '../utils/base.service';
-import { ApiKeyService } from '../utils/api-key.service';
+import {BaseService} from '../utils/base.service';
+import {ApiKeyService} from '../utils/api-key.service';
+import {CourseCreateRequest, CourseCreateResponse} from './model';
 
 export class Course {
   uuid: String;
@@ -13,7 +14,7 @@ export class Course {
   secondaryOrganiserUuid: String;
   status: number;
 
-  constructor (uuid: String, date: moment.Moment, organiserUuid: String, secondaryOrganiserUuid: String, status: number) {
+  constructor(uuid: String, date: moment.Moment, organiserUuid: String, secondaryOrganiserUuid: String, status: number) {
     this.uuid = uuid;
     this.date = date;
     this.organiserUuid = organiserUuid;
@@ -27,7 +28,7 @@ export class CourseWithNumSpaces {
   totalSpaces: number;
   spacesFree: number;
 
-  constructor (course: Course, totalSpaces: number, spacesFree: number) {
+  constructor(course: Course, totalSpaces: number, spacesFree: number) {
     this.course = course;
     this.totalSpaces = totalSpaces;
     this.spacesFree = spacesFree;
@@ -38,7 +39,7 @@ export class CommitteeMember {
   name: string;
   uuid: string;
 
-  constructor (name: string, uuid: string) {
+  constructor(name: string, uuid: string) {
     this.name = name;
     this.uuid = uuid;
   }
@@ -49,7 +50,7 @@ export class CourseWithOrganisers {
   organiser: CommitteeMember;
   secondaryOrganiser: CommitteeMember;
 
-  constructor (course: Course, organiser: CommitteeMember, secondaryOrganiser: CommitteeMember) {
+  constructor(course: Course, organiser: CommitteeMember, secondaryOrganiser: CommitteeMember) {
     this.course = course;
     this.organiser = organiser;
     this.secondaryOrganiser = secondaryOrganiser;
@@ -64,7 +65,7 @@ export class StrippedMember {
   height: number;
   createdAt: moment.Moment;
 
-  constructor (firstName: string, lastName: string, uuid: string, weight: number, height: number, createdAt: moment.Moment) {
+  constructor(firstName: string, lastName: string, uuid: string, weight: number, height: number, createdAt: moment.Moment) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.uuid = uuid;
@@ -107,6 +108,8 @@ export abstract class CourseService extends BaseService {
 
   abstract spaces(uuid: string): Observable<CourseSpaceWithMember[]>
 
+  abstract create(course: CourseCreateRequest): Observable<CourseCreateResponse>
+
 }
 
 /**
@@ -115,9 +118,11 @@ export abstract class CourseService extends BaseService {
 @Injectable()
 export class CourseServiceImpl extends CourseService {
 
-  private coursesFindUrl = 'http://localhost:8080/api/v1/courses';
-  private coursesGetUrl = 'http://localhost:8080/api/v1/courses/{{uuid}}';
-  private courseSpacesUrl = 'http://localhost:8080/api/v1/courses/{{uuid}}/spaces';
+  private baseUrl = 'http://localhost:8080/api/v1/courses';
+  private coursesFindUrl = this.baseUrl;
+  private coursesGetUrl = this.baseUrl + '/{{uuid}}';
+  private courseSpacesUrl = this.baseUrl + '/{{uuid}}/spaces';
+  private coursesCreateUrl = this.baseUrl + '/create';
 
   constructor(http: Http, apiKeyService: ApiKeyService) {
     super(http, apiKeyService);
@@ -162,6 +167,18 @@ export class CourseServiceImpl extends CourseService {
   spaces(uuid: string): Observable<CourseSpaceWithMember[]> {
     return this.get(this.courseSpacesUrl.replace('{{uuid}}', uuid))
       .map(r => this.extractJson<CourseSpaceWithMember[]>(r))
+      .catch(this.handleError());
+  }
+
+  /**
+   * Create a new course.
+   *
+   * @param course
+   * @returns {undefined} course UUID
+   */
+  create(course: CourseCreateRequest): Observable<CourseCreateResponse> {
+    return this.post(this.coursesCreateUrl, course)
+      .map(r => this.extractJson<CourseCreateResponse>(r))
       .catch(this.handleError());
   }
 
