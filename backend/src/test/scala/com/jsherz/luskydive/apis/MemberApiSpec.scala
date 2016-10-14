@@ -145,8 +145,8 @@ class MemberApiSpec extends WordSpec with Matchers with ScalatestRouteTest with 
       verify(dao, never()).get(any[UUID])
     }
 
-    "return method not allowed when used with anything other than GET" in new Fixtured {
-      Seq(Post, Put, Delete, Patch).foreach { method =>
+    "return method not allowed when used with anything other than GET or PUT" in new Fixtured {
+      Seq(Post, Delete, Patch).foreach { method =>
         method(getUrl) ~> Route.seal(route) ~> check {
           response.status shouldEqual StatusCodes.MethodNotAllowed
         }
