@@ -166,7 +166,7 @@ class CourseDaoImpl(
       _.map {
         case (space, member) =>
           CourseSpaceWithMember(
-            space.uuid, space.courseUuid, space.number, false,
+            space.uuid, space.courseUuid, space.number, space.depositPaid,
             member.map(x => StrippedMember(x.uuid, x.firstName, x.lastName, x.createdAt))
           )
       }
