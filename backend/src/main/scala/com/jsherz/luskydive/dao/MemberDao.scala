@@ -171,7 +171,7 @@ class MemberDaoImpl(override protected val databaseService: DatabaseService)
 
       query.withServerError
     } else {
-      Future(-\/(MemberDaoErrors.invalidSearchTerm))
+      Future.successful(-\/(MemberDaoErrors.invalidSearchTerm))
     }
   }
 

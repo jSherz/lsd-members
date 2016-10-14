@@ -95,7 +95,7 @@ class AuthDaoImpl(protected override val databaseService: DatabaseService)
 
     for {
       lookupResult <- lookup ifNone AuthDaoErrors.invalidApiKey
-      validateResult <- Future(lookupResult.flatMap(validateKey(time)))
+      validateResult <- Future.successful(lookupResult.flatMap(validateKey(time)))
       authResult <- validateResult withFutureF extendKeyExpiry(time)
     } yield authResult
   }
@@ -165,7 +165,7 @@ class AuthDaoImpl(protected override val databaseService: DatabaseService)
   override def login(email: String, password: String, time: Timestamp): Future[String \/ UUID] = {
     for {
       committeeMember <- db.run(CommitteeMembers.filter(cm => cm.email === email).result.headOption)
-      passwordCheckResult <- Future(checkPasswordAndLocked(committeeMember, password))
+      passwordCheckResult <- Future.successful(checkPasswordAndLocked(committeeMember, password))
       apiKeyResult <- passwordCheckResult withFutureF generateApiKey(time)
     } yield apiKeyResult.map(_.uuid)
   }

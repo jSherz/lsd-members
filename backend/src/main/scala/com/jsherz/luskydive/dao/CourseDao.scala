@@ -216,7 +216,7 @@ class CourseDaoImpl(
         }
       } yield courseUuid
     } else {
-      Future(-\/(CourseSpaceDaoErrors.invalidNumSpaces))
+      Future.successful(-\/(CourseSpaceDaoErrors.invalidNumSpaces))
     }
   }
 
@@ -231,7 +231,7 @@ class CourseDaoImpl(
         case Some(committeeMember) => \/-(Some(committeeMember))
         case None => -\/(CourseDaoErrors.invalidSecondaryOrganiser)
       }
-      case None => Future(\/-(None))
+      case None => Future.successful(\/-(None))
     }
   }
 

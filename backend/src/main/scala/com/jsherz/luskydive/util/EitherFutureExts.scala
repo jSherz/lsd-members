@@ -52,7 +52,7 @@ class EitherWithError[X](either: String \/ X) {
     * @return
     */
   def withFutureF[V](f: X => Future[String \/ V])(implicit ec: ExecutionContext): Future[String \/ V] = {
-    either.fold(error => Future(-\/(error)), f(_))
+    either.fold(error => Future.successful(-\/(error)), f(_))
   }
 
 }

@@ -49,7 +49,9 @@ class StubMemberDao()(implicit val ec: ExecutionContext) extends MemberDao {
     * @return
     */
   override def memberExists(phoneNumber: Option[String], email: Option[String]): Future[Boolean] = {
-    Future(phoneNumber.contains(StubMemberDao.existsPhoneNumberFormatted) || email.contains(StubMemberDao.existsEmail))
+    Future.successful {
+      phoneNumber.contains(StubMemberDao.existsPhoneNumberFormatted) || email.contains(StubMemberDao.existsEmail)
+    }
   }
 
   /**

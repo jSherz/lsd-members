@@ -108,7 +108,7 @@ class CourseSpaceDaoImpl(protected override val databaseService: DatabaseService
         case _ => -\/(Errors.internalServer)
       }
     } else {
-      Future(-\/(CourseSpaceDaoErrors.invalidNumSpaces))
+      Future.successful(-\/(CourseSpaceDaoErrors.invalidNumSpaces))
     }
   }
 
@@ -124,7 +124,7 @@ class CourseSpaceDaoImpl(protected override val databaseService: DatabaseService
       case Some(space) => {
         // Check the space isn't already full
         if (space.memberUuid.isDefined) {
-          Future(-\/(CourseSpaceDaoErrors.spaceNotEmpty))
+          Future.successful(-\/(CourseSpaceDaoErrors.spaceNotEmpty))
         } else {
           // Ensure the member isn't already on this course
           val courseLookup = db.run(CourseSpaces.filter(foundSpace =>
@@ -133,7 +133,7 @@ class CourseSpaceDaoImpl(protected override val databaseService: DatabaseService
           ).result.headOption)
 
           courseLookup.flatMap {
-            case Some(_: CourseSpace) => Future(-\/(CourseSpaceDaoErrors.alreadyOnCourse))
+            case Some(_: CourseSpace) => Future.successful(-\/(CourseSpaceDaoErrors.alreadyOnCourse))
             case _ => {
               db.run(CourseSpaces.filter(_.uuid === uuid)
                 .map(_.memberUuid)
@@ -143,7 +143,7 @@ class CourseSpaceDaoImpl(protected override val databaseService: DatabaseService
           }
         }
       }
-      case None => Future(-\/(CourseSpaceDaoErrors.unknownSpace))
+      case None => Future.successful(-\/(CourseSpaceDaoErrors.unknownSpace))
     }
   }
 
@@ -164,10 +164,10 @@ class CourseSpaceDaoImpl(protected override val databaseService: DatabaseService
             .update(None, false) // Deposit can't be paid with no-one in space
           ).map(_ => \/-(uuid))
         } else {
-          Future(-\/(CourseSpaceDaoErrors.memberNotInSpace))
+          Future.successful(-\/(CourseSpaceDaoErrors.memberNotInSpace))
         }
       }
-      case None => Future(-\/(CourseSpaceDaoErrors.unknownSpace))
+      case None => Future.successful(-\/(CourseSpaceDaoErrors.unknownSpace))
     }
   }
 

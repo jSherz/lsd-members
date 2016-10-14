@@ -69,9 +69,9 @@ class StubCourseSpaceDao extends CourseSpaceDao {
 
   private def fakeImpl(spaceUuid: UUID): Future[\/[String, UUID]] = {
     if (StubCourseSpaceDao.validSpaceUuid.equals(spaceUuid)) {
-      Future(\/-(spaceUuid))
+      Future.successful(\/-(spaceUuid))
     } else if (StubCourseSpaceDao.invalidSpaceUuid.equals(spaceUuid)) {
-      Future(-\/(CourseSpaceDaoErrors.unknownSpace))
+      Future.successful(-\/(CourseSpaceDaoErrors.unknownSpace))
     } else {
       throw new RuntimeException("unknown UUID used with stub")
     }

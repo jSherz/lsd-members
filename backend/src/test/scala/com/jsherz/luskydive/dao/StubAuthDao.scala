@@ -47,9 +47,9 @@ class StubAuthDao extends AuthDao {
     */
   override def authenticate(apiKey: UUID, time: Timestamp): Future[\/[String, UUID]] = {
     if (apiKey.equals(StubAuthDao.validApiKey)) {
-      Future(\/-(StubAuthDao.validMemberUuid))
+      Future.successful(\/-(StubAuthDao.validMemberUuid))
     } else if (apiKey.equals(StubAuthDao.invalidApiKey)) {
-      Future(-\/(AuthDaoErrors.invalidApiKey))
+      Future.successful(-\/(AuthDaoErrors.invalidApiKey))
     } else {
       throw new RuntimeException("unknown value used with stub")
     }
@@ -63,9 +63,9 @@ class StubAuthDao extends AuthDao {
     */
   override def get(apiKey: UUID): Future[Option[ApiKey]] = {
     if (apiKey.equals(StubAuthDao.validApiKey)) {
-      Future(Some(StubAuthDao.exampleApiKey))
+      Future.successful(Some(StubAuthDao.exampleApiKey))
     } else if (apiKey.equals(StubAuthDao.invalidApiKey)) {
-      Future(None)
+      Future.successful(None)
     } else {
       throw new RuntimeException("unknown value used with stub")
     }
@@ -81,11 +81,11 @@ class StubAuthDao extends AuthDao {
     */
   override def login(email: String, password: String, time: Timestamp): Future[\/[String, UUID]] = {
     if (email == StubAuthDao.validEmail && password == StubAuthDao.validPassword) {
-      Future(\/-(StubAuthDao.validApiKey))
+      Future.successful(\/-(StubAuthDao.validApiKey))
     } else if (email == StubAuthDao.invalidEmail && password == StubAuthDao.invalidPassword) {
-      Future(-\/(AuthDaoErrors.invalidEmailPass))
+      Future.successful(-\/(AuthDaoErrors.invalidEmailPass))
     } else if (email == StubAuthDao.accountLockedEmail && password == StubAuthDao.accountLockedPassword) {
-      Future(-\/(AuthDaoErrors.accountLocked))
+      Future.successful(-\/(AuthDaoErrors.accountLocked))
     } else {
       throw new RuntimeException("unknown value used with stub")
     }

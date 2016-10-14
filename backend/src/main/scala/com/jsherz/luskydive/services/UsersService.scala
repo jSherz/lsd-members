@@ -31,6 +31,6 @@ import scala.concurrent.{ExecutionContext, Future}
   */
 class UsersService(val databaseService: DatabaseService)(implicit ec: ExecutionContext) {
 
-  def test(): Future[String] = Future("Hello, world!")
+  def test(): Future[String] = Future.successful("Hello, world!")
 
 }
