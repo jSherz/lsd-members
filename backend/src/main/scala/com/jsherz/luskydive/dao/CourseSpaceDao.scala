@@ -160,8 +160,8 @@ class CourseSpaceDaoImpl(protected override val databaseService: DatabaseService
         // Check space has the correct member
         if (space.memberUuid.contains(memberUuid)) {
           db.run(CourseSpaces.filter(_.uuid === uuid)
-            .map(_.memberUuid)
-            .update(None)
+            .map(space => (space.memberUuid, space.depositPaid))
+            .update(None, false) // Deposit can't be paid with no-one in space
           ).map(_ => \/-(uuid))
         } else {
           Future(-\/(CourseSpaceDaoErrors.memberNotInSpace))

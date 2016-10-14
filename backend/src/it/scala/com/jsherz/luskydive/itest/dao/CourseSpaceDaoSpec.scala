@@ -204,17 +204,36 @@ class CourseSpaceDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
     "remove a member from a space correctly" in {
       val validExamples = Map(
-        // Space UUID -> member UUID
-        "ecbb17b7-7b30-4e02-aea4-adb3959744b6" -> "47bb44af-66ed-4800-8c3d-328779db4f3c",
-        "bbc8b584-27c1-4cf2-8881-500ae5e89c3c" -> "670bc55a-2a41-4977-8b8d-283cfa592299",
-        "ea17874a-804e-4b05-90ec-7d69a7c31cc4" -> "0b8e9518-9fbc-4dc1-80ca-841564bb6f77",
-        "19b251af-4d22-4b6d-b6f2-cb0d86cef533" -> "27cd5f36-555a-4601-8592-dce584d357ae"
+        // Course UUID, Space UUID -> member UUID
+        ("e29668eb-e8e3-44b0-b9ca-0f72770a576f", "ecbb17b7-7b30-4e02-aea4-adb3959744b6") ->
+          "47bb44af-66ed-4800-8c3d-328779db4f3c",
+        ("e29668eb-e8e3-44b0-b9ca-0f72770a576f", "bbc8b584-27c1-4cf2-8881-500ae5e89c3c") ->
+          "670bc55a-2a41-4977-8b8d-283cfa592299",
+        ("2ae8d372-5160-47a7-91ae-2d3b38e9b9b6", "ea17874a-804e-4b05-90ec-7d69a7c31cc4") ->
+          "0b8e9518-9fbc-4dc1-80ca-841564bb6f77",
+        ("4d57b508-8d4e-43c7-b772-6854a70c29d2", "19b251af-4d22-4b6d-b6f2-cb0d86cef533") ->
+          "27cd5f36-555a-4601-8592-dce584d357ae"
       )
 
-      validExamples.foreach { case (spaceUuid, memberUuid) =>
-        val result = dao.removeMember(UUID.fromString(spaceUuid), UUID.fromString(memberUuid))
+      validExamples.foreach {
+        case ((rawCourseUuid, rawSpaceUuid), memberUuid) => {
+          val courseUuid = UUID.fromString(rawCourseUuid)
+          val spaceUuid = UUID.fromString(rawSpaceUuid)
 
-        result.futureValue shouldEqual \/-(UUID.fromString(spaceUuid))
+          val result = dao.removeMember(spaceUuid, UUID.fromString(memberUuid))
+
+          result.futureValue shouldEqual \/-(spaceUuid)
+
+          val spaces = courseDao.spaces(courseUuid).futureValue
+
+          val matchingSpace = spaces.find(_.uuid contains spaceUuid)
+
+          matchingSpace shouldBe defined
+          matchingSpace.foreach { space =>
+            space.member shouldBe None
+            space.depositPaid shouldBe false
+          }
+        }
       }
     }
 
