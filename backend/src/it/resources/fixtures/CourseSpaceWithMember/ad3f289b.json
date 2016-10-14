@@ -3,6 +3,7 @@
     "uuid": "5904a035-e00e-4d3d-af73-dd484d7b6292",
     "courseUuid": "ad3f289b-ce04-428d-968c-513eaf9889b0",
     "number": 1,
+    "depositPaid": true,
     "member": {
       "uuid": "7c8ca533-50c1-4279-a9c9-cb5f2dcd863a",
       "firstName": "Jessica",
@@ -13,17 +14,20 @@
   {
     "uuid": "7c99d0eb-3613-47ae-8802-008b8d464919",
     "courseUuid": "ad3f289b-ce04-428d-968c-513eaf9889b0",
-    "number": 2
+    "number": 2,
+    "depositPaid": false
   },
   {
     "uuid": "5e28d9fe-9da9-4eca-a4c8-d0bebb0338d4",
     "courseUuid": "ad3f289b-ce04-428d-968c-513eaf9889b0",
-    "number": 3
+    "number": 3,
+    "depositPaid": false
   },
   {
     "uuid": "36d15354-6b1d-4e9a-af5c-ad043619e08f",
     "courseUuid": "ad3f289b-ce04-428d-968c-513eaf9889b0",
     "number": 4,
+    "depositPaid": true,
     "member": {
       "uuid": "9a6fb698-3e33-4aa5-a83b-18701cf702e1",
       "firstName": "Anthony",
@@ -35,6 +39,7 @@
     "uuid": "b49f7364-7f31-4174-b6b5-46a523e1a00e",
     "courseUuid": "ad3f289b-ce04-428d-968c-513eaf9889b0",
     "number": 5,
+    "depositPaid": false,
     "member": {
       "uuid": "7c54400d-76e7-42bd-80c5-2f319ee9e669",
       "firstName": "Alicia",
@@ -46,6 +51,7 @@
     "uuid": "c8e5c69e-ffd5-4553-bc72-61d10594b924",
     "courseUuid": "ad3f289b-ce04-428d-968c-513eaf9889b0",
     "number": 6,
+    "depositPaid": true,
     "member": {
       "uuid": "359a2d69-f07d-4564-a62e-ee1fa5f3ef3f",
       "firstName": "Damon",
@@ -56,12 +62,14 @@
   {
     "uuid": "2c8c91cb-81ee-4f26-89b6-c76e503fbc9b",
     "courseUuid": "ad3f289b-ce04-428d-968c-513eaf9889b0",
-    "number": 7
+    "number": 7,
+    "depositPaid": false
   },
   {
     "uuid": "0952508f-3496-4c89-aa6e-4bca994858c1",
     "courseUuid": "ad3f289b-ce04-428d-968c-513eaf9889b0",
     "number": 8,
+    "depositPaid": true,
     "member": {
       "uuid": "cf20f34e-d358-4e88-b68c-2f183e4fea39",
       "firstName": "Dylan",

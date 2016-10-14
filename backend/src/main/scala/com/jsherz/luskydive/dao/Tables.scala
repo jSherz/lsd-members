@@ -263,10 +263,12 @@ class Tables(protected val databaseService: DatabaseService) {
 
     def memberUuid: Rep[Option[UUID]] = column[Option[UUID]]("member_uuid")
 
+    def depositPaid: Rep[Boolean] = column[Boolean]("deposit_paid")
+
     def course: ForeignKeyQuery[CoursesTable, Course] =
       foreignKey("course_spaces_course_uuid_number_key", courseUuid, Courses)(_.uuid, ForeignKeyAction.Cascade)
 
-    def * = (uuid.?, courseUuid, number, memberUuid) <> (CourseSpace.tupled, CourseSpace.unapply)
+    def * = (uuid.?, courseUuid, number, memberUuid, depositPaid) <> (CourseSpace.tupled, CourseSpace.unapply)
 
   }
 

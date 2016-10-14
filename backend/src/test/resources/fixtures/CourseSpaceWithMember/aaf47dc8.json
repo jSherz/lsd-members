@@ -1,0 +1,74 @@
+[
+  {
+    "uuid": "f543c4c2-7e07-4e2a-8ce3-f2e653008daa",
+    "courseUuid": "aaf47dc8-2e6b-4b4a-b9bd-afe89444149a",
+    "number": 1,
+    "depositPaid": false,
+    "member": {
+      "uuid": "61e6c06f-295c-49e9-bf2b-b3a8dda299e2",
+      "firstName": "Callum",
+      "lastName": "Scott",
+      "createdAt": "2016-09-29 00:00:00"
+    }
+  },
+  {
+    "uuid": "16daf695-5509-4cb7-ae40-6e04c7ce4b44",
+    "courseUuid": "aaf47dc8-2e6b-4b4a-b9bd-afe89444149a",
+    "number": 2,
+    "depositPaid": false
+  },
+  {
+    "uuid": "ff526943-55f2-4b51-a863-e3ce800eabf7",
+    "courseUuid": "aaf47dc8-2e6b-4b4a-b9bd-afe89444149a",
+    "number": 3,
+    "depositPaid": false
+  },
+  {
+    "uuid": "2a14e024-d165-4147-9d98-00463bbf93c9",
+    "courseUuid": "aaf47dc8-2e6b-4b4a-b9bd-afe89444149a",
+    "number": 4,
+    "depositPaid": false,
+    "member": {
+      "uuid": "8556d0dd-05e9-44e6-8b66-d9607240387e",
+      "firstName": "Brandon",
+      "lastName": "Gardner",
+      "createdAt": "2014-07-10 00:00:00"
+    }
+  },
+  {
+    "uuid": "38c429c2-8147-4c56-a9bb-8675647fbf51",
+    "courseUuid": "aaf47dc8-2e6b-4b4a-b9bd-afe89444149a",
+    "number": 5,
+    "depositPaid": false,
+    "member": {
+      "uuid": "98d9c289-f966-4767-8f9d-ec0a17831a27",
+      "firstName": "Alicia",
+      "lastName": "Moore",
+      "createdAt": "2016-09-28 00:00:00"
+    }
+  },
+  {
+    "uuid": "c914214c-4498-4506-b9dc-fc1f7d715215",
+    "courseUuid": "aaf47dc8-2e6b-4b4a-b9bd-afe89444149a",
+    "number": 6,
+    "depositPaid": false,
+    "member": {
+      "uuid": "35c816a9-eb6f-4fe2-bea2-15a340a81508",
+      "firstName": "Samuel",
+      "lastName": "Barber",
+      "createdAt": "2016-09-28 00:00:00"
+    }
+  },
+  {
+    "uuid": "bae4cba2-e6d1-4dd3-ad6c-a6a452aad646",
+    "courseUuid": "aaf47dc8-2e6b-4b4a-b9bd-afe89444149a",
+    "number": 7,
+    "depositPaid": false
+  },
+  {
+    "uuid": "c8bfcaca-e55e-4f32-9f3f-782b72d8acfa",
+    "courseUuid": "aaf47dc8-2e6b-4b4a-b9bd-afe89444149a",
+    "number": 8,
+    "depositPaid": false
+  }
+]

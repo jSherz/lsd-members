@@ -23,6 +23,7 @@
   */
 
 package com.jsherz.luskydive.dao
+
 import java.util.UUID
 
 import scala.concurrent.Future

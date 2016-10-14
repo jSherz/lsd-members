@@ -1,0 +1,12 @@
+{
+  "course": {
+    "uuid": "aaf47dc8-2e6b-4b4a-b9bd-afe89444149a",
+    "date": "2016-08-01",
+    "organiserUuid": "b0da6d11-866b-447e-8a7d-d78fcde2da37",
+    "status": 0
+  },
+  "organiser": {
+    "uuid": "b0da6d11-866b-447e-8a7d-d78fcde2da37",
+    "name": "Test Member"
+  }
+}

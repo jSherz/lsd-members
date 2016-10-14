@@ -93,7 +93,7 @@ class CourseSpaceDaoImpl(protected override val databaseService: DatabaseService
         (1 to numSpaces).map { number =>
           val uuid = Some(Generators.randomBasedGenerator().generate())
 
-          CourseSpaces += CourseSpace(uuid, courseUuid, number, None)
+          CourseSpaces += CourseSpace(uuid, courseUuid, number, None, depositPaid = false)
         }
       )
 

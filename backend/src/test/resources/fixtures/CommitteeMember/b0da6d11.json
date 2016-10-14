@@ -1,0 +1,10 @@
+{
+  "uuid": "b0da6d11-866b-447e-8a7d-d78fcde2da37",
+  "name": "Test Member",
+  "email": "test@leedsskydivers.com",
+  "password": "12345",
+  "salt": "12345",
+  "locked": false,
+  "createdAt": "2016-08-09 07:15:01.363",
+  "updatedAt": "2016-08-09 07:15:01.363"
+}

@@ -28,7 +28,7 @@ import java.sql.{Date, Timestamp}
 import java.util.UUID
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import com.jsherz.luskydive.core.{CommitteeMember, Course, CourseSpace, CourseWithOrganisers}
+import com.jsherz.luskydive.core.{Course, CourseWithOrganisers}
 import com.jsherz.luskydive.util.{DateJsonFormat, TimestampJsonFormat, UuidJsonFormat}
 import spray.json.DefaultJsonProtocol
 
@@ -43,7 +43,7 @@ object CoursesJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val CourseWithOrganisersFormat = jsonFormat3(CourseWithOrganisers)
   implicit val CourseWithNumSpacesFormat = jsonFormat3(CourseWithNumSpaces)
   implicit val StrippedMemberFormat = jsonFormat4(StrippedMember)
-  implicit val CourseSpaceWithMemberFormat = jsonFormat4(CourseSpaceWithMember)
+  implicit val CourseSpaceWithMemberFormat = jsonFormat5(CourseSpaceWithMember)
   implicit val CourseCreateRequestFormat = jsonFormat4(CourseCreateRequest)
   implicit val CourseCreateResponseFormat = jsonFormat3(CourseCreateResponse)
 
@@ -81,7 +81,8 @@ case class StrippedMember(uuid: Option[UUID], firstName: String, lastName: Optio
   * @param number
   * @param member
   */
-case class CourseSpaceWithMember(uuid: Option[UUID], courseUuid: UUID, number: Int, member: Option[StrippedMember])
+case class CourseSpaceWithMember(uuid: Option[UUID], courseUuid: UUID, number: Int, depositPaid: Boolean,
+                                 member: Option[StrippedMember])
 
 /**
   * A request to create a new course.

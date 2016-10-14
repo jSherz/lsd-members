@@ -27,9 +27,10 @@ package com.jsherz.luskydive.dao
 import java.sql.Date
 import java.util.UUID
 
-import com.jsherz.luskydive.core.{Course, CourseSpace, CourseWithOrganisers}
-import com.jsherz.luskydive.fixtures.CoursesWithOrganisers
+import com.jsherz.luskydive.core.{Course, CourseWithOrganisers}
 import com.jsherz.luskydive.json.{CourseSpaceWithMember, CourseWithNumSpaces}
+import com.jsherz.luskydive.util.Util
+import com.jsherz.luskydive.json.CoursesJsonSupport._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scalaz.{-\/, \/, \/-}
@@ -47,9 +48,9 @@ class StubCourseDao()(implicit ec: ExecutionContext) extends CourseDao {
     */
   override def get(uuid: UUID): Future[Option[CourseWithOrganisers]] = {
     if (StubCourseDao.validCourseUuid.equals(uuid)) {
-      Future(Some(CoursesWithOrganisers.courseWithOrganisersA))
+      Future.successful(Some(StubCourseDao.validCourse))
     } else if (StubCourseDao.notFoundCourseUuid.equals(uuid)) {
-      Future(None)
+      Future.successful(None)
     } else {
       throw new RuntimeException("unknown uuid used with stub")
     }
@@ -62,8 +63,9 @@ class StubCourseDao()(implicit ec: ExecutionContext) extends CourseDao {
     * @param endDate
     * @return
     */
-  override def find(startDate: Date, endDate: Date): Future[Seq[CourseWithNumSpaces]] =
-  Future(StubCourseDao.coursesWithNumSpaces)
+  override def find(startDate: Date, endDate: Date): Future[Seq[CourseWithNumSpaces]] = {
+    Future.successful(StubCourseDao.coursesWithNumSpaces)
+  }
 
   /**
     * Get the space(s) (if any) on a course.
@@ -73,9 +75,9 @@ class StubCourseDao()(implicit ec: ExecutionContext) extends CourseDao {
     */
   override def spaces(uuid: UUID): Future[Seq[CourseSpaceWithMember]] = {
     if (StubCourseDao.validCourseUuid.equals(uuid)) {
-      Future(StubCourseDao.validCourseSpaces)
+      Future.successful(StubCourseDao.validCourseSpaces)
     } else if (StubCourseDao.notFoundCourseUuid.equals(uuid)) {
-      Future(Seq())
+      Future.successful(Seq())
     } else {
       throw new RuntimeException("unknown uuid used with stub")
     }
@@ -89,7 +91,7 @@ class StubCourseDao()(implicit ec: ExecutionContext) extends CourseDao {
     * @return
     */
   override def create(course: Course, numSpaces: Int): Future[String \/ UUID] = {
-    Future {
+    Future.successful {
       if (numSpaces >= CourseSpaceDaoImpl.MIN_SPACES && numSpaces <= CourseSpaceDaoImpl.MAX_SPACES) {
         \/-(course.uuid.get)
       } else {
@@ -102,11 +104,11 @@ class StubCourseDao()(implicit ec: ExecutionContext) extends CourseDao {
 
 object StubCourseDao {
 
-  val validCourseUuid = CoursesWithOrganisers.courseWithOrganisersA.course.uuid.get
+  val validCourse = Util.fixture[CourseWithOrganisers]("aaf47dc8.json")
 
-  val validCourse = CoursesWithOrganisers.courseWithOrganisersA
+  val validCourseUuid = validCourse.course.uuid.get
 
-  val validCourseSpaces = CoursesWithOrganisers.courseWithOrganisersASpaces
+  val validCourseSpaces = Util.fixture[Seq[CourseSpaceWithMember]]("aaf47dc8.json")
 
   val notFoundCourseUuid = UUID.fromString("f309d4ca-c8b2-44ac-8380-678bb7bcc3cb")
 
