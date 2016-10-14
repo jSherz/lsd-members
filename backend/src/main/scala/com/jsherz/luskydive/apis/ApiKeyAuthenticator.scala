@@ -64,22 +64,26 @@ class ApiKeyAuthenticator(authDao: AuthDao)
     */
   val authenticateWithApiKey: Directive1[UUID] = {
     extractExecutionContext.flatMap { implicit ec ⇒
-      extractApiKey.flatMap {
-        case Some(apiKey) =>
-          val time = new Timestamp(new Date().getTime)
+      extractRequest.flatMap { request =>
+        log.info(request.method.value + " " + request.uri)
 
-          onSuccess(authDao.authenticate(apiKey, time)).flatMap {
-            case \/-(memberUuid) => provide(memberUuid)
-            case -\/(_) => {
-              log.info("Auth failed - invalid API key: " + apiKey)
+        extractApiKey.flatMap {
+          case Some(apiKey) =>
+            val time = new Timestamp(new Date().getTime)
 
-              reject(AuthenticationFailedRejection(CredentialsRejected, dummyChallenge))
+            onSuccess(authDao.authenticate(apiKey, time)).flatMap {
+              case \/-(memberUuid) => provide(memberUuid)
+              case -\/(_) => {
+                log.info("Auth failed - invalid API key: " + apiKey)
+
+                reject(AuthenticationFailedRejection(CredentialsRejected, dummyChallenge))
+              }
             }
-          }
-        case None => {
-          log.info("Auth failed - no API key.")
+          case None => {
+            log.info("Auth failed - no API key.")
 
-          reject(AuthenticationFailedRejection(CredentialsMissing, dummyChallenge))
+            reject(AuthenticationFailedRejection(CredentialsMissing, dummyChallenge))
+          }
         }
       }
     }
