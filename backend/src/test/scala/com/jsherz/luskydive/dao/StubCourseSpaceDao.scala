@@ -77,6 +77,27 @@ class StubCourseSpaceDao extends CourseSpaceDao {
     }
   }
 
+  /**
+    * Sets the deposit on a space to be paid or unpaid.
+    *
+    * @param spaceUuid
+    * @param depositPaid
+    * @return
+    */
+  override def setDepositPaid(spaceUuid: UUID, depositPaid: Boolean): Future[String \/ Int] = {
+    Future.successful {
+      if (StubCourseSpaceDao.setDepositPaidValidUuid.equals(spaceUuid)) {
+        \/-(1)
+      } else if (StubCourseSpaceDao.setDepositPaidNotFoundUuid.equals(spaceUuid)) {
+        \/-(0)
+      } else if (StubCourseSpaceDao.setDepositPaidErrorUuid.equals(spaceUuid)) {
+        -\/(CourseSpaceDaoErrors.internalServer)
+      } else {
+        throw new RuntimeException("unknown uuid used with stub")
+      }
+    }
+  }
+
 }
 
 object StubCourseSpaceDao {
@@ -84,5 +105,9 @@ object StubCourseSpaceDao {
   val validSpaceUuid = UUID.fromString("a7dabd00-8f84-4ec3-b99f-de9ab95498ae")
 
   val invalidSpaceUuid = UUID.fromString("f17f83d6-c8a2-4748-bda7-2e925ca11e52")
+
+  val setDepositPaidValidUuid = UUID.fromString("205f67c0-ef8d-46dd-ae51-062c65b1a0a2")
+  val setDepositPaidNotFoundUuid = UUID.fromString("4efc3e26-6565-493d-94f0-eaba00a19043")
+  val setDepositPaidErrorUuid = UUID.fromString("1348bc47-975c-45fc-a1b2-80b7ae9786b9")
 
 }

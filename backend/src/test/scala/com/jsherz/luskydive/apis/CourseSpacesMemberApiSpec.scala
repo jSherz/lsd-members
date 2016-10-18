@@ -32,7 +32,7 @@ import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.jsherz.luskydive.dao.{StubCourseDao, StubCourseSpaceDao}
-import com.jsherz.luskydive.json.{CourseSpaceMemberRequest, CourseSpaceMemberResponse}
+import com.jsherz.luskydive.json.{CourseSpaceDepositPaidRequest, CourseSpaceDepositPaidResponse, CourseSpaceMemberRequest, CourseSpaceMemberResponse}
 import com.jsherz.luskydive.util.AuthenticationDirectives
 import org.mockito.Matchers._
 import org.mockito.Mockito
@@ -42,7 +42,7 @@ import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
 import scala.concurrent.ExecutionContext
 
 /**
-  * Defines the behaviour of adding and removing members from a space.
+  * Defines the member related behaviour on course spaces.
   */
 class CourseSpacesMemberApiSpec extends WordSpec with Matchers with ScalatestRouteTest with BeforeAndAfter {
 
@@ -57,6 +57,7 @@ class CourseSpacesMemberApiSpec extends WordSpec with Matchers with ScalatestRou
 
   private val addUrl = "/course-spaces/%s/add-member"
   private val removeUrl = "/course-spaces/%s/remove-member"
+  private val depositPaidUrl = "/course-spaces/%s/deposit-paid"
 
   private val validAddUrl =
     addUrl.format(StubCourseSpaceDao.validSpaceUuid.toString)
@@ -168,6 +169,45 @@ class CourseSpacesMemberApiSpec extends WordSpec with Matchers with ScalatestRou
 
         res.success shouldEqual false
         res.error shouldEqual Some("error.unknownSpace")
+      }
+    }
+
+  }
+
+  "CourseSpaceApi#setDepositPaid" should {
+
+    "return success when a record is updated" in {
+      val request = CourseSpaceDepositPaidRequest(depositPaid = true)
+
+      Put(depositPaidUrl.format(StubCourseSpaceDao.setDepositPaidValidUuid.toString), request) ~> route ~> check {
+        response.status shouldEqual StatusCodes.OK
+
+        val res = responseAs[CourseSpaceDepositPaidResponse]
+
+        res.success shouldEqual true
+        res.error shouldBe None
+      }
+    }
+
+    "return a 404 if the record was not found" in {
+      val request = CourseSpaceDepositPaidRequest(depositPaid = false)
+
+      Put(depositPaidUrl.format(StubCourseSpaceDao.setDepositPaidNotFoundUuid.toString), request) ~> Route.seal(route) ~> check {
+        response.status shouldEqual StatusCodes.NotFound
+        responseAs[String] shouldEqual "No course space found with that UUID."
+      }
+    }
+
+    "return the correct response for the request failing" in {
+      val request = CourseSpaceDepositPaidRequest(depositPaid = true)
+
+      Put(depositPaidUrl.format(StubCourseSpaceDao.setDepositPaidErrorUuid.toString), request) ~> Route.seal(route) ~> check {
+        response.status shouldEqual StatusCodes.OK
+
+        val res = responseAs[CourseSpaceDepositPaidResponse]
+
+        res.success shouldEqual false
+        res.error shouldEqual Some("error.internalServer")
       }
     }
 

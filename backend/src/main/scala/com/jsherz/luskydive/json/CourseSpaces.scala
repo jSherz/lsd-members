@@ -37,6 +37,8 @@ object CourseSpacesJsonSupport extends DefaultJsonProtocol with SprayJsonSupport
 //  implicit val TimestampFormat = TimestampJsonFormat
   implicit val CourseSpaceMemberRequestFormat = jsonFormat1(CourseSpaceMemberRequest)
   implicit val CourseSpaceMemberResponseFormat = jsonFormat2(CourseSpaceMemberResponse)
+  implicit val courseSpaceDepositPaidRequestFormat = jsonFormat1(CourseSpaceDepositPaidRequest)
+  implicit val courseSpaceDepositPaidResponseFormat = jsonFormat2(CourseSpaceDepositPaidResponse)
 
 }
 
@@ -52,3 +54,13 @@ case class CourseSpaceMemberRequest(memberUuid: UUID)
   * @param error
   */
 case class CourseSpaceMemberResponse(success: Boolean, error: Option[String])
+
+/**
+  * Set a space to have deposit (not) paid.
+  */
+case class CourseSpaceDepositPaidRequest(depositPaid: Boolean)
+
+/**
+  * Result of the above.
+  */
+case class CourseSpaceDepositPaidResponse(success: Boolean, error: Option[String])

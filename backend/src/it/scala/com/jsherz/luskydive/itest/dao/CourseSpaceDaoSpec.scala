@@ -37,7 +37,7 @@ import org.scalatest.concurrent.ScalaFutures._
 
 import scala.io.Source
 import scala.concurrent.ExecutionContext.Implicits.global
-import scalaz.{-\/, \/-}
+import scalaz.{-\/, \/, \/-}
 
 /**
   * Ensures the course space management functions correctly.
@@ -237,6 +237,40 @@ class CourseSpaceDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       }
     }
 
+  }
+
+  "CourseSpaceDao#setDepositPaid" should {
+
+    "set the correct deposit paid values" in {
+      val results = Seq(
+        setDepositPaid("2e1bb0d6-3625-409f-8666-c72188c8f17b", depositPaid = false),
+        setDepositPaid("3753b3ac-b806-4cf4-902c-7de528bc354d", depositPaid = false),
+        setDepositPaid("d114eac0-6992-417c-9fd5-1f4548ca5389", depositPaid = true),
+        setDepositPaid("1c8a0ffa-1ca9-490e-bb7e-5049b7240c12", depositPaid = false),
+        setDepositPaid("e1bc3685-fd9a-4b79-971d-c937cd8dbcf0", depositPaid = false),
+        setDepositPaid("401ef41a-26a9-4250-b82c-57f86212e68f", depositPaid = false),
+        setDepositPaid("c898ad2e-0472-49bb-89b3-221e83ba74a8", depositPaid = true),
+        setDepositPaid("d3dc793b-fa82-4bd6-9418-de7e8ae8f2c4", depositPaid = true),
+        setDepositPaid("a3b34e2f-b97a-4578-989d-880497c72ed8", depositPaid = false)
+      )
+
+      results.foreach { result =>
+        result.isRight shouldBe true
+        result.map {
+          _ shouldEqual 1
+        }
+      }
+
+      courseDao
+        .spaces(UUID.fromString("c9ffcedd-7f4b-4764-acff-db089b4b1222"))
+        .futureValue
+        .map(_.depositPaid) shouldEqual Vector(false, false, true, false, false, false, true, true, false)
+    }
+
+  }
+
+  private def setDepositPaid(uuid: String, depositPaid: Boolean): String \/ Int = {
+    dao.setDepositPaid(UUID.fromString(uuid), depositPaid).futureValue
   }
 
 }

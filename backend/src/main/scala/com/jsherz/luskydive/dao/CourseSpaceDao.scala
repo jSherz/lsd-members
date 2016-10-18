@@ -26,11 +26,12 @@ package com.jsherz.luskydive.dao
 
 import java.util.UUID
 
+import akka.event.LoggingAdapter
 import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.CourseSpace
 import com.jsherz.luskydive.services.DatabaseService
 import com.jsherz.luskydive.util.Errors
-import com.jsherz.luskydive.util.FutureError._
+import com.jsherz.luskydive.util.FutureError
 
 import scala.concurrent.{ExecutionContext, Future}
 import scalaz.{-\/, \/, \/-}
@@ -68,12 +69,22 @@ trait CourseSpaceDao {
     */
   def removeMember(spaceUuid: UUID, memberUuid: UUID): Future[String \/ UUID]
 
+  /**
+    * Sets the deposit on a space to be paid or unpaid.
+    *
+    * @param spaceUuid
+    * @param depositPaid
+    * @return
+    */
+  def setDepositPaid(spaceUuid: UUID, depositPaid: Boolean): Future[String \/ Int]
+
 }
 
 /**
   * Stores and retrieves course spaces from the database.
   */
-class CourseSpaceDaoImpl(protected override val databaseService: DatabaseService)(implicit val ec: ExecutionContext)
+class CourseSpaceDaoImpl(protected override val databaseService: DatabaseService)
+                        (implicit val ec: ExecutionContext, implicit val log: LoggingAdapter)
   extends Tables(databaseService) with CourseSpaceDao {
 
   import driver.api._
@@ -103,7 +114,7 @@ class CourseSpaceDaoImpl(protected override val databaseService: DatabaseService
           if existingSpaces == 0
           createResult <- db.run(createSpacesAction).map(_ => ())
         } yield \/-(createResult)
-      ).recover {
+        ).recover {
         case _: NoSuchElementException => -\/(CourseSpaceDaoErrors.courseAlreadySetup)
         case _ => -\/(Errors.internalServer)
       }
@@ -129,7 +140,7 @@ class CourseSpaceDaoImpl(protected override val databaseService: DatabaseService
           // Ensure the member isn't already on this course
           val courseLookup = db.run(CourseSpaces.filter(foundSpace =>
             foundSpace.courseUuid === space.courseUuid &&
-            foundSpace.memberUuid === memberUuid
+              foundSpace.memberUuid === memberUuid
           ).result.headOption)
 
           courseLookup.flatMap {
@@ -179,6 +190,21 @@ class CourseSpaceDaoImpl(protected override val databaseService: DatabaseService
     */
   private def get(uuid: UUID): Future[Option[CourseSpace]] = {
     db.run(CourseSpaces.filter(_.uuid === uuid).result.headOption)
+  }
+
+  /**
+    * Sets the deposit on a space to be paid or unpaid.
+    *
+    * @param spaceUuid
+    * @param depositPaid
+    * @return
+    */
+  override def setDepositPaid(spaceUuid: UUID, depositPaid: Boolean): Future[String \/ Int] = {
+    new FutureError(db.run(
+      CourseSpaces.filter(_.uuid === spaceUuid)
+        .map(_.depositPaid)
+        .update(depositPaid)
+    )) withServerError
   }
 
 }
