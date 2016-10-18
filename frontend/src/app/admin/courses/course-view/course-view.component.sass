@@ -63,8 +63,23 @@ $sl-course-students-border: solid 0.08em #ccc
 a.sl-course-students-view-member
   padding: 0.5em 0.7em
 
-.sl-course-students-remove, a.sl-course-students-edit-member, .sl-course-students-add-member
+.sl-course-students-remove, a.sl-course-students-edit-member, .sl-course-students-add-member, a.sl-course-students-set-deposit-not-paid, a.sl-course-students-set-deposit-paid
   padding: 0.5em
+
+$deposit-paid-button: #9dffb9
+$deposit-not-paid-button: #ffa36f
+
+a.sl-course-students-set-deposit-paid
+  background: $deposit-paid-button
+
+  &:hover
+    background: darken($deposit-paid-button, 20%)
+
+a.sl-course-students-set-deposit-not-paid
+  background: $deposit-not-paid-button
+
+  &:hover
+    background: darken($deposit-not-paid-button, 20%)
 
 $add-member-bg: lighten(green, 4%)
 

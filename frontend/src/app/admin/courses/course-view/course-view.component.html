@@ -60,6 +60,14 @@
            class="sl-course-students-view-member button">
           <i class="fa fa-info" aria-hidden="true"></i>
         </a>
+        <a title="Set deposit as paid" class="sl-course-students-set-deposit-paid button"
+           (click)="setDepositPaid(space.uuid, true)" *ngIf="!space.depositPaid">
+          <i class="fa fa-money" aria-hidden="true"></i>
+        </a>
+        <a title="Set deposit as NOT paid" class="sl-course-students-set-deposit-not-paid button"
+           (click)="setDepositPaid(space.uuid, false)" *ngIf="space.depositPaid">
+          <i class="fa fa-money" aria-hidden="true"></i>
+        </a>
         <a [routerLink]="['/admin', 'members', space.member.uuid, 'edit']" title="Edit member information"
            class="sl-course-students-edit-member button">
           <i class="fa fa-pencil" aria-hidden="true"></i>

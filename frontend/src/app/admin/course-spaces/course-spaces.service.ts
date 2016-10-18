@@ -4,8 +4,12 @@ import { Observable } from 'rxjs';
 
 import { ApiKeyService, BaseService } from '../utils';
 
-
 export class CourseSpaceMemberResponse {
+  success: boolean;
+  error: string;
+}
+
+export class CourseSpaceDepositPaidResponse {
   success: boolean;
   error: string;
 }
@@ -39,13 +43,23 @@ export abstract class CourseSpaceService extends BaseService {
    */
   abstract removeMember(uuid: string, memberUuid: string): Observable<CourseSpaceMemberResponse>
 
+  /**
+   * Set a space to have the deposit paid or not paid.
+   *
+   * @param uuid
+   * @param depositPaid
+   */
+  abstract setDepositPaid(uuid: string, depositPaid: boolean): Observable<CourseSpaceDepositPaidResponse>
+
 }
 
 @Injectable()
 export class CourseSpaceServiceImpl extends CourseSpaceService {
 
-  private addMemberUrl = 'http://localhost:8080/api/v1/course-spaces/{{uuid}}/add-member';
-  private removeMemberUrl = 'http://localhost:8080/api/v1/course-spaces/{{uuid}}/remove-member';
+  private baseUrl = 'http://localhost:8080/api/v1/';
+  private addMemberUrl = this.baseUrl + 'course-spaces/{{uuid}}/add-member';
+  private removeMemberUrl = this.baseUrl + 'course-spaces/{{uuid}}/remove-member';
+  private setDepositPaidUrl = this.baseUrl + 'course-spaces/{{uuid}}/deposit-paid';
 
   constructor(http: Http, apiKeyService: ApiKeyService) {
     super(http, apiKeyService);
@@ -80,6 +94,20 @@ export class CourseSpaceServiceImpl extends CourseSpaceService {
 
     return this.post(this.removeMemberUrl.replace('{{uuid}}', uuid), request)
       .map(r => this.extractJson<CourseSpaceMemberResponse>(r))
+      .catch(this.handleError());
+  }
+
+  /**
+   * Set a space to have the deposit paid or not paid.
+   *
+   * @param uuid
+   * @param depositPaid
+   */
+  setDepositPaid(uuid: string, depositPaid: boolean): Observable<CourseSpaceDepositPaidResponse> {
+    let request = { depositPaid: depositPaid };
+
+    return this.put(this.setDepositPaidUrl.replace('{{uuid}}', uuid), request)
+      .map(r => this.extractJson<CourseSpaceDepositPaidResponse>(r))
       .catch(this.handleError());
   }
 

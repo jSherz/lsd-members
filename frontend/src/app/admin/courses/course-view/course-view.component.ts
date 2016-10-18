@@ -188,6 +188,25 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Set the space's deposit to be paid or not paid.
+   *
+   * @param spaceUuid
+   * @param depositPaid
+   */
+  setDepositPaid(spaceUuid: string, depositPaid: boolean) {
+    this.spaceService.setDepositPaid(spaceUuid, depositPaid).subscribe(
+      result => {
+        this.updateSpaces();
+      },
+      error => {
+        this.apiRequestFailed = true;
+        console.error('Failed to set deposit paid on course space ' + spaceUuid);
+        console.error(error);
+      }
+    );
+  }
+
+  /**
    * Turn a status returned by the API into a meaningful version.
    *
    * @param status
