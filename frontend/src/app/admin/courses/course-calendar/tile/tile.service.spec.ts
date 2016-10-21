@@ -2,34 +2,31 @@
 
 import * as moment from 'moment';
 
-import { Tile, TileService } from './tile.service';
-import { MOMENT_MATCHER    } from '../../../../utils/moment-matcher';
-import { TestBed           } from '@angular/core/testing/test_bed';
+import {Tile, TileService} from './tile.service';
+import {MOMENT_MATCHER} from '../../../../utils/moment-matcher';
+import {async} from '@angular/core/testing';
 
 describe('Tile Service', () => {
 
-  var testSamples: Tile[][] = [];
-  var service: TileService = null;
+  let service: TileService = new TileService();
+
+  let testSamples: Tile[][] = [
+    service.getTiles(moment([2016, 5, 1]), moment([2016, 5, 20])),
+    service.getTiles(moment([2017, 5, 1]), moment([2016, 5, 15])),
+    service.getTiles(moment([2018, 5, 1]), moment([2016, 5, 28])),
+    service.getTiles(moment([2016, 6, 1]), moment([2016, 6, 1])),
+    service.getTiles(moment([2016, 7, 1]), moment([2016, 7, 3]))
+  ];
 
   beforeEach(() => {
-    service = new TileService();
-
-    testSamples = [
-      service.getTiles(moment([2016, 5, 1]), moment([2016, 5, 20])),
-      service.getTiles(moment([2017, 5, 1]), moment([2016, 5, 15])),
-      service.getTiles(moment([2018, 5, 1]), moment([2016, 5, 28])),
-      service.getTiles(moment([2016, 6, 1]), moment([2016, 6, 1])),
-      service.getTiles(moment([2016, 7, 1]), moment([2016, 7, 3]))
-    ];
-
     jasmine.addMatchers(MOMENT_MATCHER);
   });
 
-  it('should always return 42 tiles', () => {
+  it('should always return 42 tiles', async(() => {
     testSamples.map(x => expect(x.length).toEqual(42));
-  });
+  }));
 
-  it('should return tiles in the correct date order', () => {
+  it('should return tiles in the correct date order', async(() => {
     testSamples.map((sample) => {
       let lastTile = sample[0];
 
@@ -40,9 +37,9 @@ describe('Tile Service', () => {
         lastTile = sample[i];
       }
     });
-  });
+  }));
 
-  it('should start on the correct day of the previous month', () => {
+  it('should start on the correct day of the previous month', async(() => {
     // Months starting on Monday -> Sunday with the number of days that should be
     // shown from the previous month.
     let monthsStartingOnDays: [moment.Moment, number][] = [
@@ -61,14 +58,14 @@ describe('Tile Service', () => {
 
       expect(results[0].date).toBeSameAs(correctStartDate);
     });
-  });
+  }));
 
-  it('should highlight the current day correctly', () => {
+  it('should highlight the current day correctly', async(() => {
     // A day in a month and the index (of generated tiles) we'd expect to be the
     // current today (_.isToday == true)
     let examples: [moment.Moment, number][] = [
       [moment([2016, 5, 15]), 16],
-      [moment([2016, 6, 1]),  4],
+      [moment([2016, 6, 1]), 4],
       [moment([2016, 7, 18]), 24]
     ];
 
@@ -84,6 +81,6 @@ describe('Tile Service', () => {
         }
       }
     });
-  });
+  }));
 
 });
