@@ -3,6 +3,7 @@
 
 module.exports = function (config) {
   config.set({
+
     basePath: '..',
     frameworks: ['jasmine', 'angular-cli'],
     plugins: [
@@ -24,7 +25,7 @@ module.exports = function (config) {
     preprocessors: {
       './src/test.ts': ['angular-cli']
     },
-    angularCliConfig: './angular-cli.json',
+    angularCli: { config: './angular-cli.json', environment: 'dev' },
     reporters: ['coverage', 'progress'],
     port: 9876,
     colors: true,
