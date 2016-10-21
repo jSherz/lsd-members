@@ -14,15 +14,16 @@ import {MonthService} from '../month.service';
 import {TileService} from './tile/tile.service';
 import {CourseCalendarComponent} from './course-calendar.component';
 import {MOMENT_MATCHER} from '../../../utils/moment-matcher';
+import {CourseService} from '../course.service';
 import {
-  CourseService,
   CourseWithNumSpaces,
   CourseWithOrganisers,
-  CourseSpaceWithMember
-} from '../course.service';
+  CourseSpaceWithMember,
+  CourseCreateRequest,
+  CourseCreateResponse
+} from '../model';
 import {Course} from '../model/course';
 import {APP_BASE_HREF} from '@angular/common';
-import {CourseCreateRequest, CourseCreateResponse} from '../model';
 
 
 // Useful to mock a component with a given year & month

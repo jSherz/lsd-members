@@ -27,10 +27,11 @@ export abstract class MassTextService extends BaseService {
    * @param startDate Send to users that signed up on or after this date (inclusive)
    * @param endDate Send to users that signed up BEFORE this date (exclusive)
    * @param template Template to use for the mass text
-   * @param expectedRender How the template is expected to look when rendered
+   * @param expectedRendered How the template is expected to look when rendered
    * @return
    */
-  abstract send(startDate: moment.Moment, endDate: moment.Moment, template: string, expectedRendered: string): Observable<MassTextSendResponse>
+  abstract send(startDate: moment.Moment, endDate: moment.Moment, template: string,
+                expectedRendered: string): Observable<MassTextSendResponse>
 
 }
 

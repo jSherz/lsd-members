@@ -7,11 +7,21 @@ import { ApiKeyService, BaseService } from '../utils';
 export class CourseSpaceMemberResponse {
   success: boolean;
   error: string;
+
+  constructor(success: boolean, error: string) {
+    this.success = success;
+    this.error = error;
+  }
 }
 
 export class CourseSpaceDepositPaidResponse {
   success: boolean;
   error: string;
+
+  constructor(success: boolean, error: string) {
+    this.success = success;
+    this.error = error;
+  }
 }
 
 /**
