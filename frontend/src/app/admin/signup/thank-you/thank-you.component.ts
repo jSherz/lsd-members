@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
 @Component({
-  selector: 'thank-you-component',
+  selector: 'lsd-thank-you-component',
   templateUrl: 'thank-you.component.html'
 })
 export class ThankYouComponent {

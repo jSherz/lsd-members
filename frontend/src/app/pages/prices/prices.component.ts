@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-prices',
+  selector: 'lsd-prices',
   templateUrl: 'prices.component.html',
   styleUrls: ['prices.component.sass']
 })

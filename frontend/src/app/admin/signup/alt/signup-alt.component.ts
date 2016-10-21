@@ -13,7 +13,7 @@ import {
 } from '../service/signup.service';
 
 @Component({
-  selector: 'signup-alt-component',
+  selector: 'lsd-signup-alt-component',
   templateUrl: 'signup-alt.component.html'
 })
 export class SignupAltComponent {

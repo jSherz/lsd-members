@@ -12,7 +12,7 @@ import {MassTextService} from './mass-text.service';
 
 
 @Component({
-  selector: 'app-mass-text',
+  selector: 'lsd-mass-text',
   templateUrl: './mass-text.component.html',
   styleUrls: ['./mass-text.component.sass']
 })

@@ -17,7 +17,7 @@ import {CourseSpaceService} from '../../course-spaces/course-spaces.service';
 
 
 @Component({
-  selector: 'app-course-view',
+  selector: 'lsd-course-view',
   templateUrl: 'course-view.component.html',
   styleUrls: ['course-view.component.sass']
 })

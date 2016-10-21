@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-faq',
+  selector: 'lsd-faq',
   templateUrl: 'faq.component.html',
   styleUrls: ['faq.component.sass']
 })

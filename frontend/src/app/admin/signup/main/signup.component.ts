@@ -11,7 +11,7 @@ import { CustomValidators } from '../../../utils';
 import { SignupService    } from '../service/signup.service';
 
 @Component({
-  selector: 'signup-component',
+  selector: 'lsd-signup-component',
   templateUrl: 'signup.component.html'
 })
 export class SignupComponent {

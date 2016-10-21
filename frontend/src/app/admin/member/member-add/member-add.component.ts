@@ -6,13 +6,11 @@ import {MemberService, Member} from '../member.service';
 import {CustomValidators} from '../../../utils/custom-validators';
 
 @Component({
-  selector: 'app-member-add',
+  selector: 'lsd-member-add',
   templateUrl: 'member-add.component.html',
   styleUrls: ['member-add.component.sass']
 })
 export class MemberAddComponent {
-
-  private member: Member;
 
   memberForm: FormGroup;
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-contact',
+  selector: 'lsd-contact',
   templateUrl: 'contact.component.html',
   styleUrls: ['contact.component.sass']
 })

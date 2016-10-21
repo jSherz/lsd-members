@@ -1,5 +1,5 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
-import {Router} from '@angular/router'
+import {Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 import * as moment from 'moment';
 
@@ -19,7 +19,7 @@ import {CourseService} from '../course.service';
 import {CourseCreateRequest} from '../model';
 
 @Component({
-  selector: 'course-add-component',
+  selector: 'lsd-course-add-component',
   templateUrl: 'course-add.component.html',
   styleUrls: ['course-add.component.sass']
 })
@@ -111,8 +111,8 @@ export class CourseAddComponent implements OnInit, OnDestroy {
     let request = new CourseCreateRequest(
       moment(formData.date),
       formData.organiser,
-      formData.secondaryOrganiser == null || formData.secondaryOrganiser == '' ? null : formData.secondaryOrganiser,
-      parseInt(formData.numSpaces)
+      formData.secondaryOrganiser === null || formData.secondaryOrganiser === '' ? null : formData.secondaryOrganiser,
+      parseInt(formData.numSpaces, 10)
     );
 
     this.service.create(request).subscribe(

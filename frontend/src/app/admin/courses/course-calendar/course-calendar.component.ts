@@ -13,7 +13,7 @@ import {
 
 
 @Component({
-  selector: 'course-calendar-component',
+  selector: 'lsd-course-calendar-component',
   templateUrl: 'course-calendar.component.html',
   providers: [MonthService, TileService,  { provide: CourseService, useClass: CourseServiceImpl }],
   styleUrls: ['course-calendar.component.sass']

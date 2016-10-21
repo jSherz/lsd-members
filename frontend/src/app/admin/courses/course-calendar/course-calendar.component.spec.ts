@@ -4,29 +4,31 @@ import {
   ActivatedRoute,
   Params, UrlSegment, Router
 } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing/router_testing_module';
-import { TestBed, inject     } from '@angular/core/testing/test_bed';
+import {RouterTestingModule} from '@angular/router/testing/router_testing_module';
+import {TestBed, inject} from '@angular/core/testing/test_bed';
 
 import * as moment from 'moment';
-import { Observable } from 'rxjs/Rx';
+import {Observable} from 'rxjs/Rx';
 
-import { MonthService            } from '../month.service';
-import { TileService             } from './tile/tile.service';
-import { CourseCalendarComponent } from './course-calendar.component';
-import { MOMENT_MATCHER          } from '../../../utils/moment-matcher';
+import {MonthService} from '../month.service';
+import {TileService} from './tile/tile.service';
+import {CourseCalendarComponent} from './course-calendar.component';
+import {MOMENT_MATCHER} from '../../../utils/moment-matcher';
 import {
   CourseService,
-  CourseWithNumSpaces, Course, CourseWithOrganisers, CourseSpaceWithMember
+  CourseWithNumSpaces,
+  CourseWithOrganisers,
+  CourseSpaceWithMember
 } from '../course.service';
+import {Course} from '../model/course';
 import {APP_BASE_HREF} from '@angular/common';
+import {CourseCreateRequest, CourseCreateResponse} from '../model';
 
 
 // Useful to mock a component with a given year & month
-let mockComp = function(
-  urlParts: [string, Params][] = [['courses', {}], ['calendar', {}]],
-  params: Params = {},
-  courses: CourseWithNumSpaces[] = []
-): CourseCalendarComponent {
+let mockComp = function (urlParts: [string, Params][] = [['courses', {}], ['calendar', {}]],
+                         params: Params = {},
+                         courses: CourseWithNumSpaces[] = []): CourseCalendarComponent {
   return inject([Router], (router: Router) => {
     let urls = urlParts.map(([path, pathParams]) => new UrlSegment(path, pathParams));
 
@@ -55,8 +57,8 @@ beforeEach(() => {
   TestBed.configureTestingModule({
     imports: [RouterTestingModule],
     providers: [
-      { provide: APP_BASE_HREF, useValue: '/' },
-      { provide: Router, useValue: {} }
+      {provide: APP_BASE_HREF, useValue: '/'},
+      {provide: Router, useValue: {}}
     ]
   });
 
@@ -128,11 +130,11 @@ describe('Component: CourseCalendar', () => {
     );
 
     let tileIndexesWithNoCourse = [
-          1,  2,  3,  4,  5,  6,
-      7,  8,  9,  10,     12, 13,
-      14, 15, 16,     18, 19, 20,
+      1, 2, 3, 4, 5, 6,
+      7, 8, 9, 10, 12, 13,
+      14, 15, 16, 18, 19, 20,
       21, 22, 23, 24, 25, 26, 27,
-      28, 29,     31, 32, 33, 34,
+      28, 29, 31, 32, 33, 34,
       35, 36, 37, 38, 39, 40
     ];
 
@@ -171,6 +173,10 @@ export class StubCourseService extends CourseService {
 
   find(startDate: moment.Moment, endDate: moment.Moment): Observable<CourseWithNumSpaces[]> {
     return Observable.of(this.courses);
+  }
+
+  create(course: CourseCreateRequest): Observable<CourseCreateResponse> {
+    return undefined;
   }
 
 }

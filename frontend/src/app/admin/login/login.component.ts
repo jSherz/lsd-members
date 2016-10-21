@@ -10,7 +10,7 @@ import { LoginService } from './login.service';
 import { ApiKeyService } from '../utils';
 
 @Component({
-  selector: 'login-component',
+  selector: 'lsd-login-component',
   templateUrl: 'login.component.html',
   styleUrls: ['login.component.sass']
 })

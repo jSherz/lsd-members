@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 import { Tile } from './tile.service';
 
 @Component({
-  selector: 'calendar-tile',
+  selector: 'lsd-calendar-tile',
   templateUrl: 'tile.component.html',
   styleUrls: ['tile.component.sass']
 })

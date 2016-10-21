@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import * as moment from 'moment';
-import {BaseService} from "../utils/base.service";
-import {Http} from "@angular/http";
-import {ApiKeyService} from "../utils/api-key.service";
-import {Observable} from "rxjs";
+import {BaseService} from '../utils/base.service';
+import {Http} from '@angular/http';
+import {ApiKeyService} from '../utils/api-key.service';
+import {Observable} from 'rxjs';
 
 
 export class MassTextSendResponse {
@@ -38,7 +38,7 @@ export abstract class MassTextService extends BaseService {
 @Injectable()
 export class MassTextServiceImpl extends MassTextService {
 
-  private sendUrl = "http://localhost:8080/api/v1/mass-texts/send";
+  private sendUrl = 'http://localhost:8080/api/v1/mass-texts/send';
 
   constructor(http: Http, apiKeyService: ApiKeyService) {
     super(http, apiKeyService);

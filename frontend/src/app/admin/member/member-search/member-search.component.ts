@@ -53,7 +53,7 @@ export class MemberSearchComponent implements OnInit {
 
   constructor(private service: MemberService) {
   }
-
+x
   ngOnInit() {
   }
 

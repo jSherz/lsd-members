@@ -1,7 +1,7 @@
 import { Input, Component } from '@angular/core';
 
 @Component({
-  selector: 'nav-item',
+  selector: 'lsd-nav-item',
   templateUrl: './nav.component.html',
   styleUrls: ['nav.component.sass']
 })

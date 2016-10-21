@@ -13,16 +13,11 @@ export class CommitteeMember {
 }
 
 @Component({
-  selector: 'app-committee',
+  selector: 'lsd-committee',
   templateUrl: 'committee.component.html',
   styleUrls: ['committee.component.sass']
 })
 export class CommitteeComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
 
   committeeMembers = [
     new CommitteeMember('emily.jpg', 'Emily', 'President'),
@@ -34,5 +29,10 @@ export class CommitteeComponent implements OnInit {
     new CommitteeMember('georgia.jpg', 'Georgia', 'Social Secretary #2'),
     new CommitteeMember('james.jpg', 'James', '"The website guy"'),
   ];
+
+  constructor() { }
+
+  ngOnInit() {
+  }
 
 }

@@ -8,7 +8,7 @@ import {MemberService, Member} from '../member.service';
 import {CustomValidators} from '../../../utils/custom-validators';
 
 @Component({
-  selector: 'app-member-edit',
+  selector: 'lsd-member-edit',
   templateUrl: 'member-edit.component.html',
   styleUrls: ['member-edit.component.sass']
 })

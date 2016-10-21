@@ -2,7 +2,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 
 @Component({
-  selector: 'app-base',
+  selector: 'lsd-base',
   templateUrl: 'base.component.html',
   styleUrls: ['base.component.sass'],
   encapsulation: ViewEncapsulation.None

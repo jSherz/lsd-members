@@ -1,12 +1,11 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
-import * as moment from 'moment';
 
 import {MemberService, Member, TextMessage} from '../member.service';
 
 @Component({
-  selector: 'app-member-view',
+  selector: 'lsd-member-view',
   templateUrl: './member-view.component.html',
   styleUrls: ['./member-view.component.sass']
 })
