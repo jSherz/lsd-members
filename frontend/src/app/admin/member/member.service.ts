@@ -92,6 +92,18 @@ export class MemberEditResult {
   }
 }
 
+export class MemberAddResult {
+  success: boolean;
+  uuid: string;
+  error: string;
+
+  constructor(success: boolean, uuid: string, error: string) {
+    this.success = success;
+    this.uuid = uuid;
+    this.error = error;
+  }
+}
+
 export abstract class MemberService extends BaseService {
 
   constructor(http: Http, apiKeyService: ApiKeyService) {
@@ -104,18 +116,20 @@ export abstract class MemberService extends BaseService {
 
   abstract search(term: string): Observable<SearchResult[]>
 
+  abstract addMember(member: Member): Observable<MemberAddResult>
+
   abstract editMember(member: Member): Observable<MemberEditResult>
 
 }
 
 @Injectable()
 export class MemberServiceImpl extends MemberService {
-
   private baseUrl = 'http://localhost:8080/api/v1/';
   private getUrl = this.baseUrl + 'members/{{uuid}}';
   private textMessagesUrl = this.getUrl + '/text-messages';
   private memberSearchUrl = this.baseUrl + 'members/search';
   private editUrl = this.baseUrl + 'members/{{uuid}}';
+  private addUrl = this.baseUrl + 'members/create';
 
   constructor(http: Http, apiKeyService: ApiKeyService) {
     super(http, apiKeyService);
@@ -157,6 +171,11 @@ export class MemberServiceImpl extends MemberService {
 
     return this.post(this.memberSearchUrl, body)
       .map(r => this.extractJson<SearchResult[]>(r))
+      .catch(this.handleError());
+  }
+
+  addMember(member: Member): Observable<MemberAddResult> {
+    return this.post(this.addUrl, member)
       .catch(this.handleError());
   }
 

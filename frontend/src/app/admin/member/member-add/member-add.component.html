@@ -1,0 +1,84 @@
+<div id="member-add">
+  <h2>Create member</h2>
+
+  <div *ngIf="apiRequestFailed" class="form-field-error">
+    An unknown error occurred #sadtimes #turnitoffandonagain
+  </div>
+
+  <form [formGroup]="memberForm" *ngIf="member" (submit)="createMember()">
+    <div>
+      <label for="first-name">First name</label>
+      <input type="text" id="first-name" formControlName="firstName" required value="">
+
+      <div [hidden]="ctrlFirstName.valid || ctrlFirstName.untouched" class="form-field-error" id="first-name-form-field-error">
+        Please enter a first name
+      </div>
+    </div>
+
+    <div>
+      <label for="last-name">Last name</label>
+      <input type="text" id="last-name" formControlName="lastName" value="">
+    </div>
+
+    <div>
+      <label for="phone-number">Mobile number</label>
+      <input type="text" id="phone-number" formControlName="phoneNumber" value="">
+
+      <div [hidden]="ctrlPhoneNumber.valid || ctrlPhoneNumber.untouched" class="form-field-error" id="phone-number-form-field-error">
+        Please enter a valid phone number (or clear this field)
+      </div>
+    </div>
+
+    <div>
+      <label for="email">E-mail</label>
+      <input type="email" id="email" formControlName="email" value="">
+
+      <div [hidden]="ctrlEmail.valid || ctrlEmail.untouched" class="form-field-error" id="email-form-field-error">
+        Please enter a valid e-mail (or clear this field)
+      </div>
+    </div>
+
+    <div>
+      <label for="last-jump">Last jump</label>
+      <input type="date" id="last-jump" formControlName="lastJump" value="">
+
+      <div [hidden]="ctrlLastName.valid || ctrlLastName.untouched" class="form-field-error" id="last-jump-form-field-error">
+        Please enter a valid date (or clear this field)
+      </div>
+    </div>
+
+    <div>
+      <label for="weight">Weight (kg)</label>
+      <input type="number" id="weight" formControlName="weight" value="">
+
+      <div [hidden]="ctrlWeight.valid || ctrlWeight.untouched" class="form-field-error" id="weight-form-field-error">
+        Please enter a weight (or clear this field)
+      </div>
+    </div>
+
+    <div>
+      <label for="height">Height (kg)</label>
+      <input type="number" id="height" formControlName="height" value="">
+
+      <div [hidden]="ctrlHeight.valid || ctrlHeight.untouched" class="form-field-error" id="height-form-field-error">
+        Please enter a height (or clear this field)
+      </div>
+    </div>
+
+    <div>
+      <label for="driver">Driver?</label>
+      <input type="checkbox" id="driver" formControlName="driver" value="">
+    </div>
+
+    <div>
+      <label for="organiser">Course organiser?</label>
+      <input type="checkbox" id="organiser" formControlName="organiser" value="">
+    </div>
+
+    <div>
+      <button type="submit">Create member</button>
+    </div>
+  </form>
+
+  <p *ngIf="member == undefined">Loading...</p>
+</div>
