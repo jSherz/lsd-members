@@ -1,7 +1,6 @@
-import { Observable } from 'rxjs/Observable';
-import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
+import {Observable} from 'rxjs/Observable';
 
-import { SignupResult, SignupService } from '../index';
+import {SignupResult, SignupService} from '../index';
 
 export class SignupServiceStub extends SignupService {
 
@@ -17,12 +16,12 @@ export class SignupServiceStub extends SignupService {
   static apiFailEmail: string = 'AmyFarrell@armyspy.com';
   static apiFailPhoneNumber: string = '07827651140';
 
-  signup(name: string, phoneNumber: string): Observable<SignupResult> | ErrorObservable {
+  signup(name: string, phoneNumber?: string): Observable<SignupResult> {
     if (name === SignupServiceStub.validName && phoneNumber === SignupServiceStub.validPhoneNumber) {
       return Observable.of(new SignupResult(true, {}));
     } else if (name === SignupServiceStub.inUseName && phoneNumber === SignupServiceStub.inUsePhoneNumber) {
       return Observable.of(new SignupResult(false, [
-        { 'phoneNumber': 'The specified phone number is in use' }
+        {'phoneNumber': 'The specified phone number is in use'}
       ]));
     } else if (name === SignupServiceStub.apiFailName && phoneNumber === SignupServiceStub.apiFailPhoneNumber) {
       return Observable.throw('Internal server error');
@@ -31,12 +30,12 @@ export class SignupServiceStub extends SignupService {
     }
   }
 
-  signupAlt(name: string, email: string): Observable<SignupResult> | ErrorObservable {
+  signupAlt(name: string, email?: string): Observable<SignupResult> {
     if (name === SignupServiceStub.validName && email === SignupServiceStub.validEmail) {
       return Observable.of(new SignupResult(true, {}));
     } else if (name === SignupServiceStub.inUseName && email === SignupServiceStub.inUseEmail) {
       return Observable.of(new SignupResult(false, [
-        { 'email': 'The specified e-mail is in use' }
+        {'email': 'The specified e-mail is in use'}
       ]));
     } else if (name === SignupServiceStub.apiFailName && email === SignupServiceStub.apiFailEmail) {
       return Observable.throw('Internal server error');
