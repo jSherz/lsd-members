@@ -5,7 +5,7 @@ import {FormBuilder} from '@angular/forms';
 import {Router} from '@angular/router';
 
 import {MemberAddComponent} from './member-add.component';
-import {StubMemberService} from "../member.service.stub";
+import {StubMemberService} from '../member.service.stub';
 
 describe('Component: MemberAdd', () => {
 
