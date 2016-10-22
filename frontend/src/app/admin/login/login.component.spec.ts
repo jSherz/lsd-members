@@ -37,7 +37,7 @@ function mockComp(): TestSetup {
   return new TestSetup(router, service, new LoginComponent(builder, router, service, apiKeyService));
 }
 
-describe('Component : Login', () => {
+describe('Component: Login', () => {
 
   it('shows a generic error message if the API call fails', async(() => {
     let test = mockComp();
@@ -83,7 +83,7 @@ describe('Component : Login', () => {
       email: LoginServiceStub.accountLockedEmail,
       password: LoginServiceStub.accountLockedPassword
     });
-    expect(test.component.errors[0].password).toEqual('Your account has been disabled. Please contact an administrator.');
+    expect(test.component.errors.email).toEqual('Your account has been disabled. Please contact an administrator.');
 
     expect(test.router.navigate).not.toHaveBeenCalled();
   }));

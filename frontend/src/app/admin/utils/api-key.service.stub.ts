@@ -13,6 +13,7 @@ export class StubApiKeyService extends ApiKeyService {
   private key: string;
 
   constructor(key: string) {
+    super();
     this.key = key;
   }
 

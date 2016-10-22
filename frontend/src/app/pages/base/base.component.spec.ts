@@ -1,15 +1,22 @@
 /* tslint:disable:no-unused-variable */
 
-import { By }           from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
-import { async, inject } from '@angular/core/testing';
-import { BaseComponent } from './base.component';
+import {Router} from '@angular/router';
+import {async, inject, TestBed} from '@angular/core/testing';
+
+import {BaseComponent} from './base.component';
+import {TestModule} from '../../test.module';
 
 describe('Component: Base', () => {
 
-  it('should create an instance', () => {
-    let component = new BaseComponent();
-    expect(component).toBeTruthy();
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [TestModule]
+    });
   });
+
+  it('should create an instance', async(inject([Router], (router: Router) => {
+    let component = new BaseComponent(router);
+    expect(component).toBeTruthy();
+  })));
 
 });

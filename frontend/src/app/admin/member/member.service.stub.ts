@@ -1,14 +1,14 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 
-import {MemberService, Member, TextMessage} from './member.service';
+import {MemberService, Member, TextMessage, SearchResult, MemberAddResult, MemberEditResult} from './member.service';
 
 
 @Injectable()
 export class StubMemberService extends MemberService {
 
   constructor() {
-    super(undefined, undefined);
+    super(null, null);
   }
 
   getMember(uuid: string): Observable<Member> {

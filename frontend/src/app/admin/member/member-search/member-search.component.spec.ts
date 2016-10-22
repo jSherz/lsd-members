@@ -1,27 +1,20 @@
 /* tslint:disable:no-unused-variable */
 
-import {HttpModule} from '@angular/http';
-import {TestBed, inject} from '@angular/core/testing/test_bed';
+import {TestBed, inject, async} from '@angular/core/testing';
 
 import {MemberSearchComponent} from './member-search.component';
-import {MemberService, MemberServiceImpl} from '../member.service';
+import {TestModule} from '../../../test.module';
 
 describe('Component: MemberSearch', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpModule
-      ],
-      providers: [
-        {provide: MemberService, useClass: MemberServiceImpl},
-        MemberSearchComponent
-      ]
+      imports: [TestModule]
     });
   });
 
-  it('should create an instance', inject([MemberSearchComponent], (component: MemberSearchComponent) => {
+  it('should create an instance', async(inject([MemberSearchComponent], (component: MemberSearchComponent) => {
     expect(component).toBeTruthy();
-  }));
+  })));
 
 });

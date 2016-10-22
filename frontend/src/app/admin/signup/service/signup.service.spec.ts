@@ -1,23 +1,29 @@
 /* tslint:disable:no-unused-variable */
 
 import {
-  inject, TestBed
+  inject, TestBed, async
 } from '@angular/core/testing';
-import { HttpModule } from '@angular/http';
 
-import { SignupService, SignupServiceImpl } from './signup.service';
+import {SignupService, SignupServiceImpl} from './signup.service';
+import {TestModule} from '../../../test.module';
+import {ApiKeyService} from '../../utils/api-key.service';
+import {StubApiKeyService} from '../../utils/api-key.service.stub';
 
-describe('Signup Service', () => {
+
+describe('Service: Signup', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpModule],
-      providers: [{ provides: SignupService, useClass: SignupServiceImpl }]
+      imports: [TestModule],
+      providers: [
+        {provide: ApiKeyService, useValue: new StubApiKeyService('12345')},
+        {provide: SignupService, useClass: SignupServiceImpl}
+      ]
     });
   });
 
-  it('should ...', inject([SignupService], (service: SignupService) => {
+  it('should ...', async(inject([SignupService], (service: SignupService) => {
     expect(service).toBeTruthy();
-  }));
+  })));
 
 });

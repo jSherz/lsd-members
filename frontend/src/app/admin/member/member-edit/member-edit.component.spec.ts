@@ -1,11 +1,22 @@
 /* tslint:disable:no-unused-variable */
 
-import { TestBed, async } from '@angular/core/testing';
-import { MemberViewComponent } from './member-edit.component';
+import {TestBed, async, inject} from '@angular/core/testing';
+import {MemberEditComponent} from './member-edit.component';
 
-describe('Component: MemberView', () => {
-  it('should create an instance', () => {
-    let component = new MemberViewComponent();
-    expect(component).toBeTruthy();
+import {TestModule} from '../../../test.module';
+
+
+describe('Component: MemberEdit', () => {
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [TestModule],
+      providers: [MemberEditComponent]
+    });
   });
+
+  it('should create an instance', async(inject([MemberEditComponent], (component: MemberEditComponent) => {
+    expect(component).toBeTruthy();
+  })));
+
 });

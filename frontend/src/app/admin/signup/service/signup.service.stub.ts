@@ -16,6 +16,10 @@ export class SignupServiceStub extends SignupService {
   static apiFailEmail: string = 'AmyFarrell@armyspy.com';
   static apiFailPhoneNumber: string = '07827651140';
 
+  constructor() {
+    super(null, null);
+  }
+
   signup(name: string, phoneNumber?: string): Observable<SignupResult> {
     if (name === SignupServiceStub.validName && phoneNumber === SignupServiceStub.validPhoneNumber) {
       return Observable.of(new SignupResult(true, {}));

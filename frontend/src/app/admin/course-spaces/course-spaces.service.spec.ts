@@ -1,15 +1,17 @@
 /* tslint:disable:no-unused-variable */
 
-import { inject  } from '@angular/core/testing';
-import { TestBed } from '@angular/core/testing/test_bed';
+import {inject} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing/test_bed';
 
-import { CourseSpaceService } from './course-spaces.service';
+import {CourseSpaceService, CourseSpaceServiceImpl} from './course-spaces.service';
+import {TestModule} from '../../test.module';
 
 describe('Service: CourseSpaces', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [CourseSpaceService]
+      imports: [TestModule],
+      providers: [{provide: CourseSpaceService, useClass: CourseSpaceServiceImpl}]
     });
   });
 

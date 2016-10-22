@@ -1,26 +1,27 @@
 /* tslint:disable:no-unused-variable */
 
-import { TestBed, inject          } from '@angular/core/testing/test_bed';
-import { FormsModule, FormBuilder } from '@angular/forms';
+import {TestBed, inject, async} from '@angular/core/testing';
 
-import { CourseAddComponent } from './course-add.component';
-import { CommitteeService   } from '../../committee/committee.service';
+import {CourseAddComponent} from './course-add.component';
+import {TestModule} from '../../../test.module';
+import {StubCourseService} from '../course-calendar/course-calendar.component.spec';
+import {CourseService} from '../course.service';
 
 describe('Component: CourseAddComponent', () => {
 
-  it('should create an instance', inject([CourseAddComponent], (component: CourseAddComponent) => {
-    expect(component).toBeTruthy();
-  }));
-
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule],
+      imports: [TestModule],
       providers: [
-        CommitteeService,
-        CourseAddComponent,
-        FormBuilder
+        {provide: CourseService, useValue: new StubCourseService([])},
+        CourseAddComponent
       ]
     });
   });
+
+  it('should create an instance', async(inject([CourseAddComponent], (component: CourseAddComponent) => {
+    expect(component).toBeTruthy();
+  })));
+
 
 });

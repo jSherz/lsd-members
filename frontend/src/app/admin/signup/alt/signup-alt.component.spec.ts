@@ -1,11 +1,12 @@
 /* tslint:disable:no-unused-variable */
 
-import { FormBuilder } from '@angular/forms';
-import { Router      } from '@angular/router';
+import {async} from '@angular/core/testing';
+import {FormBuilder} from '@angular/forms';
+import {Router} from '@angular/router';
 
-import { SignupAltComponent } from './signup-alt.component';
-import { SignupServiceStub  } from '../service/signup.service.stub';
-import { SignupService      } from '../service/signup.service';
+import {SignupAltComponent} from './signup-alt.component';
+import {SignupServiceStub} from '../service/signup.service.stub';
+import {SignupService} from '../service/signup.service';
 
 class TestSetup {
   router: Router;
@@ -36,50 +37,50 @@ function mockComp(): TestSetup {
 
 describe('Signup Alt Component', () => {
 
-  it('shows a generic error message if the API call fails', () => {
+  it('shows a generic error message if the API call fails', async(() => {
     let test = mockComp();
 
-    test.component.signup({ name: SignupServiceStub.apiFailName, email: SignupServiceStub.apiFailEmail });
+    test.component.signup({name: SignupServiceStub.apiFailName, email: SignupServiceStub.apiFailEmail});
     expect(test.component.apiRequestFailed).toEqual(true);
 
     expect(test.router.navigate).not.toHaveBeenCalled();
-  });
+  }));
 
-  it('clears the generic error message if a successful API call is made at a later time', () => {
+  it('clears the generic error message if a successful API call is made at a later time', async(() => {
     let test = mockComp();
 
     // Ensure error showing
-    test.component.signup({ name: SignupServiceStub.apiFailName, email: SignupServiceStub.apiFailEmail });
+    test.component.signup({name: SignupServiceStub.apiFailName, email: SignupServiceStub.apiFailEmail});
     expect(test.component.apiRequestFailed).toEqual(true);
 
     // API call - successful response
-    test.component.signup({ name: SignupServiceStub.validName, email: SignupServiceStub.validEmail });
+    test.component.signup({name: SignupServiceStub.validName, email: SignupServiceStub.validEmail});
     expect(test.component.apiRequestFailed).toEqual(false);
 
     // Ensure error showing
-    test.component.signup({ name: SignupServiceStub.apiFailName, email: SignupServiceStub.apiFailEmail });
+    test.component.signup({name: SignupServiceStub.apiFailName, email: SignupServiceStub.apiFailEmail});
     expect(test.component.apiRequestFailed).toEqual(true);
 
     // API call - returned errors
-    test.component.signup({ name: SignupServiceStub.inUseName, email: SignupServiceStub.inUseEmail });
+    test.component.signup({name: SignupServiceStub.inUseName, email: SignupServiceStub.inUseEmail});
     expect(test.component.apiRequestFailed).toEqual(false);
-  });
+  }));
 
-  it('navigates to the thank-you page if signing up succeeds', () => {
+  it('navigates to the thank-you page if signing up succeeds', async(() => {
     let test = mockComp();
 
-    test.component.signup({ name: SignupServiceStub.validName, email: SignupServiceStub.validEmail });
+    test.component.signup({name: SignupServiceStub.validName, email: SignupServiceStub.validEmail});
 
     expect(test.router.navigate).toHaveBeenCalled();
-  });
+  }));
 
-  it('shows errors against the correct field(s) with a successful API call but errors returned', () => {
+  it('shows errors against the correct field(s) with a successful API call but errors returned', async(() => {
     let test = mockComp();
 
-    test.component.signup({ name: SignupServiceStub.inUseName, email: SignupServiceStub.inUseEmail });
+    test.component.signup({name: SignupServiceStub.inUseName, email: SignupServiceStub.inUseEmail});
     expect(test.component.errors[0].email).toEqual('The specified e-mail is in use');
 
     expect(test.router.navigate).not.toHaveBeenCalled();
-  });
+  }));
 
 });

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'page-nav-item',
+  selector: 'lsd-page-nav-item',
   templateUrl: 'page-nav.component.html'
 })
 
