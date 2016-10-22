@@ -83,7 +83,7 @@ describe('Component: Login', () => {
       email: LoginServiceStub.accountLockedEmail,
       password: LoginServiceStub.accountLockedPassword
     });
-    expect(test.component.errors.email).toEqual('Your account has been disabled. Please contact an administrator.');
+    expect(test.component.errors.email).toEqual('error.accountLocked');
 
     expect(test.router.navigate).not.toHaveBeenCalled();
   }));
