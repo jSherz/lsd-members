@@ -1,10 +1,10 @@
 /* tslint:disable:no-unused-variable */
 
+import {ActivatedRoute, Router} from '@angular/router';
 import {TestBed, async, inject} from '@angular/core/testing';
 import {MemberEditComponent} from './member-edit.component';
 
 import {TestModule} from '../../../test.module';
-import {ActivatedRoute, Router} from "@angular/router";
 
 
 describe('Component: MemberEdit', () => {
