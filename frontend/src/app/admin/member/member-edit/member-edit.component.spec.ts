@@ -4,14 +4,21 @@ import {TestBed, async, inject} from '@angular/core/testing';
 import {MemberEditComponent} from './member-edit.component';
 
 import {TestModule} from '../../../test.module';
+import {ActivatedRoute, Router} from "@angular/router";
 
 
 describe('Component: MemberEdit', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [TestModule],
-      providers: [MemberEditComponent]
+      imports: [
+        TestModule
+      ],
+      providers: [
+        {provide: Router, useValue: {navigate: () => {}}},
+        {provide: ActivatedRoute, useValue: {params: [{'uuid': '12345'}]}},
+        MemberEditComponent
+      ]
     });
   });
 
