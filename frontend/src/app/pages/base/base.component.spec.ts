@@ -1,22 +1,38 @@
 /* tslint:disable:no-unused-variable */
 
-import {Router} from '@angular/router';
-import {async, inject, TestBed} from '@angular/core/testing';
+import {async} from '@angular/core/testing';
+import {Router, NavigationStart, Event} from '@angular/router';
+import {Subject} from 'rxjs';
 
 import {BaseComponent} from './base.component';
-import {TestModule} from '../../test.module';
+
 
 describe('Component: Base', () => {
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [TestModule]
-    });
-  });
+  it('should collapse the menu when the route changes', async(() => {
+    let fakeRouter = new FakeRouter();
+    let component = new BaseComponent(fakeRouter);
 
-  it('should create an instance', async(inject([Router], (router: Router) => {
-    let component = new BaseComponent(router);
-    expect(component).toBeTruthy();
-  })));
+    component.menuCollapsed = false;
+
+    expect(component.menuCollapsed).toBeFalsy();
+
+    fakeRouter.triggerSubscriptions();
+
+    expect(component.menuCollapsed).toBeTruthy();
+  }));
 
 });
+
+class FakeRouter extends Router {
+
+  constructor() {
+    super(null, null, null, null, null, null, null, []);
+  }
+
+  triggerSubscriptions() {
+    let navigationStart: Event = new NavigationStart(123, 'test-page');
+    (<Subject<Event>>this.events).next(navigationStart);
+  }
+
+}
