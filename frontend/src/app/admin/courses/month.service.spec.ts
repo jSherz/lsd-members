@@ -1,11 +1,11 @@
 /* tslint:disable:no-unused-variable */
 
-import {inject, async} from '@angular/core/testing';
-import {TestBed} from '@angular/core/testing/test_bed';
+import {inject, async, TestBed} from '@angular/core/testing';
 import * as moment from 'moment';
 
 import {MonthService} from './month.service';
 import {MOMENT_MATCHER} from '../../utils/moment-matcher';
+
 
 describe('Service: Month', () => {
 
@@ -13,7 +13,9 @@ describe('Service: Month', () => {
     jasmine.addMatchers(MOMENT_MATCHER);
 
     TestBed.configureTestingModule({
-      imports: [MonthService]
+      providers: [
+        MonthService
+      ]
     });
   });
 

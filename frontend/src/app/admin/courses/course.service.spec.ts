@@ -1,22 +1,29 @@
 /* tslint:disable:no-unused-variable */
 
-import { inject     } from '@angular/core/testing';
-import { TestBed    } from '@angular/core/testing/test_bed';
-import { HttpModule } from '@angular/http';
+import {inject, TestBed, async} from '@angular/core/testing';
+import {HttpModule} from '@angular/http';
 
-import { CourseService, CourseServiceImpl } from './course.service';
+import {CourseService, CourseServiceImpl} from './course.service';
+import {StubApiKeyService} from '../utils/api-key.service.stub';
+import {ApiKeyService} from '../utils/api-key.service';
+
 
 describe('Course Service', () => {
 
-  it('should ...', inject([CourseServiceImpl], (service: CourseService) => {
-    expect(service).toBeTruthy();
-  }));
-
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpModule],
-      providers: [CourseServiceImpl]
+      imports: [
+        HttpModule
+      ],
+      providers: [
+        {provide: ApiKeyService, useValue: new StubApiKeyService('12345')},
+        {provide: CourseService, useClass: CourseServiceImpl}
+      ]
     });
   });
+
+  it('should ...', async(inject([CourseService], (service: CourseService) => {
+    expect(service).toBeTruthy();
+  })));
 
 });

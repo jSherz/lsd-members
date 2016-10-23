@@ -5,7 +5,7 @@ import {
   Params, UrlSegment, Router
 } from '@angular/router';
 import {RouterTestingModule} from '@angular/router/testing/router_testing_module';
-import {TestBed, inject} from '@angular/core/testing/test_bed';
+import {TestBed, inject, async} from '@angular/core/testing';
 
 import * as moment from 'moment';
 import {Observable} from 'rxjs/Rx';
@@ -54,6 +54,8 @@ let mockComp = function (urlParts: [string, Params][] = [['courses', {}], ['cale
 };
 
 beforeEach(() => {
+  jasmine.addMatchers(MOMENT_MATCHER);
+
   // TODO: Replace with RouterTestingModule.withRoutes when released
   TestBed.configureTestingModule({
     imports: [RouterTestingModule],
@@ -62,32 +64,31 @@ beforeEach(() => {
       {provide: Router, useValue: {}}
     ]
   });
-
-  jasmine.addMatchers(MOMENT_MATCHER);
 });
+
 
 describe('Component: CourseCalendar', () => {
 
-  it('should create an instance', () => {
+  it('should create an instance', async(() => {
     let app = mockComp();
     expect(app).toBeTruthy();
-  });
+  }));
 
-  it('should generate 36 months for the form', () => {
+  it('should generate 36 months for the form', async(() => {
     let app = mockComp();
     expect(app.months.length).toEqual(36);
-  });
+  }));
 
-  it('should have the correct previous, current and next months (no month specified)', () => {
+  it('should have the correct previous, current and next months (no month specified)', async(() => {
     let app = mockComp();
     let today = moment();
 
     expect(app.previousMonth).toBeSameAs(moment([today.year(), today.month() - 1, 1]));
     expect(app.currentMonth).toBeSameAs(moment([today.year(), today.month(), 1]));
     expect(app.nextMonth).toBeSameAs(moment([today.year(), today.month() + 1, 1]));
-  });
+  }));
 
-  it('should show the specified year and month if provided', () => {
+  it('should show the specified year and month if provided', async(() => {
     let app = mockComp(
       [['courses', {}, 'calendar', {'year': '2017', 'month': '5'}]],
       {'year': '2017', 'month': '5'}
@@ -96,9 +97,9 @@ describe('Component: CourseCalendar', () => {
     expect(app.previousMonth).toBeSameAs(moment([2017, 3, 1]));
     expect(app.currentMonth).toBeSameAs(moment([2017, 4, 1]));
     expect(app.nextMonth).toBeSameAs(moment([2017, 5, 1]));
-  });
+  }));
 
-  it('should show courses found with the course service to the relevant tiles', () => {
+  it('should show courses found with the course service to the relevant tiles', async(() => {
     // 28th September -> 07th November (inclusive) displayed
     let courses = [
       // Some courses before the tile dates
@@ -146,7 +147,7 @@ describe('Component: CourseCalendar', () => {
     expect(app.tiles[17].courses[0].course.uuid).toEqual('8cdf7369-ab17-40d0-acfb-073a1f873c8d');
     expect(app.tiles[30].courses[0].course.uuid).toEqual('b9a9a1b1-29a6-40af-bb48-e2cc3fa83938');
     expect(app.tiles[41].courses[0].course.uuid).toEqual('09406555-a166-4fbf-8452-df526fc690d3');
-  });
+  }));
 
 });
 
