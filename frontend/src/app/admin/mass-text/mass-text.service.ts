@@ -1,22 +1,11 @@
 import {Injectable} from '@angular/core';
-import * as moment from 'moment';
-import {BaseService} from '../utils/base.service';
 import {Http} from '@angular/http';
-import {ApiKeyService} from '../utils/api-key.service';
+import * as moment from 'moment';
 import {Observable} from 'rxjs';
 
-
-export class MassTextSendResponse {
-  success: boolean;
-  error: string;
-  uuid: string;
-
-  constructor(success: boolean, error: string, uuid: string) {
-    this.success = success;
-    this.error = error;
-    this.uuid = uuid;
-  }
-}
+import {MassTextSendResponse} from './mass-text-send-response';
+import {BaseService} from '../utils/base.service';
+import {ApiKeyService} from '../utils/api-key.service';
 
 
 export abstract class MassTextService extends BaseService {

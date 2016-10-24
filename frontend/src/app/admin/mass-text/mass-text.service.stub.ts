@@ -2,7 +2,8 @@ import {Injectable} from '@angular/core';
 import * as moment from 'moment';
 import {Observable} from 'rxjs';
 
-import {MassTextService, MassTextSendResponse} from './mass-text.service';
+import {MassTextSendResponse} from './mass-text-send-response';
+import {MassTextService} from './mass-text.service';
 
 
 @Injectable()
