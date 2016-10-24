@@ -10,10 +10,7 @@ import {
   Validators
 } from '@angular/forms';
 
-import {
-  CommitteeService,
-  StrippedCommitteeMember
-} from '../../committee/committee.service';
+import {StrippedCommitteeMember, CommitteeService} from '../../committee';
 
 import {CourseService} from '../course.service';
 import {CourseCreateRequest} from '../model';

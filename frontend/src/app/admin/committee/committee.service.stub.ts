@@ -1,7 +1,9 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 
-import {CommitteeService, StrippedCommitteeMember} from './committee.service';
+import {StrippedCommitteeMember} from './stripped-committee-member';
+import {CommitteeService} from './committee.service';
+
 
 @Injectable()
 export class StubCommitteeService extends CommitteeService {

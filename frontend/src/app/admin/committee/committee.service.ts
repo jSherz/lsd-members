@@ -1,22 +1,10 @@
-import { Injectable } from '@angular/core';
-import { Http       } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import {Injectable} from '@angular/core';
+import {Http} from '@angular/http';
+import {Observable} from 'rxjs/Observable';
 
-import { ApiKeyService, BaseService } from '../utils';
+import {ApiKeyService, BaseService} from '../utils';
+import {StrippedCommitteeMember} from './stripped-committee-member';
 
-
-/**
- * A committee member with the bare minimum of information.
- */
-export class StrippedCommitteeMember {
-  uuid: string;
-  name: string;
-
-  constructor (uuid: string, name: string) {
-    this.uuid = uuid;
-    this.name = name;
-  }
-}
 
 /**
  * A service that manages commmittee members
