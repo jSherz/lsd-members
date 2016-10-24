@@ -1,1 +1,3 @@
-export { SignupService, SignupServiceImpl, SignupResult } from './signup.service';
+
+export {SignupResult} from './signup-result';
+export {SignupService, SignupServiceImpl} from './signup.service';

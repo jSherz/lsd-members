@@ -1,21 +1,10 @@
-import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import {Injectable} from '@angular/core';
+import {Http} from '@angular/http';
+import {Observable} from 'rxjs/Observable';
 
-import { ApiKeyService, BaseService } from '../../utils';
+import {SignupResult} from './signup-result';
+import {ApiKeyService, BaseService} from '../../utils';
 
-
-export class SignupResult {
-
-  success: boolean;
-  errors: any;
-
-  constructor(success: boolean, errors: any) {
-    this.success = success;
-    this.errors = errors;
-  }
-
-}
 
 export abstract class SignupService extends BaseService {
 
