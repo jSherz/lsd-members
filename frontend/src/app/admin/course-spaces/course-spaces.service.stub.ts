@@ -1,11 +1,9 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 
-import {
-  CourseSpaceService,
-  CourseSpaceMemberResponse,
-  CourseSpaceDepositPaidResponse
-} from './course-spaces.service';
+import {CourseSpaceDepositPaidResponse, CourseSpaceMemberResponse} from './model';
+import {CourseSpaceService} from './course-spaces.service';
+
 
 @Injectable()
 export class StubCourseSpaceService extends CourseSpaceService {
