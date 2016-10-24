@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
 
-import { LoginService, LoginResult } from './login.service';
+import {LoginResult} from './login-result';
+import {LoginService} from './login.service';
 
 
 @Injectable()
