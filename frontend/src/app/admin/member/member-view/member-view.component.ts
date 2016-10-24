@@ -2,7 +2,9 @@ import {Component, OnInit, OnDestroy} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 
-import {MemberService, Member, TextMessage} from '../member.service';
+import {Member, TextMessage} from '../model';
+import {MemberService} from '../member.service';
+
 
 @Component({
   selector: 'lsd-member-view',

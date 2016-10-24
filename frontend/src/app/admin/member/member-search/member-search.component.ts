@@ -1,6 +1,8 @@
 import {Component, OnInit, Output, EventEmitter} from '@angular/core';
 
-import {SearchResult, MemberService} from '../member.service';
+import {SearchResult} from '../model';
+import {MemberService} from '../member.service';
+
 
 /**
  * Enables a user to search for a member and then select that member.

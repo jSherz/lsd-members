@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 
-import {MemberService, Member, TextMessage, SearchResult, MemberAddResult, MemberEditResult} from './member.service';
+import {Member, TextMessage, SearchResult, MemberAddResult, MemberEditResult} from './model';
+import {MemberService} from './member.service';
 
 
 @Injectable()

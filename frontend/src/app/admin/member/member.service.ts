@@ -1,108 +1,11 @@
 import {Injectable} from '@angular/core';
-import {BaseService} from '../utils/base.service';
+import {Http} from '@angular/http';
 import {Observable} from 'rxjs';
 import * as moment from 'moment';
-import {Http} from '@angular/http';
-import {ApiKeyService} from '../utils/api-key.service';
 
-export class Member {
-  uuid: string;
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  email: string;
-  lastJump: moment.Moment;
-  weight: number;
-  height: number;
-  driver: boolean;
-  organiser: boolean;
-  createdAt: moment.Moment;
-  updatedAt: moment.Moment;
+import {Member, MemberAddResult, MemberEditResult, SearchResult, TextMessage} from './model';
+import {BaseService, ApiKeyService} from '../utils';
 
-  constructor(uuid: string, firstName: string, lastName: string, phoneNumber: string, email: string, lastJump: moment.Moment,
-              weight: number, height: number, driver: boolean, organiser: boolean, createdAt: moment.Moment,
-              updatedAt: moment.Moment) {
-    this.uuid = uuid;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.phoneNumber = phoneNumber;
-    this.email = email;
-    this.lastJump = lastJump;
-    this.weight = weight;
-    this.height = height;
-    this.driver = driver;
-    this.organiser = organiser;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
-  }
-}
-
-export class TextMessage {
-  uuid: string;
-  memberUuid: string;
-  massTextUuid: string;
-  status: number;
-  toNumber: string;
-  fromNumber: string;
-  message: string;
-  externalId: string;
-  createdAt: moment.Moment;
-  updatedAt: moment.Moment;
-
-  constructor(uuid: string, memberUuid: string, massTextUuid: string, status: number, toNumber: string, fromNumber: string,
-              message: string, externalId: string, createdAt: moment.Moment, updatedAt: moment.Moment) {
-    this.uuid = uuid;
-    this.memberUuid = memberUuid;
-    this.massTextUuid = massTextUuid;
-    this.status = status;
-    this.toNumber = toNumber;
-    this.fromNumber = fromNumber;
-    this.message = message;
-    this.externalId = externalId;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
-  }
-}
-
-export class SearchResult {
-
-  uuid: string;
-  name: string;
-  phoneNumber: string;
-  email: string;
-  chosen: boolean;
-
-  constructor(uuid, name, phoneNumber, email) {
-    this.uuid = uuid;
-    this.name = name;
-    this.phoneNumber = phoneNumber;
-    this.email = email;
-    this.chosen = false;
-  }
-
-}
-
-export class MemberEditResult {
-  success: boolean;
-  error: string;
-
-  constructor(success: boolean, error: string) {
-    this.success = success;
-    this.error = error;
-  }
-}
-
-export class MemberAddResult {
-  success: boolean;
-  uuid: string;
-  error: string;
-
-  constructor(success: boolean, uuid: string, error: string) {
-    this.success = success;
-    this.uuid = uuid;
-    this.error = error;
-  }
-}
 
 export abstract class MemberService extends BaseService {
 
