@@ -8,7 +8,7 @@ import {RouterTestingModule} from '@angular/router/testing/router_testing_module
 import {TestBed, inject, async} from '@angular/core/testing';
 
 import * as moment from 'moment';
-import {Observable} from 'rxjs/Rx';
+import {Observable, Subject} from 'rxjs/Rx';
 
 import {MonthService} from '../month.service';
 import {TileService} from './tile/tile.service';
@@ -156,6 +156,13 @@ describe('Component: CourseCalendar', () => {
  */
 export class StubCourseService extends CourseService {
 
+  static createDontCompleteSubject = new Subject<CourseCreateResponse>();
+  static createDontCompleteNumSpaces = 14;
+  static createApiErrorNumSpaces = 11;
+  static createOkNumSpaces = 5;
+  static createInvalidNumSpaces = 51;
+  static createInvalidMiscErrorNumSpaces = 13;
+
   getByUuid(uuid: string): Observable<CourseWithOrganisers> {
     return undefined;
   }
@@ -178,7 +185,25 @@ export class StubCourseService extends CourseService {
   }
 
   create(course: CourseCreateRequest): Observable<CourseCreateResponse> {
-    return undefined;
+    if (StubCourseService.createDontCompleteNumSpaces === course.numSpaces) {
+      return StubCourseService.createDontCompleteSubject;
+    } else if (StubCourseService.createApiErrorNumSpaces === course.numSpaces) {
+      return Observable.throw('API error');
+    } else if (StubCourseService.createOkNumSpaces === course.numSpaces) {
+      return Observable.of(
+        new CourseCreateResponse(true, null, '74e24a9f-5fc1-4241-b7d3-c2ebd2c7f61b')
+      );
+    } else if (StubCourseService.createInvalidNumSpaces === course.numSpaces) {
+      return Observable.of(
+        new CourseCreateResponse(false, 'error.invalidNumSpaces', null)
+      );
+    } else if (StubCourseService.createInvalidMiscErrorNumSpaces === course.numSpaces) {
+      return Observable.of(
+        new CourseCreateResponse(false, 'error.genericValidationError', null)
+      );
+    } else {
+      return Observable.throw('API error');
+    }
   }
 
 }

@@ -46,21 +46,12 @@ export class CourseAddComponent implements OnInit, OnDestroy {
   /**
    * Any errors returned by the API.
    */
-  errors: {
-    numSpaces: undefined
-  };
+  errors: { [key: string]: string } = {};
 
   /**
    * A list of active committee members.
    */
   committeeMembers: StrippedCommitteeMember[];
-
-  /**
-   * Maximum number of spaces a user can create a course with.
-   *
-   * @type {number}
-   */
-  maxSpaces: number = 50;
 
   /**
    * Reference is kept so we can clean it up when this component is destroyed.
@@ -105,6 +96,9 @@ export class CourseAddComponent implements OnInit, OnDestroy {
   }
 
   createCourse(formData: any) {
+    console.log('Showing throbber...');
+    this.showThrobber = true;
+
     let request = new CourseCreateRequest(
       moment(formData.date),
       formData.organiser,
@@ -114,17 +108,34 @@ export class CourseAddComponent implements OnInit, OnDestroy {
 
     this.service.create(request).subscribe(
       result => {
+        this.showThrobber = false;
+
         if (result.success) {
           this.router.navigate(['/admin', 'courses', result.uuid]);
+        } else if (result.error === 'error.invalidNumSpaces') {
+          this.errors = {
+            numSpaces: 'error.invalidNumSpaces'
+          };
         } else {
-          this.errors['general'] = result.error;
+          this.errors = {
+            general: result.error
+          };
         }
       },
       error => {
+        this.showThrobber = false;
         this.apiRequestFailed = true;
         console.log('Failed to create course: ' + error);
       }
     );
+  }
+
+  translate(key: string): string {
+    if ('error.invalidNumSpaces' === key) {
+      return 'Invalid number of spaces - a course must have at least one space and at most 50.';
+    } else {
+      return key;
+    }
   }
 
 }
