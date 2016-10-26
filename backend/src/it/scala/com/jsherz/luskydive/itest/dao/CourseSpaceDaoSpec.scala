@@ -34,6 +34,7 @@ import com.jsherz.luskydive.itest.util.Util._
 import com.jsherz.luskydive.services.DatabaseService
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 import org.scalatest.concurrent.ScalaFutures._
+import org.scalatest.time.{Seconds, Span}
 
 import scala.io.Source
 import scala.concurrent.ExecutionContext.Implicits.global
