@@ -48,6 +48,8 @@ class CourseSpaceDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
   private var dao: CourseSpaceDao = _
   private var courseDao: CourseDao = _
 
+  implicit val patienceConfig = PatienceConfig(scaled(Span(1, Seconds)))
+
   override protected def beforeAll(): Unit = {
     implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
     dbService = Util.setupGoldTestDb()
