@@ -5,7 +5,7 @@ import {Router} from '@angular/router';
 
 import {CourseAddComponent} from './course-add.component';
 import {TestModule} from '../../../test.module';
-import {StubCourseService} from '../course-calendar/course-calendar.component.spec';
+import {StubCourseService} from '../course.service.stub';
 import {CourseService} from '../course.service';
 import {CourseCreateResponse} from '../model/course-create-response';
 

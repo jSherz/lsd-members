@@ -9,7 +9,7 @@ import {async} from '@angular/core/testing';
 import {Observable} from 'rxjs/Rx';
 
 import {CourseViewComponent} from './course-view.component';
-import {StubCourseService} from '../course-calendar/course-calendar.component.spec';
+import {StubCourseService} from '../course.service.stub';
 import {StubCourseSpaceService} from '../../course-spaces/course-spaces.service.stub';
 
 describe('Component: CourseView', () => {
