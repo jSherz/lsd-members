@@ -24,6 +24,7 @@ import {
 } from '../model';
 import {Course} from '../model/course';
 import {APP_BASE_HREF} from '@angular/common';
+import {stubExampleSpaces} from '../model/stub-example-spaces';
 
 
 // Useful to mock a component with a given year & month
@@ -156,6 +157,16 @@ describe('Component: CourseCalendar', () => {
  */
 export class StubCourseService extends CourseService {
 
+  static getDontCompleteSubject = new Subject<CourseWithOrganisers>();
+  static getDontCompleteUuid = '692d2968-5600-4e88-9111-1c439e002edf';
+  static getApiErrorUuid = '5cb2b7b7-8edb-4e0c-aaa0-a46bf0bc6a81';
+  static getOkUuid = '04cf71d9-d709-4f09-af2c-2390cec2b728';
+
+  static spacesDontCompleteSubject = new Subject<CourseSpaceWithMember[]>();
+  static spacesDontCompleteUuid = '5a17a150-93b7-4537-8f32-13539f719ea5';
+  static spacesApiErrorUuid = '7f03b5bb-ee2c-4879-a3aa-02be3721015f';
+  static spacesOkUuid = '04cf71d9-d709-4f09-af2c-2390cec2b728';
+
   static createDontCompleteSubject = new Subject<CourseCreateResponse>();
   static createDontCompleteNumSpaces = 14;
   static createApiErrorNumSpaces = 11;
@@ -168,7 +179,15 @@ export class StubCourseService extends CourseService {
   }
 
   spaces(uuid: string): Observable<CourseSpaceWithMember[]> {
-    return undefined;
+    if (StubCourseService.spacesDontCompleteUuid === uuid) {
+      return StubCourseService.spacesDontCompleteSubject;
+    } else if (StubCourseService.spacesApiErrorUuid === uuid) {
+      return Observable.throw('API error');
+    } else if (StubCourseService.spacesOkUuid === uuid) {
+      return Observable.of(stubExampleSpaces);
+    } else {
+      return Observable.throw('Unknown uuid used with stub');
+    }
   }
 
   /**
