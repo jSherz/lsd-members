@@ -7,7 +7,9 @@ import {
   CourseSpaceWithMember,
   CourseCreateResponse,
   CourseWithNumSpaces,
-  CourseCreateRequest
+  CourseCreateRequest,
+  Course,
+  CommitteeMember
 } from './model';
 import {stubExampleSpaces} from './model/stub-example-spaces';
 
@@ -17,13 +19,16 @@ import {stubExampleSpaces} from './model/stub-example-spaces';
  */
 export class StubCourseService extends CourseService {
 
-  static getDontCompleteSubject = new Subject<CourseWithOrganisers>();
   static getDontCompleteUuid = '692d2968-5600-4e88-9111-1c439e002edf';
   static getApiErrorUuid = '5cb2b7b7-8edb-4e0c-aaa0-a46bf0bc6a81';
   static getOkUuid = '04cf71d9-d709-4f09-af2c-2390cec2b728';
+  static getOkCourse = new CourseWithOrganisers(
+    new Course('04cf71d9-d709-4f09-af2c-2390cec2b728', moment('2014-12-18'), '91a35643-3fd0-403b-b90f-c612092cc97b', null, 1),
+    new CommitteeMember('91a35643-3fd0-403b-b90f-c612092cc97b', 'Taylor Moore'),
+    null
+  );
 
-  static spacesDontCompleteSubject = new Subject<CourseSpaceWithMember[]>();
-  static spacesDontCompleteUuid = '5a17a150-93b7-4537-8f32-13539f719ea5';
+  static spacesDontCompleteUuid = StubCourseService.getDontCompleteUuid;
   static spacesApiErrorUuid = '7f03b5bb-ee2c-4879-a3aa-02be3721015f';
   static spacesOkUuid = '04cf71d9-d709-4f09-af2c-2390cec2b728';
 
@@ -34,13 +39,26 @@ export class StubCourseService extends CourseService {
   static createInvalidNumSpaces = 51;
   static createInvalidMiscErrorNumSpaces = 13;
 
+  getDontCompleteSubject = new Subject<CourseWithOrganisers>();
+  spacesDontCompleteSubject = new Subject<CourseSpaceWithMember[]>();
+
   getByUuid(uuid: string): Observable<CourseWithOrganisers> {
-    return undefined;
+    //  || StubCourseService.spacesApiErrorUuid === uuid
+    if (StubCourseService.getDontCompleteUuid === uuid) {
+      return this.getDontCompleteSubject;
+    } else if (StubCourseService.getApiErrorUuid === uuid) {
+      return Observable.throw('API error');
+    } else if (StubCourseService.getOkUuid === uuid || StubCourseService.spacesApiErrorUuid === uuid) {
+      // Pass through to this if the spaces method will error - allows testing error handling for get then spaces
+      return Observable.of(StubCourseService.getOkCourse);
+    } else {
+      return Observable.throw('Unknown uuid used with stub');
+    }
   }
 
   spaces(uuid: string): Observable<CourseSpaceWithMember[]> {
     if (StubCourseService.spacesDontCompleteUuid === uuid) {
-      return StubCourseService.spacesDontCompleteSubject;
+      return this.spacesDontCompleteSubject;
     } else if (StubCourseService.spacesApiErrorUuid === uuid) {
       return Observable.throw('API error');
     } else if (StubCourseService.spacesOkUuid === uuid) {

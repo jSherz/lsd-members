@@ -50,6 +50,13 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   apiRequestFailed: boolean = false;
 
   /**
+   * Should we show the loading animation?
+   *
+   * @type {boolean}
+   */
+  showThrobber: boolean = true;
+
+  /**
    * The course that is being displayed (if loaded).
    *
    * @type {any}
@@ -69,9 +76,11 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.displayCourseSub = this.route.params
       .subscribe(params => {
+        console.log('Loading course ' + params['uuid']);
         let uuid: string = params['uuid'];
 
         this.updateCourse(uuid);
+        this.updateSpaces(uuid);
       });
   }
 
@@ -90,6 +99,10 @@ export class CourseViewComponent implements OnInit, OnDestroy {
 
     this.service.getByUuid(uuid).subscribe(
       course => {
+        if (this.spaces.length >= 1) {
+          this.showThrobber = false;
+        }
+
         // Ensure date is a moment
         course.course.date = moment(course.course.date);
 
@@ -97,20 +110,24 @@ export class CourseViewComponent implements OnInit, OnDestroy {
       },
       error => {
         this.apiRequestFailed = true;
+        this.showThrobber = false;
+
         console.error('Failed to get course info:');
         console.error(error);
       }
     );
-
-    this.updateSpaces();
   }
 
   /**
    * Load the list of spaces on this course from the API.
    */
-  private updateSpaces() {
-    this.service.spaces(this.currentCourseUuid).subscribe(
+  private updateSpaces(uuid: string) {
+    this.service.spaces(uuid).subscribe(
       spaces => {
+        if (this.course.course.uuid !== 'Loading') {
+          this.showThrobber = false;
+        }
+
         this.spaces = spaces.map(space => {
           // Rebuild member to ensure it has the correct instance methods
           if (space.member) {
@@ -129,6 +146,8 @@ export class CourseViewComponent implements OnInit, OnDestroy {
       },
       error => {
         this.apiRequestFailed = true;
+        this.showThrobber = false;
+
         console.error('Failed to get course spaces:');
         console.error(error);
       }
@@ -149,13 +168,15 @@ export class CourseViewComponent implements OnInit, OnDestroy {
       this.spaceService.addMember(nextSpace.uuid, event.uuid).subscribe(
         result => {
           if (result.success) {
-            this.updateSpaces();
+            this.updateSpaces(this.currentCourseUuid);
           } else {
             alert(this.translateError(result.error));
           }
         },
         error => {
           this.apiRequestFailed = true;
+          this.showThrobber = false;
+
           console.error('Failed to add member to course:');
           console.error(error);
         }
@@ -174,7 +195,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
     this.spaceService.removeMember(space.uuid, space.member.uuid).subscribe(
       result => {
         if (result.success) {
-          this.updateSpaces();
+          this.updateSpaces(this.currentCourseUuid);
         } else {
           alert(this.translateError(result.error));
         }
@@ -196,7 +217,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   setDepositPaid(spaceUuid: string, depositPaid: boolean) {
     this.spaceService.setDepositPaid(spaceUuid, depositPaid).subscribe(
       result => {
-        this.updateSpaces();
+        this.updateSpaces(this.currentCourseUuid);
       },
       error => {
         this.apiRequestFailed = true;
