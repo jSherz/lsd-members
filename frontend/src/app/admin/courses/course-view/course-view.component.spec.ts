@@ -53,6 +53,7 @@ describe('Component: CourseView', () => {
     setup.courseSpacesSubject.error('Simulate course request failing');
 
     expect(setup.component.showThrobber).toBeFalsy();
+    expect(setup.component.spaces).toEqual([]);
   }));
 
   it('should hide the throbber if the get course request fails', async(() => {
@@ -63,6 +64,19 @@ describe('Component: CourseView', () => {
     setup.getCourseSubject.error('Simulate course info request failing');
 
     expect(setup.component.showThrobber).toBeFalsy();
+    expect(setup.component.course).toEqual(null);
+  }));
+
+  it('should show the correct course, picked up from the URL', async(() => {
+    let setup = mockComp(StubCourseService.getOkUuid);
+
+    expect(setup.component.course).toEqual(StubCourseService.getOkCourse);
+  }));
+
+  it('should show the correct spaces, picked up from the URL', async(() => {
+    let setup = mockComp(StubCourseService.spacesOkUuid);
+
+    expect(setup.component.spaces).toEqual(stubExampleSpaces);
   }));
 
 });

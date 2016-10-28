@@ -6,8 +6,6 @@ import * as moment from 'moment';
 import {CourseService} from '../course.service';
 
 import {
-  Course,
-  CommitteeMember,
   StrippedMember,
   CourseSpaceWithMember,
   CourseWithOrganisers
@@ -31,16 +29,12 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   /**
    * The currently displayed course (if any).
    */
-  private course: CourseWithOrganisers = new CourseWithOrganisers(
-    new Course('Loading', moment([1800, 0, 1]), 'Loading', 'Loading', 0),
-    new CommitteeMember('Loading', 'Loading'),
-    new CommitteeMember('Loading', 'Loading')
-  );
+  course: CourseWithOrganisers = null;
 
   /**
    * The spaces on this course, if a course is loaded.
    */
-  private spaces: CourseSpaceWithMember[] = [];
+  spaces: CourseSpaceWithMember[] = [];
 
   /**
    * Set when an API request fails.
@@ -124,7 +118,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   private updateSpaces(uuid: string) {
     this.service.spaces(uuid).subscribe(
       spaces => {
-        if (this.course.course.uuid !== 'Loading') {
+        if (this.course !== null) {
           this.showThrobber = false;
         }
 
