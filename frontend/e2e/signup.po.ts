@@ -2,7 +2,8 @@ import {browser, element, by} from 'protractor';
 
 export class SignupForm {
   navigateTo() {
-    return browser.get('/sign-up');
+    browser.executeScript('window.localStorage.setItem("API_KEY", "5a584fc1-8592-420d-ba5c-1d3254de7cbb")');
+    return browser.get('/admin/sign-up');
   }
 
   nameField() {
