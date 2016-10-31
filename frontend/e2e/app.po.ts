@@ -1,4 +1,7 @@
+import {browser, element, by} from 'protractor';
+
 export class LuskydivePage {
+
   navigateTo() {
     return browser.get('/');
   }
@@ -8,6 +11,7 @@ export class LuskydivePage {
   }
 
   getTitle() {
-    return element(by.css('title')).getInnerHtml();
+    return element(by.css('title')).getWebElement().getInnerHtml();
   }
+
 }

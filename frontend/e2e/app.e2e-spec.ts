@@ -1,6 +1,7 @@
-import { LuskydivePage } from './app.po';
+import {LuskydivePage} from './app.po';
 
-describe('luskydive App', function() {
+describe('luskydive App', function () {
+
   let page: LuskydivePage;
 
   beforeEach(() => {
@@ -17,4 +18,5 @@ describe('luskydive App', function() {
     page.navigateTo();
     expect(page.getTitle()).toEqual('Sign-up - Leeds University Skydivers');
   });
+
 });

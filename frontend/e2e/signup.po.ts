@@ -1,3 +1,5 @@
+import {browser, element, by} from 'protractor';
+
 export class SignupForm {
   navigateTo() {
     return browser.get('/sign-up');
