@@ -19,11 +19,11 @@ export class LoginPage {
   }
 
   passwordField() {
-    return element(by.css('#phone-number'));
+    return element(by.css('#password'));
   }
 
   passwordFieldError() {
-    return element(by.css('#phone-number-form-field-error'));
+    return element(by.css('#password-form-field-error'));
   }
 
   submitButton() {
