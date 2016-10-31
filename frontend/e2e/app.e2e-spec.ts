@@ -1,6 +1,6 @@
 import {LuskydivePage} from './app.po';
 
-describe('luskydive App', function () {
+describe('LSD App', function () {
 
   let page: LuskydivePage;
 
@@ -10,13 +10,12 @@ describe('luskydive App', function () {
 
   it('should display the main form by default', () => {
     page.navigateTo();
-    expect(page.getParagraphText()).toContain('Name');
-    expect(page.getParagraphText()).toContain('Phone number');
+    expect(page.getParagraphText()).toContain('Join us now and start skydiving for just £175!');
   });
 
   it('should have the correct title', () => {
     page.navigateTo();
-    expect(page.getTitle()).toEqual('Sign-up - Leeds University Skydivers');
+    expect(page.getTitle()).toEqual('Leeds University Skydivers');
   });
 
 });
