@@ -63,11 +63,9 @@ describe('Pages: Home', function () {
     expect(page.getCurrentUrl()).toEqual('http://localhost:4200/faq');
   });
 
-  it('should navigate to the correct page when join is clicked', () => {
+  it('should have the correct link for joining', () => {
     page.navigateTo();
-    page.getJoinLink().click();
-
-    expect(page.getCurrentUrl()).toEqual('https://www.luu.org.uk/groups/skydiving/');
+    expect(page.getJoinLink().getAttribute('href')).toEqual('https://www.luu.org.uk/groups/skydiving/');
   });
 
   it('should navigate to the correct page when contact is clicked', () => {
