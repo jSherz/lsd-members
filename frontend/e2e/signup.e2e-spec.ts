@@ -89,4 +89,25 @@ describe('Sign-up form', function() {
     page.phoneNumberField().sendKeys('07111000111');
     expect(page.phoneNumberFieldError().isDisplayed()).toBeFalsy();
   });
+
+  it('actually signs the user up', () => {
+    page.navigateTo();
+
+    page.nameField().sendKeys('Testy McTesting');
+    page.phoneNumberField().sendKeys('07001100110');
+    page.nameField().click(); // Ensure button is enabled after form fill
+    page.submitButton().click();
+
+    expect(page.getCurrentUrl()).toEqual('http://localhost:4200/admin/sign-up/thank-you');
+
+    page.navigateTo();
+
+    page.nameField().sendKeys('Testy McTesting');
+    page.phoneNumberField().sendKeys('07001100110');
+    page.nameField().click(); // Ensure button is enabled after form fill
+    page.submitButton().click();
+
+    expect(page.generalErrors().getText()).toEqual('This phone number is in use. Have you already signed up?');
+  });
+
 });
