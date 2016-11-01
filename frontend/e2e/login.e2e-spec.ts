@@ -57,17 +57,6 @@ describe('Login', function () {
     expect(page.passwordFieldError().isDisplayed()).toBeFalsy();
   });
 
-  it('clears validation errors (e-mail) after resolving the issue', () => {
-    page.navigateTo();
-
-    page.emailField().sendKeys('flop');
-    page.passwordField().click();
-    expect(page.emailFieldError().isDisplayed()).toBeTruthy();
-
-    page.emailField().sendKeys('flop@example.com');
-    expect(page.emailFieldError().isDisplayed()).toBeFalsy();
-  });
-
   it('clears validation errors (password) after resolving the issue', () => {
     page.navigateTo();
 
