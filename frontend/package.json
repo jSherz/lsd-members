@@ -4,6 +4,8 @@
   "license": "MIT",
   "angular-cli": {},
   "scripts": {
+    "build": "ng build",
+    "build-prod": "ng build --prod",
     "start": "ng serve",
     "lint": "tslint \"src/**/*.ts\"",
     "test": "ng test",
