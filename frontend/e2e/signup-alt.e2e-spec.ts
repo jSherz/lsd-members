@@ -1,6 +1,7 @@
-import { SignupAltForm } from './signup-alt.po';
+import {SignupAltForm} from './signup-alt.po';
 
-describe('Alternative sign-up form', function() {
+describe('Alternative sign-up form', function () {
+
   let page: SignupAltForm;
 
   beforeEach(() => {
@@ -89,4 +90,25 @@ describe('Alternative sign-up form', function() {
     page.emailField().sendKeys('SofiaOConnor@teleworm.us');
     expect(page.emailFieldError().isDisplayed()).toBeFalsy();
   });
+
+  it('actually signs the user up', () => {
+    page.navigateTo();
+
+    page.nameField().sendKeys('Testy McTesting');
+    page.emailField().sendKeys('test@mctesting.org.uk');
+    page.nameField().click(); // Ensure button is enabled after form fill
+    page.submitButton().click();
+
+    expect(page.getCurrentUrl()).toEqual('http://localhost:4200/admin/sign-up/thank-you');
+
+    page.navigateTo();
+
+    page.nameField().sendKeys('Testy McTesting');
+    page.emailField().sendKeys('test@mctesting.org.uk');
+    page.nameField().click(); // Ensure button is enabled after form fill
+    page.submitButton().click();
+
+    expect(page.serverEmailErrors().getText()).toEqual('This e-mail is in use. Have you already signed up?');
+  });
+
 });

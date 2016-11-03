@@ -8,7 +8,7 @@
       <div>
         <label for="name">Name</label>
         <input type="text" id="name" name="name" formControlName="name" required value=""
-          placeholder="My name is ________ and I love skydiving!">
+               placeholder="My name is ________ and I love skydiving!">
 
         <div [hidden]="ctrlName.valid || ctrlName.untouched" class="form-field-error" id="name-form-field-error">
           Please enter a name
@@ -20,15 +20,15 @@
       </div>
 
       <div>
-         <label for="email">E-mail address</label>
-         <input type="email" id="email" name="email" formControlName="email" required value=""
-           placeholder="Your main (non-uni) e-mail address">
+        <label for="email">E-mail address</label>
+        <input type="email" id="email" name="email" formControlName="email" required value=""
+               placeholder="Your main (non-uni) e-mail address">
 
-         <div [hidden]="ctrlEmail.valid || ctrlEmail.untouched" class="form-field-error" id="email-form-field-error">
-           Please enter a valid e-mail address
-         </div>
+        <div [hidden]="ctrlEmail.valid || ctrlEmail.untouched" class="form-field-error" id="email-form-field-error">
+          Please enter a valid e-mail address
+        </div>
 
-        <div *ngIf="errors && errors.email" class="form-field-error">
+        <div *ngIf="errors && errors.email" class="form-field-error" id="server-email-errors">
           {{translate(errors.email)}}
         </div>
       </div>
