@@ -1950,6 +1950,7 @@ INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUE
 INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES ('67ab5d5a-843f-46bb-a20b-5f0d0fda75e6', '50b7fec4-a416-44b4-a0be-c28d0f1c01ca', '2014-03-26 14:48:17', '2014-03-27 03:14:30');
 INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES ('e87a2012-8393-4385-a6d0-5a6d41f86df0', 'e54872dc-3721-4437-b2af-71860e9fcb07', '2014-11-12 23:36:16', '2014-11-13 16:53:15');
 INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES ('59dbddc3-b65f-488e-8dfd-ee177f31aed1', '13da0c26-b8b5-4c76-8010-cee5fd95c5d9', '2013-02-16 06:52:34', '2013-02-17 01:20:20');
+INSERT INTO api_keys (uuid, committee_member_uuid, created_at, expires_at) VALUES ('7e9d3d99-0bfc-4401-882b-1d32c46de3b9', '0bca1521-2757-4d58-a2b1-7cd751ec9b14', '2013-02-16 06:52:34', '2099-02-17 01:20:20');
 
 
 --
