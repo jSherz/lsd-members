@@ -107,7 +107,7 @@ describe('Sign-up form', function() {
     page.nameField().click(); // Ensure button is enabled after form fill
     page.submitButton().click();
 
-    expect(page.generalErrors().getText()).toEqual('This phone number is in use. Have you already signed up?');
+    expect(page.serverPhoneNumberErrors().getText()).toEqual('This phone number is in use. Have you already signed up?');
   });
 
 });

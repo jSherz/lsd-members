@@ -2,7 +2,7 @@ import {browser, element, by} from 'protractor';
 
 export class SignupAltForm {
   navigateTo() {
-    browser.executeScript('window.localStorage.setItem("API_KEY", "5a584fc1-8592-420d-ba5c-1d3254de7cbb")');
+    browser.executeScript('window.localStorage.setItem("API_KEY", "7e9d3d99-0bfc-4401-882b-1d32c46de3b9")');
     return browser.get('/admin/sign-up/alt');
   }
 
