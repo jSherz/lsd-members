@@ -22,13 +22,46 @@ describe('Component: MassText', () => {
     let router = jasmine.createSpyObj('MockRouter', keys);
     let service = new StubMassTextService();
 
-    return new MassTextComponent(builder, router, service);
+    let component = new MassTextComponent(builder, router, service);
+    component.ngOnInit();
+
+    return component;
   }
 
   it('should create an instance', async(() => {
     let component = mockComp();
 
     expect(component).toBeTruthy();
+  }));
+
+  it('should calculate the correct message', async(() => {
+    let component = mockComp();
+
+    expect(component.preview).toEqual('Hello, Mary - Reply \'NOFUN\' to stop these messages');
+  }));
+
+  it('should update the preview message when triggered', async(() => {
+    let component = mockComp();
+
+    component.ctrlTemplate.setValue('Hello {{ name }}. How are you today, {{ name }}?');
+    component.updateTemplate();
+
+    expect(component.preview).toEqual('Hello Mary. How are you today, Mary? - Reply \'NOFUN\' to stop these messages');
+  }));
+
+  it('should calculate the correct number of characters remaining', async(() => {
+    let component = mockComp();
+
+    let message = 'Hello {{ name }}. Or is it {{ name }}?';
+    let messageNoPlaceholderLength = 18;
+    let nameLength = 24;
+    let optOutLength = 39;
+
+    component.ctrlTemplate.setValue(message);
+    component.updateTemplate();
+
+    expect(component.numCharsTotal).toEqual(480);
+    expect(component.numCharsUsed).toEqual(messageNoPlaceholderLength + nameLength + nameLength + optOutLength);
   }));
 
 });
