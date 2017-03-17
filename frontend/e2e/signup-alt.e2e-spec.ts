@@ -99,7 +99,7 @@ describe('Alternative sign-up form', function () {
     page.nameField().click(); // Ensure button is enabled after form fill
     page.submitButton().click();
 
-    expect(page.getCurrentUrl()).toEqual('http://localhost:4200/admin/sign-up/thank-you');
+    expect(page.getCurrentUrl()).toEqual('http://localhost:49152/admin/sign-up/thank-you');
 
     page.navigateTo();
 

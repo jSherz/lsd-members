@@ -1,7 +1,7 @@
 /* tslint:disable:no-unused-variable */
 
 import { Location             } from '@angular/common';
-import { MockLocationStrategy } from '@angular/common/testing/mock_location_strategy';
+import { MockLocationStrategy } from '@angular/common/testing';
 
 import { ThankYouComponent } from './thank-you.component';
 

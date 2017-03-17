@@ -76,7 +76,7 @@ describe('Login', function () {
 
     page.submitButton().click();
 
-    expect(page.currentUrl()).toEqual('http://localhost:4200/admin/courses/calendar');
+    expect(page.currentUrl()).toEqual('http://localhost:49152/admin/courses/calendar');
   });
 
 });
