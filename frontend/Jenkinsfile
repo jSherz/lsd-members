@@ -1,0 +1,20 @@
+node {
+
+  stage('Checkout') {
+    git credentialsId: 'github-lsd-members',
+        url: 'git@github.com:jSherz/lsd-members.git'
+  }
+
+  ansiColor('gnome-terminal') {
+    dir('frontend') {
+      stage('Install') {
+        sh 'yarn install'
+      }
+
+      stage('Test') {
+        sh 'yarn run test -- --browsers PhantomJS --watch false'
+      }
+    }
+  }
+
+}
