@@ -1,22 +1,41 @@
 node {
 
-  stage('Build') {
-    sh 'sh deploy/prepare-build.sh'
+  stage('Checkout') {
+    git credentialsId: 'github-lsd-members',
+        url: 'git@github.com:jSherz/lsd-members.git'
   }
 
-  withCredentials([
-    string(credentialsId: 'lsd-prod-aws-id', variable: 'AWS_ACCESS_KEY_ID'),
-    string(credentialsId: 'lsd-prod-aws-secret', variable: 'AWS_SECRET_ACCESS_KEY')
-  ]) {
-    stage('Deploy to S3') {
-      sh 'aws s3 cp -r dist/* s3://lsd-prod-frontend/'
+  dir('frontend') {
+    stage('Install') {
+      sh 'yarn install'
     }
 
-    stage('Invalidate cache') {
-      sh 'aws configure set preview.cloudfront true'
-      sh 'aws cloudfront create-invalidation ' +
-        '--distribution-id E1LNJUAVS7YL91 ' +
-        '--paths "index.html"'
+    stage('Build') {
+      sh 'sh deploy/prepare-build.sh'
+    }
+
+    withCredentials([
+      string(credentialsId: 'lsd-prod-aws-id', variable: 'AWS_ACCESS_KEY_ID'),
+      string(credentialsId: 'lsd-prod-aws-secret', variable: 'AWS_SECRET_ACCESS_KEY')
+    ]) {
+      stage('Deploy to S3') {
+        sh 'aws s3 cp --recursive \'dist/\' s3://lsd-prod-frontend/'
+      }
+
+      stage('Invalidate cache') {
+        sh '''echo "{
+            \\"Paths\\": {
+              \\"Quantity\\": 1,
+              \\"Items\\": [\\"/index.html\\"]
+            },
+            \\"CallerReference\\": \\"invalidate-index-$(date "+%Y-%m-%d_%H_%M_%S")\\"
+          }" > invalidate-batch.json'''
+
+        sh 'aws configure set preview.cloudfront true'
+        sh 'aws cloudfront create-invalidation ' +
+          '--distribution-id E1LNJUAVS7YL91 ' +
+          '--invalidation-batch file://invalidate-batch.json'
+      }
     }
   }
 
