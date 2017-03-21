@@ -215,6 +215,10 @@ amdefine@>=0.0.4:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.0.tgz#fd17474700cb5cc9c2b709f0be9d23ce3c198c33"
 
+angulartics2@^1.6.4:
+  version "1.6.4"
+  resolved "https://registry.yarnpkg.com/angulartics2/-/angulartics2-1.6.4.tgz#1388e76b37b81bd5649ca218d384d359d9c68782"
+
 ansi-align@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/ansi-align/-/ansi-align-1.1.0.tgz#2f0c1658829739add5ebb15e6b0c6e3423f016ba"

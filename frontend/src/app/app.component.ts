@@ -1,5 +1,6 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import './rxjs-operators';
+import {Angulartics2GoogleAnalytics} from "angulartics2";
 
 @Component({
   selector: 'lsd-root',
@@ -8,4 +9,6 @@ import './rxjs-operators';
   encapsulation: ViewEncapsulation.None
 })
 export class AppComponent {
+  constructor(angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics) {
+  }
 }
