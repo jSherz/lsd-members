@@ -46,7 +46,8 @@ import {
   SignupComponent,
   SignupAltComponent,
   ThankYouComponent,
-  MemberEditComponent
+  MemberEditComponent,
+  MemberAddComponent
 } from './';
 
 import {adminRouting} from './admin.routing';
@@ -75,7 +76,8 @@ import {adminRouting} from './admin.routing';
     ThankYouComponent,
     MemberViewComponent,
     MemberLookupComponent,
-    MemberEditComponent
+    MemberEditComponent,
+    MemberAddComponent
   ],
   bootstrap: [],
   providers: [

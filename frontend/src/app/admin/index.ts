@@ -37,6 +37,7 @@ export {
 export {
   MemberService,
   MemberServiceImpl,
+  MemberAddComponent,
   MemberEditComponent,
   MemberSearchComponent,
   MemberLookupComponent,

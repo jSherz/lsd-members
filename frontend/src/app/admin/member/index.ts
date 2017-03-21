@@ -1,3 +1,4 @@
+export {MemberAddComponent} from './member-add';
 export {MemberEditComponent} from './member-edit';
 export {MemberSearchComponent, MemberLookupComponent} from './member-search';
 export {MemberViewComponent} from './member-view';
