@@ -15,9 +15,9 @@ export class MemberViewComponent implements OnInit, OnDestroy {
 
   private displayMemberSub: Subscription;
 
-  private member: Member;
+  member: Member;
 
-  private textMessages: TextMessage[] = [];
+  textMessages: TextMessage[] = [];
 
   constructor(private service: MemberService,
               private route: ActivatedRoute) {
