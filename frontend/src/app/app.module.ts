@@ -1,6 +1,6 @@
 /// <reference path="../typings.d.ts" />
 
-import {NgModule} from '@angular/core';
+import {NgModule, ErrorHandler} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {
   FormsModule,
@@ -10,6 +10,7 @@ import {
 import {HttpModule} from '@angular/http';
 import {LocationStrategy, PathLocationStrategy} from '@angular/common';
 import {Angulartics2Module, Angulartics2GoogleAnalytics} from 'angulartics2';
+import {RavenErrorHandler} from './utils/error-handler';
 
 import {AppComponent} from './app.component';
 import {routing} from './app.routing';
@@ -51,7 +52,8 @@ import {
   ],
   providers: [
     FormBuilder,
-    {provide: LocationStrategy, useClass: PathLocationStrategy}
+    {provide: LocationStrategy, useClass: PathLocationStrategy},
+    {provide: ErrorHandler, useClass: RavenErrorHandler}
   ]
 })
 export class AppModule {
