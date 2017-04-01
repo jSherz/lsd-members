@@ -46,7 +46,16 @@ export class CourseAddComponent implements OnInit, OnDestroy {
   /**
    * Any errors returned by the API.
    */
-  errors: { [key: string]: string } = {};
+  errors: {
+    numSpaces: string,
+    general: string
+  };
+
+  /**
+   * The most people that can be on a static line course.
+   * @type {number}
+   */
+  maxSpaces: number = 15;
 
   /**
    * A list of active committee members.
@@ -114,10 +123,12 @@ export class CourseAddComponent implements OnInit, OnDestroy {
           this.router.navigate(['/admin', 'courses', result.uuid]);
         } else if (result.error === 'error.invalidNumSpaces') {
           this.errors = {
-            numSpaces: 'error.invalidNumSpaces'
+            numSpaces: 'error.invalidNumSpaces',
+            general: null
           };
         } else {
           this.errors = {
+            numSpaces: null,
             general: result.error
           };
         }
