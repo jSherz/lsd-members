@@ -63,7 +63,7 @@ describe('Component: CourseAddComponent', () => {
 
   it('should show the correct error against number of spaces if it\'s invalid', async(inject([CourseAddComponent],
     (component: CourseAddComponent) => {
-      expect(component.errors).toEqual({});
+      expect(component.errors).toBeUndefined();
 
       component.createCourse({
         date: '2016-11-10',
@@ -71,15 +71,13 @@ describe('Component: CourseAddComponent', () => {
         numSpaces: StubCourseService.createInvalidNumSpaces
       });
 
-      expect(component.errors).toEqual({
-        numSpaces: 'error.invalidNumSpaces'
-      });
+      expect(component.errors.numSpaces).toEqual('error.invalidNumSpaces');
       expect(component.apiRequestFailed).toBeFalsy();
     })));
 
   it('should show any other API error (not invalid num spaces) against the general field / key', async(inject([CourseAddComponent],
     (component: CourseAddComponent) => {
-      expect(component.errors).toEqual({});
+      expect(component.errors).toBeUndefined();
 
       component.createCourse({
         date: '2016-11-10',
@@ -87,9 +85,7 @@ describe('Component: CourseAddComponent', () => {
         numSpaces: StubCourseService.createInvalidMiscErrorNumSpaces
       });
 
-      expect(component.errors).toEqual({
-        general: 'error.genericValidationError'
-      });
+      expect(component.errors.general).toEqual('error.genericValidationError');
       expect(component.apiRequestFailed).toBeFalsy();
     })));
 
