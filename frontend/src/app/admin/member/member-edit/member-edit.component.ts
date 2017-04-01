@@ -17,7 +17,8 @@ import {CustomValidators} from '../../../utils/custom-validators';
 export class MemberEditComponent implements OnInit, OnDestroy {
 
   private displayMemberSub: Subscription;
-  private member: Member;
+
+  member: Member;
 
   memberForm: FormGroup;
 
