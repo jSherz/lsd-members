@@ -5,7 +5,7 @@
     An unknown error occurred #sadtimes #turnitoffandonagain
   </div>
 
-  <form [formGroup]="memberForm" *ngIf="member" (submit)="createMember()">
+  <form [formGroup]="memberForm" (submit)="createMember()">
     <div>
       <label for="first-name">First name</label>
       <input type="text" id="first-name" formControlName="firstName" required value="">
@@ -79,6 +79,4 @@
       <button type="submit">Create member</button>
     </div>
   </form>
-
-  <p *ngIf="member == undefined">Loading...</p>
 </div>
