@@ -5,11 +5,11 @@
 
 // General page structure
 #header, #navbar, #content, #footer
-  @include outer-container
+  @include grid-container
 
 #navbar, #content, #footer
   & > div
-    @include span-columns(12)
+    @include grid-column(12)
 
 // Header
 $header-breakpoint: max-width 40em
@@ -19,14 +19,14 @@ $header-breakpoint: max-width 40em
   margin-bottom: 1rem
 
 #header-logo
-  @include span-columns(4)
+  @include grid-column(4)
 
-  @include media($header-breakpoint)
-    @include span-columns(12)
+  @media #{$header-breakpoint}
+    @include grid-column(12)
     text-align: center
 
 #header-title
-  @include span-columns(8)
+  @include grid-column(8)
 
   padding-top: 0.7em
 
@@ -38,14 +38,14 @@ $header-breakpoint: max-width 40em
     text-align: center
     margin: 0 -1em 0 0
 
-    @include media(max-width 76em)
+    @media(max-width: 76em)
       margin: 0
 
-    @include media(max-width 30em)
+    @media(max-width: 30em)
       font-size: 3.5rem
 
-  @include media(max-width 40rem)
-    @include span-columns(12)
+  @media(max-width: 40rem)
+    @include grid-column(12)
 
 // Social icons
 #facebook-icon, #twitter-icon
@@ -114,11 +114,11 @@ $header-breakpoint: max-width 40em
     &#join-lsd-btn a
       color: #009B00
 
-  @include media(max-width 70rem)
+  @media(max-width: 70rem)
     .separator
       display: none
 
-  @include media(max-width 30rem)
+  @media(max-width: 30rem)
     ul
       display: block
 
@@ -155,7 +155,6 @@ $header-breakpoint: max-width 40em
   padding: 0.5rem
   text-align: center
   color: #555
-  font-family: 'Bree Serif', serif
   margin-top: 1rem
 
 // Feature images

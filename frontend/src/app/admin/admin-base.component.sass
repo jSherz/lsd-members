@@ -10,7 +10,7 @@ code
 
 
 #admin-container
-  @include outer-container
+  @include grid-container()
 
   #logo
     width: 9.67rem
@@ -24,7 +24,7 @@ code
         margin-bottom: 1em
 
   #nav-container
-    @include span-columns(12)
+    @include grid-column(12)
 
 .content
   background: white

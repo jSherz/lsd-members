@@ -4,7 +4,7 @@
 @import '../../../../assets/css/variables'
 
 #course-view
-  @include span-columns(12)
+  @include grid-column(12)
   background: white
   padding: 0.8rem
   border-radius: 0.4rem
@@ -89,7 +89,7 @@ $add-member-bg: lighten(green, 4%)
   &:hover
     background: darken($add-member-bg, 7%)
 
-@include media(max-width 68em)
+@media(max-width: 68em)
   #sl-course-students
     thead
       display: none

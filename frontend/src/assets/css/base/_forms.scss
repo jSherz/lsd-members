@@ -21,13 +21,12 @@ input,
 select,
 textarea {
   display: block;
-  font-family: $form-font-family;
-  font-size: $form-font-size;
+  font-family: $base-font-family;
+  font-size: $base-font-size;
 }
 
-#{$all-text-inputs},
-select[multiple],
-select {
+#{$all-text-inputs} {
+  appearance: none;
   background-color: $base-background-color;
   border: $base-border;
   border-radius: $base-border-radius;
@@ -56,14 +55,14 @@ select {
       border: $base-border;
     }
   }
+
+  &::placeholder {
+    color: tint($base-font-color, 40%);
+  }
 }
 
 textarea {
   resize: vertical;
-}
-
-[type="search"] {
-  appearance: none;
 }
 
 [type="checkbox"],

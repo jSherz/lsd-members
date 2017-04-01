@@ -6,7 +6,7 @@
 
 
 #sl-course-calendar-container
-  @include span-columns(12)
+  @include grid-column(12)
   background: white
   padding: 0.8rem
   border-radius: 0.4rem
@@ -28,7 +28,7 @@ h2
   .short-form
     display: none
 
-  @include media(max-width 55em)
+  @media(max-width: 55em)
     .full-form
       display: none
 
