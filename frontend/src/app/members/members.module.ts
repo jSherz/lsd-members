@@ -3,19 +3,15 @@ import {CommonModule} from '@angular/common';
 import {HttpModule} from '@angular/http';
 
 import {
-  LocationStrategy,
-  PathLocationStrategy
-} from '@angular/common';
-
-import {
   FormsModule,
   FormBuilder,
   ReactiveFormsModule
 } from '@angular/forms';
 
 import {membersRouting} from './members.routing';
-import {LoginComponent} from './login';
 import {MembersComponent} from './members.component';
+import {LoginComponent} from './login';
+import {DashboardComponent} from './dashboard';
 
 @NgModule({
   imports: [
@@ -27,7 +23,8 @@ import {MembersComponent} from './members.component';
   ],
   declarations: [
     MembersComponent,
-    LoginComponent
+    LoginComponent,
+    DashboardComponent
   ],
   bootstrap: [],
   providers: [

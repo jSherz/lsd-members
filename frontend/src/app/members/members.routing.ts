@@ -3,14 +3,15 @@ import {Routes, RouterModule} from '@angular/router';
 
 import {MembersComponent} from './members.component';
 import {LoginComponent} from './login';
+import {DashboardComponent} from './dashboard';
 
 export const membersRoutes: Routes = [
   {
     path: '',
     component: MembersComponent,
     children: [
-      {path: 'login', component: LoginComponent}
-      // {path: 'dashboard', component: DashboardComponent, canActivate: [CanActivateAdmin]}
+      {path: '', component: LoginComponent},
+      {path: 'dashboard', component: DashboardComponent}
     ]
   }
 ];

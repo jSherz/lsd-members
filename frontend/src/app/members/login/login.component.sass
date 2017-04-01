@@ -1,0 +1,55 @@
+@import '../../../assets/css/base'
+
+#header-wrapper
+  @include grid-container()
+
+@media(min-width: 29em)
+  #header-wrapper
+    margin-bottom: 1em
+
+@media(min-width: 75em)
+  #header-wrapper > div, #login-wrapper > div
+    @include grid-column(6)
+    @include grid-shift(3)
+
+#header-first, #header-second
+  display: block
+
+@media(min-width: 29em)
+  #header-first, #header-second
+    font-size: 1.5em
+
+@media(min-width: 50em)
+  #header-first, #header-second
+    display: inline
+    font-size: 2.5em
+
+  #header-second
+    margin-left: 0.15em
+
+#logo-wrapper
+  float: left
+  width: 25%
+
+header
+  float: left
+  width: 70%
+  text-align: right
+
+#login-wrapper
+  @include grid-container()
+
+#login-wrapper > div
+  clear: both
+  background: #fff
+  padding: 1em
+  box-shadow: 0 0 0.2em 0 #ccc
+
+#login-button
+  text-align: right
+
+  a
+    padding: 0.5em
+
+hr
+  margin: 1em -1em
