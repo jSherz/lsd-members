@@ -1,5 +1,5 @@
 import {Subject, Observable} from 'rxjs';
-import moment = require('moment');
+import * as moment from 'moment';
 
 import {CourseService} from './course.service';
 import {
