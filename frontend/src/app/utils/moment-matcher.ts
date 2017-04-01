@@ -1,10 +1,10 @@
 import * as moment from 'moment';
 
-export const MOMENT_MATCHER: jasmine.CustomMatcherFactories = {
+export const MOMENT_MATCHER = {
   toBeSameAs: (util, customEqualityTesters) => {
     return {
       compare: (actual: moment.Moment, expected: moment.Moment) => {
-        let result: any = { };
+        let result: any = {};
 
         result.pass = actual.isSame(expected);
 
