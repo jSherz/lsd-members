@@ -1,11 +1,12 @@
-import { ModuleWithProviders } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import {ModuleWithProviders} from '@angular/core';
+import {Routes, RouterModule} from '@angular/router';
 
-import { PageRoutes } from './pages/page.routes';
+import {PageRoutes} from './pages/page.routes';
 
 export const routes: Routes = [
   ...PageRoutes,
-  { path: 'admin', loadChildren: 'app/admin/admin.module#AdminModule' }
+  {path: 'admin', loadChildren: 'app/admin/admin.module#AdminModule'},
+  {path: 'members', loadChildren: 'app/members/members.module#MembersModule'}
 ];
 
 export const routing: ModuleWithProviders = RouterModule.forRoot(routes);

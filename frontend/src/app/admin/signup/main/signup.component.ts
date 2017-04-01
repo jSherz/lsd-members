@@ -39,8 +39,9 @@ export class SignupComponent {
    * Any errors returned by the API.
    */
   errors: {
-    name: undefined,
-    email: undefined
+    name: null,
+    email: null,
+    phoneNumber: null
   };
 
   /**
