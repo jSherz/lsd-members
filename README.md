@@ -1,5 +1,7 @@
 # Leeds University Skydivers - Management system
 
+[![Trello board](https://img.shields.io/badge/Trello-public-green.svg)](https://trello.com/b/Lc8wED62/leedsskydivers-com)
+
 *TODO:* Proper testing, proper build & deploy process.
 
 ## Frontend
