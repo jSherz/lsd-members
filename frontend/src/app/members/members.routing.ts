@@ -4,6 +4,7 @@ import {Routes, RouterModule} from '@angular/router';
 import {MembersComponent} from './members.component';
 import {LoginComponent} from './login';
 import {DashboardComponent} from './dashboard';
+import {NotApprovedComponent} from './not-approved';
 
 export const membersRoutes: Routes = [
   {
@@ -11,7 +12,8 @@ export const membersRoutes: Routes = [
     component: MembersComponent,
     children: [
       {path: '', component: LoginComponent},
-      {path: 'dashboard', component: DashboardComponent}
+      {path: 'dashboard', component: DashboardComponent},
+      {path: 'not-approved', component: NotApprovedComponent}
     ]
   }
 ];

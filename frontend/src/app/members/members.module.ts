@@ -12,6 +12,7 @@ import {membersRouting} from './members.routing';
 import {MembersComponent} from './members.component';
 import {LoginComponent} from './login';
 import {DashboardComponent} from './dashboard';
+import {NotApprovedComponent} from './not-approved/not-approved.component';
 
 @NgModule({
   imports: [
@@ -24,7 +25,8 @@ import {DashboardComponent} from './dashboard';
   declarations: [
     MembersComponent,
     LoginComponent,
-    DashboardComponent
+    DashboardComponent,
+    NotApprovedComponent
   ],
   bootstrap: [],
   providers: [
