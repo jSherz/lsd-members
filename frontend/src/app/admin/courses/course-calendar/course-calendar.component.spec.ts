@@ -8,7 +8,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {TestBed, inject, async} from '@angular/core/testing';
 import {APP_BASE_HREF} from '@angular/common';
 import * as moment from 'moment';
-import {Observable} from 'rxjs/Rx';
+import {Observable} from 'rxjs/Observable';
 
 import {MonthService} from '../month.service';
 import {TileService} from './tile/tile.service';

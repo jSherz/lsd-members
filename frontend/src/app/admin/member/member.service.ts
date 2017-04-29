@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
 import * as moment from 'moment';
 
 import {Member, MemberAddResult, MemberEditResult, SearchResult, TextMessage} from './model';
