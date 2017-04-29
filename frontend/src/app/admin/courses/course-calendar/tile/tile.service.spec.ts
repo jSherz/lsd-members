@@ -8,9 +8,9 @@ import {async} from '@angular/core/testing';
 
 describe('Tile Service', () => {
 
-  let service: TileService = new TileService();
+  const service: TileService = new TileService();
 
-  let testSamples: Tile[][] = [
+  const testSamples: Tile[][] = [
     service.getTiles(moment([2016, 5, 1]), moment([2016, 5, 20])),
     service.getTiles(moment([2017, 5, 1]), moment([2016, 5, 15])),
     service.getTiles(moment([2018, 5, 1]), moment([2016, 5, 28])),
@@ -42,7 +42,7 @@ describe('Tile Service', () => {
   it('should start on the correct day of the previous month', async(() => {
     // Months starting on Monday -> Sunday with the number of days that should be
     // shown from the previous month.
-    let monthsStartingOnDays: [moment.Moment, number][] = [
+    const monthsStartingOnDays: [moment.Moment, number][] = [
       [moment([2016, 4, 1]), 6], // Sunday (0)
       [moment([2016, 1, 1]), 7], // Monday (1)
       [moment([2016, 2, 1]), 1],
@@ -53,8 +53,8 @@ describe('Tile Service', () => {
     ];
 
     monthsStartingOnDays.map(([firstOfMonth, expectedNumDays]) => {
-      let results: Tile[] = service.getTiles(firstOfMonth, firstOfMonth);
-      let correctStartDate = firstOfMonth.clone().subtract(expectedNumDays, 'days');
+      const results: Tile[] = service.getTiles(firstOfMonth, firstOfMonth);
+      const correctStartDate = firstOfMonth.clone().subtract(expectedNumDays, 'days');
 
       expect(results[0].date).toBeSameAs(correctStartDate);
     });
@@ -63,15 +63,15 @@ describe('Tile Service', () => {
   it('should highlight the current day correctly', async(() => {
     // A day in a month and the index (of generated tiles) we'd expect to be the
     // current today (_.isToday == true)
-    let examples: [moment.Moment, number][] = [
+    const examples: [moment.Moment, number][] = [
       [moment([2016, 5, 15]), 16],
       [moment([2016, 6, 1]), 4],
       [moment([2016, 7, 18]), 24]
     ];
 
     examples.map(([dayInMonth, expectedTodayIndex]) => {
-      let startOfMonth = moment([dayInMonth.year(), dayInMonth.month(), 1]);
-      let tiles = service.getTiles(startOfMonth, dayInMonth);
+      const startOfMonth = moment([dayInMonth.year(), dayInMonth.month(), 1]);
+      const tiles = service.getTiles(startOfMonth, dayInMonth);
 
       for (let i = 0; i < tiles.length; i++) {
         if (i === expectedTodayIndex) {

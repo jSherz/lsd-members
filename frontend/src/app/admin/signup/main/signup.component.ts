@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { Router    } from '@angular/router';
+import {Component} from '@angular/core';
+import {Router} from '@angular/router';
 import {
   FormControl,
   FormBuilder,
@@ -7,8 +7,8 @@ import {
   Validators
 } from '@angular/forms';
 
-import { CustomValidators } from '../../../utils';
-import { SignupService    } from '../service/signup.service';
+import {CustomValidators} from '../../../utils';
+import {SignupService} from '../service/signup.service';
 
 @Component({
   selector: 'lsd-signup-component',
@@ -26,14 +26,14 @@ export class SignupComponent {
    *
    * @type {boolean}
    */
-  apiRequestFailed: boolean = false;
+  apiRequestFailed = false;
 
   /**
    * Should we show the loading animation?
    *
    * @type {boolean}
    */
-  showThrobber: boolean = false;
+  showThrobber = false;
 
   /**
    * Any errors returned by the API.

@@ -2,7 +2,7 @@
 
 import {inject, async, TestBed} from '@angular/core/testing';
 import {Http, Response, ResponseOptions} from '@angular/http';
-import {Observable} from 'rxjs';
+import {Observable} from 'rxjs/Observable';
 
 import {CommitteeService, CommitteeServiceImpl} from './committee.service';
 import {ApiKeyService} from '../utils/api-key.service';

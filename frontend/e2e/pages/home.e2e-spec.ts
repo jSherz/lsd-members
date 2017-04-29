@@ -25,7 +25,7 @@ describe('Pages: Home', function () {
       page.getFaqLink(),
       page.getJoinLink(),
       page.getContactLink()
-    ].forEach(page => expect(page.getCssValue('background-color')).toEqual('rgba(0, 0, 0, 0)'));
+    ].forEach(pageLink => expect(pageLink.getCssValue('background-color')).toEqual('rgba(0, 0, 0, 0)'));
   });
 
   it('should not navigate anywhere when home is clicked', () => {

@@ -32,7 +32,7 @@ export class SignupAltForm {
   }
 
   serverEmailErrors() {
-    return element(by.css('#server-email-errors'))
+    return element(by.css('#server-email-errors'));
   }
 
 }

@@ -1,5 +1,4 @@
-
-export var stubExampleSpaces: any = [
+export const stubExampleSpaces: any = [
   {
     'uuid': 'b6ada081-f291-47f4-85b9-9031b9c64547',
     'courseUuid': '04db69a4-1cff-48d0-8a20-6d8bde7bc670',

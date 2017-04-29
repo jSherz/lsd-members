@@ -57,7 +57,7 @@ export class CourseServiceImpl extends CourseService {
    * @returns {Observable<R>}
    */
   find(startDate: moment.Moment, endDate: moment.Moment): Observable<CourseWithNumSpaces[]> {
-    let body = {
+    const body = {
       startDate: startDate.format('YYYY-MM-DD'),
       endDate: endDate.format('YYYY-MM-DD')
     };

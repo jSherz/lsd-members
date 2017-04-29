@@ -10,22 +10,22 @@ import {StubMemberService} from '../member.service.stub';
 describe('Component: MemberAdd', () => {
 
   function mockComp(): MemberAddComponent {
-    let keys = [];
-    for (let key in Router.prototype) {
+    const keys = [];
+    for (const key in Router.prototype) {
       if (Router.prototype.hasOwnProperty(key)) {
         keys.push(key);
       }
     }
 
-    let builder = new FormBuilder();
-    let router = jasmine.createSpyObj('MockRouter', keys);
-    let service = new StubMemberService();
+    const builder = new FormBuilder();
+    const router = jasmine.createSpyObj('MockRouter', keys);
+    const service = new StubMemberService();
 
     return new MemberAddComponent(builder, service, router);
   }
 
   it('should create an instance', async(() => {
-    let component = mockComp();
+    const component = mockComp();
 
     expect(component).toBeTruthy();
   }));

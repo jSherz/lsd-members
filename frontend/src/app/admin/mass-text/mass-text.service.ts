@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
 import * as moment from 'moment';
-import {Observable} from 'rxjs';
+import {Observable} from 'rxjs/Observable';
 
 import {MassTextSendResponse} from './mass-text-send-response';
 import {BaseService} from '../utils/base.service';
@@ -35,7 +35,7 @@ export class MassTextServiceImpl extends MassTextService {
   }
 
   send(startDate: moment.Moment, endDate: moment.Moment, template: string, expectedRendered: string): Observable<MassTextSendResponse> {
-    let body = {
+    const body = {
       startDate: startDate,
       endDate: endDate,
       template: template,

@@ -18,7 +18,7 @@ import {CourseWithOrganisers, CourseSpaceWithMember} from '../model';
 describe('Component: CourseView', () => {
 
   it('should show a loading indicator while waiting for the course info & spaces', async(() => {
-    let setup = mockComp(StubCourseService.getDontCompleteUuid);
+    const setup = mockComp(StubCourseService.getDontCompleteUuid);
 
     expect(setup.component.showThrobber).toBeTruthy();
 
@@ -32,7 +32,7 @@ describe('Component: CourseView', () => {
   }));
 
   it('should show a loading indicator while waiting for the course info & spaces (spaces returns first)', async(() => {
-    let setup = mockComp(StubCourseService.getDontCompleteUuid);
+    const setup = mockComp(StubCourseService.getDontCompleteUuid);
 
     expect(setup.component.showThrobber).toBeTruthy();
 
@@ -46,7 +46,7 @@ describe('Component: CourseView', () => {
   }));
 
   it('should hide the throbber if the get spaces request fails', async(() => {
-    let setup = mockComp(StubCourseService.getDontCompleteUuid);
+    const setup = mockComp(StubCourseService.getDontCompleteUuid);
 
     expect(setup.component.showThrobber).toBeTruthy();
 
@@ -57,7 +57,7 @@ describe('Component: CourseView', () => {
   }));
 
   it('should hide the throbber if the get course request fails', async(() => {
-    let setup = mockComp(StubCourseService.getDontCompleteUuid);
+    const setup = mockComp(StubCourseService.getDontCompleteUuid);
 
     expect(setup.component.showThrobber).toBeTruthy();
 
@@ -68,13 +68,13 @@ describe('Component: CourseView', () => {
   }));
 
   it('should show the correct course, picked up from the URL', async(() => {
-    let setup = mockComp(StubCourseService.getOkUuid);
+    const setup = mockComp(StubCourseService.getOkUuid);
 
     expect(setup.component.course).toEqual(StubCourseService.getOkCourse);
   }));
 
   it('should show the correct spaces, picked up from the URL', async(() => {
-    let setup = mockComp(StubCourseService.spacesOkUuid);
+    const setup = mockComp(StubCourseService.spacesOkUuid);
 
     expect(setup.component.spaces).toEqual(stubExampleSpaces);
   }));
@@ -101,22 +101,22 @@ class TestSetup {
  * @returns {CourseViewComponent}
  */
 function mockComp(courseUuid: string): TestSetup {
-  let params = {uuid: courseUuid};
-  let urlParts = [['courses', params]];
+  const params = {uuid: courseUuid};
+  const urlParts = [['courses', params]];
 
-  let urls = [new UrlSegment('courses', {'uuid': courseUuid})];
+  const urls = [new UrlSegment('courses', {'uuid': courseUuid})];
 
-  let observableUrls = Observable.of(urls);
-  let observableParams: Observable<Params> = Observable.of(params);
+  const observableUrls = Observable.of(urls);
+  const observableParams: Observable<Params> = Observable.of(params);
 
-  let activatedRoute = new ActivatedRoute();
+  const activatedRoute = new ActivatedRoute();
   activatedRoute.url = observableUrls;
   activatedRoute.params = observableParams;
 
-  let service = new StubCourseService([]);
-  let spaceService = new StubCourseSpaceService();
+  const service = new StubCourseService([]);
+  const spaceService = new StubCourseSpaceService();
 
-  let component = new CourseViewComponent(activatedRoute, service, spaceService);
+  const component = new CourseViewComponent(activatedRoute, service, spaceService);
   component.ngOnInit();
 
   return new TestSetup(component, service.getDontCompleteSubject, service.spacesDontCompleteSubject);

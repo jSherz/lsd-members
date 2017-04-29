@@ -6,17 +6,17 @@ import {SignupService} from '../index';
 
 export class SignupServiceStub extends SignupService {
 
-  static validName: string = 'Abby North';
-  static validEmail: string = 'AbbyNorth@teleworm.us';
-  static validPhoneNumber: string = '07058074719';
+  static validName = 'Abby North';
+  static validEmail = 'AbbyNorth@teleworm.us';
+  static validPhoneNumber = '07058074719';
 
-  static inUseName: string = 'Mohammed Charlton';
-  static inUseEmail: string = 'MohammedCharlton@jourrapide.com';
-  static inUsePhoneNumber: string = '07985457231';
+  static inUseName = 'Mohammed Charlton';
+  static inUseEmail = 'MohammedCharlton@jourrapide.com';
+  static inUsePhoneNumber = '07985457231';
 
-  static apiFailName: string = 'Amy Farrell';
-  static apiFailEmail: string = 'AmyFarrell@armyspy.com';
-  static apiFailPhoneNumber: string = '07827651140';
+  static apiFailName = 'Amy Farrell';
+  static apiFailEmail = 'AmyFarrell@armyspy.com';
+  static apiFailPhoneNumber = '07827651140';
 
   constructor() {
     super(null, null);

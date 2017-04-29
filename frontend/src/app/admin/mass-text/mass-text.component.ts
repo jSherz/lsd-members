@@ -23,7 +23,7 @@ export class MassTextComponent implements OnInit {
    *
    * @type {string}
    */
-  private optOut: string = ' - Reply \'NOFUN\' to stop these messages';
+  private optOut = ' - Reply \'NOFUN\' to stop these messages';
 
   /**
    * Maximum message size is three standard text messages.
@@ -37,7 +37,7 @@ export class MassTextComponent implements OnInit {
    *
    * @type {string}
    */
-  private exampleLongName: string = 'Dr. Daniel Stevenson DVM';
+  private exampleLongName = 'Dr. Daniel Stevenson DVM';
 
   /**
    * Matches names in templates.
@@ -53,21 +53,21 @@ export class MassTextComponent implements OnInit {
   ctrlSendAfterDate: FormControl;
   ctrlTemplate: FormControl;
 
-  preview: string = '';
+  preview = '';
 
   /**
    * Set when an API request fails.
    *
    * @type {boolean}
    */
-  apiRequestFailed: boolean = false;
+  apiRequestFailed = false;
 
   /**
    * Should we show the loading animation?
    *
    * @type {boolean}
    */
-  showThrobber: boolean = false;
+  showThrobber = false;
 
   numCharsUsed = 0;
   numCharsTotal = this.maxTextLength;
@@ -85,9 +85,9 @@ export class MassTextComponent implements OnInit {
    * @param service
    */
   constructor(private builder: FormBuilder, private router: Router, private service: MassTextService) {
-    let todayFormatted = moment().format('YYYY-MM-DD');
-    let tomorrowFormatted = moment().add(1, 'days').format('YYYY-MM-DD');
-    let anHourFromNow = moment().add(1, 'hours').format('YYYY-MM-DDTHH:mm:ss');
+    const todayFormatted = moment().format('YYYY-MM-DD');
+    const tomorrowFormatted = moment().add(1, 'days').format('YYYY-MM-DD');
+    const anHourFromNow = moment().add(1, 'hours').format('YYYY-MM-DDTHH:mm:ss');
 
     this.ctrlStartDate = new FormControl(todayFormatted, Validators.required);
     this.ctrlEndDate = new FormControl(tomorrowFormatted, Validators.required);

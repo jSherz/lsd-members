@@ -1,9 +1,9 @@
-import {Component, OnInit, OnDestroy}      from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Subscription}      from 'rxjs/Subscription';
+import {Subscription} from 'rxjs/Subscription';
 
-import * as moment         from 'moment';
-import {MonthService}      from '../month.service';
+import * as moment from 'moment';
+import {MonthService} from '../month.service';
 import {Tile, TileService} from './tile/tile.service';
 import {CourseWithNumSpaces} from '../model';
 import {
@@ -15,7 +15,7 @@ import {
 @Component({
   selector: 'lsd-course-calendar-component',
   templateUrl: 'course-calendar.component.html',
-  providers: [MonthService, TileService,  { provide: CourseService, useClass: CourseServiceImpl }],
+  providers: [MonthService, TileService, {provide: CourseService, useClass: CourseServiceImpl}],
   styleUrls: ['course-calendar.component.sass']
 })
 export class CourseCalendarComponent implements OnInit, OnDestroy {
@@ -32,12 +32,12 @@ export class CourseCalendarComponent implements OnInit, OnDestroy {
   courses: CourseWithNumSpaces[];
   errorMessage: any;
 
-  constructor(
-    private monthService: MonthService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private tileService: TileService,
-    private courseService: CourseService) { }
+  constructor(private monthService: MonthService,
+              private router: Router,
+              private route: ActivatedRoute,
+              private tileService: TileService,
+              private courseService: CourseService) {
+  }
 
   private updateCalendar() {
     this.months = this.monthService.get(this.displayMonth);
@@ -53,10 +53,10 @@ export class CourseCalendarComponent implements OnInit, OnDestroy {
       courses => {
         this.courses = courses;
 
-        for (let tile of this.tiles) {
+        for (const tile of this.tiles) {
           tile.courses = [];
 
-          for (let course of this.courses) {
+          for (const course of this.courses) {
             if (tile.date.isSame(course.course.date)) {
               tile.courses.push(course);
             }
@@ -75,11 +75,11 @@ export class CourseCalendarComponent implements OnInit, OnDestroy {
    * @param event
    */
   monthSelectionChanged(event) {
-    let chosenMonth = moment(event.target.value);
+    const chosenMonth = moment(event.target.value);
 
     if (!chosenMonth.isSame(this.currentMonth)) {
-      let year = chosenMonth.year();
-      let month = chosenMonth.month() + 1; // Month is zero indexed, URL is 1 indexed
+      const year = chosenMonth.year();
+      const month = chosenMonth.month() + 1; // Month is zero indexed, URL is 1 indexed
 
       this.router.navigate(['admin', 'courses', 'calendar', year, month]);
     }
@@ -88,12 +88,12 @@ export class CourseCalendarComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.displayMonthSub = this.route.params
       .subscribe(params => {
-        let year: number = +params['year'];
-        let month: number = +params['month'];
+        const year: number = +params['year'];
+        const month: number = +params['month'];
 
         if (!isNaN(year) && !isNaN(month)) {
           // Convert 1 indexed month to 0 indexed for momentjs / JS
-          let zeroIndexedMonth: number = month - 1;
+          const zeroIndexedMonth: number = month - 1;
           this.displayMonth = moment([year, zeroIndexedMonth, 1]);
           this.updateCalendar();
         }

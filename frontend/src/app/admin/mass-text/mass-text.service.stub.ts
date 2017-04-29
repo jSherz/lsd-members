@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import * as moment from 'moment';
-import {Observable} from 'rxjs';
+import {Observable} from 'rxjs/Observable';
 
 import {MassTextSendResponse} from './mass-text-send-response';
 import {MassTextService} from './mass-text.service';

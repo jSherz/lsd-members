@@ -1,5 +1,5 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
-import {Subscription} from 'rxjs';
+import {Subscription} from 'rxjs/Subscription';
 import {ActivatedRoute} from '@angular/router';
 
 import {Member, TextMessage} from '../model';
@@ -32,7 +32,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.displayMemberSub = this.route.params
       .subscribe(params => {
-        let uuid: string = params['uuid'];
+        const uuid: string = params['uuid'];
 
         this.showMember(uuid);
       });
@@ -44,11 +44,16 @@ export class MemberViewComponent implements OnInit, OnDestroy {
 
   parseStatus(statusId: number) {
     switch (statusId) {
-      case 0: return 'Pending';
-      case 1: return 'Sent';
-      case 2: return 'Error';
-      case 3: return 'Received';
-      default: return 'Unknown (' + statusId + ')';
+      case 0:
+        return 'Pending';
+      case 1:
+        return 'Sent';
+      case 2:
+        return 'Error';
+      case 3:
+        return 'Received';
+      default:
+        return 'Unknown (' + statusId + ')';
     }
   }
 

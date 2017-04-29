@@ -1,6 +1,6 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {Router} from '@angular/router';
-import {Subscription} from 'rxjs';
+import {Subscription} from 'rxjs/Subscription';
 import * as moment from 'moment';
 
 import {
@@ -34,14 +34,14 @@ export class CourseAddComponent implements OnInit, OnDestroy {
    *
    * @type {boolean}
    */
-  apiRequestFailed: boolean = false;
+  apiRequestFailed = false;
 
   /**
    * Should we show the loading animation?
    *
    * @type {boolean}
    */
-  showThrobber: boolean = false;
+  showThrobber = false;
 
   /**
    * Any errors returned by the API.
@@ -55,7 +55,7 @@ export class CourseAddComponent implements OnInit, OnDestroy {
    * The most people that can be on a static line course.
    * @type {number}
    */
-  maxSpaces: number = 15;
+  maxSpaces = 15;
 
   /**
    * A list of active committee members.
@@ -108,7 +108,7 @@ export class CourseAddComponent implements OnInit, OnDestroy {
     console.log('Showing throbber...');
     this.showThrobber = true;
 
-    let request = new CourseCreateRequest(
+    const request = new CourseCreateRequest(
       moment(formData.date),
       formData.organiser,
       formData.secondaryOrganiser === null || formData.secondaryOrganiser === '' ? null : formData.secondaryOrganiser,

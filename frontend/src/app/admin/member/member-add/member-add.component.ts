@@ -30,14 +30,14 @@ export class MemberAddComponent {
    *
    * @type {boolean}
    */
-  apiRequestFailed: boolean = false;
+  apiRequestFailed = false;
 
   /**
    * Should we show the loading animation?
    *
    * @type {boolean}
    */
-  showThrobber: boolean = false;
+  showThrobber = false;
 
   /**
    * Any errors returned by the API that are not network or availability related.

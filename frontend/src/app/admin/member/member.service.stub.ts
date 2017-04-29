@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {Observable} from 'rxjs/Observable';
 
 import {Member, TextMessage, SearchResult, MemberAddResult, MemberEditResult} from './model';
 import {MemberService} from './member.service';

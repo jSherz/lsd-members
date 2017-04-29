@@ -23,14 +23,14 @@ export class MemberSearchComponent implements OnInit {
    */
   displayPerLoad = 10;
 
-  searchTerm: string = '';
+  searchTerm = '';
 
   /**
    * Has the user performed a search yet?
    *
    * @type {boolean}
    */
-  hasSearched: boolean = false;
+  hasSearched = false;
 
   /**
    * All of the returned results.
@@ -84,8 +84,8 @@ export class MemberSearchComponent implements OnInit {
    */
   showMoreResults() {
     if (!this.allResultsDisplayed()) {
-      let startIndex = this.displayedSearchResults.length;
-      let maxIndex = startIndex + this.displayPerLoad;
+      const startIndex = this.displayedSearchResults.length;
+      const maxIndex = startIndex + this.displayPerLoad;
 
       // Keep displaying more results while we have them
       for (let i = startIndex; i < maxIndex && i < this.searchResults.length; i++) {

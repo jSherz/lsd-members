@@ -11,37 +11,37 @@ import {StubMassTextService} from './mass-text.service.stub';
 describe('Component: MassText', () => {
 
   function mockComp(): MassTextComponent {
-    let keys = [];
-    for (let key in Router.prototype) {
+    const keys = [];
+    for (const key in Router.prototype) {
       if (Router.prototype.hasOwnProperty(key)) {
         keys.push(key);
       }
     }
 
-    let builder = new FormBuilder();
-    let router = jasmine.createSpyObj('MockRouter', keys);
-    let service = new StubMassTextService();
+    const builder = new FormBuilder();
+    const router = jasmine.createSpyObj('MockRouter', keys);
+    const service = new StubMassTextService();
 
-    let component = new MassTextComponent(builder, router, service);
+    const component = new MassTextComponent(builder, router, service);
     component.ngOnInit();
 
     return component;
   }
 
   it('should create an instance', async(() => {
-    let component = mockComp();
+    const component = mockComp();
 
     expect(component).toBeTruthy();
   }));
 
   it('should calculate the correct message', async(() => {
-    let component = mockComp();
+    const component = mockComp();
 
     expect(component.preview).toEqual('Hello, Mary - Reply \'NOFUN\' to stop these messages');
   }));
 
   it('should update the preview message when triggered', async(() => {
-    let component = mockComp();
+    const component = mockComp();
 
     component.ctrlTemplate.setValue('Hello {{ name }}. How are you today, {{ name }}?');
     component.updateTemplate();
@@ -50,12 +50,12 @@ describe('Component: MassText', () => {
   }));
 
   it('should calculate the correct number of characters remaining', async(() => {
-    let component = mockComp();
+    const component = mockComp();
 
-    let message = 'Hello {{ name }}. Or is it {{ name }}?';
-    let messageNoPlaceholderLength = 18;
-    let nameLength = 24;
-    let optOutLength = 39;
+    const message = 'Hello {{ name }}. Or is it {{ name }}?';
+    const messageNoPlaceholderLength = 18;
+    const nameLength = 24;
+    const optOutLength = 39;
 
     component.ctrlTemplate.setValue(message);
     component.updateTemplate();

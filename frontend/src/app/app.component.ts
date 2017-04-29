@@ -1,6 +1,6 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import './rxjs-operators';
-import {Angulartics2GoogleAnalytics} from "angulartics2";
+import {Angulartics2GoogleAnalytics} from 'angulartics2';
 
 @Component({
   selector: 'lsd-root',

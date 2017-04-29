@@ -29,14 +29,14 @@ export class TileService {
   constructor() {}
 
   getTiles(month: moment.Moment, rawCurrentDay: moment.Moment): Tile[] {
-    let firstDay = this.firstDayOfMonth(month);
-    let currentDay = this.stripTime(rawCurrentDay);
+    const firstDay = this.firstDayOfMonth(month);
+    const currentDay = this.stripTime(rawCurrentDay);
 
-    let daysOfPrevMonth = this.numDaysOfPreviousMonth(firstDay.day());
-    let daysOfPrimaryMonth = firstDay.daysInMonth();
-    let daysOfNextMonth = TILES_PER_CALENDAR - daysOfPrimaryMonth - daysOfPrevMonth;
+    const daysOfPrevMonth = this.numDaysOfPreviousMonth(firstDay.day());
+    const daysOfPrimaryMonth = firstDay.daysInMonth();
+    const daysOfNextMonth = TILES_PER_CALENDAR - daysOfPrimaryMonth - daysOfPrevMonth;
 
-    let nextMonth = firstDay.clone().add(1, 'months');
+    const nextMonth = firstDay.clone().add(1, 'months');
 
     return this.rangeOfDates(firstDay.clone().subtract(daysOfPrevMonth, 'days'), daysOfPrevMonth).
       concat(this.rangeOfDates(firstDay, daysOfPrimaryMonth)).
@@ -71,9 +71,9 @@ export class TileService {
   private toTile(month: moment.Moment, nextMonth: moment.Moment, today: moment.Moment,
     inputDate: moment.Moment): Tile {
 
-    let isPreviousMonth = inputDate.isBefore(month);
-    let isNextMonth = inputDate.isSame(nextMonth) || inputDate.isAfter(nextMonth);
-    let isToday = inputDate.isSame(today);
+    const isPreviousMonth = inputDate.isBefore(month);
+    const isNextMonth = inputDate.isSame(nextMonth) || inputDate.isAfter(nextMonth);
+    const isToday = inputDate.isSame(today);
 
     return new Tile(inputDate, isPreviousMonth, isNextMonth, isToday);
   }

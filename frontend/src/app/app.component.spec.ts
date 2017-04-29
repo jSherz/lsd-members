@@ -8,7 +8,7 @@ import {AppComponent} from './app.component';
 describe('Component: App', () => {
 
   it('should create the app', async(() => {
-    let app = new AppComponent(null);
+    const app = new AppComponent(null);
     expect(app).toBeTruthy();
   }));
 

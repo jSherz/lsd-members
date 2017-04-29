@@ -4,10 +4,10 @@ import {
   RequestOptions,
   Http
 } from '@angular/http';
-import { Observable      } from 'rxjs';
-import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
+import {Observable} from 'rxjs/Observable';
+import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 
-import { ApiKeyService } from './';
+import {ApiKeyService} from './';
 
 /**
  * Basic methods shared across services.
@@ -29,7 +29,7 @@ export class BaseService {
    * @returns
    */
   protected extractJson<T>(res: Response): T {
-    let body = res.json();
+    const body = res.json();
     return body || [];
   }
 
@@ -38,10 +38,10 @@ export class BaseService {
    */
   protected handleError<R, T>() {
     // We use a closure here to ensure that the reference to this.apiKeyService isn't lost when this error handler is used
-    let apiKeyService = this.apiKeyService;
+    const apiKeyService = this.apiKeyService;
 
-    let innerHandler = <R, T>(err: any, caught: Observable<T>): ErrorObservable => {
-      let errMsg = (err.message) ? err.message : err.status ? `${err.status} - ${err.statusText}` : 'Server error';
+    const innerHandler = <R, T>(err: any, caught: Observable<T>): ErrorObservable => {
+      const errMsg = (err.message) ? err.message : err.status ? `${err.status} - ${err.statusText}` : 'Server error';
       console.error(errMsg);
 
       if (err.status && err.status === 401) {
@@ -64,9 +64,9 @@ export class BaseService {
    * @returns {Observable<Response>}
    */
   protected post(url: string, data: any) {
-    let body = JSON.stringify(data);
-    let headers = new Headers({ 'Content-Type': 'application/json', 'Api-Key': this.apiKeyService.getKey() });
-    let options = new RequestOptions({ headers: headers });
+    const body = JSON.stringify(data);
+    const headers = new Headers({'Content-Type': 'application/json', 'Api-Key': this.apiKeyService.getKey()});
+    const options = new RequestOptions({headers: headers});
 
     return this.http.post(url, body, options);
   }
@@ -81,9 +81,9 @@ export class BaseService {
    * @returns {Observable<Response>}
    */
   protected put(url: string, data: any) {
-    let body = JSON.stringify(data);
-    let headers = new Headers({ 'Content-Type': 'application/json', 'Api-Key': this.apiKeyService.getKey() });
-    let options = new RequestOptions({ headers: headers });
+    const body = JSON.stringify(data);
+    const headers = new Headers({'Content-Type': 'application/json', 'Api-Key': this.apiKeyService.getKey()});
+    const options = new RequestOptions({headers: headers});
 
     return this.http.put(url, body, options);
   }
@@ -95,8 +95,8 @@ export class BaseService {
    * @returns {Observable<Response>}
    */
   protected get(url: string) {
-    let headers = new Headers({ 'Api-Key': this.apiKeyService.getKey() });
-    let options = new RequestOptions({ headers: headers });
+    const headers = new Headers({'Api-Key': this.apiKeyService.getKey()});
+    const options = new RequestOptions({headers: headers});
 
     return this.http.get(url, options);
   }

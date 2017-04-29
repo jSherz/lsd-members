@@ -1,5 +1,5 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
-import {Subscription} from 'rxjs';
+import {Subscription} from 'rxjs/Subscription';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormBuilder, Validators, FormControl, FormGroup} from '@angular/forms';
 import * as moment from 'moment';
@@ -37,14 +37,14 @@ export class MemberEditComponent implements OnInit, OnDestroy {
    *
    * @type {boolean}
    */
-  apiRequestFailed: boolean = false;
+  apiRequestFailed = false;
 
   /**
    * Should we show the loading animation?
    *
    * @type {boolean}
    */
-  showThrobber: boolean = false;
+  showThrobber = false;
 
   /**
    * Any errors returned by the API that are not network or availability related.
@@ -98,7 +98,7 @@ export class MemberEditComponent implements OnInit, OnDestroy {
   updateMember() {
     this.showThrobber = true;
 
-    let memberData = this.memberForm.value;
+    const memberData = this.memberForm.value;
     memberData.uuid = this.member.uuid;
     memberData.createdAt = this.member.createdAt.format('YYYY-MM-DD hh:mm:ss');
     memberData.updatedAt = moment().format('YYYY-MM-DD hh:mm:ss');
@@ -121,7 +121,7 @@ export class MemberEditComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.displayMemberSub = this.route.params
       .subscribe(params => {
-        let uuid: string = params['uuid'];
+        const uuid: string = params['uuid'];
 
         this.showMember(uuid);
       });

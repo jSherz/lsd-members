@@ -19,16 +19,16 @@ describe('Service: Month', () => {
     });
   });
 
-  let testDate = moment();
+  const testDate = moment();
 
   it('should return 36 moments', async(inject([MonthService], (service: MonthService) => {
-    let result: moment.Moment[] = service.get(testDate);
+    const result: moment.Moment[] = service.get(testDate);
 
     expect(result.length).toEqual(36);
   })));
 
   it('should return the correct months', async(inject([MonthService], (service: MonthService) => {
-    let expected = [
+    const expected = [
       moment([2014, 4, 1]), moment([2014, 5, 1]), moment([2014, 6, 1]),
       moment([2014, 7, 1]), moment([2014, 8, 1]), moment([2014, 9, 1]),
       moment([2014, 10, 1]), moment([2014, 11, 1]), moment([2015, 0, 1]),
@@ -42,8 +42,8 @@ describe('Service: Month', () => {
       moment([2016, 10, 1]), moment([2016, 11, 1]), moment([2017, 0, 1]),
       moment([2017, 1, 1]), moment([2017, 2, 1]), moment([2017, 3, 1])
     ];
-    let startMonth = moment([2015, 4, 1]);
-    let actual = service.get(startMonth);
+    const startMonth = moment([2015, 4, 1]);
+    const actual = service.get(startMonth);
 
     for (let i = 0; i < expected.length; i++) {
       expect(expected[i]).toBeSameAs(actual[i]);

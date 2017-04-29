@@ -20,26 +20,26 @@ import {StubCourseService} from '../course.service.stub';
 
 
 // Useful to mock a component with a given year & month
-let mockComp = function (urlParts: [string, Params][] = [['courses', {}], ['calendar', {}]],
-                         params: Params = {},
-                         courses: CourseWithNumSpaces[] = []): CourseCalendarComponent {
+const mockComp = function (urlParts: [string, Params][] = [['courses', {}], ['calendar', {}]],
+                           params: Params = {},
+                           courses: CourseWithNumSpaces[] = []): CourseCalendarComponent {
   return inject([Router], (router: Router) => {
-    let urls = urlParts.map(([path, pathParams]) => new UrlSegment(path, pathParams));
+    const urls = urlParts.map(([path, pathParams]) => new UrlSegment(path, pathParams));
 
-    let observableUrls = Observable.of(urls);
-    let observableParams: Observable<Params> = Observable.of(params);
+    const observableUrls = Observable.of(urls);
+    const observableParams: Observable<Params> = Observable.of(params);
 
-    let activatedRoute = new ActivatedRoute();
+    const activatedRoute = new ActivatedRoute();
     activatedRoute.url = observableUrls;
     activatedRoute.params = observableParams;
 
-    let monthService = new MonthService();
+    const monthService = new MonthService();
 
-    let tileService = new TileService();
+    const tileService = new TileService();
 
-    let courseService = new StubCourseService(courses);
+    const courseService = new StubCourseService(courses);
 
-    let component = new CourseCalendarComponent(monthService, router, activatedRoute, tileService, courseService);
+    const component = new CourseCalendarComponent(monthService, router, activatedRoute, tileService, courseService);
     component.ngOnInit();
 
     return component;
@@ -63,18 +63,18 @@ beforeEach(() => {
 describe('Component: CourseCalendar', () => {
 
   it('should create an instance', async(() => {
-    let app = mockComp();
+    const app = mockComp();
     expect(app).toBeTruthy();
   }));
 
   it('should generate 36 months for the form', async(() => {
-    let app = mockComp();
+    const app = mockComp();
     expect(app.months.length).toEqual(36);
   }));
 
   it('should have the correct previous, current and next months (no month specified)', async(() => {
-    let app = mockComp();
-    let today = moment();
+    const app = mockComp();
+    const today = moment();
 
     expect(app.previousMonth).toBeSameAs(moment([today.year(), today.month() - 1, 1]));
     expect(app.currentMonth).toBeSameAs(moment([today.year(), today.month(), 1]));
@@ -82,7 +82,7 @@ describe('Component: CourseCalendar', () => {
   }));
 
   it('should show the specified year and month if provided', async(() => {
-    let app = mockComp(
+    const app = mockComp(
       [['courses', {}, 'calendar', {'year': '2017', 'month': '5'}]],
       {'year': '2017', 'month': '5'}
     );
@@ -94,7 +94,7 @@ describe('Component: CourseCalendar', () => {
 
   it('should show courses found with the course service to the relevant tiles', async(() => {
     // 28th September -> 07th November (inclusive) displayed
-    let courses = [
+    const courses = [
       // Some courses before the tile dates
       new CourseWithNumSpaces(new Course('248be6b6-ddce-4788-a9ab-42edcd7c24d2', moment([2014, 6, 20]),
         '0b2d6da0-33f5-4709-bf8c-c0115c229fce', null, 0), 10, 2),
@@ -118,13 +118,13 @@ describe('Component: CourseCalendar', () => {
         '676b7664-4a4d-4ce4-b3a2-1c2caa492b74', 'e448e04e-1ec6-4418-a24a-f593db874878', 0), 8, 0)
     ];
 
-    let app = mockComp(
+    const app = mockComp(
       [['courses', {}, 'calendar', {'year': '2014', 'month': '8'}]],
       {'year': '2014', 'month': '8'},
       courses
     );
 
-    let tileIndexesWithNoCourse = [
+    const tileIndexesWithNoCourse = [
       1, 2, 3, 4, 5, 6,
       7, 8, 9, 10, 12, 13,
       14, 15, 16, 18, 19, 20,

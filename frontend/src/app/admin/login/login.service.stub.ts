@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {Observable} from 'rxjs/Observable';
 
 import {LoginResult} from './login-result';
 import {LoginService} from './login.service';
@@ -8,17 +8,17 @@ import {LoginService} from './login.service';
 @Injectable()
 export class LoginServiceStub extends LoginService {
 
-  static validEmail: string = 'AbbyNorth@teleworm.us';
-  static validPassword: string = 'Password1';
+  static validEmail = 'AbbyNorth@teleworm.us';
+  static validPassword = 'Password1';
 
-  static invalidEmail: string = 'MohammedCharlton@jourrapide.com';
-  static invalidPassword: string = 'Hunter2';
+  static invalidEmail = 'MohammedCharlton@jourrapide.com';
+  static invalidPassword = 'Hunter2';
 
-  static accountLockedEmail: string = 'MohammedCharlton@jourrapide.com';
-  static accountLockedPassword: string = 'qwertyuiop';
+  static accountLockedEmail = 'MohammedCharlton@jourrapide.com';
+  static accountLockedPassword = 'qwertyuiop';
 
-  static apiFailEmail: string = 'AmyFarrell@armyspy.com';
-  static apiFailPassword: string = 'P455w0rd';
+  static apiFailEmail = 'AmyFarrell@armyspy.com';
+  static apiFailPassword = 'P455w0rd';
 
   constructor() {
     super(null, null);

@@ -4,7 +4,7 @@ import {Component} from '@angular/core';
 import {inject, async, TestBed} from '@angular/core/testing';
 import {NavigationStart, Event, Router} from '@angular/router';
 import {RouterTestingModule} from '@angular/router/testing';
-import {Subject, Observable} from 'rxjs';
+import {Subject} from 'rxjs/Subject';
 
 import {AppComponent} from '../../app.component';
 import {BaseComponent} from './base.component';
@@ -19,16 +19,16 @@ describe('Component: Base', () => {
       ],
       imports: [
         RouterTestingModule.withRoutes([
-          { path: 'home', component: AppComponent }
+          {path: 'home', component: AppComponent}
         ])
       ]
     });
   });
 
   it('should collapse the menu when the route changes', async(inject([Router], (router) => {
-    let subject: Subject<NavigationStart> = new Subject();
+    const subject: Subject<NavigationStart> = new Subject();
     router.events = subject;
-    let component = new BaseComponent(router);
+    const component = new BaseComponent(router);
 
     component.menuCollapsed = false;
 

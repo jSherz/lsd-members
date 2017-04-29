@@ -1,13 +1,13 @@
-import { Component } from '@angular/core';
-import { Router    } from '@angular/router';
+import {Component} from '@angular/core';
+import {Router} from '@angular/router';
 import {
   FormControl,
   FormBuilder,
   FormGroup,
   Validators
 } from '@angular/forms';
-import { LoginService } from './login.service';
-import { ApiKeyService } from '../utils';
+import {LoginService} from './login.service';
+import {ApiKeyService} from '../utils';
 
 @Component({
   selector: 'lsd-login-component',
@@ -26,14 +26,14 @@ export class LoginComponent {
    *
    * @type {boolean}
    */
-  apiRequestFailed: boolean = false;
+  apiRequestFailed = false;
 
   /**
    * Should we show the loading animation?
    *
    * @type {boolean}
    */
-  showThrobber: boolean = false;
+  showThrobber = false;
 
   /**
    * Any errors returned by the API.

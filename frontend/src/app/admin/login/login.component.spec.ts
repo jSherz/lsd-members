@@ -22,17 +22,17 @@ class TestSetup {
 }
 
 function mockComp(): TestSetup {
-  let keys = [];
-  for (let key in Router.prototype) {
+  const keys = [];
+  for (const key in Router.prototype) {
     if (Router.prototype.hasOwnProperty(key)) {
       keys.push(key);
     }
   }
 
-  let builder = new FormBuilder();
-  let router = jasmine.createSpyObj('MockRouter', keys);
-  let service = new LoginServiceStub();
-  let apiKeyService = new StubApiKeyService(undefined);
+  const builder = new FormBuilder();
+  const router = jasmine.createSpyObj('MockRouter', keys);
+  const service = new LoginServiceStub();
+  const apiKeyService = new StubApiKeyService(undefined);
 
   return new TestSetup(router, service, new LoginComponent(builder, router, service, apiKeyService));
 }
@@ -40,7 +40,7 @@ function mockComp(): TestSetup {
 describe('Component: Login', () => {
 
   it('shows a generic error message if the API call fails', async(() => {
-    let test = mockComp();
+    const test = mockComp();
 
     test.component.login({email: LoginServiceStub.apiFailEmail, password: LoginServiceStub.apiFailPassword});
     expect(test.component.apiRequestFailed).toEqual(true);
@@ -49,7 +49,7 @@ describe('Component: Login', () => {
   }));
 
   it('clears the generic error message if a successful API call is made at a later time', async(() => {
-    let test = mockComp();
+    const test = mockComp();
 
     // Ensure error showing
     test.component.login({email: LoginServiceStub.apiFailEmail, password: LoginServiceStub.apiFailPassword});
@@ -69,7 +69,7 @@ describe('Component: Login', () => {
   }));
 
   it('navigates to the courses calendar if login succeeds', async(() => {
-    let test = mockComp();
+    const test = mockComp();
 
     test.component.login({email: LoginServiceStub.validEmail, password: LoginServiceStub.validPassword});
 
@@ -77,7 +77,7 @@ describe('Component: Login', () => {
   }));
 
   it('shows errors against the correct field(s) with a successful API call but errors returned', async(() => {
-    let test = mockComp();
+    const test = mockComp();
 
     test.component.login({
       email: LoginServiceStub.accountLockedEmail,

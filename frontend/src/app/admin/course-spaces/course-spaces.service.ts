@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
-import {Observable} from 'rxjs';
+import {Observable} from 'rxjs/Observable';
 
 import {ApiKeyService, BaseService} from '../utils';
 import {CourseSpaceDepositPaidResponse, CourseSpaceMemberResponse} from './model';
@@ -66,7 +66,7 @@ export class CourseSpaceServiceImpl extends CourseSpaceService {
    * @param memberUuid
    */
   addMember(uuid: string, memberUuid: string): Observable<CourseSpaceMemberResponse> {
-    let request = {memberUuid: memberUuid};
+    const request = {memberUuid: memberUuid};
 
     return this.post(this.addMemberUrl.replace('{{uuid}}', uuid), request)
       .map(r => this.extractJson<CourseSpaceMemberResponse>(r))
@@ -82,7 +82,7 @@ export class CourseSpaceServiceImpl extends CourseSpaceService {
    * @param memberUuid
    */
   removeMember(uuid: string, memberUuid: string): Observable<CourseSpaceMemberResponse> {
-    let request = {memberUuid: memberUuid};
+    const request = {memberUuid: memberUuid};
 
     return this.post(this.removeMemberUrl.replace('{{uuid}}', uuid), request)
       .map(r => this.extractJson<CourseSpaceMemberResponse>(r))
@@ -96,7 +96,7 @@ export class CourseSpaceServiceImpl extends CourseSpaceService {
    * @param depositPaid
    */
   setDepositPaid(uuid: string, depositPaid: boolean): Observable<CourseSpaceDepositPaidResponse> {
-    let request = {depositPaid: depositPaid};
+    const request = {depositPaid: depositPaid};
 
     return this.put(this.setDepositPaidUrl.replace('{{uuid}}', uuid), request)
       .map(r => this.extractJson<CourseSpaceDepositPaidResponse>(r))

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {Observable} from 'rxjs/Observable';
 import {Http} from '@angular/http';
 
 import {LoginResult} from './login-result';
@@ -26,7 +26,7 @@ export class LoginServiceImpl extends LoginService {
   }
 
   login(email: string, password: string): Observable<LoginResult> {
-    let body = {
+    const body = {
       email: email,
       password: password
     };

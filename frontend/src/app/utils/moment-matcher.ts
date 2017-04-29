@@ -4,7 +4,7 @@ export const MOMENT_MATCHER = {
   toBeSameAs: (util, customEqualityTesters) => {
     return {
       compare: (actual: moment.Moment, expected: moment.Moment) => {
-        let result: any = {};
+        const result: any = {};
 
         result.pass = actual.isSame(expected);
 

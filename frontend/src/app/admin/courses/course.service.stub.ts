@@ -1,4 +1,5 @@
-import {Subject, Observable} from 'rxjs';
+import {Subject} from 'rxjs/Subject';
+import {Observable} from 'rxjs/Observable';
 import * as moment from 'moment';
 
 import {CourseService} from './course.service';

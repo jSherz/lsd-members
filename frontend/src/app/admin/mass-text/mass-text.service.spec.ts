@@ -1,11 +1,9 @@
 /* tslint:disable:no-unused-variable */
 
-import { TestBed, async, inject } from '@angular/core/testing';
+import {TestBed, async, inject} from '@angular/core/testing';
 import {HttpModule} from '@angular/http';
-import {RouterTestingModule} from '@angular/router/testing';
-import {Observable} from 'rxjs';
 
-import { MassTextService, MassTextServiceImpl } from './mass-text.service';
+import {MassTextService, MassTextServiceImpl} from './mass-text.service';
 import {ApiKeyService} from '../utils/api-key.service';
 import {StubApiKeyService} from '../utils/api-key.service.stub';
 

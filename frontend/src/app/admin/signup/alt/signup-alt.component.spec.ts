@@ -21,16 +21,16 @@ class TestSetup {
 }
 
 function mockComp(): TestSetup {
-  let keys = [];
-  for (let key in Router.prototype) {
+  const keys = [];
+  for (const key in Router.prototype) {
     if (Router.prototype.hasOwnProperty(key)) {
       keys.push(key);
     }
   }
 
-  let builder = new FormBuilder();
-  let router = jasmine.createSpyObj('MockRouter', keys);
-  let service = new SignupServiceStub();
+  const builder = new FormBuilder();
+  const router = jasmine.createSpyObj('MockRouter', keys);
+  const service = new SignupServiceStub();
 
   return new TestSetup(router, service, new SignupAltComponent(builder, router, service));
 }
@@ -38,7 +38,7 @@ function mockComp(): TestSetup {
 describe('Signup Alt Component', () => {
 
   it('shows a generic error message if the API call fails', async(() => {
-    let test = mockComp();
+    const test = mockComp();
 
     test.component.signup({name: SignupServiceStub.apiFailName, email: SignupServiceStub.apiFailEmail});
     expect(test.component.apiRequestFailed).toEqual(true);
@@ -47,7 +47,7 @@ describe('Signup Alt Component', () => {
   }));
 
   it('clears the generic error message if a successful API call is made at a later time', async(() => {
-    let test = mockComp();
+    const test = mockComp();
 
     // Ensure error showing
     test.component.signup({name: SignupServiceStub.apiFailName, email: SignupServiceStub.apiFailEmail});
@@ -67,7 +67,7 @@ describe('Signup Alt Component', () => {
   }));
 
   it('navigates to the thank-you page if signing up succeeds', async(() => {
-    let test = mockComp();
+    const test = mockComp();
 
     test.component.signup({name: SignupServiceStub.validName, email: SignupServiceStub.validEmail});
 
@@ -75,7 +75,7 @@ describe('Signup Alt Component', () => {
   }));
 
   it('shows errors against the correct field(s) with a successful API call but errors returned', async(() => {
-    let test = mockComp();
+    const test = mockComp();
 
     test.component.signup({name: SignupServiceStub.inUseName, email: SignupServiceStub.inUseEmail});
     expect(test.component.errors[0].email).toEqual('The specified e-mail is in use');

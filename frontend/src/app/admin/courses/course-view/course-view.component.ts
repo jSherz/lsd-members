@@ -1,4 +1,4 @@
-import {Subscription} from 'rxjs';
+import {Subscription} from 'rxjs/Subscription';
 import {ActivatedRoute} from '@angular/router';
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import * as moment from 'moment';
@@ -41,14 +41,14 @@ export class CourseViewComponent implements OnInit, OnDestroy {
    *
    * @type {boolean}
    */
-  apiRequestFailed: boolean = false;
+  apiRequestFailed = false;
 
   /**
    * Should we show the loading animation?
    *
    * @type {boolean}
    */
-  showThrobber: boolean = true;
+  showThrobber = true;
 
   /**
    * The course that is being displayed (if loaded).
@@ -71,7 +71,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
     this.displayCourseSub = this.route.params
       .subscribe(params => {
         console.log('Loading course ' + params['uuid']);
-        let uuid: string = params['uuid'];
+        const uuid: string = params['uuid'];
 
         this.updateCourse(uuid);
         this.updateSpaces(uuid);
@@ -156,7 +156,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
    * @param event From search component
    */
   addMemberToCourse(event) {
-    let nextSpace = this.spaces.filter(space => space.member == null)[0];
+    const nextSpace = this.spaces.filter(space => space.member == null)[0];
 
     if (nextSpace) {
       this.spaceService.addMember(nextSpace.uuid, event.uuid).subscribe(

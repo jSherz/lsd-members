@@ -21,15 +21,15 @@ export abstract class SignupService extends BaseService {
 @Injectable()
 export class SignupServiceImpl extends SignupService {
 
-  private signupUrl: string = 'http://localhost:8080/api/v1/members/sign-up';
-  private signupAltUrl: string = 'http://localhost:8080/api/v1/members/sign-up/alt';
+  private signupUrl = 'http://localhost:8080/api/v1/members/sign-up';
+  private signupAltUrl = 'http://localhost:8080/api/v1/members/sign-up/alt';
 
   constructor(http: Http, apiKeyService: ApiKeyService) {
     super(http, apiKeyService);
   }
 
   signup(name: string, phoneNumber: string): Observable<SignupResult> {
-    let request = {
+    const request = {
       name: name,
       phoneNumber: phoneNumber
     };
@@ -38,7 +38,7 @@ export class SignupServiceImpl extends SignupService {
   }
 
   signupAlt(name: string, email?: string): Observable<SignupResult> {
-    let request = {
+    const request = {
       name: name,
       email: email
     };

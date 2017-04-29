@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
-import {Observable} from 'rxjs';
+import {Observable} from 'rxjs/Observable';
 import * as moment from 'moment';
 
 import {Member, MemberAddResult, MemberEditResult, SearchResult, TextMessage} from './model';
@@ -41,7 +41,7 @@ export class MemberServiceImpl extends MemberService {
   getMember(uuid: string): Observable<Member> {
     return this.get(this.getUrl.replace('{{uuid}}', uuid))
       .map(r => {
-        let rawMember = this.extractJson<Member>(r);
+        const rawMember = this.extractJson<Member>(r);
 
         rawMember.lastJump = rawMember.lastJump == null ? null : moment(rawMember.lastJump);
         rawMember.createdAt = rawMember.createdAt == null ? null : moment(rawMember.createdAt);
@@ -55,7 +55,7 @@ export class MemberServiceImpl extends MemberService {
   getTextMessages(uuid: string): Observable<TextMessage[]> {
     return this.get(this.textMessagesUrl.replace('{{uuid}}', uuid))
       .map(r => {
-        let rawMessages = this.extractJson<TextMessage[]>(r);
+        const rawMessages = this.extractJson<TextMessage[]>(r);
 
         return rawMessages.map(message => {
           message.createdAt = message.createdAt == null ? null : moment(message.createdAt);
@@ -68,7 +68,7 @@ export class MemberServiceImpl extends MemberService {
   }
 
   search(term: string): Observable<SearchResult[]> {
-    let body = {
+    const body = {
       searchTerm: term
     };
 

@@ -1,9 +1,9 @@
-import { AbstractControl } from '@angular/forms';
-import { PhoneNumberUtil } from 'google-libphonenumber';
+import {AbstractControl} from '@angular/forms';
+import {PhoneNumberUtil} from 'google-libphonenumber';
 
-type ValidationResult = {
+interface ValidationResult {
   [key: string]: boolean;
-};
+}
 
 export class CustomValidators {
 
@@ -16,7 +16,7 @@ export class CustomValidators {
    */
   static email(control: AbstractControl): ValidationResult {
     if (control.value === undefined || control.value === '' || !/.+\@.+\..+/.test(control.value)) {
-      return { 'email': true };
+      return {'email': true};
     } else {
       return null;
     }
@@ -26,23 +26,23 @@ export class CustomValidators {
    * Use Google's libphonenumber library to validate phone numbers.
    */
   static phoneNumber(control: AbstractControl): ValidationResult {
-    let numToTest: string = control.value;
+    const numToTest: string = control.value;
 
     if (numToTest !== undefined && numToTest !== '') {
       try {
-        let parsed = CustomValidators.phoneNumberUtil.parse(numToTest, CustomValidators.defaultRegion);
+        const parsed = CustomValidators.phoneNumberUtil.parse(numToTest, CustomValidators.defaultRegion);
 
         if (CustomValidators.phoneNumberUtil.isPossibleNumber(parsed) &&
-            CustomValidators.phoneNumberUtil.isValidNumber(parsed)) {
+          CustomValidators.phoneNumberUtil.isValidNumber(parsed)) {
           return null;
         } else {
-          return { 'phoneNumber': true };
+          return {'phoneNumber': true};
         }
       } catch (ex) {
-        return { 'phoneNumber': true };
+        return {'phoneNumber': true};
       }
     } else {
-      return { 'phoneNumber': true };
+      return {'phoneNumber': true};
     }
   }
 

@@ -22,7 +22,7 @@ describe('Service: Member', () => {
   });
 
   it('should ...', async(inject([Http, ApiKeyService], (http, apiKeyService) => {
-    let service = new MemberServiceImpl(http, apiKeyService);
+    const service = new MemberServiceImpl(http, apiKeyService);
     expect(service).toBeTruthy();
   })));
 

@@ -16,7 +16,7 @@ describe('Service: ApiKey', () => {
   });
 
   it('should store the key it\'s given', async(() => {
-    let service = new ApiKeyServiceImpl();
+    const service = new ApiKeyServiceImpl();
 
     service.setKey('48db70de-9a39-4211-ae97-f1d97976aab2');
 
@@ -24,7 +24,7 @@ describe('Service: ApiKey', () => {
   }));
 
   it('should remove the key when no new key is given', async(() => {
-    let service = new ApiKeyServiceImpl();
+    const service = new ApiKeyServiceImpl();
 
     service.setKey('');
 
@@ -32,7 +32,7 @@ describe('Service: ApiKey', () => {
   }));
 
   it('should not return authenticated when it has no key', async(() => {
-    let service = new ApiKeyServiceImpl();
+    const service = new ApiKeyServiceImpl();
 
     service.setKey('');
 
@@ -40,7 +40,7 @@ describe('Service: ApiKey', () => {
   }));
 
   it('should return authenticated when it has a key', async(() => {
-    let service = new ApiKeyServiceImpl();
+    const service = new ApiKeyServiceImpl();
 
     service.setKey('88bc0729-9de1-4091-b79a-0a20b96122d1');
 
