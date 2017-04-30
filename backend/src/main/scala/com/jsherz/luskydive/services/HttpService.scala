@@ -33,7 +33,8 @@ import akka.http.scaladsl.model.{HttpEntity, HttpResponse, StatusCodes}
 import akka.http.scaladsl.server
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
-import ch.megard.akka.http.cors.CorsSettings
+import ch.megard.akka.http.cors.scaladsl.settings.CorsSettings
+import ch.megard.akka.http.cors.scaladsl.{CorsDirectives, CorsRejection}
 import com.jsherz.luskydive.apis._
 import com.jsherz.luskydive.dao._
 
@@ -100,7 +101,7 @@ class Cors(val log: LoggingAdapter) {
     ctx.complete(HttpResponse(StatusCodes.NotFound, entity = HttpEntity("Resource not found")))
   }
 
-  def cors: Directive0 = ch.megard.akka.http.cors.CorsDirectives.corsDecorate(settings).map(_ ⇒ ())
+  def cors: Directive0 = CorsDirectives.corsDecorate(settings).map(_ ⇒ ())
 
   /**
     * Ensure that authentication errors still have the correct CORS headers.
@@ -110,12 +111,23 @@ class Cors(val log: LoggingAdapter) {
   def rejectionHandler: RejectionHandler = {
     RejectionHandler.newBuilder()
       .handleNotFound(notFoundRoute)
-      .handle { case (AuthorizationFailedRejection | AuthenticationFailedRejection(_, _)) =>
-        cors {
-          complete {
-            HttpResponse(StatusCodes.Unauthorized, entity = HttpEntity("Authorization failed"))
+      .handle {
+        case (AuthorizationFailedRejection | AuthenticationFailedRejection(_, _)) =>
+          cors {
+            complete {
+              HttpResponse(StatusCodes.Unauthorized, entity = HttpEntity("Authorization failed"))
+            }
           }
-        }
+      }
+      .handle {
+        case (CorsRejection(origin, method, _)) =>
+          ctx => {
+            log.info(s"CORS rejection for origin $origin, method $method to ${ctx.request.uri} (${ctx.request.method})")
+
+            ctx.complete {
+              HttpResponse(StatusCodes.Forbidden, entity = HttpEntity("Unauthorized cross-origin request"))
+            }
+          }
       }
       .result()
   }

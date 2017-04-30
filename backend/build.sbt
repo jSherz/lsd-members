@@ -26,7 +26,8 @@ import sbt.Keys._
 import wartremover.WartRemover.autoImport._
 
 val scalaV = "2.11.8"
-val akkaV = "2.4.9-RC2"
+val akkaV = "2.5.0"
+val akkaHttpV = "10.0.5"
 val scaldiV = "0.5.7"
 val metricsV = "3.1.0"
 
@@ -60,14 +61,13 @@ lazy val root = (project in file("."))
 
         // Web framework
         "com.typesafe.akka" %% "akka-actor"                        % akkaV,
-        "com.typesafe.akka" %% "akka-http-core"                    % akkaV,
-        "com.typesafe.akka" %% "akka-http-testkit"                 % akkaV,
         "com.typesafe.akka" %% "akka-remote"                       % akkaV,
         "com.typesafe.akka" %% "akka-slf4j"                        % akkaV,
         "com.typesafe.akka" %% "akka-testkit"                      % akkaV,
-        "com.typesafe.akka" %% "akka-http-experimental"            % akkaV,
-        "com.typesafe.akka" %% "akka-http-spray-json-experimental" % akkaV,
-        "ch.megard" %% "akka-http-cors" % "0.1.4",
+        "com.typesafe.akka" %% "akka-http-core"                    % akkaHttpV,
+        "com.typesafe.akka" %% "akka-http-testkit"                 % akkaHttpV,
+        "com.typesafe.akka" %% "akka-http-spray-json"              % akkaHttpV,
+        "ch.megard" %% "akka-http-cors" % "0.2.1",
 
         // Logging
         "ch.qos.logback" % "logback-classic" % "1.1.3",

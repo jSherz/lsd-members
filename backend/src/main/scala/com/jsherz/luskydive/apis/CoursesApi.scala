@@ -51,7 +51,7 @@ class CoursesApi(private val courseDao: CourseDao)
     * Shows the courses that are
     */
   val listRoute = pathEnd {
-    post {
+    get {
       authDirective { _ =>
         entity(as[CoursesListRequest]) { req =>
           if (req.endDate.before(req.startDate)) {
