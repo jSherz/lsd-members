@@ -24,12 +24,15 @@
 
 package com.jsherz.luskydive.services
 
+import java.util.UUID
+
 import akka.event.LoggingAdapter
 import akka.http.scaladsl.model.HttpMethods._
-import akka.http.scaladsl.model.{HttpEntity, HttpResponse, StatusCodes}
 import akka.http.scaladsl.model.headers.{HttpOrigin, HttpOriginRange}
-import akka.http.scaladsl.server._
+import akka.http.scaladsl.model.{HttpEntity, HttpResponse, StatusCodes}
+import akka.http.scaladsl.server
 import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.server._
 import ch.megard.akka.http.cors.CorsSettings
 import com.jsherz.luskydive.apis._
 import com.jsherz.luskydive.dao._
@@ -50,9 +53,9 @@ class HttpService(
                    textMessageReceiveApiKey: String
                  )
                  (implicit executionContext: ExecutionContext,
-                  loggingAdapter: LoggingAdapter) {
+                  log: LoggingAdapter) {
 
-  implicit val auth = new ApiKeyAuthenticator(authDao).authenticateWithApiKey
+  implicit val auth: Directive1[UUID] = new ApiKeyAuthenticator(authDao).authenticateWithApiKey
 
   val signupRoutes = new SignupApi(memberDao)
   val coursesRoutes = new CoursesApi(courseDao)
@@ -64,9 +67,11 @@ class HttpService(
 
   val loginApi = new LoginApi(authDao)
 
-  val routes =
-    handleRejections(Cors.rejectionHandler) {
-      (pathPrefix("api") & pathPrefix("v1") & Cors.cors) {
+  val cors: Cors = new Cors(log)
+
+  val routes: server.Route =
+    handleRejections(cors.rejectionHandler) {
+      (pathPrefix("api") & pathPrefix("v1") & cors.cors) {
         signupRoutes.route ~
           coursesRoutes.route ~
           courseSpacesApi.route ~
@@ -80,7 +85,7 @@ class HttpService(
 
 }
 
-object Cors {
+class Cors(val log: LoggingAdapter) {
 
   private val settings = CorsSettings.defaultSettings.copy(allowedOrigins = HttpOriginRange(
     HttpOrigin("http://localhost:4200"),
@@ -89,6 +94,12 @@ object Cors {
     HttpOrigin("https://leedsskydivers.com")
   ), allowedMethods = scala.collection.immutable.Seq(GET, PUT, POST, HEAD, OPTIONS))
 
+  private val notFoundRoute: Route = ctx => {
+    log.info(s"HTTP 404: ${ctx.request.uri}")
+
+    ctx.complete(HttpResponse(StatusCodes.NotFound, entity = HttpEntity("Resource not found")))
+  }
+
   def cors: Directive0 = ch.megard.akka.http.cors.CorsDirectives.corsDecorate(settings).map(_ ⇒ ())
 
   /**
@@ -96,14 +107,17 @@ object Cors {
     *
     * Otherwise, the AJAX frontend will not accept the request and will instead set it to a status code of 0 (failed).
     */
-  val rejectionHandler = RejectionHandler.newBuilder()
-    .handle { case (AuthorizationFailedRejection | AuthenticationFailedRejection(_, _)) =>
-      cors {
-        complete {
-          HttpResponse(StatusCodes.Unauthorized, entity = HttpEntity("Authorization failed"))
+  def rejectionHandler: RejectionHandler = {
+    RejectionHandler.newBuilder()
+      .handleNotFound(notFoundRoute)
+      .handle { case (AuthorizationFailedRejection | AuthenticationFailedRejection(_, _)) =>
+        cors {
+          complete {
+            HttpResponse(StatusCodes.Unauthorized, entity = HttpEntity("Authorization failed"))
+          }
         }
       }
-    }
-    .result()
+      .result()
+  }
 
 }

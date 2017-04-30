@@ -24,6 +24,8 @@
 
 package com.jsherz.luskydive
 
+import java.time.{Duration, Instant}
+
 import akka.actor.ActorSystem
 import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.Http
@@ -40,21 +42,26 @@ import scala.io.{Codec, Source}
   */
 object Main extends App with Config {
 
+  val bootStarted = Instant.now()
+
   implicit val actorSystem = ActorSystem()
   implicit val executor = actorSystem.dispatcher
   implicit val log: LoggingAdapter = Logging(actorSystem, getClass)
   implicit val materializer = ActorMaterializer()
 
   // What is an application without an ASCII-art banner?
-  implicit val codec = Codec.UTF8
-  log.info(Source.fromURL(getClass.getResource("/banner.txt")).mkString)
+  log.info(Source.fromURL(getClass.getResource("/banner.txt"))(Codec.UTF8).mkString)
 
   val databaseService = new DatabaseService(dbUrl, dbUsername, dbPassword)
+
+  log.info("Checking for and running migrations")
 
   // Automatically run migrations
   val flyway = new Flyway()
   flyway.setDataSource(dbUrl, dbUsername, dbPassword)
   flyway.migrate()
+
+  log.info("Migrations complete")
 
   val memberDao = new MemberDaoImpl(databaseService)
   val committeeMemberDao = new CommitteeMemberDaoImpl(databaseService)
@@ -68,5 +75,8 @@ object Main extends App with Config {
     textMessageDao, textMessageReceiveApiKey)
 
   Http().bindAndHandle(httpService.routes, interface, port)
+
+  val bootTime = Duration.between(bootStarted, Instant.now())
+  log.info(s"Startup took ${bootTime.toMillis} ms")
 
 }
