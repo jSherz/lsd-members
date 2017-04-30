@@ -9,7 +9,7 @@
     "build-prod": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "node $NODE_DEBUG_OPTION node_modules/@angular/cli/bin/ng e2e"
   },
   "private": true,
   "dependencies": {

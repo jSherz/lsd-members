@@ -22,10 +22,10 @@ describe('Pages: Committee', function () {
 
     expect(imageUrls).toEqual([
       baseUrl + 'emily.jpg', baseUrl + 'will.jpg', baseUrl + 'angus.jpg', baseUrl + 'jim.jpg', baseUrl + 'nathan.jpg',
-      baseUrl + 'isabelle.jpg', baseUrl + 'georgia.jpg', baseUrl + 'james.jpg'
+      baseUrl + 'georgia.jpg'
     ]);
 
-    const names = ['Emily', 'Will', 'Angus', 'Jim', 'Nathan', 'Isabelle', 'Georgia', 'James'];
+    const names = ['Emily', 'Will', 'Angus', 'Jim', 'Nathan', 'Georgia'];
 
     expect(imageTitles).toEqual(names);
     expect(imageAlts).toEqual(names);
@@ -33,8 +33,7 @@ describe('Pages: Committee', function () {
     expect(headers).toEqual(names);
 
     expect(roles).toEqual([
-      'President', 'Vice-president', 'Treasurer', 'RAPS Secretary', 'Kit Secretary', 'Social Secretary #1',
-      'Social Secretary #2', '"The website guy"'
+      'President', 'Vice-president', 'Treasurer', 'RAPS Secretary', 'Kit Secretary', 'Social Secretary'
     ]);
   });
 

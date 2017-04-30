@@ -11,7 +11,7 @@ export class LuskydivePage {
   }
 
   getTitle() {
-    return element(by.css('title')).getWebElement().getInnerHtml();
+    return element(by.css('title')).getAttribute('innerHTML');
   }
 
 }
