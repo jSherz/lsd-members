@@ -1,6 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {HttpModule} from '@angular/http';
+import {FacebookModule} from 'ngx-facebook';
 
 import {
   FormsModule,
@@ -13,6 +14,7 @@ import {MembersComponent} from './members.component';
 import {LoginComponent} from './login';
 import {DashboardComponent} from './dashboard';
 import {NotApprovedComponent} from './not-approved/not-approved.component';
+import {SocialLoginService, SocialLoginServiceImpl} from './social-login/social-login.service';
 
 @NgModule({
   imports: [
@@ -20,6 +22,7 @@ import {NotApprovedComponent} from './not-approved/not-approved.component';
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
+    FacebookModule.forRoot(),
     membersRouting
   ],
   declarations: [
@@ -30,7 +33,8 @@ import {NotApprovedComponent} from './not-approved/not-approved.component';
   ],
   bootstrap: [],
   providers: [
-    FormBuilder
+    FormBuilder,
+    {provide: SocialLoginService, useClass: SocialLoginServiceImpl}
   ]
 })
 export class MembersModule {

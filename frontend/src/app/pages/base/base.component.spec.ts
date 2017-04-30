@@ -18,9 +18,7 @@ describe('Component: Base', () => {
         AppComponent
       ],
       imports: [
-        RouterTestingModule.withRoutes([
-          {path: 'home', component: AppComponent}
-        ])
+        RouterTestingModule
       ]
     });
   });

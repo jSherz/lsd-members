@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --host local-dev.leedsskydivers.com",
     "build": "ng build",
     "build-prod": "ng build --prod",
     "test": "ng test",
@@ -27,6 +27,7 @@
     "google-libphonenumber": "^1.0.25",
     "karma-phantomjs-launcher": "^1.0.4",
     "moment": "^2.13.0",
+    "ngx-facebook": "^2.4.0",
     "node-sass": "^3.8.0",
     "raven-js": "^3.14.0",
     "reflect-metadata": "^0.1.3",
