@@ -31,16 +31,15 @@ import akka.event.{Logging, LoggingAdapter}
 import com.jsherz.luskydive.core.TextMessage
 import com.jsherz.luskydive.dao.TextMessageDaoImpl
 import com.jsherz.luskydive.itest.util.Util
-import org.scalatest.{Matchers, WordSpec}
-import org.scalatest.concurrent.ScalaFutures._
 import com.jsherz.luskydive.json.TextMessageJsonSupport._
+import org.scalatest.concurrent.ScalaFutures._
 import org.scalatest.time.{Seconds, Span}
+import org.scalatest.{Matchers, WordSpec}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 
 class TextMessageDaoSpec extends WordSpec with Matchers {
-
   implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
   val dbService = Util.setupGoldTestDb()
   val dao = new TextMessageDaoImpl(dbService)
@@ -54,10 +53,15 @@ class TextMessageDaoSpec extends WordSpec with Matchers {
 
       result.isRight shouldBe true
       result.map { messages =>
-        val expected = Util.fixture[Vector[TextMessage]]("all.json")
+        val expectedMessages = Util.fixture[Vector[TextMessage]]("all.json")
 
-        messages.length shouldEqual expected.length
-        messages shouldEqual expected
+        messages.length shouldEqual expectedMessages.length
+
+        result.map {
+          _.zip(expectedMessages).foreach { case (actual, expected) =>
+            textMessagesShouldBeSameBarUuids(actual, expected)
+          }
+        }
       }
     }
 
@@ -97,7 +101,9 @@ class TextMessageDaoSpec extends WordSpec with Matchers {
 
         val created = dao.get(uuid).futureValue
         created.isRight shouldBe true
-        created.map { _ shouldEqual Some(text) }
+        created.map {
+          _ shouldEqual Some(text)
+        }
       }
     }
 
@@ -111,7 +117,9 @@ class TextMessageDaoSpec extends WordSpec with Matchers {
 
         val created = dao.get(uuid).futureValue
         created.isRight shouldBe true
-        created.map { _ shouldEqual Some(text) }
+        created.map {
+          _ shouldEqual Some(text)
+        }
       }
     }
 
@@ -125,7 +133,9 @@ class TextMessageDaoSpec extends WordSpec with Matchers {
 
         val created = dao.get(uuid).futureValue
         created.isRight shouldBe true
-        created.map { _ shouldEqual Some(text) }
+        created.map {
+          _ shouldEqual Some(text)
+        }
       }
     }
 
@@ -209,14 +219,28 @@ class TextMessageDaoSpec extends WordSpec with Matchers {
 
     "return all text messages that are pending being sent" in {
       val result = dao.toSend().futureValue
-      val expected = Util.fixture[Vector[TextMessage]]("to_send.json")
+      val expectedMessages = Util.fixture[Vector[TextMessage]]("to_send.json")
 
       result.isRight shouldBe true
       result.map {
-        _ should contain theSameElementsAs expected
+        _.zip(expectedMessages).foreach { case (actual, expected) =>
+          textMessagesShouldBeSameBarUuids(actual, expected)
+        }
       }
     }
 
+  }
+
+  /**
+    * Compare messages, discarding the UUIDs (but ensuring the mass text UUID is either present or not present on both).
+    *
+    * @param actual
+    * @param expected
+    * @return
+    */
+  private def textMessagesShouldBeSameBarUuids(actual: TextMessage, expected: TextMessage): Unit = {
+    actual.massTextUuid.isDefined shouldEqual expected.massTextUuid.isDefined
+    actual.copy(uuid = expected.uuid, massTextUuid = expected.massTextUuid) shouldEqual expected
   }
 
 }
