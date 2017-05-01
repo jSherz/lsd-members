@@ -57,6 +57,7 @@ pipeline {
                 ansiColor('css') {
                     dir('backend') {
                         sh 'sbt assembly'
+                        archiveArtifacts 'target/scala-2.11/luskydive-assembly-0.0.0.1.jar'
                     }
                 }
             }
