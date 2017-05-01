@@ -1,0 +1,65 @@
+#!/usr/bin/env groovy
+
+pipeline {
+    agent any
+
+    environment {
+        JAVA_HOME = '/usr/lib/jvm/java-8-openjdk-amd64'
+        PATH = '/usr/lib/jvm/java-8-openjdk-amd64/bin:/usr/local/bin:/usr/bin:/bin'
+        LSD_TEXT_MESSAGE_API_KEY = 'test-key-123'
+        LSD_TWILIO_MESSAGING_SERVICE_SID = '123'
+        LSD_TWILIO_ACCOUNT_SID = '123'
+        LSD_DB_PASSWORD	= 'luskydive_test'
+        LSD_DB_URL = 'jdbc:postgresql://127.0.0.1/luskydive_test'
+        LSD_TWILIO_AUTH_TOKEN = '123'
+        LSD_DB_USERNAME = 'luskydive_test'
+        LSD_PORT = 8080
+    }
+
+    options {
+        buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '10'))
+        disableConcurrentBuilds()
+        gitLabConnection('SCM')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git credentialsId: 'github-lsd-members',
+                        url: 'git@github.com:jSherz/lsd-members.git'
+                sh 'echo "Java home: `echo $JAVA_HOME`"'
+                sh 'echo "Java version: `java -version`"'
+            }
+        }
+
+        stage('Unit test') {
+            steps {
+                ansiColor('css') {
+                    dir('backend') {
+                        sh 'sbt test'
+                    }
+                }
+            }
+        }
+
+        stage('Integration test') {
+            steps {
+                ansiColor('css') {
+                    dir('backend') {
+                        sh 'sbt it:test'
+                    }
+                }
+            }
+        }
+
+        stage('Package') {
+            steps {
+                ansiColor('css') {
+                    dir('backend') {
+                        sh 'sbt assembly'
+                    }
+                }
+            }
+        }
+    }
+}
