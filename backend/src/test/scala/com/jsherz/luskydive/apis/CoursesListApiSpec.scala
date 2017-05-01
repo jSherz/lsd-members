@@ -64,13 +64,13 @@ class CoursesListApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
       implicit val authDirective = AuthenticationDirectives.denyAll
       val route = new CoursesApi(dao).route
 
-      Post(url) ~> Route.seal(route) ~> check {
+      Get(url) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.Unauthorized
       }
     }
 
     "return method not allowed when used with anything other than POST" in {
-      Seq(Get, Put, Delete, Patch).foreach { method =>
+      Seq(Post, Put, Delete, Patch).foreach { method =>
         method(url) ~> Route.seal(route) ~> check {
           response.status shouldEqual StatusCodes.MethodNotAllowed
         }
@@ -82,7 +82,7 @@ class CoursesListApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
     "return bad request when the end date is before the start date" in {
       val invalid = CoursesListRequest(DateUtil.makeDate(2016, 8, 8), DateUtil.makeDate(2016, 8, 7))
 
-      Post(url, invalid) ~> Route.seal(route) ~> check {
+      Get(url, invalid) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.BadRequest
         responseAs[String] shouldEqual "endDate must be after startDate"
       }
@@ -98,7 +98,7 @@ class CoursesListApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
       )
 
       missingDates.foreach { date =>
-        Post(url, HttpEntity(ContentTypes.`application/json`, date)) ~> Route.seal(route) ~> check {
+        Get(url, HttpEntity(ContentTypes.`application/json`, date)) ~> Route.seal(route) ~> check {
           response.status shouldEqual StatusCodes.BadRequest
         }
       }
@@ -114,7 +114,7 @@ class CoursesListApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
       )
 
       unsupportedContentTypes.foreach { contentType =>
-        Post(url, HttpEntity(contentType, "blah")) ~> Route.seal(route) ~> check {
+        Get(url, HttpEntity(contentType, "blah")) ~> Route.seal(route) ~> check {
           response.status shouldEqual StatusCodes.UnsupportedMediaType
         }
       }
@@ -130,7 +130,7 @@ class CoursesListApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
 
       val expected = StubCourseDao.courses
 
-      Post(url, request) ~> route ~> check {
+      Get(url, request) ~> route ~> check {
         response.status shouldEqual StatusCodes.OK
         responseAs[String].parseJson shouldEqual expected.toJson
       }
