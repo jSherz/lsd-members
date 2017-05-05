@@ -29,7 +29,7 @@ export class LoginComponent {
 
   private handleLoginResult(response: LoginResponse) {
     if (response.status === 'connected') {
-      console.log('Logged in with FB.');
+      console.log('Logged in with FB.', response);
 
       this.router.navigate(['members', 'dashboard']);
     } else {

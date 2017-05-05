@@ -111,8 +111,10 @@ class Tables(protected val databaseService: DatabaseService) {
 
     def updatedAt: Rep[Timestamp] = column[Timestamp]("updated_at")
 
+    def socialUserId: Rep[Option[String]] = column[Option[String]]("social_user_id")
+
     def * = (uuid.?, firstName, lastName, phoneNumber, email, lastJump,
-      weight, height, driver, organiser, createdAt, updatedAt) <> (Member.tupled, Member.unapply)
+      weight, height, driver, organiser, createdAt, updatedAt, socialUserId) <> (Member.tupled, Member.unapply)
 
   }
 

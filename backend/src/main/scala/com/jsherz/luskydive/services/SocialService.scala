@@ -22,35 +22,33 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.util
+package com.jsherz.luskydive.services
 
-import com.typesafe.config.ConfigFactory
+import akka.event.LoggingAdapter
+import com.jsherz.luskydive.core.FBSignedRequest
+import com.restfb.FacebookClient
+import com.restfb.exception.FacebookException
+
+trait SocialService {
+
+  def parseSignedRequest(signedRequest: String): Option[FBSignedRequest]
+
+}
 
 /**
-  * The application configuration, as read from resources/application.conf.
+  * No, this service does not help with societal issues.
+  * <p>
+  * It's for social website authentication.
   */
-trait Config {
+class SocialServiceImpl(fbClient: FacebookClient, appSecret: String)(implicit log: LoggingAdapter) extends SocialService {
 
-  private val config = ConfigFactory.load()
-  private val configHttp = config.getConfig("http")
-  private val configDb = config.getConfig("database")
-  private val configTwilio = config.getConfig("twilio")
+  def parseSignedRequest(signedRequest: String): Option[FBSignedRequest] = try {
+    Some(fbClient.parseSignedRequest(signedRequest, appSecret, classOf[FBSignedRequest]))
+  } catch {
+    case ex: FacebookException =>
+      log.error(ex, s"Failed to parse FB signed request.")
 
-  val interface: String = configHttp.getString("interface")
-  val port: Int = configHttp.getInt("port")
-
-  val dbUrl: String = configDb.getString("url")
-  val dbUsername: String = configDb.getString("username")
-  val dbPassword: String = configDb.getString("password")
-
-  val textMessageReceiveApiKey: String = config.getString("text_message_receive_api_key")
-
-  val twilioAccountSid: String = configTwilio.getString("account_sid")
-  val twilioAuthToken: String = configTwilio.getString("auth_token")
-  val twilioMessagingServiceSid: String = configTwilio.getString("messaging_service_sid")
-
-  val fbSecret: String = config.getConfig("fb").getString("secret")
-
-  val jwtSecret: String = config.getConfig("jwt").getString("secret")
+      None
+  }
 
 }

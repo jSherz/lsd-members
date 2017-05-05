@@ -69,6 +69,11 @@ lazy val root = (project in file("."))
         "com.typesafe.akka" %% "akka-http-spray-json"              % akkaHttpV,
         "ch.megard" %% "akka-http-cors" % "0.2.1",
 
+        // Authentication
+        "joda-time" % "joda-time" % "2.9.9",
+        "com.auth0" % "java-jwt" % "3.1.0",
+        "com.restfb" % "restfb" % "1.40.1",
+
         // Logging
         "ch.qos.logback" % "logback-classic" % "1.1.3",
         "org.slf4j"      % "slf4j-api"       % "1.7.21",

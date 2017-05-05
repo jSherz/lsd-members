@@ -1,0 +1,15 @@
+{
+  "uuid": "0d6a5325-db61-4554-a06b-41c66120da55",
+  "firstName": "Bradley",
+  "lastName": "Romero",
+  "email": "jessica64@steele.com",
+  "phoneNumber": "+447914231934",
+  "lastJump": "2010-03-25",
+  "weight": null,
+  "height": null,
+  "driver": false,
+  "organiser": false,
+  "createdAt": "2012-11-23 00:01:20.000000",
+  "updatedAt": "2015-05-24 09:58:55.000000",
+  "socialUserId": null
+}

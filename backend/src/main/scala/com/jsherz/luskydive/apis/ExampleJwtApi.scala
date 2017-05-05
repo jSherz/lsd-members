@@ -22,35 +22,29 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.util
+package com.jsherz.luskydive.apis
 
-import com.typesafe.config.ConfigFactory
+import akka.event.LoggingAdapter
+import akka.http.scaladsl.server.Directives.{complete, get, path}
+import akka.http.scaladsl.server.Route
+import com.jsherz.luskydive.dao.MemberDao
+import com.jsherz.luskydive.directives.JwtDirectives
+import com.jsherz.luskydive.services.JwtService
 
-/**
-  * The application configuration, as read from resources/application.conf.
-  */
-trait Config {
+class ExampleJwtApi(
+                     private val jwtService: JwtService,
+                     private val memberDao: MemberDao
+                   )
+                   (implicit val log: LoggingAdapter) {
 
-  private val config = ConfigFactory.load()
-  private val configHttp = config.getConfig("http")
-  private val configDb = config.getConfig("database")
-  private val configTwilio = config.getConfig("twilio")
+  private val authenticateWithJwt = new JwtDirectives(jwtService, memberDao).authenticateWithJwt
 
-  val interface: String = configHttp.getString("interface")
-  val port: Int = configHttp.getInt("port")
-
-  val dbUrl: String = configDb.getString("url")
-  val dbUsername: String = configDb.getString("username")
-  val dbPassword: String = configDb.getString("password")
-
-  val textMessageReceiveApiKey: String = config.getString("text_message_receive_api_key")
-
-  val twilioAccountSid: String = configTwilio.getString("account_sid")
-  val twilioAuthToken: String = configTwilio.getString("auth_token")
-  val twilioMessagingServiceSid: String = configTwilio.getString("messaging_service_sid")
-
-  val fbSecret: String = config.getConfig("fb").getString("secret")
-
-  val jwtSecret: String = config.getConfig("jwt").getString("secret")
+  val route: Route = path("foobar") {
+    authenticateWithJwt { member =>
+      get {
+        complete(s"YO DUDES! (more specifically ${member.firstName})")
+      }
+    }
+  }
 
 }

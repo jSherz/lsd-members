@@ -71,7 +71,7 @@ class MemberApiSpec extends WordSpec with Matchers with ScalatestRouteTest with 
   private val exampleUuid = UUID.fromString("a9e6ba54-2040-4060-9297-2f40a64e388c")
   private val exampleMember = Member(Some(exampleUuid), "Lance", Some("Scott"), Some("+447802070397"),
     Some("nathansmith@tucker-estes.com"), Some(DateUtil.makeDate(2012, 12, 24)), None, None, false, false,
-    DateUtil.makeTimestamp(2008, 11, 14), DateUtil.makeTimestamp(2016, 1, 29))
+    DateUtil.makeTimestamp(2008, 11, 14), DateUtil.makeTimestamp(2016, 1, 29), None)
 
   trait Fixtured {
     val dao = Mockito.spy(new StubMemberDao())

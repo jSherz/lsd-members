@@ -22,35 +22,18 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.util
+package com.jsherz.luskydive.json
 
-import com.typesafe.config.ConfigFactory
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
+import spray.json.{DefaultJsonProtocol, RootJsonFormat}
 
-/**
-  * The application configuration, as read from resources/application.conf.
-  */
-trait Config {
+case class SocialLoginRequest(signedRequest: String)
 
-  private val config = ConfigFactory.load()
-  private val configHttp = config.getConfig("http")
-  private val configDb = config.getConfig("database")
-  private val configTwilio = config.getConfig("twilio")
+case class SocialLoginResponse(success: Boolean, error: Option[String], jwt: Option[String])
 
-  val interface: String = configHttp.getString("interface")
-  val port: Int = configHttp.getInt("port")
+object SocialLoginJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
 
-  val dbUrl: String = configDb.getString("url")
-  val dbUsername: String = configDb.getString("username")
-  val dbPassword: String = configDb.getString("password")
-
-  val textMessageReceiveApiKey: String = config.getString("text_message_receive_api_key")
-
-  val twilioAccountSid: String = configTwilio.getString("account_sid")
-  val twilioAuthToken: String = configTwilio.getString("auth_token")
-  val twilioMessagingServiceSid: String = configTwilio.getString("messaging_service_sid")
-
-  val fbSecret: String = config.getConfig("fb").getString("secret")
-
-  val jwtSecret: String = config.getConfig("jwt").getString("secret")
+  implicit val SocialLoginRequestFormat: RootJsonFormat[SocialLoginRequest] = jsonFormat1(SocialLoginRequest)
+  implicit val SocialLoginResponseFormat: RootJsonFormat[SocialLoginResponse] = jsonFormat3(SocialLoginResponse)
 
 }

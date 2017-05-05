@@ -30,19 +30,21 @@ import java.util.UUID
 /**
   * The main member class, representing a person that has provided us with a phone number or e-mail address.
   *
-  * @param uuid        Unique ID
-  * @param firstName   First name
-  * @param lastName    Last name
-  * @param phoneNumber Phone number
-  * @param email       E-mail address
-  * @param lastJump    The date the member last jumped, if applicable
-  * @param weight      Weight in kilograms
-  * @param height      Height in centimeters
-  * @param driver      Is the member a driver?
-  * @param organiser   Does the member help organise static line courses?
-  * @param createdAt   When the member was created
-  * @param updatedAt   When the member's record was last updated
+  * @param uuid         Unique ID
+  * @param firstName    First name
+  * @param lastName     Last name
+  * @param phoneNumber  Phone number
+  * @param email        E-mail address
+  * @param lastJump     The date the member last jumped, if applicable
+  * @param weight       Weight in kilograms
+  * @param height       Height in centimeters
+  * @param driver       Is the member a driver?
+  * @param organiser    Does the member help organise static line courses?
+  * @param createdAt    When the member was created
+  * @param updatedAt    When the member's record was last updated
+  * @param socialUserId FB user ID
   */
 case class Member(uuid: Option[UUID], firstName: String, lastName: Option[String], phoneNumber: Option[String],
                   email: Option[String], lastJump: Option[Date], weight: Option[Short], height: Option[Short],
-                  driver: Boolean, organiser: Boolean, createdAt: Timestamp, updatedAt: Timestamp)
+                  driver: Boolean, organiser: Boolean, createdAt: Timestamp, updatedAt: Timestamp,
+                  socialUserId: Option[String])

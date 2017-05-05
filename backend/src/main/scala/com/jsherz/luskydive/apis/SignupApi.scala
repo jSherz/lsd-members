@@ -57,7 +57,8 @@ class SignupApi(private val memberDao: MemberDao)
           case true => Future.successful(SignupResponse(false, Map("phoneNumber" -> "error.inUse")))
           case false => {
             val createdAt = currentTimestamp()
-            val member = Member(None, req.name, None, Some(phoneNumber), None, None, None, None, false, false, createdAt, createdAt)
+            val member = Member(None, req.name, None, Some(phoneNumber), None, None, None, None, false, false,
+              createdAt, createdAt, None)
 
             memberDao.create(member).map { _ =>
               log.info(s"Signed up member with name '${req.name}' and phone number '${req.phoneNumber}'.")
@@ -91,7 +92,8 @@ class SignupApi(private val memberDao: MemberDao)
           case true => Future.successful(SignupResponse(false, Map("email" -> "error.inUse")))
           case false => {
             val createdAt = currentTimestamp()
-            val member = Member(None, req.name, None, None, Some(req.email), None, None, None, false, false, createdAt, createdAt)
+            val member = Member(None, req.name, None, None, Some(req.email), None, None, None, false, false, createdAt,
+              createdAt, None)
 
             memberDao.create(member).map { _ =>
               log.info(s"Signed up member with name '${req.name}' and e-mail '${req.email}'.")

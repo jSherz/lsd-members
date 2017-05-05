@@ -74,7 +74,7 @@ object Util {
     * @tparam T
     * @return
     */
-  def fixture[T :JsonReader](path: String)(implicit jsonFormat: JsonFormat[T], t: reflect.Manifest[T]): T = {
+  def fixture[T: JsonReader](path: String)(implicit jsonFormat: JsonFormat[T], t: reflect.Manifest[T]): T = {
     val fullPath = Paths.get("/fixtures", t.toString.split("\\.").last.replace("]", ""), path).toString
     val resourceUrl = getClass.getResource(fullPath)
     val raw = Source.fromURL(resourceUrl).mkString
@@ -84,6 +84,19 @@ object Util {
     }
 
     raw.parseJson.convertTo[T]
+  }
+
+  /**
+    * Parse a fixture into a String without JSON deserialisation.
+    *
+    * @param path       Location of fixture (without /fixtures prefix)
+    * @return
+    */
+  def rawFixture(path: String*): String = {
+    val fullPath = Paths.get("/fixtures", path.toArray: _*).toString
+    val resourceUrl = getClass.getResource(fullPath)
+
+    Source.fromURL(resourceUrl).mkString
   }
 
 }

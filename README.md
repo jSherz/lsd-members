@@ -2,7 +2,14 @@
 
 [![Trello board](https://img.shields.io/badge/Trello-public-green.svg)](https://trello.com/b/Lc8wED62/leedsskydivers-com)
 
-*TODO:* Proper testing, proper build & deploy process.
+The Leeds Uni Skydiving club organises a number of people learning to skydive
+each year and this involves collecting some information, arranging transport
+and ensuring they've got all the information they need for a great static line
+course weekend. This project was initially created as a public, static, website
+for the club but has evolved into a system that will eventually help them book
+courses and mange their members.
+
+The website: https://www.leedsskydivers.com
 
 ## Frontend
 

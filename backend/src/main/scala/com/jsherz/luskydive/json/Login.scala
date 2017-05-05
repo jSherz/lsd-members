@@ -28,7 +28,7 @@ import java.util.UUID
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import com.jsherz.luskydive.util.UuidJsonFormat
-import spray.json.DefaultJsonProtocol
+import spray.json.{DefaultJsonProtocol, RootJsonFormat}
 
 
 case class LoginRequest(email: String, password: String)
@@ -38,7 +38,7 @@ case class LoginResponse(success: Boolean, errors: Map[String, String], apiKey: 
 object LoginJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
 
   implicit val UuidFormat = UuidJsonFormat
-  implicit val LoginRequestFormat = jsonFormat2(LoginRequest)
-  implicit val loginResponseFormat = jsonFormat3(LoginResponse)
+  implicit val LoginRequestFormat: RootJsonFormat[LoginRequest] = jsonFormat2(LoginRequest)
+  implicit val LoginResponseFormat: RootJsonFormat[LoginResponse] = jsonFormat3(LoginResponse)
 
 }

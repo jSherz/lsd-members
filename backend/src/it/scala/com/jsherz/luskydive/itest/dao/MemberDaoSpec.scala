@@ -113,7 +113,8 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       val createdAt = Timestamp.valueOf("2016-08-13 21:13:37.10101")
       val updatedAt = Timestamp.valueOf("2016-08-13 21:14:10.00101")
 
-      val member = Member(None, "Tegan", Some("Harper"), None, None, None, None, None, false, false, createdAt, updatedAt)
+      val member = Member(None, "Tegan", Some("Harper"), None, None, None, None, None, false, false, createdAt,
+        updatedAt, None)
       val result = dao.create(member)
 
       result.futureValue shouldBe -\/(MemberDaoErrors.noPhoneNumberOrEmail)
@@ -124,7 +125,7 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       val updatedAt = Timestamp.valueOf("2009-01-21 18:10:10.123814")
 
       val member = Member(None, "Keira", Some("Rahman"), Some("+447916149532"), Some("KeiraRahman@armyspy.com"),
-        Some(DateUtil.makeDate(2011, 5, 9)), None, None, false, false, createdAt, updatedAt)
+        Some(DateUtil.makeDate(2011, 5, 9)), None, None, false, false, createdAt, updatedAt, None)
 
       val futureResult = dao.create(member)
       val result = futureResult.futureValue
@@ -142,7 +143,8 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       val updatedAt = Timestamp.valueOf("2009-01-21 18:10:10.812728")
 
       val member = Member(Some(UUID.fromString("da53db07-72b5-40e5-88a6-caa4e3d41403")), "Spencer", Some("Burton"),
-        Some("+447938921821"), Some("sburton@theburtons.xyz"), None, None, None, false, false, createdAt, updatedAt)
+        Some("+447938921821"), Some("sburton@theburtons.xyz"), None, None, None, false, false, createdAt, updatedAt,
+        None)
 
       val futureResult = dao.create(member)
       val result = futureResult.futureValue
@@ -159,11 +161,11 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       val createdAt = Timestamp.valueOf("2016-08-14 12:13:00")
       val updatedAt = Timestamp.valueOf("2016-08-14 12:13:01")
       val memberA = Member(None, "Alisha", Some("Stevens"), Some("+447985203839"), Some("AlishaStevens@yahoo.com"),
-        None, None, None, false, false, createdAt, updatedAt)
+        None, None, None, false, false, createdAt, updatedAt, None)
       val memberB = Member(None, "Hollie", Some("Hammond"), Some("+447885929137"), Some("x_x_hollie_x_x@fanmail.com"),
-        None, None, None, false, false, createdAt, updatedAt)
+        None, None, None, false, false, createdAt, updatedAt, None)
       val memberC = Member(None, "Kayleigh", Some("Barker"), Some("+447043025413"), Some("kay_kay100101@hotmail.co.uk"),
-        None, None, None, false, false, createdAt, updatedAt)
+        None, None, None, false, false, createdAt, updatedAt, None)
 
       val memberAUuid = dao.create(memberA).futureValue
       val memberBUuid = dao.create(memberB).futureValue

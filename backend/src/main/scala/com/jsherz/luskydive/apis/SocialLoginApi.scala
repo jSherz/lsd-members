@@ -22,35 +22,40 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.util
+package com.jsherz.luskydive.apis
 
-import com.typesafe.config.ConfigFactory
+import akka.event.LoggingAdapter
+import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.server.Route
+import com.jsherz.luskydive.json.{SocialLoginRequest, SocialLoginResponse}
+import com.jsherz.luskydive.services.{JwtService, SocialService}
+
+import scala.concurrent.ExecutionContext
 
 /**
-  * The application configuration, as read from resources/application.conf.
+  * Used to authenticate users with a social single-sign-on.
   */
-trait Config {
+class SocialLoginApi(private val service: SocialService, private val jwtService: JwtService)
+                    (implicit ec: ExecutionContext, log: LoggingAdapter) {
 
-  private val config = ConfigFactory.load()
-  private val configHttp = config.getConfig("http")
-  private val configDb = config.getConfig("database")
-  private val configTwilio = config.getConfig("twilio")
+  import com.jsherz.luskydive.json.SocialLoginJsonSupport._
 
-  val interface: String = configHttp.getString("interface")
-  val port: Int = configHttp.getInt("port")
+  val socialLoginRoute: Route = (pathEnd & post & entity(as[SocialLoginRequest])) { req =>
+    val parsedRequest = service.parseSignedRequest(req.signedRequest)
 
-  val dbUrl: String = configDb.getString("url")
-  val dbUsername: String = configDb.getString("username")
-  val dbPassword: String = configDb.getString("password")
+    parsedRequest match {
+      case Some(validRequest) => complete(SocialLoginResponse(true, None, Some("JWT HERE!")))
+      case None => complete(SocialLoginResponse(false, Some("Invalid signed request."), None))
+    }
+  }
 
-  val textMessageReceiveApiKey: String = config.getString("text_message_receive_api_key")
+  val getTokenRoute: Route = (path("token") & get) {
+    complete(jwtService.createJwt())
+  }
 
-  val twilioAccountSid: String = configTwilio.getString("account_sid")
-  val twilioAuthToken: String = configTwilio.getString("auth_token")
-  val twilioMessagingServiceSid: String = configTwilio.getString("messaging_service_sid")
-
-  val fbSecret: String = config.getConfig("fb").getString("secret")
-
-  val jwtSecret: String = config.getConfig("jwt").getString("secret")
+  val route: Route = pathPrefix("social-login") {
+    socialLoginRoute ~
+    getTokenRoute
+  }
 
 }

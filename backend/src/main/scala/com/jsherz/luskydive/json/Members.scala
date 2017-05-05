@@ -39,7 +39,7 @@ object MemberJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val UuidFormat = UuidJsonFormat
   implicit val DateFormat = DateJsonFormat
   implicit val TimestampFormat = TimestampJsonFormat
-  implicit val MemberFormat = jsonFormat12(Member)
+  implicit val MemberFormat = jsonFormat13(Member)
   implicit val MemberSearchResultFormat = jsonFormat5(MemberSearchResult)
   implicit val MemberSearchRequestFormat = jsonFormat1(MemberSearchRequest)
   implicit val textMessageFormat = jsonFormat11(TextMessage)
