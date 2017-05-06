@@ -127,6 +127,16 @@ class StubMemberDao()(implicit val ec: ExecutionContext) extends MemberDao {
   }
 
   /**
+    * Look for a member with the given social user ID.
+    *
+    * @param socialId
+    * @return
+    */
+  override def forSocialId(socialId: String): Future[\/[String, Option[Member]]] = {
+    Future.successful(-\/("Stub not configured"))
+  }
+
+  /**
     * Update a member's information.
     *
     * @param member

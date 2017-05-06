@@ -29,7 +29,10 @@ import java.util.UUID
 import akka.actor.ActorSystem
 import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
+import com.auth0.jwt.JWT
+import com.auth0.jwt.algorithms.Algorithm
 import com.jsherz.luskydive.util.Util
+import org.joda.time.DateTime
 import org.scalatest.{Matchers, WordSpec}
 
 class JwtServiceSpec extends WordSpec with Matchers with ScalatestRouteTest {
@@ -38,7 +41,7 @@ class JwtServiceSpec extends WordSpec with Matchers with ScalatestRouteTest {
 
   val jwtService = new JwtServiceImpl("apples")
 
-  "JwtService" should {
+  "JwtService#verifyJwt" should {
 
     "reject tokens that aren't signed" in {
       val jwt = fixture("unsigned.txt")
@@ -112,6 +115,32 @@ class JwtServiceSpec extends WordSpec with Matchers with ScalatestRouteTest {
 
         jwtService.verifyJwt(jwt) shouldBe Some(UUID.fromString(uuid))
       }
+    }
+
+  }
+
+  "JwtService#createJwt" should {
+
+    "create tokens with the correct algorithm, issuer, UUID, issued at and expires at" in {
+      val uuid = UUID.randomUUID()
+      val issuedAt = new DateTime()
+      val expiresAt = new DateTime(2037, 9, 1, 13, 41, 51)
+
+      val jwt = jwtService.createJwt(uuid, issuedAt, expiresAt)
+
+      val decoded = JWT.decode(jwt)
+
+      // Ensure built with correct info
+      decoded.getAlgorithm shouldEqual "HS384"
+      decoded.getClaim("iss").asString() shouldEqual "LSD"
+      decoded.getClaim("UUID").asString() shouldEqual uuid.toString
+      decoded.getClaim("iat").asDate() shouldEqual issuedAt.withMillisOfSecond(0).toDate // JWT doesn't store millis so ignore it
+      decoded.getClaim("exp").asDate() shouldEqual expiresAt.toDate
+
+      // Ensure signature also valid
+      JWT.require(Algorithm.HMAC384("apples"))
+        .build()
+        .verify(jwt)
     }
 
   }

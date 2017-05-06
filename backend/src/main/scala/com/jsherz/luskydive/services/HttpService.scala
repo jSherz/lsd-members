@@ -67,7 +67,7 @@ class HttpService(
   val courseSpacesApi = new CourseSpacesApi(courseSpaceDao)
   val massTextApi = new MassTextApi(massTextDao)
   val textMessageApi = new TextMessageApi(textMessageDao, memberDao, textMessageReceiveApiKey)
-  val socialLoginApi = new SocialLoginApi(socialService, jwtService)
+  val socialLoginApi = new SocialLoginApi(socialService, memberDao, jwtService)
   val exampleJwtApi = new ExampleJwtApi(jwtService, memberDao)
 
   val loginApi = new LoginApi(authDao)
@@ -96,6 +96,7 @@ class Cors(val log: LoggingAdapter) {
 
   private val settings = CorsSettings.defaultSettings.copy(allowedOrigins = HttpOriginRange(
     HttpOrigin("http://localhost:4200"),
+    HttpOrigin("http://local-dev.leedsskydivers.com:4200"),
     HttpOrigin("https://dev.leedsskydivers.com"),
     HttpOrigin("https://www.leedsskydivers.com"),
     HttpOrigin("https://leedsskydivers.com")

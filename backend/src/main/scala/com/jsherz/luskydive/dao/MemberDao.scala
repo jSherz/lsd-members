@@ -86,6 +86,14 @@ trait MemberDao {
   def forPhoneNumber(phoneNumber: String): Future[String \/ Option[Member]]
 
   /**
+    * Look for a member with the given social user ID.
+    *
+    * @param socialId
+    * @return
+    */
+  def forSocialId(socialId: String): Future[String \/ Option[Member]]
+
+  /**
     * Update a member's information.
     *
     * @param member
@@ -183,6 +191,16 @@ class MemberDaoImpl(override protected val databaseService: DatabaseService)
     */
   override def forPhoneNumber(phoneNumber: String): Future[String \/ Option[Member]] = {
     db.run(Members.filter(_.phoneNumber === phoneNumber).result.headOption) withServerError
+  }
+
+  /**
+    * Look for a member with the given social user ID.
+    *
+    * @param socialId
+    * @return
+    */
+  override def forSocialId(socialId: String): Future[\/[String, Option[Member]]] = {
+    db.run(Members.filter(_.socialUserId === socialId).result.headOption) withServerError
   }
 
   /**

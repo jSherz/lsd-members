@@ -21,7 +21,13 @@ export class SocialLoginServiceImpl implements SocialLoginService {
   }
 
   login(): Promise<LoginResponse> {
-    return this.fb.login();
+    return this.fb.getLoginStatus().then(status => {
+      if (status.status === 'connected') {
+        return Promise.resolve(status);
+      } else {
+        return this.fb.login();
+      }
+    });
   }
 
 }

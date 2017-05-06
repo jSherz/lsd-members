@@ -1,0 +1,15 @@
+{
+  "uuid": "e1442281-4972-456c-a94f-5b01f5b9b240",
+  "firstName": "Monica",
+  "lastName": "Harris",
+  "email": "ashley51@gmail.com",
+  "phoneNumber": "+447782883523",
+  "lastJump": "2011-02-06",
+  "weight": null,
+  "height": null,
+  "driver": false,
+  "organiser": false,
+  "createdAt": "2010-01-20 02:33:18.000000",
+  "updatedAt": "2010-10-15 05:49:05.000000",
+  "socialUserId": "14712371237123"
+}

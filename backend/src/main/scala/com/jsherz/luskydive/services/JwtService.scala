@@ -45,8 +45,7 @@ trait JwtService {
 
   def verifyJwt(token: String): Option[UUID]
 
-  // WIP
-  def createJwt(): String
+  def createJwt(uuid: UUID, issuedAt: DateTime, expiresAt: DateTime): String
 
 }
 
@@ -103,24 +102,33 @@ class JwtServiceImpl(private val jwtSecret: String)(implicit val log: LoggingAda
     }
   }
 
-  def createJwt(): String = {
+  /**
+    * Create a JWT for a member.
+    *
+    * @param uuid      Member's UUID
+    * @param issuedAt  Token valid from
+    * @param expiresAt Token valid until
+    * @return Token
+    */
+  def createJwt(uuid: UUID, issuedAt: DateTime, expiresAt: DateTime): String = {
     try {
       val token = JWT.create
         .withIssuer(JwtService.Issuer)
-        .withClaim(JwtService.ClaimUuid, UUID.randomUUID().toString)
-        .withExpiresAt(new DateTime(2037, 10, 9, 8, 7, 6).toDate)
-        .withIssuedAt(new DateTime(2000, 5, 4, 11, 10, 40).toDate)
-        //        .sign(Algorithm.none())
+        .withClaim(JwtService.ClaimUuid, uuid.toString)
+        .withIssuedAt(issuedAt.toDate)
+        .withExpiresAt(expiresAt.toDate)
         .sign(algorithm)
 
       token
     } catch {
-      case exception: UnsupportedEncodingException =>
-        ""
-      //UTF-8 encoding not supported
-      case exception: JWTCreationException =>
-        ""
-      //Invalid Signing configuration / Couldn't convert Claims.
+      case ex: UnsupportedEncodingException =>
+        val msg = "Failed to parse JWT - UTF-8 encoding not supported."
+        log.error(ex, msg)
+        throw new RuntimeException(msg, ex)
+      case ex: JWTCreationException =>
+        val msg = s"Failed to create JWT."
+        log.error(ex, msg)
+        throw new RuntimeException(msg, ex)
     }
   }
 

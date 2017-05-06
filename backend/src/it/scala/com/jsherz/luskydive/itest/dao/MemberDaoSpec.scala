@@ -264,6 +264,24 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
   }
 
+  "MemberDao#forSocialId" should {
+
+    "return Right(Some(member)) if a member exists with the social ID" in {
+      val member = dao.forSocialId("1231415124123").futureValue
+
+      member.isRight shouldBe true
+      member.map(_ shouldEqual Some(Util.fixture[Member]("69c8d538.json")))
+    }
+
+    "return Right(None) if a member isn't found with the given social ID" in {
+      val member = dao.forSocialId("145781284798").futureValue
+
+      member.isRight shouldBe true
+      member.map(_ shouldEqual None)
+    }
+
+  }
+
   "MemberDao#update" should {
 
     "update a member correctly" in {

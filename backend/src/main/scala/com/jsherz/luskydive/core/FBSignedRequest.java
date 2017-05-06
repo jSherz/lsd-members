@@ -45,10 +45,30 @@ public class FBSignedRequest {
     @Facebook("issued_at")
     public Long issuedAt;
 
+    public FBSignedRequest() {
+    }
+
     public FBSignedRequest(final String userId, final String oauthToken, final Long expires, final Long issuedAt) {
         this.userId = userId;
         this.oauthToken = oauthToken;
         this.expires = expires;
+        this.issuedAt = issuedAt;
+    }
+
+
+    public void setUserId(final String userId) {
+        this.userId = userId;
+    }
+
+    public void setOauthToken(final String oauthToken) {
+        this.oauthToken = oauthToken;
+    }
+
+    public void setExpires(final Long expires) {
+        this.expires = expires;
+    }
+
+    public void setIssuedAt(final Long issuedAt) {
         this.issuedAt = issuedAt;
     }
 

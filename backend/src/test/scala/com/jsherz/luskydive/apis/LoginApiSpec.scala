@@ -30,12 +30,12 @@ import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.jsherz.luskydive.dao._
+import com.jsherz.luskydive.json.LoginJsonSupport._
 import com.jsherz.luskydive.json.{LoginRequest, LoginResponse}
 import org.mockito.Matchers._
 import org.mockito.Mockito
 import org.mockito.Mockito._
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
-import com.jsherz.luskydive.json.LoginJsonSupport._
 
 /**
   * Ensures the login functions correctly.

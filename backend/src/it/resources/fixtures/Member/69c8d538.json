@@ -1,0 +1,15 @@
+{
+  "uuid": "69c8d538-c7e5-4d91-97d8-7f85f367e5cf",
+  "firstName": "Jodi",
+  "lastName": "Chavez",
+  "email": "kentkristen@williams-coleman.org",
+  "phoneNumber": null,
+  "lastJump": null,
+  "weight": null,
+  "height": null,
+  "driver": false,
+  "organiser": true,
+  "createdAt": "2011-02-14 17:02:37.000000",
+  "updatedAt": "2011-02-14 17:02:37.000000",
+  "socialUserId": "1231415124123"
+}
