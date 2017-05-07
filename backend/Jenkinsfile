@@ -62,6 +62,7 @@ pipeline {
             steps {
                 ansiColor('css') {
                     dir('backend') {
+                        sh 'sed --in-place "s/---VERSION---/$(git rev-parse HEAD)/" src/main/scala/com/jsherz/luskydive/util/BuildConfig.scala'
                         sh 'sbt assembly'
                         archiveArtifacts 'target/scala-2.11/luskydive-assembly-0.0.0.1.jar'
                     }

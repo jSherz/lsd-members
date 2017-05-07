@@ -69,6 +69,7 @@ class HttpService(
   val textMessageApi = new TextMessageApi(textMessageDao, memberDao, textMessageReceiveApiKey)
   val socialLoginApi = new SocialLoginApi(socialService, memberDao, jwtService)
   val exampleJwtApi = new ExampleJwtApi(jwtService, memberDao)
+  val versionApi = new VersionApi
 
   val loginApi = new LoginApi(authDao)
 
@@ -86,7 +87,8 @@ class HttpService(
           massTextApi.route ~
           textMessageApi.route ~
           socialLoginApi.route ~
-          exampleJwtApi.route
+          exampleJwtApi.route ~
+          versionApi.route
       }
     }
 
