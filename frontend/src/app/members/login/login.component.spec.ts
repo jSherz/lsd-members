@@ -8,6 +8,8 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {SocialLoginService, SocialLoginServiceStub} from '../social-login';
 import {FacebookModule} from 'ngx-facebook';
 import {Router} from '@angular/router';
+import {JwtLoginService, JwtLoginServiceImpl} from './login.service';
+import {JwtLoginServiceStub} from './login.service.stub';
 
 describe('Component: Members - Login', () => {
 
@@ -22,7 +24,8 @@ describe('Component: Members - Login', () => {
         RouterTestingModule
       ],
       providers: [
-        {provide: SocialLoginService, useValue: socialLoginService}
+        {provide: SocialLoginService, useValue: socialLoginService},
+        {provide: JwtLoginService, useClass: JwtLoginServiceStub}
       ]
     }).compileComponents();
   });
@@ -32,7 +35,12 @@ describe('Component: Members - Login', () => {
     const component = fixture.componentInstance;
 
     socialLoginService.loginResponseToReturn = {
-      authResponse: null,
+      authResponse: {
+        accessToken: '11223344',
+        expiresIn: 5,
+        signedRequest: '123456',
+        userID: '88888888',
+      },
       status: 'connected'
     };
 
