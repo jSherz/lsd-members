@@ -25,7 +25,7 @@ pipeline {
     }
 
     triggers {
-        gitlab(triggerOnPush: true, triggerOnMergeRequest: false, branchFilterType: 'All', secret: '8cc6d0e8510ca0e34d17ba4b3891de39')
+        gitlab(triggerOnPush: true, triggerOnMergeRequest: false, branchFilterType: 'All', secretToken: '8cc6d0e8510ca0e34d17ba4b3891de39')
     }
 
     stages {
