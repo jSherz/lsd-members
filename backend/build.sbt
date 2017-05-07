@@ -26,8 +26,8 @@ import sbt.Keys._
 import wartremover.WartRemover.autoImport._
 
 val scalaV = "2.11.8"
-val akkaV = "2.5.0"
-val akkaHttpV = "10.0.5"
+val akkaV = "2.4.17"
+val akkaHttpV = "10.0.6"
 val scaldiV = "0.5.7"
 val metricsV = "3.1.0"
 
@@ -37,7 +37,9 @@ lazy val commonSettings = Seq(
   version       := "0.0.0.1",
 
   scalaVersion  := scalaV,
-  scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
+  scalacOptions := Seq(
+    "-unchecked", "-deprecation", "-encoding", "utf8", "-language:postfixOps", "-language:implicitConversions"
+  )
 )
 
 lazy val root = (project in file("."))

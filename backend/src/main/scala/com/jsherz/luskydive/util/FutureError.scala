@@ -60,7 +60,7 @@ class FutureOptionError[V](future: Future[Option[V]])(implicit val log: LoggingA
     */
   def ifNone(errorMessage: String)(implicit ec: ExecutionContext): Future[String \/ V] = {
     future.map {
-      case Some(value: V) => \/-(value)
+      case Some(value: V @unchecked) => \/-(value)
       case None => -\/(errorMessage)
     }.recover {
       case ex: Throwable =>
