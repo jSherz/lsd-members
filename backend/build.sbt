@@ -70,7 +70,6 @@ lazy val root = (project in file("."))
         "ch.megard" %% "akka-http-cors" % "0.2.1",
 
         // Authentication
-        "joda-time" % "joda-time" % "2.9.9",
         "com.auth0" % "java-jwt" % "3.1.0",
         "com.restfb" % "restfb" % "1.40.1",
 

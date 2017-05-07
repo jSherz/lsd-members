@@ -25,13 +25,13 @@
 package com.jsherz.luskydive.services
 
 import java.io.UnsupportedEncodingException
-import java.util.UUID
+import java.time.Instant
+import java.util.{Date, UUID}
 
 import akka.event.LoggingAdapter
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.{JWTCreationException, JWTVerificationException}
-import org.joda.time.DateTime
 
 object JwtService {
 
@@ -45,7 +45,7 @@ trait JwtService {
 
   def verifyJwt(token: String): Option[UUID]
 
-  def createJwt(uuid: UUID, issuedAt: DateTime, expiresAt: DateTime): String
+  def createJwt(uuid: UUID, issuedAt: Instant, expiresAt: Instant): String
 
 }
 
@@ -110,13 +110,13 @@ class JwtServiceImpl(private val jwtSecret: String)(implicit val log: LoggingAda
     * @param expiresAt Token valid until
     * @return Token
     */
-  def createJwt(uuid: UUID, issuedAt: DateTime, expiresAt: DateTime): String = {
+  def createJwt(uuid: UUID, issuedAt: Instant, expiresAt: Instant): String = {
     try {
       val token = JWT.create
         .withIssuer(JwtService.Issuer)
         .withClaim(JwtService.ClaimUuid, uuid.toString)
-        .withIssuedAt(issuedAt.toDate)
-        .withExpiresAt(expiresAt.toDate)
+        .withIssuedAt(Date.from(issuedAt))
+        .withExpiresAt(Date.from(expiresAt))
         .sign(algorithm)
 
       token

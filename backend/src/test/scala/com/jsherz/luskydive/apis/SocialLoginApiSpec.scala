@@ -24,6 +24,7 @@
 
 package com.jsherz.luskydive.apis
 
+import java.time.{Duration, Instant}
 import java.util.UUID
 
 import akka.actor.ActorSystem
@@ -39,7 +40,6 @@ import com.jsherz.luskydive.json.SocialLoginJsonSupport._
 import com.jsherz.luskydive.json.{SocialLoginRequest, SocialLoginResponse}
 import com.jsherz.luskydive.services.{JwtService, JwtServiceImpl, SocialService}
 import com.jsherz.luskydive.util.Util
-import org.joda.time.{DateTime, Hours, Seconds}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.{mock, when}
 import org.scalatest.{Matchers, WordSpec}
@@ -124,8 +124,8 @@ class SocialLoginApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
 
         val decoded = JWT.decode(socialLoginResponse.jwt.get)
         decoded.getClaim("UUID").asString() shouldEqual "e1442281-4972-456c-a94f-5b01f5b9b240"
-        Seconds.secondsBetween(new DateTime(decoded.getIssuedAt), new DateTime()).getSeconds shouldBe <=(5)
-        Hours.hoursBetween(new DateTime(decoded.getIssuedAt), new DateTime(decoded.getExpiresAt)).getHours shouldBe 24
+        Duration.between(decoded.getIssuedAt.toInstant, Instant.now()).getSeconds shouldBe <=(5L)
+        Duration.between(decoded.getIssuedAt.toInstant, decoded.getExpiresAt.toInstant).toHours shouldBe 24L
       }
     }
 
@@ -157,8 +157,8 @@ class SocialLoginApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
     Some(new FBSignedRequest(
       userId,
       UUID.randomUUID().toString,
-      new DateTime().plusMonths(1).toDate.getTime,
-      new DateTime().toDate.getTime
+      Instant.now().plus(Duration.ofHours(24)).getEpochSecond,
+      Instant.now().getEpochSecond
     ))
   }
 

@@ -25,8 +25,9 @@
 package com.jsherz.luskydive.core;
 
 import com.restfb.Facebook;
-import org.joda.time.Instant;
 import scala.Option;
+
+import java.time.Instant;
 
 /**
  * This class is written in Java for easy interoperability with the RestFB library.
@@ -94,7 +95,7 @@ public class FBSignedRequest {
         if (rawSeconds == null) {
             return Option.empty();
         } else {
-            return Option.apply(new Instant(rawSeconds * 1000L));
+            return Option.apply(Instant.ofEpochSecond(rawSeconds));
         }
     }
 

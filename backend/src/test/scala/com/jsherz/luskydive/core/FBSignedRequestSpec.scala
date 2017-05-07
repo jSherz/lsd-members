@@ -24,11 +24,11 @@
 
 package com.jsherz.luskydive.core
 
+import java.time.Instant
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import org.joda.time.Instant
-import org.joda.time.format.ISODateTimeFormat
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Random
@@ -67,7 +67,7 @@ class FBSignedRequestSpec extends WordSpec with Matchers with ScalatestRouteTest
   }
 
   private def toInstant(dateStr: String): Option[Instant] = {
-    Some(ISODateTimeFormat.dateTime().parseDateTime(dateStr).toInstant)
+    Some(Instant.from(DateTimeFormatter.ISO_INSTANT.parse(dateStr)))
   }
 
 }

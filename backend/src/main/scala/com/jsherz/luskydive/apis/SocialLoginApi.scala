@@ -24,7 +24,7 @@
 
 package com.jsherz.luskydive.apis
 
-import java.util.UUID
+import java.time.{Duration, Instant}
 
 import akka.event.LoggingAdapter
 import akka.http.scaladsl.model.StatusCodes
@@ -34,7 +34,6 @@ import com.jsherz.luskydive.core.{FBSignedRequest, Member}
 import com.jsherz.luskydive.dao.MemberDao
 import com.jsherz.luskydive.json.{SocialLoginRequest, SocialLoginResponse}
 import com.jsherz.luskydive.services.{JwtService, SocialService}
-import org.joda.time.{DateTime, Months}
 
 import scala.concurrent.ExecutionContext
 
@@ -69,7 +68,7 @@ class SocialLoginApi(
   private def issueJwtForMemberLookup(userId: String)(maybeMember: Option[Member]): Route = {
     maybeMember match {
       case Some(member: Member) =>
-        val jwt = jwtService.createJwt(member.uuid.get, new DateTime(), new DateTime().plusHours(tokenValidHours))
+        val jwt = jwtService.createJwt(member.uuid.get, Instant.now(), Instant.now().plus(Duration.ofHours(tokenValidHours)))
 
         complete(SocialLoginResponse(success = true, None, Some(jwt)))
 
@@ -84,13 +83,8 @@ class SocialLoginApi(
     complete(StatusCodes.InternalServerError, "Login failed - please try again later.")
   }
 
-  val getTokenRoute: Route = (path("token") & get) {
-    complete(jwtService.createJwt(UUID.randomUUID(), new DateTime(), new DateTime().plus(Months.ONE)))
-  }
-
   val route: Route = pathPrefix("social-login") {
-    socialLoginRoute ~
-      getTokenRoute
+    socialLoginRoute
   }
 
 }
