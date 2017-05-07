@@ -24,6 +24,10 @@ pipeline {
         gitLabConnection('SCM')
     }
 
+    triggers {
+        gitlab(triggerOnPush: true, triggerOnMergeRequest: false, branchFilterType: 'All')
+    }
+
     stages {
         stage('Checkout') {
             steps {
