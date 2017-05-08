@@ -18,6 +18,11 @@
       <a class="button" (click)="login()"><i class="fa fa-facebook"></i> Login with Facebook</a>
     </p>
 
+    <div class="error" *ngIf="loginFailed">
+      Login failed. Please try again later. If the login keeps failing, check if you're using a browser add-on /
+      extension that blocks social websites (e.g. Disconnect, Ghostery).
+    </div>
+
     <hr>
 
     <h3>First time logging in?</h3>
