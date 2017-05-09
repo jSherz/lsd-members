@@ -24,6 +24,7 @@ export const adminRoutes: Routes = [
     path: '',
     component: AdminBaseComponent,
     children: [
+      {path: '', redirectTo: 'login', pathMatch: 'full'},
       {path: 'login', component: LoginComponent},
       {path: 'courses/calendar/:year/:month', component: CourseCalendarComponent, canActivate: [CanActivateAdmin]},
       {path: 'courses/calendar', component: CourseCalendarComponent, canActivate: [CanActivateAdmin]},
