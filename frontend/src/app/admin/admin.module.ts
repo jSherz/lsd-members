@@ -13,6 +13,10 @@ import {
   ReactiveFormsModule
 } from '@angular/forms';
 
+import { MemberApprovalComponent } from './member-approval/member-approval.component';
+
+import {adminRouting} from './admin.routing';
+
 import {
   NavComponent,
   CanActivateAdmin,
@@ -49,8 +53,7 @@ import {
   MemberEditComponent,
   MemberAddComponent
 } from './';
-
-import {adminRouting} from './admin.routing';
+import {MemberApprovalService, MemberApprovalServiceImpl} from "./member-approval/member-approval.service";
 
 @NgModule({
   imports: [
@@ -77,7 +80,8 @@ import {adminRouting} from './admin.routing';
     MemberViewComponent,
     MemberLookupComponent,
     MemberEditComponent,
-    MemberAddComponent
+    MemberAddComponent,
+    MemberApprovalComponent
   ],
   bootstrap: [],
   providers: [
@@ -91,6 +95,7 @@ import {adminRouting} from './admin.routing';
     {provide: LoginService, useClass: LoginServiceImpl},
     {provide: MassTextService, useClass: MassTextServiceImpl},
     {provide: MemberService, useClass: MemberServiceImpl},
+    {provide: MemberApprovalService, useClass: MemberApprovalServiceImpl},
     CanActivateAdmin
   ]
 })

@@ -1,0 +1,37 @@
+<div id="member-approval">
+  <h2>Pending approval</h2>
+
+  <p>New sign-ups to the site require approval before they can login and view the member dashboard.</p>
+
+  <ul id="pending-approval">
+    <li *ngFor="let member of exampleMembers">
+      <div class="name">Mason Jennings</div>
+      <div class="description">Signed up 07/05/2017 at 19:51.</div>
+      <div class="controls">
+        <button (click)="approveMember(member)" class="approve-button">
+          <i class="fa fa-check"></i>
+        </button>
+        <button (click)="rejectMember(member)" class="reject-button">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+    </li>
+  </ul>
+
+  <h2>Rejected</h2>
+
+  <ul id="rejected">
+    <li *ngFor="let member of exampleMembers">
+      <div class="name">Mason Jennings</div>
+      <div class="description">Rejected on 07/05/2017 at 19:51.</div>
+      <div class="controls">
+        <button (click)="approveMember(member)" class="approve-button">
+          <i class="fa fa-check"></i>
+        </button>
+        <button (click)="deleteRejection(member)" class="delete-button">
+          <i class="fa fa-trash"></i>
+        </button>
+      </div>
+    </li>
+  </ul>
+</div>

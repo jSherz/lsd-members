@@ -58,6 +58,12 @@ export {
 } from './admin-base.component';
 
 export {
+  MemberApprovalComponent,
+  MemberApprovalService,
+  MemberApprovalServiceImpl
+} from './member-approval';
+
+export {
   ApiKeyService,
   ApiKeyServiceImpl,
   BaseService,

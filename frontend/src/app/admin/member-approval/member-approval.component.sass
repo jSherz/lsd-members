@@ -1,0 +1,68 @@
+@import '../../../assets/css/bourbon/bourbon'
+@import '../../../assets/css/base/base'
+@import '../../../assets/css/neat/neat'
+@import '../../../assets/css/variables'
+
+$member-item-border: solid 0.05em #ccc
+$approve-green: #008d2c
+$reject-red: #8d0600
+$delete-grey: #666
+
+#member-approval
+  background: white
+  padding: 0.8rem
+  border-radius: 0.4rem
+
+  @include grid-column(12)
+
+#pending-approval, #rejected
+  margin-bottom: 2em
+
+  li
+    display: block
+    padding: 0.2em 0.5em 0.5em 0.5em
+    border-top: $member-item-border
+    clear: both
+
+  li:last-child
+    border-bottom: $member-item-border
+
+.name
+  font-size: 1.25em
+
+.description
+  color: #666
+
+.controls
+  margin-top: 1em
+
+@media(min-width: 30em)
+  .controls
+    float: right
+    margin-top: -2.81em
+
+  .approve-button
+    margin-right: 1em
+
+.approve-button, .reject-button, .delete-button
+  width: 2.7em
+  text-align: center
+  padding: 0.8em 0
+
+.approve-button
+  background: $approve-green
+
+  &:active
+    background: $approve-green
+
+.reject-button
+  background: $reject-red
+
+  &:active
+    background: $reject-red
+
+.delete-button
+  background: $delete-grey
+
+  &:active
+    background: $delete-grey
