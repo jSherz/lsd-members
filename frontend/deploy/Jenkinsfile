@@ -35,7 +35,7 @@ node {
       string(credentialsId: awsSecretKey(deployEnv()), variable: 'AWS_SECRET_ACCESS_KEY')
     ]) {
       stage('Deploy to S3') {
-        sh 'aws s3 cp --recursive \'dist/\' ' + bucket(env)
+        sh 'aws s3 cp --recursive \'dist/\' ' + bucket(deployEnv())
       }
 
       stage('Invalidate cache') {
