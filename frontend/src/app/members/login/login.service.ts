@@ -5,6 +5,7 @@ import 'rxjs/add/operator/map';
 
 import {BaseService} from '../utils/base.service';
 import {LoginResult} from './login-result';
+import {environment} from '../../../environments/environment';
 
 export abstract class JwtLoginService extends BaseService {
 
@@ -19,7 +20,7 @@ export abstract class JwtLoginService extends BaseService {
 @Injectable()
 export class JwtLoginServiceImpl extends JwtLoginService {
 
-  loginUrl = 'http://localhost:8080/api/v1/social-login';
+  loginUrl = environment.apiUrl + '/api/v1/social-login';
 
   constructor(http: Http) {
     super(http);

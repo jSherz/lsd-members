@@ -6,6 +6,7 @@ import * as moment from 'moment';
 
 import {Member, MemberAddResult, MemberEditResult, SearchResult, TextMessage} from './model';
 import {BaseService, ApiKeyService} from '../utils';
+import {environment} from '../../../environments/environment';
 
 
 export abstract class MemberService extends BaseService {
@@ -28,7 +29,7 @@ export abstract class MemberService extends BaseService {
 
 @Injectable()
 export class MemberServiceImpl extends MemberService {
-  private baseUrl = 'http://localhost:8080/api/v1/';
+  private baseUrl = environment.apiUrl + '/api/v1/';
   private getUrl = this.baseUrl + 'members/{{uuid}}';
   private textMessagesUrl = this.getUrl + '/text-messages';
   private memberSearchUrl = this.baseUrl + 'members/search';

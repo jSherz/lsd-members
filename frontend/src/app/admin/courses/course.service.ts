@@ -13,6 +13,7 @@ import {
   CourseWithOrganisers,
   CourseSpaceWithMember
 } from './model';
+import {environment} from '../../../environments/environment';
 
 
 /**
@@ -40,7 +41,7 @@ export abstract class CourseService extends BaseService {
 @Injectable()
 export class CourseServiceImpl extends CourseService {
 
-  private baseUrl = 'http://localhost:8080/api/v1/courses';
+  private baseUrl = environment.apiUrl + '/api/v1/courses';
   private coursesFindUrl = this.baseUrl;
   private coursesGetUrl = this.baseUrl + '/{{uuid}}';
   private courseSpacesUrl = this.baseUrl + '/{{uuid}}/spaces';

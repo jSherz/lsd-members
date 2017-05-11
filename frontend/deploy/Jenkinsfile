@@ -1,3 +1,18 @@
+def deployEnv() {
+  if (env.JOB_NAME == 'lsd-members-frontend-deploy-dev') {
+    'dev'
+  } else if (env.JOB_NAME == 'lsd-members-frontend-deploy') {
+    'prod'
+  } else {
+    throw new RuntimeException("Invalid job name - could not detect environment")
+  }
+}
+
+def bucket(env) { (env == 'prod') ? 's3://lsd-prod-frontend/' : 's3://lsd-dev-frontend/' }
+def cloudfrontDistribution(env) { (env == 'prod') ? 'E1LNJUAVS7YL91' : 'E2J63RXYKL00G1' }
+def awsAccessKey(env) { (env == 'prod') ? 'lsd-prod-aws-id' : 'lsd-dev-aws-id' }
+def awsSecretKey(env) { (env == 'prod') ? 'lsd-prod-aws-secret' : 'lsd-dev-aws-secret' }
+
 node {
 
   stage('Checkout') {
@@ -11,29 +26,30 @@ node {
     }
 
     stage('Build') {
-      sh 'sh deploy/prepare-build.sh'
+      sh 'yarn build -- --' + deployEnv()
+      sh 'rm -rv dist/assets/css'
     }
 
     withCredentials([
-      string(credentialsId: 'lsd-prod-aws-id', variable: 'AWS_ACCESS_KEY_ID'),
-      string(credentialsId: 'lsd-prod-aws-secret', variable: 'AWS_SECRET_ACCESS_KEY')
+      string(credentialsId: awsAccessKey(deployEnv()), variable: 'AWS_ACCESS_KEY_ID'),
+      string(credentialsId: awsSecretKey(deployEnv()), variable: 'AWS_SECRET_ACCESS_KEY')
     ]) {
       stage('Deploy to S3') {
-        sh 'aws s3 cp --recursive \'dist/\' s3://lsd-prod-frontend/'
+        sh 'aws s3 cp --recursive \'dist/\' ' + bucket(env)
       }
 
       stage('Invalidate cache') {
         sh '''echo "{
             \\"Paths\\": {
               \\"Quantity\\": 1,
-              \\"Items\\": [\\"/index.html\\"]
+              \\"Items\\": [\\"/*\\"]
             },
             \\"CallerReference\\": \\"invalidate-index-$(date "+%Y-%m-%d_%H_%M_%S")\\"
           }" > invalidate-batch.json'''
 
         sh 'aws configure set preview.cloudfront true'
         sh 'aws cloudfront create-invalidation ' +
-          '--distribution-id E1LNJUAVS7YL91 ' +
+          '--distribution-id ' + cloudfrontDistribution(deployEnv()) + ' ' +
           '--invalidation-batch file://invalidate-batch.json'
       }
     }

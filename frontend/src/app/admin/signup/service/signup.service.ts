@@ -5,6 +5,7 @@ import 'rxjs/add/operator/map';
 
 import {SignupResult} from './signup-result';
 import {ApiKeyService, BaseService} from '../../utils';
+import {environment} from '../../../../environments/environment';
 
 
 export abstract class SignupService extends BaseService {
@@ -22,8 +23,8 @@ export abstract class SignupService extends BaseService {
 @Injectable()
 export class SignupServiceImpl extends SignupService {
 
-  private signupUrl = 'http://localhost:8080/api/v1/members/sign-up';
-  private signupAltUrl = 'http://localhost:8080/api/v1/members/sign-up/alt';
+  private signupUrl = environment.apiUrl + '/api/v1/members/sign-up';
+  private signupAltUrl = environment.apiUrl + '/api/v1/members/sign-up/alt';
 
   constructor(http: Http, apiKeyService: ApiKeyService) {
     super(http, apiKeyService);

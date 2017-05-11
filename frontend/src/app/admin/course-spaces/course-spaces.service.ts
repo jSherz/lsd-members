@@ -5,6 +5,7 @@ import 'rxjs/add/operator/map';
 
 import {ApiKeyService, BaseService} from '../utils';
 import {CourseSpaceDepositPaidResponse, CourseSpaceMemberResponse} from './model';
+import {environment} from '../../../environments/environment';
 
 
 /**
@@ -49,10 +50,10 @@ export abstract class CourseSpaceService extends BaseService {
 @Injectable()
 export class CourseSpaceServiceImpl extends CourseSpaceService {
 
-  private baseUrl = 'http://localhost:8080/api/v1/';
-  private addMemberUrl = this.baseUrl + 'course-spaces/{{uuid}}/add-member';
-  private removeMemberUrl = this.baseUrl + 'course-spaces/{{uuid}}/remove-member';
-  private setDepositPaidUrl = this.baseUrl + 'course-spaces/{{uuid}}/deposit-paid';
+  private baseUrl = environment.apiUrl + '/api/v1/course-spaces/';
+  private addMemberUrl = this.baseUrl + '{{uuid}}/add-member';
+  private removeMemberUrl = this.baseUrl + '{{uuid}}/remove-member';
+  private setDepositPaidUrl = this.baseUrl + '{{uuid}}/deposit-paid';
 
   constructor(http: Http, apiKeyService: ApiKeyService) {
     super(http, apiKeyService);

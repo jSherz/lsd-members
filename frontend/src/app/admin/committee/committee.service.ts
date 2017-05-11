@@ -5,6 +5,7 @@ import 'rxjs/add/operator/map';
 
 import {ApiKeyService, BaseService} from '../utils';
 import {StrippedCommitteeMember} from './stripped-committee-member';
+import {environment} from '../../../environments/environment';
 
 
 /**
@@ -26,7 +27,7 @@ export abstract class CommitteeService extends BaseService {
 @Injectable()
 export class CommitteeServiceImpl extends CommitteeService {
 
-  private committeeLookupUrl = 'http://localhost:8080/api/v1/committee-members/active';
+  private committeeLookupUrl = environment.apiUrl + '/api/v1/committee-members/active';
 
   constructor(http: Http, apiKeyService: ApiKeyService) {
     super(http, apiKeyService);

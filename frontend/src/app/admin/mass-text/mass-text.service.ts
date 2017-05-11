@@ -7,6 +7,7 @@ import 'rxjs/add/operator/map';
 import {MassTextSendResponse} from './mass-text-send-response';
 import {BaseService} from '../utils/base.service';
 import {ApiKeyService} from '../utils/api-key.service';
+import {environment} from '../../../environments/environment';
 
 
 export abstract class MassTextService extends BaseService {
@@ -29,7 +30,7 @@ export abstract class MassTextService extends BaseService {
 @Injectable()
 export class MassTextServiceImpl extends MassTextService {
 
-  private sendUrl = 'http://localhost:8080/api/v1/mass-texts/send';
+  private sendUrl = environment.apiUrl + '/api/v1/mass-texts/send';
 
   constructor(http: Http, apiKeyService: ApiKeyService) {
     super(http, apiKeyService);
