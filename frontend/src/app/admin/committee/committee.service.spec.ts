@@ -6,7 +6,7 @@ import {Observable} from 'rxjs/Observable';
 
 import {CommitteeService, CommitteeServiceImpl} from './committee.service';
 import {ApiKeyService} from '../utils/api-key.service';
-import {StubApiKeyService} from '../utils/api-key.service.stub';
+import {API_KEY, StubApiKeyService} from '../utils/api-key.service.stub';
 
 
 describe('Service: Committee', () => {
@@ -25,7 +25,8 @@ describe('Service: Committee', () => {
           }
         }
         },
-        {provide: ApiKeyService, useValue: new StubApiKeyService('487a2930-8e6a-41a5-bcc0-b7fd7f2421e4')},
+        {provide: API_KEY, useValue: '487a2930-8e6a-41a5-bcc0-b7fd7f2421e4'},
+        {provide: ApiKeyService, useClass: StubApiKeyService},
         {provide: CommitteeService, useClass: CommitteeServiceImpl}
       ]
     });

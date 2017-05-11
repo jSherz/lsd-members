@@ -5,7 +5,7 @@ import {async, inject, TestBed} from '@angular/core/testing';
 import {LoginService, LoginServiceImpl} from './login.service';
 import {TestModule} from '../../test.module';
 import {ApiKeyService} from '../utils/api-key.service';
-import {StubApiKeyService} from '../utils/api-key.service.stub';
+import {API_KEY, StubApiKeyService} from '../utils/api-key.service.stub';
 
 
 describe('Service: Login', () => {
@@ -14,7 +14,8 @@ describe('Service: Login', () => {
     TestBed.configureTestingModule({
       imports: [TestModule],
       providers: [
-        {provide: ApiKeyService, useValue: new StubApiKeyService('12345')},
+        {provide: API_KEY, useValue: '12345'},
+        {provide: ApiKeyService, useClass: StubApiKeyService},
         {provide: LoginService, useClass: LoginServiceImpl}
       ]
     });

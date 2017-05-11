@@ -3,7 +3,7 @@ import {TestBed, inject} from '@angular/core/testing';
 import {MemberApprovalService, MemberApprovalServiceImpl} from './member-approval.service';
 import {HttpModule} from '@angular/http';
 import {ApiKeyService} from '../utils/api-key.service';
-import {StubApiKeyService} from '../utils/api-key.service.stub';
+import {API_KEY, StubApiKeyService} from '../utils/api-key.service.stub';
 
 describe('MemberApprovalService', () => {
 
@@ -13,7 +13,8 @@ describe('MemberApprovalService', () => {
         HttpModule
       ],
       providers: [
-        {provide: ApiKeyService, useValue: new StubApiKeyService('foobarred')},
+        {provide: API_KEY, useValue: 'foobarred'},
+        {provide: ApiKeyService, useClass: StubApiKeyService},
         {provide: MemberApprovalService, useClass: MemberApprovalServiceImpl}
       ]
     });

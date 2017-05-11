@@ -7,7 +7,7 @@ import {
 import {SignupService, SignupServiceImpl} from './signup.service';
 import {TestModule} from '../../../test.module';
 import {ApiKeyService} from '../../utils/api-key.service';
-import {StubApiKeyService} from '../../utils/api-key.service.stub';
+import {API_KEY, StubApiKeyService} from '../../utils/api-key.service.stub';
 
 
 describe('Service: Signup', () => {
@@ -16,7 +16,8 @@ describe('Service: Signup', () => {
     TestBed.configureTestingModule({
       imports: [TestModule],
       providers: [
-        {provide: ApiKeyService, useValue: new StubApiKeyService('12345')},
+        {provide: API_KEY, useValue: '12345'},
+        {provide: ApiKeyService, useClass: StubApiKeyService},
         {provide: SignupService, useClass: SignupServiceImpl}
       ]
     });

@@ -5,7 +5,7 @@ import {Http, HttpModule} from '@angular/http';
 
 import {MemberServiceImpl} from './member.service';
 import {ApiKeyService} from '../utils/api-key.service';
-import {StubApiKeyService} from '../utils/api-key.service.stub';
+import {StubApiKeyService, API_KEY} from '../utils/api-key.service.stub';
 
 
 describe('Service: Member', () => {
@@ -16,7 +16,8 @@ describe('Service: Member', () => {
         HttpModule
       ],
       providers: [
-        {provide: ApiKeyService, useValue: new StubApiKeyService('12345')}
+        {provide: API_KEY, useValue: '12345'},
+        {provide: ApiKeyService, useClass: StubApiKeyService}
       ]
     });
   });

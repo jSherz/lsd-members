@@ -5,7 +5,7 @@ import {HttpModule} from '@angular/http';
 
 import {MassTextService, MassTextServiceImpl} from './mass-text.service';
 import {ApiKeyService} from '../utils/api-key.service';
-import {StubApiKeyService} from '../utils/api-key.service.stub';
+import {API_KEY, StubApiKeyService} from '../utils/api-key.service.stub';
 
 describe('Service: MassText', () => {
   beforeEach(() => {
@@ -14,8 +14,9 @@ describe('Service: MassText', () => {
         HttpModule
       ],
       providers: [
+        {provide: API_KEY, useValue: '487a2930-8e6a-41a5-bcc0-b7fd7f2421e4'},
         {provide: MassTextService, useClass: MassTextServiceImpl},
-        {provide: ApiKeyService, useValue: new StubApiKeyService('487a2930-8e6a-41a5-bcc0-b7fd7f2421e4')}
+        {provide: ApiKeyService, useClass: StubApiKeyService}
       ]
     });
   });

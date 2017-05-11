@@ -4,7 +4,7 @@ import {inject, TestBed, async} from '@angular/core/testing';
 import {HttpModule} from '@angular/http';
 
 import {CourseService, CourseServiceImpl} from './course.service';
-import {StubApiKeyService} from '../utils/api-key.service.stub';
+import {API_KEY, StubApiKeyService} from '../utils/api-key.service.stub';
 import {ApiKeyService} from '../utils/api-key.service';
 
 
@@ -16,7 +16,8 @@ describe('Course Service', () => {
         HttpModule
       ],
       providers: [
-        {provide: ApiKeyService, useValue: new StubApiKeyService('12345')},
+        {provide: API_KEY, useValue: '12345'},
+        {provide: ApiKeyService, useClass: StubApiKeyService},
         {provide: CourseService, useClass: CourseServiceImpl}
       ]
     });
