@@ -25,6 +25,7 @@
 package com.jsherz.luskydive
 
 import java.time.{Duration, Instant}
+import java.util.logging.{LogManager, Logger}
 
 import akka.actor.ActorSystem
 import akka.event.{Logging, LoggingAdapter}
@@ -35,6 +36,7 @@ import com.jsherz.luskydive.services._
 import com.jsherz.luskydive.util.Config
 import com.restfb.{DefaultFacebookClient, Version}
 import org.flywaydb.core.Flyway
+import org.slf4j.bridge.SLF4JBridgeHandler
 
 import scala.io.{Codec, Source}
 
@@ -45,6 +47,7 @@ object Main extends App with Config {
 
   val bootStarted = Instant.now()
 
+
   implicit val actorSystem = ActorSystem()
   implicit val executor = actorSystem.dispatcher
   implicit val log: LoggingAdapter = Logging(actorSystem, getClass)
@@ -52,6 +55,10 @@ object Main extends App with Config {
 
   // What is an application without an ASCII-art banner?
   log.info(Source.fromURL(getClass.getResource("/banner.txt"))(Codec.UTF8).mkString)
+
+  SLF4JBridgeHandler.install()
+
+  log.info("SLF4J bridge created")
 
   val databaseService = new DatabaseService(dbUrl, dbUsername, dbPassword)
 
