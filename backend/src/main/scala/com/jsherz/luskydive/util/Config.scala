@@ -49,6 +49,7 @@ trait Config {
   val twilioAuthToken: String = configTwilio.getString("auth_token")
   val twilioMessagingServiceSid: String = configTwilio.getString("messaging_service_sid")
 
+  val fbAppId: String = config.getConfig("fb").getString("app_id")
   val fbSecret: String = config.getConfig("fb").getString("secret")
 
   val jwtSecret: String = config.getConfig("jwt").getString("secret")

@@ -48,7 +48,7 @@ class SocialServiceSpec extends WordSpec with Matchers with ScalatestRouteTest {
       val fb = mock(classOf[FacebookClient])
       when(fb.parseSignedRequest(any, any, any)).thenThrow(new FacebookSignedRequestParsingException("Boaty McBoatface"))
 
-      val service = new SocialServiceImpl(fb, "SSSHHHSECRET")
+      val service = new SocialServiceImpl(fb, "BLAHBLAHBLAH", "SSSHHHSECRET")
 
       service.parseSignedRequest("foobar") shouldBe None
     }
@@ -63,7 +63,7 @@ class SocialServiceSpec extends WordSpec with Matchers with ScalatestRouteTest {
       when(fb.parseSignedRequest(dummyRequest, dummySecret, classOf[FBSignedRequest]))
         .thenReturn(expectedSignedRequest)
 
-      val service = new SocialServiceImpl(fb, dummySecret)
+      val service = new SocialServiceImpl(fb, "BLAHBLAHBLAH", dummySecret)
 
       service.parseSignedRequest(dummyRequest) shouldBe Some(expectedSignedRequest)
     }

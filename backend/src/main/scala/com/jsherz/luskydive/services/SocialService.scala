@@ -24,14 +24,24 @@
 
 package com.jsherz.luskydive.services
 
+import java.io.IOException
+
 import akka.event.LoggingAdapter
 import com.jsherz.luskydive.core.FBSignedRequest
-import com.restfb.FacebookClient
 import com.restfb.exception.FacebookException
+import com.restfb.json.{JsonException, JsonObject}
+import com.restfb.types.User
+import com.restfb.{DefaultFacebookClient, FacebookClient, Parameter, Version}
+
+import scalaz.{-\/, \/, \/-}
 
 trait SocialService {
 
   def parseSignedRequest(signedRequest: String): Option[FBSignedRequest]
+
+  def getNameAndEmail(userId: String): \/[String, (String, String, String)]
+
+  def getProfilePhoto(userId: String): \/[String, String]
 
 }
 
@@ -40,15 +50,78 @@ trait SocialService {
   * <p>
   * It's for social website authentication.
   */
-class SocialServiceImpl(fbClient: FacebookClient, appSecret: String)(implicit log: LoggingAdapter) extends SocialService {
+class SocialServiceImpl(fbClient: FacebookClient, fbAppId: String, appSecret: String)
+                       (implicit log: LoggingAdapter) extends SocialService {
 
-  def parseSignedRequest(signedRequest: String): Option[FBSignedRequest] = try {
+  log.info("Obtaining FB access token...")
+  private val accessToken = fbClient.obtainAppAccessToken(fbAppId, appSecret)
+  log.info(s"FB init complete - token valid until ${accessToken.getExpires} (type = ${accessToken.getTokenType})")
+  private val authenticatedFbClient = new DefaultFacebookClient(accessToken.getAccessToken, Version.VERSION_2_9)
+
+  override def parseSignedRequest(signedRequest: String): Option[FBSignedRequest] = try {
     Some(fbClient.parseSignedRequest(signedRequest, appSecret, classOf[FBSignedRequest]))
   } catch {
     case ex: FacebookException =>
       log.error(ex, s"Failed to parse FB signed request.")
 
       None
+  }
+
+  /**
+    * Lookup the name & e-mail of an FB user.
+    *
+    * @param userId User
+    * @return (first, last, email)
+    */
+  override def getNameAndEmail(userId: String): \/[String, (String, String, String)] = {
+    try {
+      val user: User = authenticatedFbClient.fetchObject(userId, classOf[User],
+        Parameter.`with`("fields", "id,first_name,last_name,name,email"))
+
+      log.info(s"Welcome '${user.getName}' to LSD!")
+
+      \/-((user.getFirstName, user.getLastName, user.getEmail))
+    } catch {
+      case ex: JsonException =>
+        val msg = "Failed to parse FB response for user's name & e-mail."
+        log.error(ex, msg)
+        -\/(msg)
+
+      case ex: IOException =>
+        val msg = "Failed to request user's name & e-mail - network error."
+        log.error(ex, msg)
+        -\/(msg)
+    }
+  }
+
+  /**
+    * Download a user's profile picture.
+    *
+    * @param userId FB user ID
+    * @return URL to profile picture
+    */
+  override def getProfilePhoto(userId: String): \/[String, String] = {
+    try {
+      val picture: JsonObject = authenticatedFbClient.fetchObject(
+        s"$userId/picture",
+        classOf[JsonObject],
+        Parameter.`with`("redirect", "false"),
+        Parameter.`with`("height", "160"),
+        Parameter.`with`("width", "160")
+      )
+
+      \/-(picture.getString("data.url"))
+    } catch {
+      case ex: JsonException =>
+        val msg = "Failed to parse FB response for user profile picture."
+        log.error(ex, msg)
+        -\/(msg)
+
+      case ex: IOException =>
+        val msg = "Failed to request user profile picture - network error."
+        log.error(ex, msg)
+        -\/(msg)
+    }
   }
 
 }

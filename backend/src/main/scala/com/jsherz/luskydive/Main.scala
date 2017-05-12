@@ -80,7 +80,7 @@ object Main extends App with Config {
   val textMessageDao = new TextMessageDaoImpl(databaseService)
 
   val fbClient = new DefaultFacebookClient(Version.VERSION_2_9)
-  val socialService = new SocialServiceImpl(fbClient, fbSecret)
+  val socialService = new SocialServiceImpl(fbClient, fbAppId, fbSecret)
   val jwtService = new JwtServiceImpl(jwtSecret)
 
   val httpService = new HttpService(memberDao, courseDao, committeeMemberDao, courseSpaceDao, authDao, massTextDao,

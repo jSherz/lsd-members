@@ -24,18 +24,22 @@
 
 package com.jsherz.luskydive.apis
 
-import java.time.{Duration, Instant}
+import java.sql.Timestamp
+import java.time.{Duration, Instant, LocalDateTime}
+import java.util.UUID
 
 import akka.event.LoggingAdapter
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
+import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.{FBSignedRequest, Member}
 import com.jsherz.luskydive.dao.MemberDao
 import com.jsherz.luskydive.json.{SocialLoginRequest, SocialLoginResponse}
 import com.jsherz.luskydive.services.{JwtService, SocialService}
 
 import scala.concurrent.ExecutionContext
+import scalaz.{-\/, \/-}
 
 /**
   * Used to authenticate users with a social single-sign-on.
@@ -68,19 +72,51 @@ class SocialLoginApi(
   private def issueJwtForMemberLookup(userId: String)(maybeMember: Option[Member]): Route = {
     maybeMember match {
       case Some(member: Member) =>
-        val jwt = jwtService.createJwt(member.uuid.get, Instant.now(), Instant.now().plus(Duration.ofHours(tokenValidHours)))
+        val jwt = generateJwt(member.uuid.get)
 
         complete(SocialLoginResponse(success = true, None, Some(jwt)))
 
       case None =>
-        log.error(s"Member not found with social ID: $userId")
-        complete(StatusCodes.Unauthorized, SocialLoginResponse(success = false, Some("Login failed."), None))
+        log.info(s"Member not found with social ID '$userId', creating one.")
+
+        val createMemberF = createMember(userId) _
+
+        service.getNameAndEmail(userId).fold(_ => genericError, createMemberF.tupled)
     }
   }
 
+  private def createMember(userId: String)(firstName: String, lastName: String, email: String): Route = {
+    val member = buildMemberForSocialId(userId, firstName, lastName, email)
+    onSuccess(memberDao.create(member)) {
+      case \/-(newMemberUuid: UUID) =>
+        val jwt = generateJwt(newMemberUuid)
+
+        complete(StatusCodes.OK, SocialLoginResponse(success = true, None, Some(jwt)))
+
+      case -\/(error: String) =>
+        log.error(s"Failed to create member: $error")
+        genericError
+    }
+  }
+
+  private def generateJwt(memberUuid: UUID) = {
+    jwtService.createJwt(memberUuid, Instant.now(), Instant.now().plus(Duration.ofHours(tokenValidHours)))
+  }
+
+  private val genericError = complete(StatusCodes.InternalServerError, "Login failed - please try again later.")
+
   private def lookupFailed(error: String): Route = {
     log.error(s"Error while looking up member by social ID: $error")
-    complete(StatusCodes.InternalServerError, "Login failed - please try again later.")
+    genericError
+  }
+
+  private def buildMemberForSocialId(userId: String, firstName: String, lastName: String, email: String): Member = {
+    Member(
+      uuid = Some(Generators.randomBasedGenerator.generate), firstName, Option(lastName), phoneNumber = None,
+      email = Option(email), lastJump = None, weight = None, height = None, driver = false, organiser = false,
+      createdAt = Timestamp.valueOf(LocalDateTime.now()), updatedAt = Timestamp.valueOf(LocalDateTime.now()),
+      socialUserId = Some(userId)
+    )
   }
 
   val route: Route = pathPrefix("social-login") {
