@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {FacebookService, InitParams, LoginResponse} from 'ngx-facebook';
+import {FacebookService, InitParams, LoginOptions, LoginResponse} from 'ngx-facebook';
 
 export abstract class SocialLoginService {
 
@@ -16,6 +16,10 @@ export class SocialLoginServiceImpl implements SocialLoginService {
     version: 'v2.8'
   };
 
+  static LOGIN_PARAMS: LoginOptions = {
+    scope: 'public_profile,email'
+  };
+
   constructor(private fb: FacebookService) {
     fb.init(SocialLoginServiceImpl.FB_PARAMS);
   }
@@ -25,7 +29,7 @@ export class SocialLoginServiceImpl implements SocialLoginService {
       if (status.status === 'connected') {
         return Promise.resolve(status);
       } else {
-        return this.fb.login();
+        return this.fb.login(SocialLoginServiceImpl.LOGIN_PARAMS);
       }
     });
   }
