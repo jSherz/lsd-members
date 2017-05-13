@@ -15,7 +15,7 @@ import {LoginComponent} from './login';
 import {DashboardComponent} from './dashboard';
 import {NotApprovedComponent} from './not-approved/not-approved.component';
 import {SocialLoginService, SocialLoginServiceImpl} from './social-login/social-login.service';
-import {JwtLoginService, JwtLoginServiceImpl} from './login';
+import {JwtLoginService, JwtLoginServiceImpl, JwtService, JwtServiceImpl} from './login';
 
 @NgModule({
   imports: [
@@ -36,7 +36,8 @@ import {JwtLoginService, JwtLoginServiceImpl} from './login';
   providers: [
     FormBuilder,
     {provide: SocialLoginService, useClass: SocialLoginServiceImpl},
-    {provide: JwtLoginService, useClass: JwtLoginServiceImpl}
+    {provide: JwtLoginService, useClass: JwtLoginServiceImpl},
+    {provide: JwtService, useClass: JwtServiceImpl}
   ]
 })
 export class MembersModule {
