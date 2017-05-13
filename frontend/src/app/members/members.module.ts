@@ -12,7 +12,7 @@ import {
 import {membersRouting} from './members.routing';
 import {MembersComponent} from './members.component';
 import {LoginComponent} from './login';
-import {DashboardComponent} from './dashboard';
+import {DashboardComponent, ProfileComponent, DashboardService, DashboardServiceImpl} from './dashboard';
 import {NotApprovedComponent} from './not-approved/not-approved.component';
 import {SocialLoginService, SocialLoginServiceImpl} from './social-login/social-login.service';
 import {JwtLoginService, JwtLoginServiceImpl, JwtService, JwtServiceImpl} from './login';
@@ -30,14 +30,16 @@ import {JwtLoginService, JwtLoginServiceImpl, JwtService, JwtServiceImpl} from '
     MembersComponent,
     LoginComponent,
     DashboardComponent,
-    NotApprovedComponent
+    NotApprovedComponent,
+    ProfileComponent
   ],
   bootstrap: [],
   providers: [
     FormBuilder,
     {provide: SocialLoginService, useClass: SocialLoginServiceImpl},
     {provide: JwtLoginService, useClass: JwtLoginServiceImpl},
-    {provide: JwtService, useClass: JwtServiceImpl}
+    {provide: JwtService, useClass: JwtServiceImpl},
+    {provide: DashboardService, useClass: DashboardServiceImpl}
   ]
 })
 export class MembersModule {
