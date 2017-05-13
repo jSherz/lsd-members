@@ -53,7 +53,7 @@ import {
   MemberEditComponent,
   MemberAddComponent
 } from './';
-import {MemberApprovalService, MemberApprovalServiceImpl} from "./member-approval/member-approval.service";
+import {MemberApprovalService, MemberApprovalServiceImpl} from './member-approval/member-approval.service';
 
 @NgModule({
   imports: [
