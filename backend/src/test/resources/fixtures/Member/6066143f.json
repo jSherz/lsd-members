@@ -1,0 +1,15 @@
+{
+  "uuid": "6066143f-4bb9-41cc-ba22-ce41126752bf",
+  "firstName": "Carrie",
+  "lastName": "Williams",
+  "email": "bsmith@hotmail.com",
+  "phoneNumber": "+447920271979",
+  "lastJump": "2016-07-12",
+  "weight": 82,
+  "height": 185,
+  "driver": false,
+  "organiser": false,
+  "createdAt": "2011-12-10 07:18:59.000000",
+  "updatedAt": "2013-03-12 02:46:43.000000",
+  "socialUserId": null
+}

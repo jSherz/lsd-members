@@ -36,7 +36,9 @@ import akka.http.scaladsl.server._
 import ch.megard.akka.http.cors.scaladsl.settings.CorsSettings
 import ch.megard.akka.http.cors.scaladsl.{CorsDirectives, CorsRejection}
 import com.jsherz.luskydive.apis._
+import com.jsherz.luskydive.core.Member
 import com.jsherz.luskydive.dao._
+import com.jsherz.luskydive.directives.JwtDirectives
 
 import scala.concurrent.ExecutionContext
 
@@ -59,6 +61,7 @@ class HttpService(
                   log: LoggingAdapter) {
 
   implicit val auth: Directive1[UUID] = new ApiKeyAuthenticator(authDao).authenticateWithApiKey
+  private val authenticateWithJwt: Directive1[Member] = new JwtDirectives(jwtService, memberDao).authenticateWithJwt
 
   val signupRoutes = new SignupApi(memberDao)
   val coursesRoutes = new CoursesApi(courseDao)
@@ -68,7 +71,7 @@ class HttpService(
   val massTextApi = new MassTextApi(massTextDao)
   val textMessageApi = new TextMessageApi(textMessageDao, memberDao, textMessageReceiveApiKey)
   val socialLoginApi = new SocialLoginApi(socialService, memberDao, jwtService)
-  val exampleJwtApi = new ExampleJwtApi(jwtService, memberDao)
+  val currentMemberApi = new CurrentMemberApi(authenticateWithJwt, memberDao)
   val versionApi = new VersionApi
 
   val loginApi = new LoginApi(authDao)
@@ -87,7 +90,7 @@ class HttpService(
           massTextApi.route ~
           textMessageApi.route ~
           socialLoginApi.route ~
-          exampleJwtApi.route ~
+          currentMemberApi.route ~
           versionApi.route
       }
     }

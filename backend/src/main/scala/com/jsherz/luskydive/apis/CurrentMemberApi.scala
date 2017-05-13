@@ -26,25 +26,29 @@ package com.jsherz.luskydive.apis
 
 import akka.event.LoggingAdapter
 import akka.http.scaladsl.server.Directives.{complete, get, path}
-import akka.http.scaladsl.server.Route
+import akka.http.scaladsl.server.{Directive1, Route}
+import com.jsherz.luskydive.core.Member
 import com.jsherz.luskydive.dao.MemberDao
-import com.jsherz.luskydive.directives.JwtDirectives
-import com.jsherz.luskydive.services.JwtService
+import com.jsherz.luskydive.json.CoursesJsonSupport._
+import com.jsherz.luskydive.json.StrippedMember
 
-class ExampleJwtApi(
-                     private val jwtService: JwtService,
-                     private val memberDao: MemberDao
-                   )
-                   (implicit val log: LoggingAdapter) {
+class CurrentMemberApi(private val authDirective: Directive1[Member],
+                       private val memberDao: MemberDao)
+                      (implicit val log: LoggingAdapter) {
 
-  private val authenticateWithJwt = new JwtDirectives(jwtService, memberDao).authenticateWithJwt
-
-  val route: Route = path("foobar") {
-    authenticateWithJwt { member =>
-      get {
-        complete(s"YO DUDES! (more specifically ${member.firstName})")
-      }
+  val basicInfoRoute: Route = path("me") {
+    (get & authDirective) { member =>
+      complete(StrippedMember(
+        uuid = member.uuid,
+        firstName = member.firstName,
+        lastName = member.lastName,
+        createdAt = member.createdAt
+      ))
     }
+  }
+
+  val route: Route = {
+    basicInfoRoute
   }
 
 }
