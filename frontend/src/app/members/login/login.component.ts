@@ -36,8 +36,6 @@ export class LoginComponent {
     if (response.status === 'connected') {
       this.loginService.login(response.authResponse.signedRequest)
         .subscribe((result: LoginResult) => {
-            console.log('JWT: ', result.jwt);
-
             this.router.navigate(['members', 'dashboard']);
           },
           (error: any) => {

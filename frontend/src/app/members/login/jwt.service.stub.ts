@@ -22,8 +22,8 @@ export class StubJwtService extends JwtService {
     return this.jwt;
   }
 
-  setJwt(apiKey: string) {
-    this.jwt = apiKey;
+  setJwt(jwt: string) {
+    this.jwt = jwt;
   }
 
   isAuthenticated(): boolean {

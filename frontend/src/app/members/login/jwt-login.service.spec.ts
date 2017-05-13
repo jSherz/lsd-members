@@ -1,0 +1,70 @@
+/* tslint:disable:no-unused-variable */
+
+import {By} from '@angular/platform-browser';
+import {DebugElement} from '@angular/core';
+import {async, ComponentFixture, inject, TestBed, fakeAsync, tick} from '@angular/core/testing';
+import {Http, Response, ResponseOptions} from '@angular/http';
+import {Observable} from 'rxjs/Observable';
+
+import {JwtLoginService, JwtLoginServiceImpl} from './jwt-login.service';
+import {LoginResult} from './login-result';
+import {JwtService} from './jwt.service';
+import {StubJwtService} from './jwt.service.stub';
+
+describe('JwtLoginService', () => {
+
+  const dummyHttp = {
+    post: (url, request) => {
+      console.log('JwtLoginService requested ' + url);
+
+      if (request === '{"signedRequest":"itzalive"}') {
+        const body = JSON.stringify(new LoginResult(true, null, 'my.little.jwt'));
+
+        return Observable.of(new Response(new ResponseOptions({body, status: 200})));
+      } else {
+        const body = JSON.stringify(new LoginResult(false, 'wrong login something', null));
+
+        return Observable.of(new Response(new ResponseOptions({body, status: 401})));
+      }
+    }
+  };
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [],
+      imports: [],
+      providers: [
+        {provide: Http, useValue: dummyHttp}
+      ]
+    }).compileComponents();
+  });
+
+  it('stores the returned token in the JwtService', async(inject([Http], (http: Http) => {
+    const jwtService = new StubJwtService('original-jwt-value');
+    const service = new JwtLoginServiceImpl(http, jwtService);
+
+    expect(jwtService.getJwt()).toEqual('original-jwt-value');
+
+    service.login('itzalive').subscribe((loginResult: LoginResult) => {
+      expect(loginResult.success).toEqual(true);
+      expect(loginResult.error).toEqual(null);
+      expect(loginResult.jwt).toEqual('my.little.jwt');
+    });
+
+    expect(jwtService.getJwt()).toEqual('my.little.jwt');
+  })));
+
+  it('clears the JWT if the login fails', async(inject([Http], (http: Http) => {
+    const jwtService = new StubJwtService('original-jwt-value');
+    const service = new JwtLoginServiceImpl(http, jwtService);
+
+    expect(jwtService.getJwt()).toEqual('original-jwt-value');
+
+    service.login('this-will-return-an-error').subscribe((loginResult: LoginResult) => {
+      expect(loginResult.success).toEqual(false);
+    });
+
+    expect(jwtService.getJwt()).toEqual('');
+  })));
+
+});
