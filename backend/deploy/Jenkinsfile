@@ -15,32 +15,26 @@ def server(env) { (env == 'prod') ? 'deploy@api.leedsskydivers.com' : 'deploy@ap
 node {
 
     stage('Copy release jar') {
-        steps {
-            step([$class     : 'CopyArtifact',
-                  projectName: 'lsd-members-backend',
-                  filter     : 'target/scala-2.11/luskydive-assembly-*'])
+        step([$class     : 'CopyArtifact',
+              projectName: 'lsd-members-backend',
+              filter     : 'target/scala-2.11/luskydive-assembly-*'])
 
-            sh 'mv target/scala-2.11/*.jar deploy.jar'
-            sh 'rm -rf target'
-        }
+        sh 'mv target/scala-2.11/*.jar deploy.jar'
+        sh 'rm -rf target'
     }
 
     stage('Deploy') {
-        steps {
-            withCredentials([
-                    file(credentialsId: 'lsd-' + deployEnv() + '-deploy', variable: 'DEPLOY_KEY')
-            ]) {
-                sh 'chmod 0600 $DEPLOY_KEY'
-                sh 'scp -i $DEPLOY_KEY deploy.jar ' + server(deployEnv()) + ':/home/api/jars/$BUILD_TAG.jar'
-                sh 'ssh -i $DEPLOY_KEY ' + server(deployEnv()) + ' /opt/deploy.sh /home/api/jars/$BUILD_TAG.jar'
-            }
+        withCredentials([
+                file(credentialsId: 'lsd-' + deployEnv() + '-deploy', variable: 'DEPLOY_KEY')
+        ]) {
+            sh 'chmod 0600 $DEPLOY_KEY'
+            sh 'scp -i $DEPLOY_KEY deploy.jar ' + server(deployEnv()) + ':/home/api/jars/$BUILD_TAG.jar'
+            sh 'ssh -i $DEPLOY_KEY ' + server(deployEnv()) + ' /opt/deploy.sh /home/api/jars/$BUILD_TAG.jar'
         }
     }
 
     stage('Archive') {
-        steps {
-            archiveArtifacts 'deploy.jar'
-        }
+        archiveArtifacts 'deploy.jar'
     }
 
 }
