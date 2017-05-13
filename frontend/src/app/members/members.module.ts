@@ -15,7 +15,7 @@ import {LoginComponent} from './login';
 import {DashboardComponent} from './dashboard';
 import {NotApprovedComponent} from './not-approved/not-approved.component';
 import {SocialLoginService, SocialLoginServiceImpl} from './social-login/social-login.service';
-import {JwtLoginService, JwtLoginServiceImpl} from './login/login.service';
+import {JwtLoginService, JwtLoginServiceImpl} from './login';
 
 @NgModule({
   imports: [

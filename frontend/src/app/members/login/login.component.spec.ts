@@ -8,8 +8,8 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {SocialLoginService, SocialLoginServiceStub} from '../social-login';
 import {FacebookModule} from 'ngx-facebook';
 import {Router} from '@angular/router';
-import {JwtLoginService, JwtLoginServiceImpl} from './login.service';
-import {JwtLoginServiceStub} from './login.service.stub';
+import {JwtLoginService, JwtLoginServiceImpl} from './jwt-login.service';
+import {JwtLoginServiceStub} from './jwt-login.service.stub';
 
 describe('Component: Members - Login', () => {
 

@@ -3,7 +3,7 @@ import {Router} from '@angular/router';
 import {LoginResponse} from 'ngx-facebook';
 import {Observable} from 'rxjs/Observable';
 
-import {JwtLoginService} from './login.service';
+import {JwtLoginService} from './jwt-login.service';
 import {LoginResult} from './login-result';
 import {SocialLoginService} from '../social-login/social-login.service';
 

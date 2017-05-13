@@ -1,6 +1,6 @@
 import {Observable} from 'rxjs/Observable';
 
-import {JwtLoginService} from './login.service';
+import {JwtLoginService} from './jwt-login.service';
 import {LoginResult} from './login-result';
 
 export class JwtLoginServiceStub extends JwtLoginService {
