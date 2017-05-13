@@ -31,8 +31,9 @@ import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.jsherz.luskydive.core.FBSignedRequest
 import com.restfb.FacebookClient
+import com.restfb.FacebookClient.AccessToken
 import com.restfb.exception.FacebookSignedRequestParsingException
-import org.mockito.Matchers.any
+import org.mockito.Matchers.{any, anyString}
 import org.mockito.Mockito.{mock, when}
 import org.scalatest.{Matchers, WordSpec}
 
@@ -46,6 +47,7 @@ class SocialServiceSpec extends WordSpec with Matchers with ScalatestRouteTest {
 
     "catch FacebookExceptions and return None" in {
       val fb = mock(classOf[FacebookClient])
+      when(fb.obtainAppAccessToken(anyString, anyString)).thenReturn(AccessToken.fromQueryString("?access_token=blah"))
       when(fb.parseSignedRequest(any, any, any)).thenThrow(new FacebookSignedRequestParsingException("Boaty McBoatface"))
 
       val service = new SocialServiceImpl(fb, "BLAHBLAHBLAH", "SSSHHHSECRET")
@@ -60,6 +62,7 @@ class SocialServiceSpec extends WordSpec with Matchers with ScalatestRouteTest {
         Random.nextLong())
 
       val fb = mock(classOf[FacebookClient])
+      when(fb.obtainAppAccessToken(anyString, anyString)).thenReturn(AccessToken.fromQueryString("?access_token=blah"))
       when(fb.parseSignedRequest(dummyRequest, dummySecret, classOf[FBSignedRequest]))
         .thenReturn(expectedSignedRequest)
 
