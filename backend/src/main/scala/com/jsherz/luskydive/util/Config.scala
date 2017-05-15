@@ -35,6 +35,7 @@ trait Config {
   private val configHttp = config.getConfig("http")
   private val configDb = config.getConfig("database")
   private val configTwilio = config.getConfig("twilio")
+  private val fb = config.getConfig("fb")
 
   val interface: String = configHttp.getString("interface")
   val port: Int = configHttp.getInt("port")
@@ -49,8 +50,9 @@ trait Config {
   val twilioAuthToken: String = configTwilio.getString("auth_token")
   val twilioMessagingServiceSid: String = configTwilio.getString("messaging_service_sid")
 
-  val fbAppId: String = config.getConfig("fb").getString("app_id")
-  val fbSecret: String = config.getConfig("fb").getString("secret")
+  val fbAppId: String = fb.getString("app_id")
+  val fbSecret: String = fb.getString("secret")
+  val loginReturnUrl: String = fb.getString("login_return_url")
 
   val jwtSecret: String = config.getConfig("jwt").getString("secret")
 

@@ -33,7 +33,9 @@ import com.jsherz.luskydive.core.FBSignedRequest
 import com.restfb.FacebookClient
 import com.restfb.FacebookClient.AccessToken
 import com.restfb.exception.FacebookSignedRequestParsingException
-import org.mockito.Matchers.{any, anyString}
+import com.restfb.scope.ScopeBuilder
+import org.mockito.ArgumentCaptor
+import org.mockito.Matchers.{any, anyString, eq => meq}
 import org.mockito.Mockito.{mock, when}
 import org.scalatest.{Matchers, WordSpec}
 
@@ -43,14 +45,14 @@ class SocialServiceSpec extends WordSpec with Matchers with ScalatestRouteTest {
 
   implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
 
-  "SocialService" should {
+  "SocialService#parseSignedRequest" should {
 
     "catch FacebookExceptions and return None" in {
       val fb = mock(classOf[FacebookClient])
       when(fb.obtainAppAccessToken(anyString, anyString)).thenReturn(AccessToken.fromQueryString("?access_token=blah"))
       when(fb.parseSignedRequest(any, any, any)).thenThrow(new FacebookSignedRequestParsingException("Boaty McBoatface"))
 
-      val service = new SocialServiceImpl(fb, "BLAHBLAHBLAH", "SSSHHHSECRET")
+      val service = new SocialServiceImpl(fb, "BLAHBLAHBLAH", "SSSHHHSECRET", "https://localhost")
 
       service.parseSignedRequest("foobar") shouldBe None
     }
@@ -58,19 +60,47 @@ class SocialServiceSpec extends WordSpec with Matchers with ScalatestRouteTest {
     "return Some(req) when parsing succeeds" in {
       val dummyRequest = "0010011010101001001"
       val dummySecret = "WATERMELONADDICTION"
-      val expectedSignedRequest = new FBSignedRequest("666000666", UUID.randomUUID().toString, Random.nextLong(),
-        Random.nextLong())
+      val expectedSignedRequest = dummySignedRequest()
 
       val fb = mock(classOf[FacebookClient])
       when(fb.obtainAppAccessToken(anyString, anyString)).thenReturn(AccessToken.fromQueryString("?access_token=blah"))
       when(fb.parseSignedRequest(dummyRequest, dummySecret, classOf[FBSignedRequest]))
         .thenReturn(expectedSignedRequest)
 
-      val service = new SocialServiceImpl(fb, "BLAHBLAHBLAH", dummySecret)
+      val service = new SocialServiceImpl(fb, "BLAHBLAHBLAH", dummySecret, "http://127.0.0.1")
 
       service.parseSignedRequest(dummyRequest) shouldBe Some(expectedSignedRequest)
     }
 
   }
+
+  "SocialService#createLoginUrl" should {
+
+    "use the correct scope" in {
+      val myAppId = "pizzapizzapizza"
+      val redirectUrl = "https://www.example.com"
+      val expectedGeneratedUrl = "https://www.coolurl.org/" + UUID.randomUUID()
+
+      val scopeBuilder = ArgumentCaptor.forClass(classOf[ScopeBuilder])
+
+      val fb = mock(classOf[FacebookClient])
+      when(fb.obtainAppAccessToken(anyString, anyString)).thenReturn(AccessToken.fromQueryString("?access_token=blah"))
+      when(fb.parseSignedRequest("asdasdasd", "asdasdas", classOf[FBSignedRequest]))
+        .thenReturn(dummySignedRequest())
+
+      when(fb.getLoginDialogUrl(meq(myAppId), meq(redirectUrl), scopeBuilder.capture()))
+        .thenReturn(expectedGeneratedUrl)
+
+      val service = new SocialServiceImpl(fb, myAppId, "katsucurry", redirectUrl)
+
+      service.createLoginUrl() shouldEqual expectedGeneratedUrl
+
+      scopeBuilder.getValue.toString shouldEqual "public_profile,email"
+    }
+
+  }
+
+  private def dummySignedRequest() =
+    new FBSignedRequest("666000666", UUID.randomUUID().toString, Random.nextLong(), Random.nextLong())
 
 }

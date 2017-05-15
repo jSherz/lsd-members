@@ -31,9 +31,12 @@ case class SocialLoginRequest(signedRequest: String)
 
 case class SocialLoginResponse(success: Boolean, error: Option[String], jwt: Option[String])
 
+case class SocialLoginUrlResponse(url: String)
+
 object SocialLoginJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
 
   implicit val SocialLoginRequestFormat: RootJsonFormat[SocialLoginRequest] = jsonFormat1(SocialLoginRequest)
   implicit val SocialLoginResponseFormat: RootJsonFormat[SocialLoginResponse] = jsonFormat3(SocialLoginResponse)
+  implicit val SocialLoginUrlResponseFormat: RootJsonFormat[SocialLoginUrlResponse] = jsonFormat1(SocialLoginUrlResponse)
 
 }

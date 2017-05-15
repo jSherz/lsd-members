@@ -35,7 +35,7 @@ import akka.http.scaladsl.server.Route
 import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.{FBSignedRequest, Member}
 import com.jsherz.luskydive.dao.MemberDao
-import com.jsherz.luskydive.json.{SocialLoginRequest, SocialLoginResponse}
+import com.jsherz.luskydive.json.{SocialLoginRequest, SocialLoginResponse, SocialLoginUrlResponse}
 import com.jsherz.luskydive.services.{JwtService, SocialService}
 
 import scala.concurrent.ExecutionContext
@@ -61,6 +61,10 @@ class SocialLoginApi(
   val socialLoginRoute: Route = (pathEnd & post & entity(as[SocialLoginRequest])) { req =>
     service.parseSignedRequest(req.signedRequest)
       .fold(invalidSignedRequest)(handleFbRequest)
+  }
+
+  val getLoginUrlRoute: Route = (path("url") & get) {
+    complete(SocialLoginUrlResponse(service.createLoginUrl()))
   }
 
   private def handleFbRequest(request: FBSignedRequest): Route = {
@@ -120,7 +124,8 @@ class SocialLoginApi(
   }
 
   val route: Route = pathPrefix("social-login") {
-    socialLoginRoute
+    socialLoginRoute ~
+      getLoginUrlRoute
   }
 
 }

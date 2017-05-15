@@ -16,6 +16,7 @@ pipeline {
         LSD_PORT = 8080
         FB_APP_ID = 'fasdajsdjasd'
         FB_SECRET = 'blahblahblah'
+        LOGIN_RETURN_URL = 'https://dev.leedsskydivers.com/members/process-login'
         JWT_SECRET = 'nobody-does-it-better'
     }
 

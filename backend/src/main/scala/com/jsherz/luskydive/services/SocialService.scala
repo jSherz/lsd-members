@@ -30,6 +30,7 @@ import akka.event.LoggingAdapter
 import com.jsherz.luskydive.core.FBSignedRequest
 import com.restfb.exception.FacebookException
 import com.restfb.json.{JsonException, JsonObject}
+import com.restfb.scope.{ExtendedPermissions, ScopeBuilder}
 import com.restfb.types.User
 import com.restfb.{DefaultFacebookClient, FacebookClient, Parameter, Version}
 
@@ -43,6 +44,8 @@ trait SocialService {
 
   def getProfilePhoto(userId: String): \/[String, String]
 
+  def createLoginUrl(): String
+
 }
 
 /**
@@ -50,7 +53,7 @@ trait SocialService {
   * <p>
   * It's for social website authentication.
   */
-class SocialServiceImpl(fbClient: FacebookClient, fbAppId: String, appSecret: String)
+class SocialServiceImpl(fbClient: FacebookClient, fbAppId: String, appSecret: String, loginReturnUrl: String)
                        (implicit log: LoggingAdapter) extends SocialService {
 
   log.info("Obtaining FB access token...")
@@ -122,6 +125,13 @@ class SocialServiceImpl(fbClient: FacebookClient, fbAppId: String, appSecret: St
         log.error(ex, msg)
         -\/(msg)
     }
+  }
+
+  override def createLoginUrl(): String = {
+    val scope = new ScopeBuilder()
+    scope.addPermission(ExtendedPermissions.EMAIL)
+
+    fbClient.getLoginDialogUrl(fbAppId, loginReturnUrl, scope)
   }
 
 }
