@@ -116,7 +116,7 @@ class SocialLoginApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
 
         val decoded = JWT.decode(socialLoginResponse.jwt.get)
         decoded.getClaim("UUID").asString() shouldEqual "e1442281-4972-456c-a94f-5b01f5b9b240"
-        Duration.between(decoded.getIssuedAt.toInstant, Instant.now()).getSeconds shouldBe <=(5L)
+        Duration.between(decoded.getIssuedAt.toInstant, Instant.now()).getSeconds shouldBe <=(10L)
         Duration.between(decoded.getIssuedAt.toInstant, decoded.getExpiresAt.toInstant).toHours shouldBe 24L
       }
     }
