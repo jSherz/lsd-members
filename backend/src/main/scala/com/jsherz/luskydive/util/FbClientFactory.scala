@@ -22,24 +22,27 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.json
+package com.jsherz.luskydive.util
 
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import spray.json.{DefaultJsonProtocol, RootJsonFormat}
+import com.restfb.{DefaultFacebookClient, FacebookClient, Version}
 
-case class SocialLoginRequest(signedRequest: String)
+trait FbClientFactory {
 
-case class SocialLoginResponse(success: Boolean, error: Option[String], jwt: Option[String])
+  def forAppIdAndSecret(appId: String, appSecret: String): FacebookClient
 
-case class SocialLoginUrlResponse(url: String)
+  def forAccessToken(accessToken: String): FacebookClient
 
-case class SocialLoginVerifyRequest(verificationCode: String)
+}
 
-object SocialLoginJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
+class FbClientFactoryImpl(private val version: Version) extends FbClientFactory {
 
-  implicit val SocialLoginRequestFormat: RootJsonFormat[SocialLoginRequest] = jsonFormat1(SocialLoginRequest)
-  implicit val SocialLoginResponseFormat: RootJsonFormat[SocialLoginResponse] = jsonFormat3(SocialLoginResponse)
-  implicit val SocialLoginUrlResponseFormat: RootJsonFormat[SocialLoginUrlResponse] = jsonFormat1(SocialLoginUrlResponse)
-  implicit val SocialLoginVerifyRequestFormat: RootJsonFormat[SocialLoginVerifyRequest] = jsonFormat1(SocialLoginVerifyRequest)
+  override def forAppIdAndSecret(appId: String, appSecret: String): FacebookClient = {
+    val accessToken = new DefaultFacebookClient(version).obtainAppAccessToken(appId, appSecret)
+
+    forAccessToken(accessToken.getAccessToken)
+  }
+
+  override def forAccessToken(accessToken: String): FacebookClient =
+    new DefaultFacebookClient(accessToken, version)
 
 }

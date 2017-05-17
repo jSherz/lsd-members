@@ -35,8 +35,9 @@ import akka.http.scaladsl.server.Route
 import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.{FBSignedRequest, Member}
 import com.jsherz.luskydive.dao.MemberDao
-import com.jsherz.luskydive.json.{SocialLoginRequest, SocialLoginResponse, SocialLoginUrlResponse}
+import com.jsherz.luskydive.json.{SocialLoginRequest, SocialLoginResponse, SocialLoginUrlResponse, SocialLoginVerifyRequest}
 import com.jsherz.luskydive.services.{JwtService, SocialService}
+import com.restfb.types.User
 
 import scala.concurrent.ExecutionContext
 import scalaz.{-\/, \/-}
@@ -58,6 +59,8 @@ class SocialLoginApi(
   private val invalidSignedRequest: Route =
     complete(StatusCodes.Unauthorized, SocialLoginResponse(success = false, Some("Invalid signed request."), None))
 
+  private val verificationFailed = complete(StatusCodes.Unauthorized, "Verification failed.")
+
   val socialLoginRoute: Route = (pathEnd & post & entity(as[SocialLoginRequest])) { req =>
     service.parseSignedRequest(req.signedRequest)
       .fold(invalidSignedRequest)(handleFbRequest)
@@ -67,9 +70,39 @@ class SocialLoginApi(
     complete(SocialLoginUrlResponse(service.createLoginUrl()))
   }
 
+
+  val verifyRoute: Route = (path("verify") & post & entity(as[SocialLoginVerifyRequest])) { req =>
+    service.getUserAccessToken(req.verificationCode).fold(_ => verificationFailed, { accessToken =>
+      val userRequest = service.getUserForAccessToken(accessToken.getAccessToken)
+
+      userRequest.fold(_ => verificationFailed, { user =>
+        onSuccess(memberDao.forSocialId(user.getId)) {
+          case \/-(maybeMember: Option[Member]) => {
+            useOrCreateMemberAndIssueJwt(maybeMember, user)
+          }
+          case -\/(error: String) => complete(StatusCodes.InternalServerError, error)
+        }
+      })
+    })
+  }
+
   private def handleFbRequest(request: FBSignedRequest): Route = {
     onSuccess(memberDao.forSocialId(request.userId)) {
       _.fold(lookupFailed, issueJwtForMemberLookup(request.userId))
+    }
+  }
+
+  private def useOrCreateMemberAndIssueJwt(maybeMember: Option[Member], user: User): Route = {
+    maybeMember match {
+      case Some(member: Member) =>
+        val jwt = generateJwt(member.uuid.get)
+
+        complete(SocialLoginResponse(success = true, None, Some(jwt)))
+
+      case None =>
+        log.info(s"Member not found with social ID '${user.getId}', creating one.")
+
+        createMember(user.getId)(user.getFirstName, user.getLastName, user.getEmail)
     }
   }
 
@@ -125,7 +158,8 @@ class SocialLoginApi(
 
   val route: Route = pathPrefix("social-login") {
     socialLoginRoute ~
-      getLoginUrlRoute
+      getLoginUrlRoute ~
+      verifyRoute
   }
 
 }

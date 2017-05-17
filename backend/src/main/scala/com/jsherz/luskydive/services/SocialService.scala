@@ -28,6 +28,8 @@ import java.io.IOException
 
 import akka.event.LoggingAdapter
 import com.jsherz.luskydive.core.FBSignedRequest
+import com.jsherz.luskydive.util.FbClientFactory
+import com.restfb.FacebookClient.AccessToken
 import com.restfb.exception.FacebookException
 import com.restfb.json.{JsonException, JsonObject}
 import com.restfb.scope.{ExtendedPermissions, ScopeBuilder}
@@ -39,6 +41,10 @@ import scalaz.{-\/, \/, \/-}
 trait SocialService {
 
   def parseSignedRequest(signedRequest: String): Option[FBSignedRequest]
+
+  def getUserAccessToken(verificationCode: String): \/[String, AccessToken]
+
+  def getUserForAccessToken(accessToken: String): \/[String, User]
 
   def getNameAndEmail(userId: String): \/[String, (String, String, String)]
 
@@ -53,21 +59,51 @@ trait SocialService {
   * <p>
   * It's for social website authentication.
   */
-class SocialServiceImpl(fbClient: FacebookClient, fbAppId: String, appSecret: String, loginReturnUrl: String)
+class SocialServiceImpl(fbClientFactory: FbClientFactory, appId: String, appSecret: String, loginReturnUrl: String)
                        (implicit log: LoggingAdapter) extends SocialService {
 
   log.info("Obtaining FB access token...")
-  private val accessToken = fbClient.obtainAppAccessToken(fbAppId, appSecret)
-  log.info(s"FB init complete - token valid until ${accessToken.getExpires} (type = ${accessToken.getTokenType})")
-  private val authenticatedFbClient = new DefaultFacebookClient(accessToken.getAccessToken, Version.VERSION_2_9)
+  private val fbClient = fbClientFactory.forAppIdAndSecret(appId, appSecret)
+  log.info(s"FB init complete")
 
   override def parseSignedRequest(signedRequest: String): Option[FBSignedRequest] = try {
     Some(fbClient.parseSignedRequest(signedRequest, appSecret, classOf[FBSignedRequest]))
   } catch {
     case ex: FacebookException =>
-      log.error(ex, s"Failed to parse FB signed request.")
+      log.error(ex, "Failed to parse FB signed request.")
 
       None
+  }
+
+  /**
+    * Use a verification code to request an access token for a user.
+    *
+    * @param verificationCode Sent as a query param to our login return URL
+    * @return
+    */
+  override def getUserAccessToken(verificationCode: String): \/[String, AccessToken] = try {
+    \/-(fbClient.obtainUserAccessToken(appId, appSecret, loginReturnUrl, verificationCode))
+  } catch {
+    case ex: FacebookException =>
+      log.error(ex, s"Failed to get a user access token for verification code '${verificationCode}'.")
+      -\/(ex.getMessage)
+  }
+
+  /**
+    * Get a user's information using only an access token.
+    *
+    * @param accessToken Access token granted for a user
+    * @return
+    */
+  override def getUserForAccessToken(accessToken: String): \/[String, User] = try {
+    val userAuthdFbClient = fbClientFactory.forAccessToken(accessToken)
+
+    \/-(userAuthdFbClient.fetchObject("/me", classOf[User], Parameter.`with`("fields", "id,first_name,last_name,name,email")))
+  } catch {
+    case ex: FacebookException =>
+      log.error(ex, "Failed to get user for access token.")
+
+      -\/(ex.getMessage)
   }
 
   /**
@@ -78,7 +114,7 @@ class SocialServiceImpl(fbClient: FacebookClient, fbAppId: String, appSecret: St
     */
   override def getNameAndEmail(userId: String): \/[String, (String, String, String)] = {
     try {
-      val user: User = authenticatedFbClient.fetchObject(userId, classOf[User],
+      val user: User = fbClient.fetchObject(userId, classOf[User],
         Parameter.`with`("fields", "id,first_name,last_name,name,email"))
 
       log.info(s"Welcome '${user.getName}' to LSD!")
@@ -105,7 +141,7 @@ class SocialServiceImpl(fbClient: FacebookClient, fbAppId: String, appSecret: St
     */
   override def getProfilePhoto(userId: String): \/[String, String] = {
     try {
-      val picture: JsonObject = authenticatedFbClient.fetchObject(
+      val picture: JsonObject = fbClient.fetchObject(
         s"$userId/picture",
         classOf[JsonObject],
         Parameter.`with`("redirect", "false"),
@@ -131,7 +167,7 @@ class SocialServiceImpl(fbClient: FacebookClient, fbAppId: String, appSecret: St
     val scope = new ScopeBuilder()
     scope.addPermission(ExtendedPermissions.EMAIL)
 
-    fbClient.getLoginDialogUrl(fbAppId, loginReturnUrl, scope)
+    fbClient.getLoginDialogUrl(appId, loginReturnUrl, scope)
   }
 
 }

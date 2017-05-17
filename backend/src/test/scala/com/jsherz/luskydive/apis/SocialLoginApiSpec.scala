@@ -29,8 +29,7 @@ import java.util.UUID
 
 import akka.actor.ActorSystem
 import akka.event.{Logging, LoggingAdapter}
-import akka.http.scaladsl.model.{ContentType, HttpHeader, StatusCodes}
-import akka.http.scaladsl.model.ContentTypes
+import akka.http.scaladsl.model.{ContentTypes, StatusCodes}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.auth0.jwt.JWT
@@ -38,15 +37,20 @@ import com.jsherz.luskydive.core.{FBSignedRequest, Member}
 import com.jsherz.luskydive.dao.MemberDao
 import com.jsherz.luskydive.json.MemberJsonSupport.MemberFormat
 import com.jsherz.luskydive.json.SocialLoginJsonSupport._
-import com.jsherz.luskydive.json.{SocialLoginRequest, SocialLoginResponse, SocialLoginUrlResponse}
+import com.jsherz.luskydive.json.{SocialLoginRequest, SocialLoginResponse, SocialLoginUrlResponse, SocialLoginVerifyRequest}
 import com.jsherz.luskydive.services.{JwtServiceImpl, SocialService}
 import com.jsherz.luskydive.util.Util
+import com.restfb.FacebookClient.AccessToken
+import com.restfb.types.User
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers.any
+import org.mockito.Matchers.{any, anyString}
 import org.mockito.Mockito.{mock, verify, when}
+import org.mockito.invocation.InvocationOnMock
+import org.mockito.stubbing.Answer
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.concurrent.Future
+import scala.util.Random
 import scalaz.{-\/, \/, \/-}
 
 class SocialLoginApiSpec extends WordSpec with Matchers with ScalatestRouteTest {
@@ -210,6 +214,122 @@ class SocialLoginApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
         response.status shouldEqual StatusCodes.OK
         contentType shouldEqual ContentTypes.`application/json`
         responseAs[SocialLoginUrlResponse] shouldEqual SocialLoginUrlResponse(expectedUrl)
+      }
+    }
+
+  }
+
+  "SocialLoginApi#social-login/verify" should {
+
+    "return an error when obtaining the access token fails" in {
+      val (api, socialService, _) = buildApi(
+        fbReq("15151818181"),
+        aMember(None),
+        newMemberUuid(UUID.randomUUID())
+      )
+
+      when(socialService.getUserAccessToken(anyString)).thenReturn(-\/("boohoo"))
+
+      val request = SocialLoginVerifyRequest("blah-blah-blah")
+
+      Post("/social-login/verify", request) ~> Route.seal(api) ~> check {
+        response.status shouldEqual StatusCodes.Unauthorized
+        responseAs[String] shouldEqual "Verification failed."
+      }
+    }
+
+    "return an error when getting the user's social ID for the access token fails" in {
+      val (api, socialService, _) = buildApi(
+        fbReq("15151818181"),
+        aMember(None),
+        newMemberUuid(UUID.randomUUID())
+      )
+
+      when(socialService.getUserAccessToken(anyString)).thenReturn(\/-(AccessToken.fromQueryString("?access_token=moo")))
+      when(socialService.getUserForAccessToken(anyString)).thenReturn(-\/("getting user failed"))
+
+      val request = SocialLoginVerifyRequest("blah-blah-blah")
+
+      Post("/social-login/verify", request) ~> Route.seal(api) ~> check {
+        response.status shouldEqual StatusCodes.Unauthorized
+        responseAs[String] shouldEqual "Verification failed."
+      }
+    }
+
+    "return a valid JWT when all lookups succeed (and the member exists)" in {
+      val member = Util.fixture[Member]("e1442281.json")
+      val (api, socialService, _) = buildApi(
+        fbReq("15151818181"),
+        aMember(Some(member)),
+        newMemberUuid(UUID.randomUUID())
+      )
+
+      val expectedUser = new User()
+      expectedUser.setFirstName("Liam")
+      expectedUser.setLastName("Bloggs")
+      expectedUser.setId(Random.nextLong().toString)
+
+      when(socialService.getUserAccessToken(anyString)).thenReturn(\/-(AccessToken.fromQueryString("?access_token=moo")))
+      when(socialService.getUserForAccessToken(anyString)).thenReturn(\/-(expectedUser))
+
+      val request = SocialLoginVerifyRequest("blah-blah-blah")
+
+      Post("/social-login/verify", request) ~> Route.seal(api) ~> check {
+        response.status shouldEqual StatusCodes.OK
+
+        val socialResponse = responseAs[SocialLoginResponse]
+        socialResponse.jwt.isDefined shouldBe true
+        socialResponse.jwt foreach { jwt =>
+          val decoded = JWT.decode(jwt)
+
+          decoded.getClaim("UUID").asString() shouldEqual member.uuid.get.toString
+        }
+      }
+    }
+
+    "return a valid JWT when all lookups succeed (and a member was created)" in {
+      val (api, socialService, memberDao) = buildApi(
+        fbReq(""),
+        aMember(None),
+        newMemberUuid(UUID.randomUUID())
+      )
+
+      val expectedUser = new User()
+      expectedUser.setFirstName("Lianne")
+      expectedUser.setLastName("Bloggs")
+      expectedUser.setId("1284189814")
+      expectedUser.setEmail("farm@localhost.farms")
+
+      when(socialService.getUserAccessToken(anyString)).thenReturn(\/-(AccessToken.fromQueryString("?access_token=moo")))
+      when(socialService.getUserForAccessToken(anyString)).thenReturn(\/-(expectedUser))
+
+      // Return the passed in UUID when the member is created
+      when(memberDao.create(any[Member])).thenAnswer(new Answer[Future[String \/ UUID]]() {
+        override def answer(invocation: InvocationOnMock): Future[String \/ UUID] = {
+          Future.successful(\/-(invocation.getArgumentAt(0, classOf[Member]).uuid.get))
+        }
+      })
+
+      val request = SocialLoginVerifyRequest("blah-blah-blah")
+
+      Post("/social-login/verify", request) ~> Route.seal(api) ~> check {
+        response.status shouldEqual StatusCodes.OK
+
+        val socialResponse = responseAs[SocialLoginResponse]
+        socialResponse.jwt.isDefined shouldBe true
+        socialResponse.jwt foreach { jwt =>
+          // Ensure a member was created
+          val createdMemberCaptor = ArgumentCaptor.forClass(classOf[Member])
+          verify(memberDao).create(createdMemberCaptor.capture())
+
+          val createdMember = createdMemberCaptor.getValue
+          createdMember.firstName shouldEqual "Lianne"
+          createdMember.lastName shouldEqual Some("Bloggs")
+          createdMember.email shouldEqual Some("farm@localhost.farms")
+
+          val decoded = JWT.decode(jwt)
+          decoded.getClaim("UUID").asString() shouldEqual createdMemberCaptor.getValue.uuid.get.toString
+        }
       }
     }
 

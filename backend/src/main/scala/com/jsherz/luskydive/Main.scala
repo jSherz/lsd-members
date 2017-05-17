@@ -33,7 +33,7 @@ import akka.http.scaladsl.Http
 import akka.stream.ActorMaterializer
 import com.jsherz.luskydive.dao._
 import com.jsherz.luskydive.services._
-import com.jsherz.luskydive.util.Config
+import com.jsherz.luskydive.util.{Config, FbClientFactoryImpl}
 import com.restfb.{DefaultFacebookClient, Version}
 import org.flywaydb.core.Flyway
 import org.slf4j.bridge.SLF4JBridgeHandler
@@ -79,8 +79,8 @@ object Main extends App with Config {
   val massTextDao = new MassTextDaoImpl(databaseService)
   val textMessageDao = new TextMessageDaoImpl(databaseService)
 
-  val fbClient = new DefaultFacebookClient(Version.VERSION_2_9)
-  val socialService = new SocialServiceImpl(fbClient, fbAppId, fbSecret, loginReturnUrl)
+  val fbClientFactory = new FbClientFactoryImpl(Version.VERSION_2_9)
+  val socialService = new SocialServiceImpl(fbClientFactory, fbAppId, fbSecret, loginReturnUrl)
   val jwtService = new JwtServiceImpl(jwtSecret)
 
   val httpService = new HttpService(memberDao, courseDao, committeeMemberDao, courseSpaceDao, authDao, massTextDao,
