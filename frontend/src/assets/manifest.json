@@ -1,0 +1,26 @@
+{
+  "short_name": "LU Skydive",
+  "name": "Leeds Uni Skydivers",
+  "icons": [
+    {
+      "src": "/assets/images/launchers/icon-1x.png",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "/assets/images/launchers/icon-2x.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "/assets/images/launchers/icon-4x.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#01709a",
+  "theme_color": "#c40205",
+  "display": "standalone",
+  "orientation": "portrait"
+}
