@@ -1,7 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {HttpModule} from '@angular/http';
-import {FacebookModule} from 'ngx-facebook';
 
 import {
   FormsModule,
@@ -23,7 +22,6 @@ import {JwtLoginService, JwtLoginServiceImpl, JwtService, JwtServiceImpl} from '
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
-    FacebookModule.forRoot(),
     membersRouting
   ],
   declarations: [

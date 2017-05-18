@@ -1,21 +1,14 @@
 import {TestBed, inject} from '@angular/core/testing';
 
 import {SocialLoginService, SocialLoginServiceImpl} from './social-login.service';
-import {FacebookService} from 'ngx-facebook';
+import {Http} from '@angular/http';
 
 describe('SocialLoginService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        {provide: FacebookService, useValue: {
-          init: (values: any) => {},
-          login: () => {
-            return {
-              status: 'connected'
-            };
-          }
-        }},
-        {provide: SocialLoginService, useClass: SocialLoginServiceImpl}
+        {provide: SocialLoginService, useClass: SocialLoginServiceImpl},
+        {provide: Http, useValue: {}}
       ]
     });
   });

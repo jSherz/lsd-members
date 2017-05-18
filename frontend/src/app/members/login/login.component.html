@@ -14,13 +14,12 @@
   <div id="login">
     <p>Login to view your course booking and membership information.</p>
 
-    <p id="login-button">
-      <a class="button" (click)="login()"><i class="fa fa-facebook"></i> Login with Facebook</a>
+    <p id="login-button" *ngIf="!loginUnavailable">
+      <a class="button" [href]="loginUrl"><i class="fa fa-facebook"></i> Login with Facebook</a>
     </p>
 
-    <div class="error" *ngIf="loginFailed">
-      Login failed. Please try again later. If the login keeps failing, check if you're using a browser add-on /
-      extension that blocks social websites (e.g. Disconnect, Ghostery).
+    <div class="error" *ngIf="loginUnavailable">
+      The members login is currently unavailable. Please try again later.
     </div>
 
     <hr>

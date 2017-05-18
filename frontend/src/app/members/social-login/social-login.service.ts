@@ -1,37 +1,42 @@
 import {Injectable} from '@angular/core';
-import {FacebookService, InitParams, LoginOptions, LoginResponse} from 'ngx-facebook';
+import {Http} from '@angular/http';
+
+import {Observable} from 'rxjs/Observable';
+
+import {environment} from '../../../environments/environment';
+import {SocialLoginRequest, SocialLoginResponse, SocialLoginUrlResponse} from './model';
 
 export abstract class SocialLoginService {
 
-  abstract login(): Promise<LoginResponse>;
+  abstract getLoginUrl(): Observable<SocialLoginUrlResponse>;
+
+  abstract login(verificationCode: string): Observable<SocialLoginResponse>;
 
 }
 
 @Injectable()
 export class SocialLoginServiceImpl implements SocialLoginService {
 
-  static FB_PARAMS: InitParams = {
-    appId: '555160587939138',
-    xfbml: true,
-    version: 'v2.8'
-  };
+  private http: Http;
 
-  static LOGIN_PARAMS: LoginOptions = {
-    scope: 'public_profile,email'
-  };
+  private baseEndpoint: string = environment.apiUrl + '/api/v1/social-login';
+  private getLoginUrlEndpoint: string = this.baseEndpoint + '/url';
+  private loginEndpoint: string = this.baseEndpoint;
 
-  constructor(private fb: FacebookService) {
-    fb.init(SocialLoginServiceImpl.FB_PARAMS);
+  constructor(http: Http) {
+    this.http = http;
   }
 
-  login(): Promise<LoginResponse> {
-    return this.fb.getLoginStatus().then(status => {
-      if (status.status === 'connected') {
-        return Promise.resolve(status);
-      } else {
-        return this.fb.login(SocialLoginServiceImpl.LOGIN_PARAMS);
-      }
-    });
+  getLoginUrl(): Observable<SocialLoginUrlResponse> {
+    return this.http.get(this.getLoginUrlEndpoint)
+      .map(r => r.json() as SocialLoginUrlResponse);
+  }
+
+  login(verificationCode: string): Observable<SocialLoginResponse> {
+    const request = new SocialLoginRequest(verificationCode);
+
+    return this.http.post(this.loginEndpoint, request)
+      .map(r => r.json() as SocialLoginResponse);
   }
 
 }

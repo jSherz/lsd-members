@@ -1,10 +1,5 @@
 import {Component} from '@angular/core';
-import {Router} from '@angular/router';
-import {LoginResponse} from 'ngx-facebook';
-import {Observable} from 'rxjs/Observable';
 
-import {JwtLoginService} from './jwt-login.service';
-import {LoginResult} from './login-result';
 import {SocialLoginService} from '../social-login/social-login.service';
 
 @Component({
@@ -14,40 +9,21 @@ import {SocialLoginService} from '../social-login/social-login.service';
 })
 export class LoginComponent {
 
-  loginFailed = false;
+  loginUrl: string = null;
 
-  constructor(private socialLoginService: SocialLoginService,
-              private loginService: JwtLoginService,
-              private router: Router) {
-  }
+  loginUnavailable = false;
 
-  login() {
-    this.socialLoginService.login()
-      .then((response) => this.handleLoginResult(response))
-      .catch((error: any) => {
-        console.error('Login failed - may be as Facebook SDK could not be loaded (e.g. Disconnect or Ghostery' +
-          'installed).', error);
-
-        this.loginFailed = true;
-      });
-  }
-
-  private handleLoginResult(response: LoginResponse) {
-    if (response.status === 'connected') {
-      this.loginService.login(response.authResponse.signedRequest)
-        .subscribe((result: LoginResult) => {
-            this.router.navigate(['members', 'dashboard']);
-          },
-          (error: any) => {
-            console.error('App part of login failed.', error);
-
-            this.loginFailed = true;
-          });
-    } else {
-      console.log('Login failed - show error.', response.status);
-
-      this.loginFailed = true;
-    }
+  constructor(private socialLoginService: SocialLoginService) {
+    this.socialLoginService.getLoginUrl()
+      .subscribe(
+        response => {
+          this.loginUrl = response.url;
+        },
+        error => {
+          console.error('Failed to get login URL:', error);
+          this.loginUnavailable = true;
+        }
+      );
   }
 
 }

@@ -6,3 +6,9 @@ export {
 export {
   SocialLoginServiceStub
 } from './social-login.service.stub';
+
+export {
+  SocialLoginUrlResponse,
+  SocialLoginResponse,
+  SocialLoginRequest
+} from './model';
