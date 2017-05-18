@@ -1,11 +1,21 @@
 <div id="intro-snippet">
   <p>
-    <a href="http://www.leedsuniversityunion.org.uk/groups/skydiving/" title="Join us now">Join us now</a> and start skydiving for just &pound;175!
+    <a href="http://www.leedsuniversityunion.org.uk/groups/skydiving/" title="Join us now">Join us now</a> and start
+    skydiving for just &pound;175!
   </p>
 </div>
 
 <div id="frontpage-video">
   <div id="frontpage-video-wrapper">
-    <iframe src="//player.vimeo.com/video/65379442?badge=0&title=0&color=ffffff&byline=0" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+    <iframe *ngIf="showVideo"
+            src="//player.vimeo.com/video/65379442?badge=0&title=0&color=ffffff&byline=0&autoplay=true"
+            frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+
+    <div id="video-placeholder" *ngIf="!showVideo">
+      <a href="" (click)="$event.preventDefault(); loadVideo()">
+        <img src="/assets/images/video-placeholder.jpg"
+             alt="Video placeholder - click to view We Own the Sky on Vimeo.">
+      </a>
+    </div>
   </div>
 </div>
