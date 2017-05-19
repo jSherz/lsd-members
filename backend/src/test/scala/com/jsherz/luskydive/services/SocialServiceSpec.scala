@@ -31,11 +31,11 @@ import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.jsherz.luskydive.core.FBSignedRequest
 import com.jsherz.luskydive.util.FbClientFactory
-import com.restfb.{FacebookClient, Parameter}
 import com.restfb.FacebookClient.AccessToken
 import com.restfb.exception.{FacebookJsonMappingException, FacebookSignedRequestParsingException}
 import com.restfb.scope.ScopeBuilder
 import com.restfb.types.User
+import com.restfb.{FacebookClient, Parameter}
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.{any, anyString, eq => meq}
 import org.mockito.Mockito.{mock, when}
@@ -195,14 +195,36 @@ class SocialServiceSpec extends WordSpec with Matchers with ScalatestRouteTest {
       when(fb.parseSignedRequest("asdasdasd", "asdasdas", classOf[FBSignedRequest]))
         .thenReturn(dummySignedRequest())
 
-      when(fb.getLoginDialogUrl(meq(myAppId), meq(redirectUrl), scopeBuilder.capture()))
+      val unauthenticatedFb = mock(classOf[FacebookClient])
+      when(unauthenticatedFb.getLoginDialogUrl(meq(myAppId), meq(redirectUrl), scopeBuilder.capture()))
         .thenReturn(expectedGeneratedUrl)
 
-      val service = new SocialServiceImpl(factoryFor(fb), myAppId, "katsucurry", redirectUrl)
+      val factory = factoryFor(fb)
+      when(factory.unauthenticated()).thenReturn(unauthenticatedFb)
+
+      val service = new SocialServiceImpl(factory, myAppId, "katsucurry", redirectUrl)
 
       service.createLoginUrl() shouldEqual expectedGeneratedUrl
 
       scopeBuilder.getValue.toString shouldEqual "public_profile,email"
+    }
+
+    "use an unauthenticated client" in {
+      val fb = mock(classOf[FacebookClient])
+      when(fb.obtainAppAccessToken(anyString, anyString)).thenReturn(AccessToken.fromQueryString("?access_token=blah"))
+      when(fb.parseSignedRequest("asdasdasd", "asdasdas", classOf[FBSignedRequest]))
+        .thenReturn(dummySignedRequest())
+
+      val unauthenticatedFb = mock(classOf[FacebookClient])
+      when(unauthenticatedFb.getLoginDialogUrl(anyString, anyString, any[ScopeBuilder]))
+        .thenReturn("no auth, no problem")
+
+      val factory = factoryFor(fb)
+      when(factory.unauthenticated()).thenReturn(unauthenticatedFb)
+
+      val service = new SocialServiceImpl(factory, "asdasdsa", "1238183123", "????")
+
+      service.createLoginUrl() shouldEqual "no auth, no problem"
     }
 
   }

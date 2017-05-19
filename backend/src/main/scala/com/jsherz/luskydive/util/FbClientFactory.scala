@@ -32,6 +32,8 @@ trait FbClientFactory {
 
   def forAccessToken(accessToken: String): FacebookClient
 
+  def unauthenticated(): FacebookClient
+
 }
 
 class FbClientFactoryImpl(private val version: Version) extends FbClientFactory {
@@ -44,5 +46,8 @@ class FbClientFactoryImpl(private val version: Version) extends FbClientFactory 
 
   override def forAccessToken(accessToken: String): FacebookClient =
     new DefaultFacebookClient(accessToken, version)
+
+  override def unauthenticated(): FacebookClient =
+    new DefaultFacebookClient(version)
 
 }

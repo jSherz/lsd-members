@@ -64,6 +64,7 @@ class SocialServiceImpl(fbClientFactory: FbClientFactory, appId: String, appSecr
 
   log.info("Obtaining FB access token...")
   private val fbClient = fbClientFactory.forAppIdAndSecret(appId, appSecret)
+  private val unauthenticatedFbClient = fbClientFactory.unauthenticated()
   log.info(s"FB init complete")
 
   override def parseSignedRequest(signedRequest: String): Option[FBSignedRequest] = try {
@@ -167,7 +168,7 @@ class SocialServiceImpl(fbClientFactory: FbClientFactory, appId: String, appSecr
     val scope = new ScopeBuilder()
     scope.addPermission(ExtendedPermissions.EMAIL)
 
-    fbClient.getLoginDialogUrl(appId, loginReturnUrl, scope)
+    unauthenticatedFbClient.getLoginDialogUrl(appId, loginReturnUrl, scope)
   }
 
 }
