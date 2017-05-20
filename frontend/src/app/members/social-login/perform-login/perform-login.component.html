@@ -1,0 +1,16 @@
+<div id="perform-login-wrapper">
+  <div>
+    <div id="login-loading" *ngIf="!loginFailed">
+      <p>Please wait while you are logged in...</p>
+
+      <div class="loader"></div>
+    </div>
+
+    <div id="login-failed" *ngIf="loginFailed">
+      <p>Sorry, we were unable to log you in at this time.</p>
+      <p>
+        <a [routerLink]="['/members']">Try again</a>
+      </p>
+    </div>
+  </div>
+</div>

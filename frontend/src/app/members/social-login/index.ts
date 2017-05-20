@@ -12,3 +12,7 @@ export {
   SocialLoginResponse,
   SocialLoginRequest
 } from './model';
+
+export {
+  PerformLoginComponent
+} from './perform-login';

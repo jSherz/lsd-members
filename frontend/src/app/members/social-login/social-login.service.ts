@@ -21,7 +21,7 @@ export class SocialLoginServiceImpl implements SocialLoginService {
 
   private baseEndpoint: string = environment.apiUrl + '/api/v1/social-login';
   private getLoginUrlEndpoint: string = this.baseEndpoint + '/url';
-  private loginEndpoint: string = this.baseEndpoint;
+  private loginEndpoint: string = this.baseEndpoint + '/verify';
 
   constructor(http: Http) {
     this.http = http;

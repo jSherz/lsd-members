@@ -13,7 +13,11 @@ import {MembersComponent} from './members.component';
 import {LoginComponent} from './login';
 import {DashboardComponent, ProfileComponent, DashboardService, DashboardServiceImpl} from './dashboard';
 import {NotApprovedComponent} from './not-approved/not-approved.component';
-import {SocialLoginService, SocialLoginServiceImpl} from './social-login/social-login.service';
+import {
+  SocialLoginService,
+  SocialLoginServiceImpl,
+  PerformLoginComponent
+} from './social-login';
 import {JwtLoginService, JwtLoginServiceImpl, JwtService, JwtServiceImpl} from './login';
 
 @NgModule({
@@ -29,7 +33,8 @@ import {JwtLoginService, JwtLoginServiceImpl, JwtService, JwtServiceImpl} from '
     LoginComponent,
     DashboardComponent,
     NotApprovedComponent,
-    ProfileComponent
+    ProfileComponent,
+    PerformLoginComponent
   ],
   bootstrap: [],
   providers: [

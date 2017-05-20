@@ -4,7 +4,7 @@ export abstract class JwtService {
 
   abstract getJwt(): string;
 
-  abstract setJwt(apiKey: string);
+  abstract setJwt(jwt: string);
 
   abstract isAuthenticated(): boolean;
 
