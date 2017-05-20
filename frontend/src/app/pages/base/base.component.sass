@@ -9,23 +9,20 @@
   margin: 0 auto
   max-width: 88em
 
-#navbar, #content, #footer
+#navbar, #footer
   & > div
     @include grid-column(12)
 
-// Header
-$header-breakpoint: max-width 40em
+#content
+  width: 100%
+  margin: 0
 
+// Header
 #header
-  margin-top: 1rem
-  margin-bottom: 1rem
+  margin-bottom: 1.5rem
 
 #header-logo
   @include grid-column(4)
-
-  @media #{$header-breakpoint}
-    @include grid-column(12)
-    text-align: center
 
 #header-title
   @include grid-column(8)
@@ -49,7 +46,16 @@ $header-breakpoint: max-width 40em
   @media(max-width: 40rem)
     @include grid-column(12)
 
-// Social icons
+#social-icons
+  position: absolute
+  right: 1em
+  top: 1em
+
+  @media(min-width: 40rem)
+    position: relative
+    right: auto
+    top: auto
+
 #facebook-icon, #twitter-icon
   z-index: 100
   font-size: 3rem
@@ -98,8 +104,9 @@ $header-breakpoint: max-width 40em
 
     a
       letter-spacing: 0.05em
-      font-size: 1.35rem
-      padding: 0.8em 1em
+      //font-size: 1.35rem
+      //padding: 0.8em 1em
+      padding: 0.8em 0.5em
       display: block
       color: darken($lsd_blue, 10%)
       text-decoration: none
@@ -115,7 +122,7 @@ $header-breakpoint: max-width 40em
     &#join-lsd-btn a
       color: #009B00
 
-  @media(max-width: 70rem)
+  @media(max-width: 50rem)
     .separator
       display: none
 
