@@ -2,12 +2,6 @@
 
 import {NgModule, ErrorHandler} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {
-  FormsModule,
-  FormBuilder,
-  ReactiveFormsModule
-} from '@angular/forms';
-import {HttpModule} from '@angular/http';
 import {LocationStrategy, PathLocationStrategy} from '@angular/common';
 import {Angulartics2Module, Angulartics2GoogleAnalytics} from 'angulartics2';
 import {RavenErrorHandler} from './utils/error-handler';
@@ -29,9 +23,6 @@ import {
 @NgModule({
   imports: [
     BrowserModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpModule,
     routing,
     Angulartics2Module.forRoot([Angulartics2GoogleAnalytics])
   ],
@@ -51,7 +42,6 @@ import {
     AppComponent
   ],
   providers: [
-    FormBuilder,
     {provide: LocationStrategy, useClass: PathLocationStrategy},
     {provide: ErrorHandler, useClass: RavenErrorHandler}
   ]
