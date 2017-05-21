@@ -16,6 +16,11 @@
       "src": "/assets/images/launchers/icon-4x.png",
       "type": "image/png",
       "sizes": "192x192"
+    },
+    {
+      "src": "/assets/images/launchers/icon-11x.png",
+      "type": "image/png",
+      "sizes": "528x528"
     }
   ],
   "start_url": "/",
