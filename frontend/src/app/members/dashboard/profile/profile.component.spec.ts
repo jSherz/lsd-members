@@ -1,6 +1,7 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ProfileComponent} from './profile.component';
+import {BasicInfo} from '../basic-info';
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;
@@ -19,16 +20,18 @@ describe('ProfileComponent', () => {
   });
 
   it('should display a name if one is provided', () => {
-    component.name = 'Billy';
+    component.basicInfo = new BasicInfo();
+    component.basicInfo.firstName = 'Billy';
 
     expect(component.hasName()).toBeTruthy();
   });
 
   it('should display no name if one isn\'t provided', () => {
-    component.name = '';
+    component.basicInfo = new BasicInfo();
+    component.basicInfo.firstName = '';
     expect(component.hasName()).toBeFalsy();
 
-    component.name = null;
+    component.basicInfo = null;
     expect(component.hasName()).toBeFalsy();
   });
 

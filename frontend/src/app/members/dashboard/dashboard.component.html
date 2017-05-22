@@ -27,12 +27,8 @@
 
 <div id="dashboard-wrapper">
   <div id="profile">
-    <div *ngIf="basicInfo">
-      <lsd-profile [name]="basicInfo.firstName"></lsd-profile>
-    </div>
-
-    <div *ngIf="!basicInfo">
-      <p>Loading your profile...</p>
+    <div>
+      <lsd-profile [basicInfo]="basicInfo"></lsd-profile>
     </div>
   </div>
 

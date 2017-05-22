@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {BasicInfo} from '../basic-info';
 
 @Component({
   selector: 'lsd-profile',
@@ -7,10 +8,10 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class ProfileComponent {
 
-  @Input() name: String;
+  @Input() basicInfo: BasicInfo;
 
   hasName() {
-    return this.name && this.name.length >= 1;
+    return this.basicInfo && this.basicInfo.firstName;
   }
 
 }
