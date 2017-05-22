@@ -26,13 +26,21 @@
 </div>
 
 <div id="dashboard-wrapper">
-  <div *ngIf="basicInfo">
-    <div id="profile">
+  <div id="profile">
+    <div *ngIf="basicInfo">
       <lsd-profile [name]="basicInfo.firstName"></lsd-profile>
+    </div>
+
+    <div *ngIf="!basicInfo">
+      <p>Loading your profile...</p>
     </div>
   </div>
 
-  <div *ngIf="!basicInfo">
-    <p>Loading...</p>
+  <div id="dashboard-packing-list">
+    <lsd-packing-list></lsd-packing-list>
+  </div>
+
+  <div id="dashboard-key-info">
+    <lsd-key-info></lsd-key-info>
   </div>
 </div>

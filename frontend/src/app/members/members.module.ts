@@ -19,6 +19,8 @@ import {
   PerformLoginComponent
 } from './social-login';
 import {JwtLoginService, JwtLoginServiceImpl, JwtService, JwtServiceImpl} from './login';
+import { KeyInfoComponent } from './key-info/key-info.component';
+import { PackingListComponent } from './packing-list/packing-list.component';
 
 @NgModule({
   imports: [
@@ -34,7 +36,9 @@ import {JwtLoginService, JwtLoginServiceImpl, JwtService, JwtServiceImpl} from '
     DashboardComponent,
     NotApprovedComponent,
     ProfileComponent,
-    PerformLoginComponent
+    PerformLoginComponent,
+    KeyInfoComponent,
+    PackingListComponent
   ],
   bootstrap: [],
   providers: [

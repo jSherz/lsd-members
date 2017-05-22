@@ -53,6 +53,7 @@ $header-breakpoint: max-width 40em
   @media(min-width: 37.5em)
     margin-top: -7em
     margin-bottom: 8em
+    padding-right: 1.5em
 
 #facebook-icon, #twitter-icon
   z-index: 100
@@ -80,5 +81,14 @@ $header-breakpoint: max-width 40em
 
 #profile
   @include grid-column(12)
+
+#dashboard-key-info, #dashboard-packing-list
+  @include grid-column(12)
+
+  @media (min-width: 64em)
+    @include grid-column(6)
+
+#profile, #dashboard-key-info, #dashboard-packing-list
   padding: 1em
   background: white
+  margin-bottom: 1em

@@ -1,0 +1,40 @@
+@import '../../../assets/css/variables'
+
+$checkbox: #f1f1f1
+$checkbox-foreground: darken($checkbox, 20%)
+$checkbox-checked: $lsd-blue
+$checkbox-checked-foreground: #fff
+
+h2
+  text-align: center
+  letter-spacing: 0.05em
+  border-bottom: solid 0.1em #ccc
+  padding-bottom: 0.5em
+
+input
+  display: block
+  width: 0
+  height: 0
+  opacity: 0
+
+label::before
+  font-family: FontAwesome
+  content: '  \F00C  '
+  font-size: 1.5em
+  width: 1.7em
+  text-align: center
+  overflow: hidden
+  background: $checkbox
+  color: $checkbox-foreground
+  border: solid 0.1em lighten($checkbox, 10%)
+  display: inline-block
+
+label span
+  display: block
+  margin-top: -2.3em
+  margin-left: 3.5em
+  margin-bottom: 1em
+
+input:checked + label:before
+  background: $checkbox-checked
+  color: $checkbox-checked-foreground
