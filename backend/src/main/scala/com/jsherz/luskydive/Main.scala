@@ -78,13 +78,14 @@ object Main extends App with Config {
   val authDao = new AuthDaoImpl(databaseService)
   val massTextDao = new MassTextDaoImpl(databaseService)
   val textMessageDao = new TextMessageDaoImpl(databaseService)
+  val packingListDao = new PackingListItemDaoImpl(databaseService)
 
   val fbClientFactory = new FbClientFactoryImpl(Version.VERSION_2_9)
   val socialService = new SocialServiceImpl(fbClientFactory, fbAppId, fbSecret, loginReturnUrl)
   val jwtService = new JwtServiceImpl(jwtSecret)
 
   val httpService = new HttpService(memberDao, courseDao, committeeMemberDao, courseSpaceDao, authDao, massTextDao,
-    textMessageDao, textMessageReceiveApiKey, socialService, jwtService)
+    textMessageDao, textMessageReceiveApiKey, socialService, jwtService, packingListDao)
 
   Http().bindAndHandle(httpService.routes, interface, port)
 

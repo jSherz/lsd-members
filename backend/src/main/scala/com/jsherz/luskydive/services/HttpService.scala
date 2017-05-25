@@ -55,7 +55,8 @@ class HttpService(
                    textMessageDao: TextMessageDao,
                    textMessageReceiveApiKey: String,
                    socialService: SocialService,
-                   jwtService: JwtService
+                   jwtService: JwtService,
+                   packingListDao: PackingListItemDao
                  )
                  (implicit executionContext: ExecutionContext,
                   log: LoggingAdapter) {
@@ -73,6 +74,7 @@ class HttpService(
   val socialLoginApi = new SocialLoginApi(socialService, memberDao, jwtService)
   val currentMemberApi = new CurrentMemberApi(authenticateWithJwt, memberDao)
   val versionApi = new VersionApi
+  val packingListApi = new PackingListApi(authenticateWithJwt, packingListDao)
 
   val loginApi = new LoginApi(authDao)
 
@@ -91,7 +93,8 @@ class HttpService(
           textMessageApi.route ~
           socialLoginApi.route ~
           currentMemberApi.route ~
-          versionApi.route
+          versionApi.route ~
+          packingListApi.route
       }
     }
 

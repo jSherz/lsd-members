@@ -298,4 +298,27 @@ class Tables(protected val databaseService: DatabaseService) {
 
   }
 
+  protected val PackingListItems: TableQuery[PackingListTable] = TableQuery[PackingListTable]
+
+  protected class PackingListTable(tag: Tag) extends Table[PackingListItem](tag, "packing_list_items") {
+
+    def uuid: Rep[UUID] = column[UUID]("uuid", O.PrimaryKey)
+
+    def warmClothes: Rep[Boolean] = column[Boolean]("warm_clothes")
+
+    def sleepingBag: Rep[Boolean] = column[Boolean]("sleeping_bag")
+
+    def sturdyShoes: Rep[Boolean] = column[Boolean]("sturdy_shoes")
+
+    def cash: Rep[Boolean] = column[Boolean]("cash")
+
+    def toiletries: Rep[Boolean] = column[Boolean]("toiletries")
+
+    def member: ForeignKeyQuery[MembersTable, Member] =
+      foreignKey("packing_list_items_uuid_fkey", uuid, Members)(_.uuid, ForeignKeyAction.Cascade)
+
+    def * = (uuid, warmClothes, sleepingBag, sturdyShoes, cash, toiletries) <> (PackingListItem.tupled, PackingListItem.unapply)
+
+  }
+
 }

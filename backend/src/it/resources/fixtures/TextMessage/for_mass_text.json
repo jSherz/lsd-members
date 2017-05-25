@@ -2100,7 +2100,7 @@
     "committeeMemberUuid": "9f036a07-605b-44e8-a262-d33e7fc73d5d",
     "template": "Hellooooo {{ name }} - how are you doing? Excited for skydiving? Check out our website!! - Reply \"NOFUN\" to stop these messages.",
     "uuid": "5237bff3-c55b-4215-8a9b-47dc38578ec8",
-    "memberUuid": "6066143f-4bb9-41cc-ba22-ce41126752bf",
+    "memberUuid": "`",
     "massTextUuid": "1503f286-f1d6-4908-9fef-c96cee1ba1a8",
     "status": 1,
     "toNumber": "+447920271979",

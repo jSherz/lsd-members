@@ -22,15 +22,26 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.services
+package com.jsherz.luskydive.json
 
-import scala.concurrent.{ExecutionContext, Future}
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
+import com.jsherz.luskydive.core.PackingListItem
+import com.jsherz.luskydive.util.UuidJsonFormat
+import spray.json.DefaultJsonProtocol
 
-/**
-  * Created by james on 05/08/16.
-  */
-class UsersService(val databaseService: DatabaseService)(implicit ec: ExecutionContext) {
 
-  def test(): Future[String] = Future.successful("Hello, world!")
+case class StrippedPackingListItem(
+                                    warmClothes: Boolean,
+                                    sleepingBag: Boolean,
+                                    sturdyShoes: Boolean,
+                                    cash: Boolean,
+                                    toiletries: Boolean
+                                  )
+
+object PackingListJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
+
+  implicit val uuidFormat = UuidJsonFormat
+  implicit val packingListItemFormat = jsonFormat6(PackingListItem)
+  implicit val strippedPackingListItemFormat = jsonFormat5(StrippedPackingListItem)
 
 }
