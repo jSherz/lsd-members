@@ -82,13 +82,14 @@ $header-breakpoint: max-width 40em
 #profile
   @include grid-column(12)
 
-#dashboard-key-info, #dashboard-packing-list
+#dashboard-key-info, #dashboard-left, #dashboard-right
   @include grid-column(12)
 
   @media (min-width: 64em)
     @include grid-column(6)
 
-#profile, #dashboard-key-info, #dashboard-packing-list
+#profile, lsd-key-info, lsd-the-weather, lsd-packing-list
   padding: 1em
   background: white
   margin-bottom: 1em
+  display: block

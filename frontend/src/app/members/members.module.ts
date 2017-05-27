@@ -25,6 +25,7 @@ import {
   PackingListService,
   PackingListServiceImpl
 } from './packing-list';
+import {TheWeatherComponent} from './dashboard';
 
 @NgModule({
   imports: [
@@ -42,7 +43,8 @@ import {
     ProfileComponent,
     PerformLoginComponent,
     KeyInfoComponent,
-    PackingListComponent
+    PackingListComponent,
+    TheWeatherComponent
   ],
   bootstrap: [],
   providers: [
