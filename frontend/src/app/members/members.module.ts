@@ -19,8 +19,12 @@ import {
   PerformLoginComponent
 } from './social-login';
 import {JwtLoginService, JwtLoginServiceImpl, JwtService, JwtServiceImpl} from './login';
-import { KeyInfoComponent } from './key-info/key-info.component';
-import { PackingListComponent } from './packing-list/packing-list.component';
+import {KeyInfoComponent} from './key-info/key-info.component';
+import {
+  PackingListComponent,
+  PackingListService,
+  PackingListServiceImpl
+} from './packing-list';
 
 @NgModule({
   imports: [
@@ -46,7 +50,8 @@ import { PackingListComponent } from './packing-list/packing-list.component';
     {provide: SocialLoginService, useClass: SocialLoginServiceImpl},
     {provide: JwtLoginService, useClass: JwtLoginServiceImpl},
     {provide: JwtService, useClass: JwtServiceImpl},
-    {provide: DashboardService, useClass: DashboardServiceImpl}
+    {provide: DashboardService, useClass: DashboardServiceImpl},
+    {provide: PackingListService, useClass: PackingListServiceImpl}
   ]
 })
 export class MembersModule {

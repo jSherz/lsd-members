@@ -3,47 +3,49 @@
     <h2>Your perfect packing list</h2>
   </div>
 
-  <ul>
-    <li>
-      <input id="packing-list-0" name="packing-list-0" type="checkbox" checked>
-      <label for="packing-list-0">
-        <span><strong>Pre-skydiving excitement</strong></span>
-      </label>
-    </li>
+  <form [formGroup]="packingListForm">
+    <ul>
+      <li>
+        <input id="packing-list-0" name="packing-list-0" type="checkbox" checked>
+        <label for="packing-list-0">
+          <span><strong>Pre-skydiving excitement</strong></span>
+        </label>
+      </li>
 
-    <li>
-      <input id="packing-list-1" name="packing-list-1" type="checkbox">
-      <label for="packing-list-1">
-        <span><strong>Lots</strong> of warm clothes.</span>
-      </label>
-    </li>
+      <li>
+        <input id="packing-list-1" name="packing-list-1" type="checkbox" formControlName="warmClothes">
+        <label for="packing-list-1">
+          <span><strong>Lots</strong> of warm clothes.</span>
+        </label>
+      </li>
 
-    <li>
-      <input id="packing-list-2" name="packing-list-2" type="checkbox">
-      <label for="packing-list-2">
-        <span>A super-cozy (and warm) sleeping bag.</span>
-      </label>
-    </li>
+      <li>
+        <input id="packing-list-2" name="packing-list-2" type="checkbox" formControlName="sleepingBag">
+        <label for="packing-list-2">
+          <span>A super-cozy (and warm) sleeping bag.</span>
+        </label>
+      </li>
 
-    <li>
-      <input id="packing-list-3" name="packing-list-3" type="checkbox">
-      <label for="packing-list-3">
-        <span>Sturdy shoes (no hooks).</span>
-      </label>
-    </li>
+      <li>
+        <input id="packing-list-3" name="packing-list-3" type="checkbox" formControlName="sturdyShoes">
+        <label for="packing-list-3">
+          <span>Sturdy shoes (no hooks).</span>
+        </label>
+      </li>
 
-    <li>
-      <input id="packing-list-4" name="packing-list-4" type="checkbox">
-      <label for="packing-list-4">
-        <span>&pound;30-40 cash</span>
-      </label>
-    </li>
+      <li>
+        <input id="packing-list-4" name="packing-list-4" type="checkbox" formControlName="cash">
+        <label for="packing-list-4">
+          <span>&pound;30-40 cash</span>
+        </label>
+      </li>
 
-    <li>
-      <input id="packing-list-5" name="packing-list-5" type="checkbox">
-      <label for="packing-list-5">
-        <span>Shampoo, shower gel, toothbrush... etc... etc...</span>
-      </label>
-    </li>
-  </ul>
+      <li>
+        <input id="packing-list-5" name="packing-list-5" type="checkbox" formControlName="toiletries">
+        <label for="packing-list-5">
+          <span>Shampoo, shower gel, toothbrush... etc... etc...</span>
+        </label>
+      </li>
+    </ul>
+  </form>
 </div>
