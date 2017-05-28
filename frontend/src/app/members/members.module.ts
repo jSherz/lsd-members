@@ -18,7 +18,12 @@ import {
   SocialLoginServiceImpl,
   PerformLoginComponent
 } from './social-login';
-import {JwtLoginService, JwtLoginServiceImpl, JwtService, JwtServiceImpl} from './login';
+import {
+  JwtLoginService,
+  JwtLoginServiceImpl,
+  JwtService,
+  JwtServiceImpl
+} from './login';
 import {KeyInfoComponent} from './key-info/key-info.component';
 import {
   PackingListComponent,
@@ -27,6 +32,8 @@ import {
 } from './packing-list';
 import {TheWeatherComponent} from './dashboard';
 import {CanActivateMembers, CanActivateMembersLogin} from './utils';
+import {CommitteeDashboardComponent} from './committee-dashboard';
+import { HeaderComponent } from './header/header.component';
 
 @NgModule({
   imports: [
@@ -45,7 +52,9 @@ import {CanActivateMembers, CanActivateMembersLogin} from './utils';
     PerformLoginComponent,
     KeyInfoComponent,
     PackingListComponent,
-    TheWeatherComponent
+    TheWeatherComponent,
+    CommitteeDashboardComponent,
+    HeaderComponent
   ],
   bootstrap: [],
   providers: [
