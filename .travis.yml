@@ -3,6 +3,7 @@ node_js:
   - "6"
 cache: yarn
 install:
+  - cd frontend
   - yarn install
 build:
   - yarn run test
