@@ -10,7 +10,7 @@ export class JwtLoginServiceStub extends JwtLoginService {
   }
 
   login(signedFbRequest: String): Observable<LoginResult> {
-    return Observable.of(new LoginResult(true, null, 'jwt.1.23'));
+    return Observable.of(new LoginResult(true, null, 'jwt.1.23', false));
   }
 
 }
