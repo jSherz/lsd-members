@@ -2,7 +2,9 @@ language: node_js
 dist: trusty
 node_js:
   - "6"
-cache: yarn
+cache:
+  directories:
+    - "node_modules"
 install:
   - wget -O yarn.tar.gz https://yarnpkg.com/latest.tar.gz
   - tar zvxf yarn.tar.gz
