@@ -9,6 +9,6 @@ install:
   - export PATH=`pwd`/dist/bin:$PATH
   - cd frontend
   - yarn install
-build:
+script:
   - yarn run test -- --progress=false --watch=false --browsers=PhantomJS
   - yarn run build-prod
