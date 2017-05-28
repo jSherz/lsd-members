@@ -1,8 +1,12 @@
 language: node_js
+dist: trusty
 node_js:
   - "6"
 cache: yarn
 install:
+  - wget -O yarn.tar.gz https://yarnpkg.com/latest.tar.gz
+  - tar zvxf yarn.tar.gz
+  - export PATH=`pwd`/dist/bin:$PATH
   - cd frontend
   - yarn install
 build:
