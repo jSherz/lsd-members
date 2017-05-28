@@ -42,8 +42,8 @@ import {
     AppComponent
   ],
   providers: [
-    {provide: LocationStrategy, useClass: PathLocationStrategy},
-    {provide: ErrorHandler, useClass: RavenErrorHandler}
+    {provide: LocationStrategy, useClass: PathLocationStrategy} //,
+    // {provide: ErrorHandler, useClass: RavenErrorHandler}
   ]
 })
 export class AppModule {

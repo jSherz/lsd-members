@@ -32,9 +32,9 @@ export class JwtLoginServiceImpl extends JwtLoginService {
       .map(r => this.extractJson<LoginResult>(r))
       .map((result: LoginResult) => {
         if (result.success) {
-          this.jwtService.setJwt(result.jwt);
+          this.jwtService.setJwt(result.jwt, result.committeeMember);
         } else {
-          this.jwtService.setJwt('');
+          this.jwtService.setJwt('', false);
         }
 
         return result;

@@ -18,7 +18,7 @@ describe('Service: Jwt', () => {
   it('should store the key it\'s given', async(() => {
     const service = new JwtServiceImpl();
 
-    service.setJwt('a.b.c');
+    service.setJwt('a.b.c', false);
 
     expect(service.getJwt()).toEqual('a.b.c');
   }));
@@ -26,7 +26,7 @@ describe('Service: Jwt', () => {
   it('should remove the key when no new key is given', async(() => {
     const service = new JwtServiceImpl();
 
-    service.setJwt('');
+    service.setJwt('', true);
 
     expect(service.getJwt()).toEqual('');
   }));
@@ -34,7 +34,7 @@ describe('Service: Jwt', () => {
   it('should not return authenticated when it has no key', async(() => {
     const service = new JwtServiceImpl();
 
-    service.setJwt('');
+    service.setJwt('', false);
 
     expect(service.isAuthenticated()).toEqual(false);
   }));
@@ -42,9 +42,19 @@ describe('Service: Jwt', () => {
   it('should return authenticated when it has a key', async(() => {
     const service = new JwtServiceImpl();
 
-    service.setJwt('asdasdasd.asdasdasdasd.asdasdasdasd');
+    service.setJwt('asdasdasd.asdasdasdasd.asdasdasdasd', true);
 
     expect(service.isAuthenticated()).toEqual(true);
+    expect(service.isCommitteeMember()).toEqual(true);
+  }));
+
+  it('should return false if the user is not a committee member', async(() => {
+    const service = new JwtServiceImpl();
+
+    service.setJwt('asdasdasd.asdasdasdasd.asdasdasdasd', false);
+
+    expect(service.isAuthenticated()).toEqual(true);
+    expect(service.isCommitteeMember()).toEqual(false);
   }));
 
 });

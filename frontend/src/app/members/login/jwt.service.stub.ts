@@ -12,10 +12,12 @@ export let JWT = new InjectionToken<string>('stub.jwt');
 export class StubJwtService extends JwtService {
 
   private jwt: string;
+  private committeeMember: boolean;
 
-  constructor(@Inject(JWT) jwt: string) {
+  constructor(@Inject(JWT) jwt: string, committeeMember: boolean) {
     super();
     this.jwt = jwt;
+    this.committeeMember = committeeMember;
   }
 
   getJwt(): string {
@@ -28,6 +30,10 @@ export class StubJwtService extends JwtService {
 
   isAuthenticated(): boolean {
     return this.jwt != null && this.jwt.length >= 1;
+  }
+
+  isCommitteeMember(): boolean {
+    return this.committeeMember;
   }
 
 }

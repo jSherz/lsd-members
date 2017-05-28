@@ -4,9 +4,11 @@ export abstract class JwtService {
 
   abstract getJwt(): string;
 
-  abstract setJwt(jwt: string);
+  abstract setJwt(jwt: string, committeeMember: boolean);
 
   abstract isAuthenticated(): boolean;
+
+  abstract isCommitteeMember(): boolean;
 
 }
 
@@ -19,17 +21,23 @@ export abstract class JwtService {
 export class JwtServiceImpl extends JwtService {
 
   private localStorageKey = 'JWT';
+  private committeeLocalStorageKey = 'IS_COMMITTEE';
 
   getJwt(): string {
     return localStorage.getItem(this.localStorageKey);
   }
 
-  setJwt(jwt: string) {
+  setJwt(jwt: string, committeeMember: boolean) {
     localStorage.setItem(this.localStorageKey, jwt);
+    localStorage.setItem(this.committeeLocalStorageKey, committeeMember ? 'true' : 'false');
   }
 
   isAuthenticated(): boolean {
     return this.getJwt() != null && this.getJwt().length >= 1;
+  }
+
+  isCommitteeMember(): boolean {
+    return localStorage.getItem(this.committeeLocalStorageKey) === 'true';
   }
 
 }

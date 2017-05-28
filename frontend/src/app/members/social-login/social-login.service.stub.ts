@@ -7,9 +7,6 @@ export class SocialLoginServiceStub implements SocialLoginService {
 
   failGetLoginUrlRequest = false;
 
-  failLogin = false;
-  failLoginRequest = false;
-
   getLoginUrl(): Observable<SocialLoginUrlResponse> {
     if (this.failGetLoginUrlRequest) {
       return Observable.throw('Social login get URL request failed. TEAPOT EXCEPTION!!!!');
@@ -19,12 +16,14 @@ export class SocialLoginServiceStub implements SocialLoginService {
   }
 
   login(verificationCode: string): Observable<SocialLoginResponse> {
-    if (this.failLogin) {
-      return Observable.of(new SocialLoginResponse(false, 'Generic login error.', null));
-    } else if (this.failLoginRequest) {
+    if (verificationCode === 'FAIL_LOGIN') {
+      return Observable.of(new SocialLoginResponse(false, 'Generic login error.', null, false));
+    } else if (verificationCode === 'FAIL_LOGIN_REQUEST') {
       return Observable.throw('Social login request failed! :O ERROR 4000009 - NO CATS');
+    } else if (verificationCode === 'COMMITTEE') {
+      return Observable.of(new SocialLoginResponse(true, null, 'jwt.1.2', true));
     } else {
-      return Observable.of(new SocialLoginResponse(true, null, 'jwt.1.2'));
+      return Observable.of(new SocialLoginResponse(true, null, 'jwt.1.2', false));
     }
   }
 

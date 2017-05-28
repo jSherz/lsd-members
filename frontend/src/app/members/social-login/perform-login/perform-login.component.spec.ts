@@ -37,7 +37,7 @@ describe('PerformLoginComponent', () => {
   };
 
   const jwtServiceFactory = () => {
-    jwtService = new StubJwtService('12345');
+    jwtService = new StubJwtService('12345', false);
     jwtSpy = spyOn(jwtService, 'setJwt');
     return jwtService;
   };
@@ -75,36 +75,29 @@ describe('PerformLoginComponent', () => {
 
     fixture.whenStable().then(() => {
       expect(navSpy).toHaveBeenCalledWith(['members']);
-
-      component.loginFailed = false;
+      expect(component.loginFailed).toEqual(false);
     });
   }));
 
   it('should show an error when logging in with the specified verification code fails', async(() => {
-    service.failLogin = true;
-
     queryParams.next({
-      code: 'FAIL_CODE'
+      code: 'FAIL_LOGIN'
     });
 
     fixture.whenStable().then(() => {
       expect(navSpy).toHaveBeenCalledTimes(0);
-
-      component.loginFailed = true;
+      expect(component.loginFailed).toEqual(true);
     });
   }));
 
   it('should show an error when making the verification call fails', async(() => {
-    service.failLoginRequest = true;
-
     queryParams.next({
-      code: 'UNUSED'
+      code: 'FAIL_LOGIN_REQUEST'
     });
 
     fixture.whenStable().then(() => {
       expect(navSpy).toHaveBeenCalledTimes(0);
-
-      component.loginFailed = true;
+      expect(component.loginFailed).toEqual(true);
     });
   }));
 
@@ -115,9 +108,20 @@ describe('PerformLoginComponent', () => {
 
     fixture.whenStable().then(() => {
       expect(navSpy).toHaveBeenCalledWith(['members', 'dashboard']);
-      expect(jwtSpy).toHaveBeenCalledWith('jwt.1.2');
+      expect(jwtSpy).toHaveBeenCalledWith('jwt.1.2', false);
+      expect(component.loginFailed).toEqual(false);
+    });
+  }));
 
-      component.loginFailed = false;
+  it('should navigate the user to the committee dashboard if they\'re a committee member', async(() => {
+    queryParams.next({
+      code: 'COMMITTEE'
+    });
+
+    fixture.whenStable().then(() => {
+      expect(navSpy).toHaveBeenCalledWith(['members', 'committee', 'dashboard']);
+      expect(jwtSpy).toHaveBeenCalledWith('jwt.1.2', true);
+      expect(component.loginFailed).toEqual(false);
     });
   }));
 

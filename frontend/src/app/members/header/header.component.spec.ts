@@ -1,6 +1,19 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {Compiler, Injector, NgModuleFactoryLoader} from '@angular/core';
+import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import {RouterTestingModule, setupTestingRouter} from '@angular/router/testing';
+import {Location} from '@angular/common';
+
+import {
+  Router,
+  Event,
+  UrlHandlingStrategy,
+  ROUTES,
+  UrlSerializer,
+  RouterOutletMap
+} from '@angular/router';
 
 import {HeaderComponent} from './header.component';
+
 
 describe('HeaderComponent', () => {
 
@@ -9,7 +22,18 @@ describe('HeaderComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [HeaderComponent]
+      imports: [
+        RouterTestingModule
+      ],
+      declarations: [HeaderComponent],
+      providers: [
+        {provide: UrlHandlingStrategy, useValue: {}},
+        {
+          provide: Router,
+          useFactory: setupTestingRouter,
+          deps: [UrlSerializer, RouterOutletMap, Location, NgModuleFactoryLoader, Compiler, Injector, ROUTES, UrlHandlingStrategy]
+        },
+      ]
     }).compileComponents();
   }));
 

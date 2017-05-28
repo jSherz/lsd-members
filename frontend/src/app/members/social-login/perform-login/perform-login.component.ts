@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {SocialLoginService} from '../social-login.service';
 import {JwtService} from '../../login/jwt.service';
+import {SocialLoginResponse} from "../model";
 
 @Component({
   selector: 'lsd-perform-login',
@@ -26,10 +27,15 @@ export class PerformLoginComponent implements OnInit {
     });
   }
 
-  private handleResponse = (response) => {
+  private handleResponse = (response: SocialLoginResponse) => {
     if (response.success) {
-      this.jwtService.setJwt(response.jwt);
-      this.router.navigate(['members', 'dashboard']);
+      this.jwtService.setJwt(response.jwt, response.committeeMember);
+
+      if (response.committeeMember) {
+        this.router.navigate(['members', 'committee', 'dashboard']);
+      } else {
+        this.router.navigate(['members', 'dashboard']);
+      }
     } else {
       console.error('Failed to perform social login:', response.error);
       this.loginFailed = true;

@@ -16,10 +16,13 @@ export class SocialLoginResponse {
 
   jwt?: string;
 
-  constructor(success: boolean, error?: string, jwt?: string) {
+  committeeMember: boolean;
+
+  constructor(success: boolean, error: string, jwt: string, committeeMember: boolean) {
     this.success = success;
     this.error = error;
     this.jwt = jwt;
+    this.committeeMember = committeeMember;
   }
 
 }
