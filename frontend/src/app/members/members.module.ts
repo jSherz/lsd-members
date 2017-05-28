@@ -26,6 +26,7 @@ import {
   PackingListServiceImpl
 } from './packing-list';
 import {TheWeatherComponent} from './dashboard';
+import {CanActivateMembers, CanActivateMembersLogin} from './utils';
 
 @NgModule({
   imports: [
@@ -53,7 +54,9 @@ import {TheWeatherComponent} from './dashboard';
     {provide: JwtLoginService, useClass: JwtLoginServiceImpl},
     {provide: JwtService, useClass: JwtServiceImpl},
     {provide: DashboardService, useClass: DashboardServiceImpl},
-    {provide: PackingListService, useClass: PackingListServiceImpl}
+    {provide: PackingListService, useClass: PackingListServiceImpl},
+    CanActivateMembers,
+    CanActivateMembersLogin
   ]
 })
 export class MembersModule {
