@@ -33,9 +33,10 @@ import akka.http.scaladsl.model.{ContentTypes, StatusCodes}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.auth0.jwt.JWT
-import com.jsherz.luskydive.core.{FBSignedRequest, Member}
+import com.jsherz.luskydive.core.{CommitteeMember, FBSignedRequest, Member}
 import com.jsherz.luskydive.dao.MemberDao
 import com.jsherz.luskydive.json.MemberJsonSupport.MemberFormat
+import com.jsherz.luskydive.json.CommitteeMembersJsonSupport.CommitteeMemberFormat
 import com.jsherz.luskydive.json.SocialLoginJsonSupport._
 import com.jsherz.luskydive.json.{SocialLoginRequest, SocialLoginResponse, SocialLoginUrlResponse, SocialLoginVerifyRequest}
 import com.jsherz.luskydive.services.{JwtServiceImpl, SocialService}
@@ -63,7 +64,7 @@ class SocialLoginApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
       // All services would return valid response, isolates request parsing
       val (api, _, _) = buildApi(
         fbReq("14712371237123"),
-        aMember(Some(Util.fixture[Member]("e1442281.json"))),
+        aMember(Util.fixture[Member]("e1442281.json")),
         noNewMemberUuid
       )
 
@@ -75,7 +76,7 @@ class SocialLoginApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
     "reject requests with an invalid signed request" in {
       val (api, _, _) = buildApi(
         None,
-        aMember(Some(Util.fixture[Member]("e1442281.json"))),
+        aMember(Util.fixture[Member]("e1442281.json")),
         noNewMemberUuid
       )
 
@@ -83,7 +84,8 @@ class SocialLoginApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
 
       Post("/social-login", request) ~> Route.seal(api) ~> check {
         response.status shouldEqual StatusCodes.Unauthorized
-        responseAs[SocialLoginResponse] shouldEqual SocialLoginResponse(success = false, Some("Invalid signed request."), None)
+        responseAs[SocialLoginResponse] shouldEqual SocialLoginResponse(success = false, Some("Invalid signed request."),
+          None, committeeMember = false)
       }
     }
 
@@ -105,7 +107,7 @@ class SocialLoginApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
     "issues a JWT if the signed request is for a valid member" in {
       val (api, _, _) = buildApi(
         fbReq("14712371237123"),
-        aMember(Some(Util.fixture[Member]("e1442281.json"))),
+        aMember(Util.fixture[Member]("e1442281.json")),
         noNewMemberUuid
       )
 
@@ -117,6 +119,7 @@ class SocialLoginApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
         val socialLoginResponse = responseAs[SocialLoginResponse]
         socialLoginResponse.success shouldBe true
         socialLoginResponse.error shouldBe None
+        socialLoginResponse.committeeMember shouldBe false
 
         val decoded = JWT.decode(socialLoginResponse.jwt.get)
         decoded.getClaim("UUID").asString() shouldEqual "e1442281-4972-456c-a94f-5b01f5b9b240"
@@ -131,7 +134,7 @@ class SocialLoginApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
 
       val (api, socialService, memberDao) = buildApi(
         fbReq(userId),
-        aMember(None),
+        noMember(),
         newMemberUuid(expectedUuid)
       )
 
@@ -145,6 +148,7 @@ class SocialLoginApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
         val socialLoginResponse = responseAs[SocialLoginResponse]
         socialLoginResponse.success shouldBe true
         socialLoginResponse.error shouldBe None
+        socialLoginResponse.committeeMember shouldBe false
 
         val decoded = JWT.decode(socialLoginResponse.jwt.get)
         decoded.getClaim("UUID").asString() shouldEqual expectedUuid.toString
@@ -161,10 +165,29 @@ class SocialLoginApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
       }
     }
 
+    "have the committee member flag set to true when the member has a linked committee record" in {
+      val (api, _, _) = buildApi(
+        fbReq("14712371237123"),
+        aMember(Util.fixture[Member]("e1442281.json"), Some(Util.fixture[CommitteeMember]("956610c8.json"))),
+        noNewMemberUuid
+      )
+
+      val request = SocialLoginRequest("blah blah blah")
+
+      Post("/social-login", request) ~> Route.seal(api) ~> check {
+        response.status shouldEqual StatusCodes.OK
+
+        val socialLoginResponse = responseAs[SocialLoginResponse]
+        socialLoginResponse.success shouldBe true
+        socialLoginResponse.error shouldBe None
+        socialLoginResponse.committeeMember shouldBe true
+      }
+    }
+
     "returns an error when creating a member fails" in {
       val (api, socialService, _) = buildApi(
         fbReq("12312314113"),
-        aMember(None),
+        noMember(),
         Future.successful(-\/("member creation failed - error in matrix"))
       )
 
@@ -181,7 +204,7 @@ class SocialLoginApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
     "returns an error when looking up a member's name & email fails" in {
       val (api, socialService, _) = buildApi(
         fbReq("15151818181"),
-        aMember(None),
+        noMember,
         newMemberUuid(UUID.randomUUID())
       )
 
@@ -202,7 +225,7 @@ class SocialLoginApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
     "return the URL generated by the FB client" in {
       val (api, socialService, _) = buildApi(
         fbReq("15151818181"),
-        aMember(None),
+        noMember(),
         newMemberUuid(UUID.randomUUID())
       )
 
@@ -224,7 +247,7 @@ class SocialLoginApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
     "return an error when obtaining the access token fails" in {
       val (api, socialService, _) = buildApi(
         fbReq("15151818181"),
-        aMember(None),
+        noMember(),
         newMemberUuid(UUID.randomUUID())
       )
 
@@ -241,7 +264,7 @@ class SocialLoginApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
     "return an error when getting the user's social ID for the access token fails" in {
       val (api, socialService, _) = buildApi(
         fbReq("15151818181"),
-        aMember(None),
+        noMember(),
         newMemberUuid(UUID.randomUUID())
       )
 
@@ -260,7 +283,7 @@ class SocialLoginApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
       val member = Util.fixture[Member]("e1442281.json")
       val (api, socialService, _) = buildApi(
         fbReq("15151818181"),
-        aMember(Some(member)),
+        aMember(member),
         newMemberUuid(UUID.randomUUID())
       )
 
@@ -290,7 +313,7 @@ class SocialLoginApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
     "return a valid JWT when all lookups succeed (and a member was created)" in {
       val (api, socialService, memberDao) = buildApi(
         fbReq(""),
-        aMember(None),
+        noMember(),
         newMemberUuid(UUID.randomUUID())
       )
 
@@ -316,6 +339,11 @@ class SocialLoginApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
         response.status shouldEqual StatusCodes.OK
 
         val socialResponse = responseAs[SocialLoginResponse]
+
+        socialResponse.success shouldBe true
+        socialResponse.error shouldBe None
+        socialResponse.committeeMember shouldBe false
+
         socialResponse.jwt.isDefined shouldBe true
         socialResponse.jwt foreach { jwt =>
           // Ensure a member was created
@@ -337,7 +365,7 @@ class SocialLoginApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
 
   private def buildApi(
                         fbReq: Option[FBSignedRequest],
-                        member: Future[\/[String, Option[Member]]],
+                        member: Future[String \/ Option[(Member, Option[CommitteeMember])]],
                         newMemberUuid: Future[\/[String, UUID]]
                       ): (Route, SocialService, MemberDao) = {
 
@@ -355,11 +383,18 @@ class SocialLoginApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
     (socialLoginApi.route, socialService, memberDao)
   }
 
-  private def aMember(member: Option[Member]): Future[\/[String, Option[Member]]] = {
-    Future.successful(\/-(member))
+  private def aMember(
+                       member: Member,
+                       committeeMember: Option[CommitteeMember] = None
+                     ): Future[String \/ Option[(Member, Option[CommitteeMember])]] = {
+    Future.successful(\/-(Some(member, committeeMember)))
   }
 
-  private def anError(error: String): Future[\/[String, Option[Member]]] = {
+  private def noMember(): Future[String \/ Option[(Member, Option[CommitteeMember])]] = {
+    Future.successful(\/-(None))
+  }
+
+  private def anError(error: String): Future[String \/ Option[(Member, Some[CommitteeMember])]] = {
     Future.successful(-\/(error))
   }
 

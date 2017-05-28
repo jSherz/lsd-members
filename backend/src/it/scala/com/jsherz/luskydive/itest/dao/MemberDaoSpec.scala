@@ -29,12 +29,13 @@ import java.util.UUID
 
 import akka.actor.ActorSystem
 import akka.event.{Logging, LoggingAdapter}
-import com.jsherz.luskydive.core.Member
+import com.jsherz.luskydive.core.{CommitteeMember, Member}
 import com.jsherz.luskydive.dao._
 import com.jsherz.luskydive.itest.util.{DateUtil, Util}
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 import org.scalatest.concurrent.ScalaFutures._
 import com.jsherz.luskydive.json.MemberJsonSupport._
+import com.jsherz.luskydive.json.CommitteeMembersJsonSupport.CommitteeMemberFormat
 import com.jsherz.luskydive.json.MemberSearchResult
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -266,11 +267,21 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
   "MemberDao#forSocialId" should {
 
-    "return Right(Some(member)) if a member exists with the social ID" in {
+    "return the member if one exists with the given social ID (no committee record)" in {
       val member = dao.forSocialId("1231415124123").futureValue
 
       member.isRight shouldBe true
-      member.map(_ shouldEqual Some(Util.fixture[Member]("69c8d538.json")))
+      member.map(_ shouldEqual Some((Util.fixture[Member]("0ac54c4b.json"), None)))
+    }
+
+    "return the member & committee record if one exists with the given social ID" in {
+      val member = dao.forSocialId("000111000111").futureValue
+
+      val expectedMember = Util.fixture[Member]("ddc4ca00.json")
+      val expectedCommitteeMember = Util.fixture[CommitteeMember]("f59c7cd7.json")
+
+      member.isRight shouldBe true
+      member.map(_ shouldEqual Some((expectedMember, Some(expectedCommitteeMember))))
     }
 
     "return Right(None) if a member isn't found with the given social ID" in {

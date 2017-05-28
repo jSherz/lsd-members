@@ -28,14 +28,13 @@ import java.util.UUID
 
 import akka.event.LoggingAdapter
 import com.fasterxml.uuid.Generators
-import com.jsherz.luskydive.core.Member
+import com.jsherz.luskydive.core.{CommitteeMember, Member}
 import com.jsherz.luskydive.json.MemberSearchResult
 import com.jsherz.luskydive.services.DatabaseService
-import com.jsherz.luskydive.util.FutureError
 import com.jsherz.luskydive.util.FutureError._
 
 import scala.concurrent.{ExecutionContext, Future}
-import scalaz.{-\/, \/, \/-}
+import scalaz.{-\/, \/}
 
 /**
   * Data Access Object to retrieve and store Member information.
@@ -91,7 +90,7 @@ trait MemberDao {
     * @param socialId
     * @return
     */
-  def forSocialId(socialId: String): Future[String \/ Option[Member]]
+  def forSocialId(socialId: String): Future[String \/ Option[(Member, Option[CommitteeMember])]]
 
   /**
     * Update a member's information.
@@ -199,8 +198,13 @@ class MemberDaoImpl(override protected val databaseService: DatabaseService)
     * @param socialId
     * @return
     */
-  override def forSocialId(socialId: String): Future[\/[String, Option[Member]]] = {
-    db.run(Members.filter(_.socialUserId === socialId).result.headOption) withServerError
+  override def forSocialId(socialId: String): Future[String \/ Option[(Member, Option[CommitteeMember])]] = {
+    val lookup = for {
+      (member, committeeMember) <- Members.filter(_.socialUserId === socialId) joinLeft
+        CommitteeMembers on (_.uuid === _.memberUuid)
+    } yield (member, committeeMember)
+
+    db.run(lookup.result.headOption) withServerError
   }
 
   /**

@@ -33,7 +33,7 @@ import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import com.fasterxml.uuid.Generators
-import com.jsherz.luskydive.core.{FBSignedRequest, Member}
+import com.jsherz.luskydive.core.{CommitteeMember, FBSignedRequest, Member}
 import com.jsherz.luskydive.dao.MemberDao
 import com.jsherz.luskydive.json.{SocialLoginRequest, SocialLoginResponse, SocialLoginUrlResponse, SocialLoginVerifyRequest}
 import com.jsherz.luskydive.services.{JwtService, SocialService}
@@ -57,7 +57,8 @@ class SocialLoginApi(
   private val tokenValidHours = 24
 
   private val invalidSignedRequest: Route =
-    complete(StatusCodes.Unauthorized, SocialLoginResponse(success = false, Some("Invalid signed request."), None))
+    complete(StatusCodes.Unauthorized, SocialLoginResponse(success = false, Some("Invalid signed request."), None,
+      committeeMember = false))
 
   private val verificationFailed = complete(StatusCodes.Unauthorized, "Verification failed.")
 
@@ -77,7 +78,7 @@ class SocialLoginApi(
 
       userRequest.fold(_ => verificationFailed, { user =>
         onSuccess(memberDao.forSocialId(user.getId)) {
-          case \/-(maybeMember: Option[Member]) => {
+          case \/-(maybeMember: Option[(Member, Option[CommitteeMember])]) => {
             useOrCreateMemberAndIssueJwt(maybeMember, user)
           }
           case -\/(error: String) => complete(StatusCodes.InternalServerError, error)
@@ -92,12 +93,12 @@ class SocialLoginApi(
     }
   }
 
-  private def useOrCreateMemberAndIssueJwt(maybeMember: Option[Member], user: User): Route = {
+  private def useOrCreateMemberAndIssueJwt(maybeMember: Option[(Member, Option[CommitteeMember])], user: User): Route = {
     maybeMember match {
-      case Some(member: Member) =>
-        val jwt = generateJwt(member.uuid.get)
+      case Some(member: (Member, Option[CommitteeMember])) =>
+        val jwt = generateJwt(member._1.uuid.get)
 
-        complete(SocialLoginResponse(success = true, None, Some(jwt)))
+        complete(SocialLoginResponse(success = true, None, Some(jwt), committeeMember = member._2.isDefined))
 
       case None =>
         log.info(s"Member not found with social ID '${user.getId}', creating one.")
@@ -106,12 +107,12 @@ class SocialLoginApi(
     }
   }
 
-  private def issueJwtForMemberLookup(userId: String)(maybeMember: Option[Member]): Route = {
+  private def issueJwtForMemberLookup(userId: String)(maybeMember: Option[(Member, Option[CommitteeMember])]): Route = {
     maybeMember match {
-      case Some(member: Member) =>
-        val jwt = generateJwt(member.uuid.get)
+      case Some(member: (Member, Option[CommitteeMember])) =>
+        val jwt = generateJwt(member._1.uuid.get)
 
-        complete(SocialLoginResponse(success = true, None, Some(jwt)))
+        complete(SocialLoginResponse(success = true, None, Some(jwt), committeeMember = member._2.isDefined))
 
       case None =>
         log.info(s"Member not found with social ID '$userId', creating one.")
@@ -128,7 +129,7 @@ class SocialLoginApi(
       case \/-(newMemberUuid: UUID) =>
         val jwt = generateJwt(newMemberUuid)
 
-        complete(StatusCodes.OK, SocialLoginResponse(success = true, None, Some(jwt)))
+        complete(StatusCodes.OK, SocialLoginResponse(success = true, None, Some(jwt), committeeMember = false))
 
       case -\/(error: String) =>
         log.error(s"Failed to create member: $error")

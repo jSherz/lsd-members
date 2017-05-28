@@ -1,0 +1,15 @@
+{
+  "uuid": "ddc4ca00-cd7f-4192-a165-2c7dd42cae6d",
+  "firstName": "Eric",
+  "lastName": "Holt",
+  "email": "brianherman@rodriguez-edwards.com",
+  "phoneNumber": null,
+  "lastJump": null,
+  "weight": null,
+  "height": null,
+  "driver": false,
+  "organiser": true,
+  "createdAt": "2017-05-24 10:31:59.000000",
+  "updatedAt": "2017-05-24 10:31:59.000000",
+  "socialUserId": "000111000111"
+}

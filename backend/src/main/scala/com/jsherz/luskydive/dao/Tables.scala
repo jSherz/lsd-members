@@ -207,6 +207,8 @@ class Tables(protected val databaseService: DatabaseService) {
 
     def uuid: Rep[UUID] = column[UUID]("uuid", O.PrimaryKey)
 
+    def memberUuid: Rep[UUID] = column[UUID]("member_uuid")
+
     def name: Rep[String] = column[String]("name")
 
     def email: Rep[String] = column[String]("email")
@@ -221,7 +223,7 @@ class Tables(protected val databaseService: DatabaseService) {
 
     def updatedAt: Rep[Timestamp] = column[Timestamp]("updated_at")
 
-    def * = (uuid.?, name, email, password, salt, locked, createdAt, updatedAt) <> (CommitteeMember.tupled, CommitteeMember.unapply)
+    def * = (uuid.?, memberUuid, name, email, password, salt, locked, createdAt, updatedAt) <> (CommitteeMember.tupled, CommitteeMember.unapply)
 
   }
 

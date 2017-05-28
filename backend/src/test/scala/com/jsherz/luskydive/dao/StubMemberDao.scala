@@ -27,7 +27,7 @@ package com.jsherz.luskydive.dao
 import java.util.UUID
 
 import com.fasterxml.uuid.Generators
-import com.jsherz.luskydive.core.Member
+import com.jsherz.luskydive.core.{CommitteeMember, Member}
 import com.jsherz.luskydive.util.Util
 import com.jsherz.luskydive.json.MemberSearchResult
 import com.jsherz.luskydive.json.MemberJsonSupport._
@@ -132,7 +132,7 @@ class StubMemberDao()(implicit val ec: ExecutionContext) extends MemberDao {
     * @param socialId
     * @return
     */
-  override def forSocialId(socialId: String): Future[\/[String, Option[Member]]] = {
+  override def forSocialId(socialId: String): Future[String \/ Option[(Member, Option[CommitteeMember])]] = {
     Future.successful(-\/("Stub not configured"))
   }
 

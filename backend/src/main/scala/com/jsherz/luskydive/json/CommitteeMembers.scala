@@ -40,7 +40,7 @@ object CommitteeMembersJsonSupport extends DefaultJsonProtocol with SprayJsonSup
   // implicit val DateFormat = DateJsonFormat
   implicit val TimestampFormat = TimestampJsonFormat
   implicit val StrippedCommitteeMemberFormat = jsonFormat2(StrippedCommitteeMember)
-  implicit val CommitteeMemberFormat = jsonFormat8(CommitteeMember)
+  implicit val CommitteeMemberFormat = jsonFormat9(CommitteeMember)
 
 }
 
