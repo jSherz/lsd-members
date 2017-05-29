@@ -24,13 +24,14 @@
 
 package com.jsherz.luskydive
 
+import java.time.{Duration, Instant}
+
 import akka.actor.ActorSystem
 import akka.event.{Logging, LoggingAdapter}
 import akka.stream.ActorMaterializer
 import com.jsherz.luskydive.dao._
 import com.jsherz.luskydive.services.{DatabaseService, TextSendingService}
 import com.jsherz.luskydive.util.Config
-import com.twilio.Twilio
 import com.twilio.http.TwilioRestClient
 import org.flywaydb.core.Flyway
 
@@ -41,6 +42,9 @@ import scala.io.{Codec, Source}
   */
 object TextSenderMain extends App with Config {
 
+  val bootStarted = Instant.now()
+
+
   implicit val actorSystem = ActorSystem()
   implicit val executor = actorSystem.dispatcher
   implicit val log: LoggingAdapter = Logging(actorSystem, getClass)
@@ -50,17 +54,26 @@ object TextSenderMain extends App with Config {
   implicit val codec = Codec.UTF8
   log.info(Source.fromURL(getClass.getResource("/banner.txt")).mkString)
 
+  log.info("Connecting to DB")
+
   val databaseService = new DatabaseService(dbUrl, dbUsername, dbPassword)
+
+  log.info("Running migrations")
 
   // Automatically run migrations
   val flyway = new Flyway()
   flyway.setDataSource(dbUrl, dbUsername, dbPassword)
   flyway.migrate()
 
+  log.info("Creating text sending service")
+
   // val massTextDao = new MassTextDaoImpl(databaseService)
   val textMessageDao = new TextMessageDaoImpl(databaseService)
 
   val twilioClient = new TwilioRestClient.Builder(twilioAccountSid, twilioAuthToken).build()
+
+  val bootTime = Duration.between(bootStarted, Instant.now())
+  log.info(s"Startup took ${bootTime.toMillis} ms")
 
   val textSendingService = new TextSendingService(textMessageDao, twilioClient, twilioMessagingServiceSid)
 
