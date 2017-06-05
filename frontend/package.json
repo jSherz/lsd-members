@@ -10,7 +10,8 @@
     "build-prod": "ng build --environment=prod --stats --progress=false --aot --output-hashing=all",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "node $NODE_DEBUG_OPTION node_modules/@angular/cli/bin/ng e2e"
+    "e2e": "node $NODE_DEBUG_OPTION node_modules/@angular/cli/bin/ng e2e",
+    "e2e-ci": "node $NODE_DEBUG_OPTION node_modules/@angular/cli/bin/ng e2e --config protractor-ci.conf.js"
   },
   "private": true,
   "dependencies": {
@@ -26,6 +27,8 @@
     "angulartics2": "^1.6.4",
     "core-js": "^2.4.1",
     "google-libphonenumber": "^1.0.25",
+    "jsdom": "^11.0.0",
+    "karma-jsdom-launcher": "^6.1.2",
     "karma-phantomjs-launcher": "^1.0.4",
     "moment": "^2.13.0",
     "node-sass": "^3.8.0",
@@ -48,6 +51,7 @@
     "karma-coverage-istanbul-reporter": "^0.2.0",
     "karma-jasmine": "~1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
+    "mock-webstorage": "^1.0.3",
     "protractor": "~5.1.1",
     "ts-node": "~2.0.0",
     "tslint": "~4.5.0",
