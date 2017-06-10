@@ -29,14 +29,12 @@ import java.util.UUID
 
 import akka.actor.ActorSystem
 import akka.event.{Logging, LoggingAdapter}
-import com.jsherz.luskydive.core.{MassText, TextMessage, TextMessageStatuses}
+import com.jsherz.luskydive.core.{MassText, TextMessage}
 import com.jsherz.luskydive.dao._
-import com.jsherz.luskydive.itest.util.Util
-import com.jsherz.luskydive.itest.util.DateUtil
-import org.scalatest.concurrent.ScalaFutures._
-import org.scalatest.time.{Seconds, Span}
-import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
+import com.jsherz.luskydive.itest.util.{DateUtil, TestUtil, Util}
 import com.jsherz.luskydive.json.MassTextsJsonSupport._
+import org.scalatest.concurrent.ScalaFutures._
+import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scalaz.{-\/, \/-}
@@ -46,7 +44,7 @@ class MassTextDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
   private var dao: MassTextDao = _
   private var textMessageDao: TextMessageDao = _
 
-  implicit val patienceConfig = PatienceConfig(scaled(Span(1, Seconds)))
+  implicit val patienceConfig: PatienceConfig = TestUtil.defaultPatienceConfig
 
   override protected def beforeAll(): Unit = {
     implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)

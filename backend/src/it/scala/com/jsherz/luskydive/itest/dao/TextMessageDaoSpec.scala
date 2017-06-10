@@ -30,10 +30,9 @@ import akka.actor.ActorSystem
 import akka.event.{Logging, LoggingAdapter}
 import com.jsherz.luskydive.core.TextMessage
 import com.jsherz.luskydive.dao.TextMessageDaoImpl
-import com.jsherz.luskydive.itest.util.Util
+import com.jsherz.luskydive.itest.util.{TestUtil, Util}
 import com.jsherz.luskydive.json.TextMessageJsonSupport._
 import org.scalatest.concurrent.ScalaFutures._
-import org.scalatest.time.{Seconds, Span}
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -47,7 +46,7 @@ class TextMessageDaoSpec extends WordSpec with Matchers {
   "TextMessageDao#all" should {
 
     "return text messages in the correct order" in {
-      implicit val patienceConfig = PatienceConfig(scaled(Span(1, Seconds)))
+      implicit val patienceConfig: PatienceConfig = TestUtil.defaultPatienceConfig
 
       val result = dao.all().futureValue
 
@@ -226,6 +225,20 @@ class TextMessageDaoSpec extends WordSpec with Matchers {
         _.zip(expectedMessages).foreach { case (actual, expected) =>
           textMessagesShouldBeSameBarUuids(actual, expected)
         }
+      }
+    }
+
+  }
+
+  "TextMessageDao#getReceived" should {
+
+    "return all text messages with a state of received in created date ascending" in {
+      val result = dao.getReceived().futureValue
+      val expectedMessages = Util.fixture[Vector[TextMessage]]("get_received.json")
+
+      result.isRight shouldBe true
+      result.map {
+        _ shouldEqual expectedMessages
       }
     }
 

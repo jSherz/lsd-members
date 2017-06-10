@@ -31,9 +31,8 @@ import akka.event.{Logging, LoggingAdapter}
 import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.{Course, CourseStatuses, CourseWithOrganisers}
 import com.jsherz.luskydive.dao.{CommitteeMemberDaoImpl, CourseDao, CourseDaoImpl, CourseSpaceDaoImpl}
-import com.jsherz.luskydive.itest.util.Util
+import com.jsherz.luskydive.itest.util.{DateUtil, TestUtil, Util}
 import com.jsherz.luskydive.json.{CourseCreateRequest, CourseSpaceWithMember, CourseWithNumSpaces}
-import com.jsherz.luskydive.itest.util.DateUtil
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 import org.scalatest.concurrent.ScalaFutures._
 import com.jsherz.luskydive.json.CoursesJsonSupport._
@@ -154,7 +153,7 @@ class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
     "add valid courses with the correct number of spaces" in {
       val examples = Util.fixture[Seq[CourseCreateRequest]]("valid_examples.json")
 
-      implicit val patienceConfig = PatienceConfig(scaled(Span(1, Seconds)))
+      implicit val patienceConfig: PatienceConfig = TestUtil.defaultPatienceConfig
 
       examples.foreach(req => {
         // Build a course

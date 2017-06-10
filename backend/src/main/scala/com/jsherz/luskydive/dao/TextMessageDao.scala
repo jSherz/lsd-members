@@ -51,6 +51,8 @@ trait TextMessageDao {
 
   def toSend(): Future[String \/ Seq[TextMessage]]
 
+  def getReceived(): Future[String \/ Seq[TextMessage]]
+
 }
 
 /**
@@ -136,6 +138,20 @@ class TextMessageDaoImpl(protected override val databaseService: DatabaseService
       TextMessages
         .filter(_.status === TextMessageStatuses.Pending)
         .sortBy(m => (m.createdAt.asc, m.updatedAt.asc))
+        .result
+    ) withServerError
+  }
+
+  /**
+    * Get all text messages that have been received but have not yet been replied to.
+    *
+    * @return
+    */
+  override def getReceived(): Future[String \/ Seq[TextMessage]] = {
+    db.run(
+      TextMessages
+        .filter(_.status === TextMessageStatuses.Received)
+        .sortBy(_.createdAt.asc)
         .result
     ) withServerError
   }

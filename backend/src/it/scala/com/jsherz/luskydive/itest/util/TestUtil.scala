@@ -22,36 +22,20 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.core
+package com.jsherz.luskydive.itest.util
 
-import java.sql.Timestamp
-import java.util.UUID
+import org.scalatest.concurrent.ScalaFutures.{PatienceConfig, scaled}
+import org.scalatest.time.{Millis, Seconds, Span}
 
-/**
-  * A text message that will be or has been sent to a member.
-  */
-case class TextMessage(
-                        uuid: Option[UUID],
-                        memberUuid: UUID,
-                        massTextUuid: Option[UUID],
-                        status: Short,
-                        toNumber: String,
-                        fromNumber: String,
-                        message: String,
-                        // When the message is sent, this holds the external service's ID for the message
-                        // e.g. Twilio's "msid"
-                        externalId: Option[String],
-                        fromMember: Boolean,
-                        createdAt: Timestamp,
-                        updatedAt: Timestamp
-                      )
+object TestUtil {
 
-object TextMessageStatuses {
+  private val PATIENCE_TIMEOUT_S = 5
 
-  val Pending: Short = 0
-  val Sent: Short = 1
-  val Error: Short = 2
-  val Received: Short = 3
-  val ReceivedReplied: Short = 4
+  private val PATIENCE_INTERVAL_MS = 100
+
+  val defaultPatienceConfig = PatienceConfig(
+    timeout = scaled(Span(PATIENCE_TIMEOUT_S, Seconds)),
+    interval = scaled(Span(PATIENCE_INTERVAL_MS, Millis))
+  )
 
 }

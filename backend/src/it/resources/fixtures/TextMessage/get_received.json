@@ -1,0 +1,41 @@
+[
+  {
+    "uuid": "a8098365-9f48-4871-aad6-8dd968b97305",
+    "memberUuid": "b3969ca9-bb3a-4331-bdc3-f9c46c646ab9",
+    "massTextUuid": null,
+    "status": 3,
+    "toNumber": "+447838285436",
+    "fromNumber": "+447569214553",
+    "message": "This is a message that's not been replied to.",
+    "externalId": "TEXTMEISTER-jiu8y7t6fgvhbnjb",
+    "createdAt": "2016-01-04 10:09:11.000000",
+    "updatedAt": "2016-12-04 10:09:19.000000",
+    "fromMember": true
+  },
+  {
+    "uuid": "cb3d37a5-39e7-48e8-aba1-41159a5f59c4",
+    "memberUuid": "b3969ca9-bb3a-4331-bdc3-f9c46c646ab9",
+    "massTextUuid": null,
+    "status": 3,
+    "toNumber": "+447838285436",
+    "fromNumber": "+447569214553",
+    "message": "Another un-replied MESSAGE.",
+    "externalId": "TEXTMEISTER-124jeuqw8asdyhjn",
+    "createdAt": "2016-01-04 10:09:12.000000",
+    "updatedAt": "2016-01-04 10:09:18.000000",
+    "fromMember": true
+  },
+  {
+    "uuid": "f8cce0da-abcf-438a-be8e-a41d276a911a",
+    "memberUuid": "b3969ca9-bb3a-4331-bdc3-f9c46c646ab9",
+    "massTextUuid": null,
+    "status": 3,
+    "toNumber": "+447838285436",
+    "fromNumber": "+447569214553",
+    "message": "One further un-replied to message.",
+    "externalId": "TEXTMEISTER-n13rquwefshdijx",
+    "createdAt": "2016-01-04 10:09:13.000000",
+    "updatedAt": "2016-01-04 10:09:17.000000",
+    "fromMember": true
+  }
+]
