@@ -3,7 +3,6 @@ import {Observable} from 'rxjs/Observable';
 import {Response} from '@angular/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
-import 'rxjs/add/operator/map';
 
 import {PackingListComponent} from './packing-list.component';
 import {PackingListService} from './packing-list.service';

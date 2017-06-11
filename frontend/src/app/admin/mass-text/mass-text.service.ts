@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
 import * as moment from 'moment';
 import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
 
 import {MassTextSendResponse} from './mass-text-send-response';
 import {BaseService} from '../utils/base.service';
