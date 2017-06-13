@@ -6,6 +6,10 @@ export class LuskydivePage {
     return browser.get('/');
   }
 
+  navigateToUnknownPage() {
+    return browser.get('/asdfasdfasdfasdf');
+  }
+
   getParagraphText() {
     return element(by.css('lsd-root')).getText();
   }

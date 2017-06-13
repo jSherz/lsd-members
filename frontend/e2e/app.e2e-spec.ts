@@ -18,4 +18,9 @@ describe('LSD App', function () {
     expect(page.getTitle()).toEqual('Leeds University Skydivers');
   });
 
+  it('should show an error message when navigating to a page that does not exist', () => {
+    page.navigateToUnknownPage();
+    expect(page.getParagraphText()).toContain('404 - Page not found');
+  });
+
 });

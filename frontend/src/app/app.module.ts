@@ -17,7 +17,8 @@ import {
   CommitteeComponent,
   FaqComponent,
   PricesComponent,
-  PageNavComponent
+  PageNavComponent,
+  NotFoundComponent
 } from './pages';
 
 @NgModule({
@@ -36,7 +37,8 @@ import {
     ContactComponent,
     CommitteeComponent,
     FaqComponent,
-    PricesComponent
+    PricesComponent,
+    NotFoundComponent
   ],
   bootstrap: [
     AppComponent

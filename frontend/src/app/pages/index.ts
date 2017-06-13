@@ -5,4 +5,5 @@ export { ContactComponent } from './contact';
 export { FaqComponent } from './faq';
 export { HomeComponent } from './home';
 export { PricesComponent } from './prices';
+export { NotFoundComponent } from './not-found';
 export { PageRoutes } from './page.routes';
