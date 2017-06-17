@@ -1,0 +1,11 @@
+{
+  "uuid": "f5e0e6f1-1786-4702-b2b0-800774e5021b",
+  "name": "Jo Jordan",
+  "email": "davisjohn@hodge-davis.com",
+  "password": "6CCdMsMU3IiOIACMZ1TTHFW4F0dpHYyq4z1rlFrvwPVi5Z78PMj+prooT29R9rJbKywardjcPHbkzHkHDpjFIQ=",
+  "salt": "QwghpJTS2ntPibFW6h0jBOD8P8e49z7nPIfQujeGkHI=",
+  "locked": false,
+  "memberUuid": "5f89a942-2704-4442-9d68-f30408b51ca1",
+  "createdAt": "2017-04-05 00:11:38.000000",
+  "updatedAt": "2017-06-16 04:47:23.000000"
+}

@@ -1,0 +1,15 @@
+{
+  "uuid": "5f89a942-2704-4442-9d68-f30408b51ca1",
+  "firstName": "Jo",
+  "lastName": "Jordan",
+  "email": "davisjohn@hodge-davis.com",
+  "phoneNumber": null,
+  "lastJump": null,
+  "weight": null,
+  "height": null,
+  "driver": false,
+  "organiser": true,
+  "createdAt": "2017-04-05 00:11:38.000000",
+  "updatedAt": "2017-04-05 00:11:38.000000",
+  "socialUserId": null
+}

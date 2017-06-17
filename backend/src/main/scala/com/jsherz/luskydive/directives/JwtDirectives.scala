@@ -24,8 +24,6 @@
 
 package com.jsherz.luskydive.directives
 
-import java.util.UUID
-
 import akka.event.LoggingAdapter
 import akka.http.scaladsl.model.headers.HttpChallenge
 import akka.http.scaladsl.server.AuthenticationFailedRejection.CredentialsMissing
@@ -34,16 +32,17 @@ import akka.http.scaladsl.server.directives.BasicDirectives.{extractExecutionCon
 import akka.http.scaladsl.server.directives.HeaderDirectives.optionalHeaderValueByName
 import akka.http.scaladsl.server.directives.RouteDirectives.reject
 import akka.http.scaladsl.server.{AuthenticationFailedRejection, Directive1}
-import com.jsherz.luskydive.core.Member
-import com.jsherz.luskydive.dao.MemberDao
+import com.jsherz.luskydive.core.{CommitteeMember, Member}
+import com.jsherz.luskydive.dao.{CommitteeMemberDao, MemberDao}
 import com.jsherz.luskydive.services.JwtService
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scalaz.{-\/, \/, \/-}
 
 class JwtDirectives(
                      private val jwtService: JwtService,
-                     private val memberDao: MemberDao
+                     private val memberDao: MemberDao,
+                     private val committeeMemberDao: CommitteeMemberDao
                    )
                    (implicit val log: LoggingAdapter) {
 
@@ -52,6 +51,8 @@ class JwtDirectives(
   private val dummyChallenge = HttpChallenge("", None)
 
   private val emptyMember: Future[\/[String, Option[Member]]] = Future.successful(\/-(None: Option[Member]))
+
+  private val emptyMemberWithCommittee: Future[Option[(Member, CommitteeMember)]] = Future.successful(None)
 
   val authenticateWithJwt: Directive1[Member] = {
     (extractExecutionContext & extractRequest & optionalHeaderValueByName(authHeader)).tflatMap { case (ec, request, maybeJwt) =>
@@ -69,6 +70,64 @@ class JwtDirectives(
         .map(resultToMaybeMember)
         .flatMap(maybeMemberToDirective(uuid))
     }
+  }
+
+  /**
+    * Validate a user with a JWT and ensure they're an active committee member.
+    */
+  val authenticateCommitteeWithJwt: Directive1[(Member, CommitteeMember)] = {
+    (extractExecutionContext & extractRequest & optionalHeaderValueByName(authHeader)).tflatMap { case (ec, request, maybeJwt) =>
+      implicit val execContext: ExecutionContext = ec
+
+      log.info(request.method.value + " " + request.uri)
+
+      val uuidFromJwt = maybeJwt
+        .flatMap(jwtService.verifyJwt)
+
+      // Save for logging
+      val uuid = uuidFromJwt.map(_.toString).getOrElse("** NO UUID **")
+
+      onSuccess(
+        uuidFromJwt
+          .fold(emptyMember)(memberDao.get)
+          .flatMap(
+            _.fold(logMemberLookupError, committeeMemberForMember)
+          )
+      ).flatMap {
+        case Some(memberWithCommittee: (Member, CommitteeMember)) => provide(memberWithCommittee)
+        case None => rejectRequest[(Member, CommitteeMember)](uuid)
+      }
+    }
+  }
+
+  private def logMemberLookupError(error: String): Future[Option[(Member, CommitteeMember)]] = {
+    log.error(s"(lookupCommitteeMember) Member lookup failed: $error")
+    Future.successful(None)
+  }
+
+  private def committeeMemberForMember(maybeMember: Option[Member])(implicit ec: ExecutionContext): Future[Option[(Member, CommitteeMember)]] = {
+    maybeMember.fold(emptyMemberWithCommittee) { member =>
+      committeeMemberDao
+        .forMember(member.uuid)
+        .map {
+          case Some(committeeMember: CommitteeMember) => {
+            if (committeeMember.locked) {
+              log.error(s"Committe member ${committeeMember.uuid} is locked - denying access")
+              None
+            } else {
+              Some(member, committeeMember)
+            }
+          }
+          case None =>
+            log.error(s"lookupCommitteeMember failed - committee member not found for member ${member.uuid}")
+            None
+        }
+    }
+  }
+
+  private def rejectRequest[T](uuid: String): Directive1[T] = {
+    log.error(s"Login failed with UUID: $uuid")
+    reject(AuthenticationFailedRejection(CredentialsMissing, dummyChallenge))
   }
 
   private def resultToMaybeMember(result: \/[String, Option[Member]]): Option[Member] = {

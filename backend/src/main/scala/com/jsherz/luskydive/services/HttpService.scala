@@ -36,7 +36,7 @@ import akka.http.scaladsl.server._
 import ch.megard.akka.http.cors.scaladsl.settings.CorsSettings
 import ch.megard.akka.http.cors.scaladsl.{CorsDirectives, CorsRejection}
 import com.jsherz.luskydive.apis._
-import com.jsherz.luskydive.core.Member
+import com.jsherz.luskydive.core.{CommitteeMember, Member}
 import com.jsherz.luskydive.dao._
 import com.jsherz.luskydive.directives.JwtDirectives
 
@@ -62,7 +62,13 @@ class HttpService(
                   log: LoggingAdapter) {
 
   implicit val auth: Directive1[UUID] = new ApiKeyAuthenticator(authDao).authenticateWithApiKey
-  private val authenticateWithJwt: Directive1[Member] = new JwtDirectives(jwtService, memberDao).authenticateWithJwt
+
+  private val jwtDirectives: JwtDirectives = new JwtDirectives(jwtService, memberDao, committeeMemberDao)
+
+  private val authenticateWithJwt: Directive1[Member] = jwtDirectives.authenticateWithJwt
+
+  private val authenticateCommitteeWithJwt: Directive1[(Member, CommitteeMember)] =
+    jwtDirectives.authenticateCommitteeWithJwt
 
   val signupRoutes = new SignupApi(memberDao)
   val coursesRoutes = new CoursesApi(courseDao)

@@ -64,6 +64,14 @@ class StubCommitteeMemberDao extends CommitteeMemberDao {
     }
   }
 
+  /**
+    * Find the committee record for a member.
+    *
+    * @param uuid Member's UUID
+    * @return
+    */
+  override def forMember(uuid: Option[UUID]): Future[Option[CommitteeMember]] = ???
+
 }
 
 object StubCommitteeMemberDao {

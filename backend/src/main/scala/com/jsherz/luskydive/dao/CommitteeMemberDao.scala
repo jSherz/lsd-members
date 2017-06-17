@@ -38,6 +38,15 @@ import scala.concurrent.{ExecutionContext, Future}
 trait CommitteeMemberDao {
 
   /**
+    * Find the committee record for a member.
+    *
+    * @param uuid Member's UUID
+    * @return
+    */
+  def forMember(uuid: Option[UUID]): Future[Option[CommitteeMember]]
+
+
+  /**
     * Get active committee members, sorted by name.
     *
     * @return
@@ -83,6 +92,18 @@ class CommitteeMemberDaoImpl(protected override val databaseService: DatabaseSer
     */
   override def get(uuid: UUID): Future[Option[CommitteeMember]] = {
     db.run(CommitteeMembers.filter(_.uuid === uuid).result.headOption)
+  }
+
+  /**
+    * Find the committee record for a member.
+    *
+    * @param maybeUuid Member's UUID
+    * @return
+    */
+  override def forMember(maybeUuid: Option[UUID]): Future[Option[CommitteeMember]] = {
+    maybeUuid.fold(Future.successful(None: Option[CommitteeMember])) { uuid =>
+      db.run(CommitteeMembers.filter(_.memberUuid === uuid).result.headOption)
+    }
   }
 
 }

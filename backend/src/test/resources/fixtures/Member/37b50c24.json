@@ -1,0 +1,15 @@
+{
+  "uuid": "37b50c24-d8d4-4e78-a18c-2462e7396b01",
+  "firstName": "Mrs.",
+  "lastName": "Mallory",
+  "email": "timothy06@rodriguez.com",
+  "phoneNumber": null,
+  "lastJump": null,
+  "weight": null,
+  "height": null,
+  "driver": false,
+  "organiser": true,
+  "createdAt": "2015-02-28 09:02:17.000000",
+  "updatedAt": "2015-02-28 09:02:17.000000",
+  "socialUserId": null
+}
