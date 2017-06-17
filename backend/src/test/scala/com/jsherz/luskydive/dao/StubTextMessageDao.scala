@@ -67,6 +67,8 @@ class StubTextMessageDao extends TextMessageDao {
 
   override def toSend(): Future[\/[String, Seq[TextMessage]]] = ???
 
+  override def getReceived(): Future[\/[String, Seq[TextMessage]]] = ???
+
 }
 
 object StubTextMessageDao {
