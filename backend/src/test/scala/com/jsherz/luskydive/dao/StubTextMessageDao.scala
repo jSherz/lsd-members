@@ -67,7 +67,9 @@ class StubTextMessageDao extends TextMessageDao {
 
   override def toSend(): Future[\/[String, Seq[TextMessage]]] = ???
 
-  override def getReceived(): Future[\/[String, Seq[TextMessage]]] = ???
+  override def getReceived(): Future[\/[String, Seq[TextMessage]]] = {
+    Future.successful(\/-(Util.fixture[Vector[TextMessage]]("get_received.json")))
+  }
 
 }
 

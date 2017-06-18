@@ -24,20 +24,30 @@
 
 package com.jsherz.luskydive.apis
 
+import java.sql.Date
+
 import akka.actor.ActorSystem
 import akka.event.{Logging, LoggingAdapter}
-import akka.http.scaladsl.model.headers.HttpEncodings
+import akka.http.scaladsl.model.headers.{HttpChallenge, HttpEncodings}
 import akka.http.scaladsl.model.{ContentTypes, FormData, StatusCodes, Uri}
-import akka.http.scaladsl.server.Route
+import akka.http.scaladsl.server.AuthenticationFailedRejection.CredentialsRejected
+import akka.http.scaladsl.server.{AuthenticationFailedRejection, Directive1, Route, StandardRoute}
+import akka.http.scaladsl.server.directives.BasicDirectives.provide
+import akka.http.scaladsl.server.directives.RouteDirectives.reject
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import com.jsherz.luskydive.core.{TextMessage, TextMessageStatuses}
+import com.jsherz.luskydive.core.{CommitteeMember, Member, TextMessage, TextMessageStatuses}
 import com.jsherz.luskydive.dao.{MemberDao, StubMemberDao, StubTextMessageDao, TextMessageDao}
+import com.jsherz.luskydive.json.MemberJsonSupport._
+import com.jsherz.luskydive.json.CommitteeMembersJsonSupport.CommitteeMemberFormat
+import com.jsherz.luskydive.services.JwtService
+import com.jsherz.luskydive.util.{AuthenticationDirectives, Util}
 import org.mockito.{ArgumentCaptor, Mockito}
-import org.mockito.Mockito.{never, verify}
-import org.mockito.Matchers.any
+import org.mockito.Mockito.{never, verify, when, mock}
+import org.mockito.Matchers.{any, anyString}
 import org.scalatest.{Matchers, WordSpec}
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
+import scalaz.{-\/, \/-}
 
 
 class TextMessageApiSpec extends WordSpec with Matchers with ScalatestRouteTest {
@@ -66,7 +76,11 @@ class TextMessageApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
 
     val memberDao: MemberDao = Mockito.spy(new StubMemberDao())
     val dao: TextMessageDao = Mockito.spy(new StubTextMessageDao())
-    val route = new TextMessageApi(dao, memberDao, validApiKey).route
+    val member = Util.fixture[Member]("37b50c24.json")
+    val committeeMember = Util.fixture[CommitteeMember]("956610c8.json")
+    val authDirective = provide((member, committeeMember))
+
+    val route = new TextMessageApi(dao, memberDao, validApiKey, authDirective).route
   }
 
   "TextMessageApi#receive" should {
@@ -154,6 +168,47 @@ class TextMessageApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
     "return bad request if the MessageSid is missing" in new Fixtured {
       Post(validReceiveUrl, noMessageSidReceiveRequest) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.BadRequest
+      }
+    }
+
+  }
+
+  "TextMessageApi#receivedRoute" should {
+
+    val url = "/text-messages/received"
+
+    "requires authentication with a JWT" in new Fixtured {
+      val jwtAuthDirective = reject(AuthenticationFailedRejection(CredentialsRejected, HttpChallenge("", None)))
+      override val route: Route = new TextMessageApi(dao, memberDao, validApiKey, jwtAuthDirective).route
+
+      Get(url) ~> Route.seal(route) ~> check {
+        response.status shouldEqual StatusCodes.Unauthorized
+      }
+    }
+
+    "return method not allowed when used with anything other than POST" in new Fixtured {
+      Seq(Post, Put, Delete, Patch).foreach { method =>
+        method(url) ~> Route.seal(route) ~> check {
+          response.status shouldEqual StatusCodes.MethodNotAllowed
+        }
+      }
+
+      verify(dao, never()).getReceived()
+    }
+
+    "return the recent text messages" in new Fixtured {
+      Get(url) ~> Route.seal(route) ~> check {
+        response.status shouldEqual StatusCodes.OK
+        responseAs[Vector[TextMessage]] shouldEqual Util.fixture[Vector[TextMessage]]("get_received.json")
+      }
+    }
+
+    "return an error when getting the recent text messages fails" in new Fixtured {
+      override val dao = mock(classOf[TextMessageDao])
+      when(dao.getReceived()).thenReturn(Future.successful(-\/("failed to get them")))
+
+      Get(url) ~> Route.seal(route) ~> check {
+        response.status shouldEqual StatusCodes.InternalServerError
       }
     }
 

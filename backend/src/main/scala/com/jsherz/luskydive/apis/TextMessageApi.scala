@@ -30,10 +30,12 @@ import java.util.UUID
 
 import akka.event.LoggingAdapter
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse, StatusCodes}
+import akka.http.scaladsl.server.Directive1
 import akka.http.scaladsl.server.Directives._
 import com.fasterxml.uuid.Generators
-import com.jsherz.luskydive.core.{Member, TextMessage, TextMessageStatuses}
+import com.jsherz.luskydive.core.{CommitteeMember, Member, TextMessage, TextMessageStatuses}
 import com.jsherz.luskydive.dao.{MemberDao, TextMessageDao}
+import com.jsherz.luskydive.json.TextMessageJsonSupport._
 import com.jsherz.luskydive.util.EitherFutureExtensions._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -45,7 +47,8 @@ import scalaz.{-\/, \/-}
   */
 class TextMessageApi(val textMessageDao: TextMessageDao,
                      val memberDao: MemberDao,
-                     val validApiKey: String)
+                     val validApiKey: String,
+                     val committeeAuthDirective: Directive1[(Member, CommitteeMember)])
                     (implicit val ec: ExecutionContext,
                      implicit val log: LoggingAdapter) {
 
@@ -89,8 +92,20 @@ class TextMessageApi(val textMessageDao: TextMessageDao,
       }
   }
 
+  val receivedRoute = (path("received") & get) {
+    committeeAuthDirective { (_) =>
+      onSuccess(textMessageDao.getReceived()) {
+        case \/-(texts) => complete(texts)
+        case -\/(error) =>
+          log.error(s"Failed to get received text messages: $error")
+          complete(StatusCodes.InternalServerError)
+      }
+    }
+  }
+
   val route = pathPrefix("text-messages") {
-    receiveRoute
+    receiveRoute ~
+      receivedRoute
   }
 
   private def buildMessage(memberUuid: UUID, to: String, from: String, body: String, externalSid: String) = {

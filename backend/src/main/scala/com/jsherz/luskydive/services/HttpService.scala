@@ -76,7 +76,7 @@ class HttpService(
   val memberRoutes = new MemberApi(memberDao, textMessageDao)
   val courseSpacesApi = new CourseSpacesApi(courseSpaceDao)
   val massTextApi = new MassTextApi(massTextDao)
-  val textMessageApi = new TextMessageApi(textMessageDao, memberDao, textMessageReceiveApiKey)
+  val textMessageApi = new TextMessageApi(textMessageDao, memberDao, textMessageReceiveApiKey, authenticateCommitteeWithJwt)
   val socialLoginApi = new SocialLoginApi(socialService, memberDao, jwtService)
   val currentMemberApi = new CurrentMemberApi(authenticateWithJwt, memberDao)
   val versionApi = new VersionApi
