@@ -18,9 +18,11 @@ export class CanActivateMembersLogin implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     if (this.jwtService.isAuthenticated()) {
       this.router.navigate(['/members', 'dashboard']);
-    }
 
-    return Observable.of(this.jwtService.isAuthenticated());
+      return Observable.of(false);
+    } else {
+      return Observable.of(true);
+    }
   }
 
 }
