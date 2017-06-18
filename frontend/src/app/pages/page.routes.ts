@@ -7,8 +7,7 @@ import {
   ContactComponent,
   CommitteeComponent,
   FaqComponent,
-  PricesComponent,
-  NotFoundComponent
+  PricesComponent
 } from './index';
 
 export const PageRoutes: Routes = [
@@ -21,8 +20,7 @@ export const PageRoutes: Routes = [
       { path: 'contact', component: ContactComponent },
       { path: 'committee', component: CommitteeComponent },
       { path: 'faq', component: FaqComponent },
-      { path: 'prices', component: PricesComponent },
-      { path: '**', component: NotFoundComponent }
+      { path: 'prices', component: PricesComponent }
     ]
   }
 ];
