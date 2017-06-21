@@ -55,3 +55,5 @@ object TextMessageStatuses {
   val ReceivedReplied: Short = 4
 
 }
+
+case class NumReceivedMessages(numReceived: Int)

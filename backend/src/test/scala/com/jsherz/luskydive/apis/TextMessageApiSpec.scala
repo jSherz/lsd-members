@@ -24,30 +24,28 @@
 
 package com.jsherz.luskydive.apis
 
-import java.sql.Date
-
 import akka.actor.ActorSystem
 import akka.event.{Logging, LoggingAdapter}
-import akka.http.scaladsl.model.headers.{HttpChallenge, HttpEncodings}
-import akka.http.scaladsl.model.{ContentTypes, FormData, StatusCodes, Uri}
+import akka.http.scaladsl.model.headers.HttpChallenge
+import akka.http.scaladsl.model.{ContentTypes, FormData, StatusCodes}
 import akka.http.scaladsl.server.AuthenticationFailedRejection.CredentialsRejected
-import akka.http.scaladsl.server.{AuthenticationFailedRejection, Directive1, Route, StandardRoute}
 import akka.http.scaladsl.server.directives.BasicDirectives.provide
 import akka.http.scaladsl.server.directives.RouteDirectives.reject
+import akka.http.scaladsl.server.{AuthenticationFailedRejection, Route}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import com.jsherz.luskydive.core.{CommitteeMember, Member, TextMessage, TextMessageStatuses}
+import com.jsherz.luskydive.core._
 import com.jsherz.luskydive.dao.{MemberDao, StubMemberDao, StubTextMessageDao, TextMessageDao}
-import com.jsherz.luskydive.json.MemberJsonSupport._
 import com.jsherz.luskydive.json.CommitteeMembersJsonSupport.CommitteeMemberFormat
-import com.jsherz.luskydive.services.JwtService
-import com.jsherz.luskydive.util.{AuthenticationDirectives, Util}
+import com.jsherz.luskydive.json.MemberJsonSupport._
+import com.jsherz.luskydive.json.TextMessageJsonSupport.NumReceivedMessagesFormat
+import com.jsherz.luskydive.util.Util
+import org.mockito.Matchers.any
+import org.mockito.Mockito.{mock, never, verify, when}
 import org.mockito.{ArgumentCaptor, Mockito}
-import org.mockito.Mockito.{never, verify, when, mock}
-import org.mockito.Matchers.{any, anyString}
 import org.scalatest.{Matchers, WordSpec}
 
-import scala.concurrent.{ExecutionContext, Future}
-import scalaz.{-\/, \/-}
+import scala.concurrent.Future
+import scalaz.-\/
 
 
 class TextMessageApiSpec extends WordSpec with Matchers with ScalatestRouteTest {
@@ -184,9 +182,11 @@ class TextMessageApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
       Get(url) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.Unauthorized
       }
+
+      verify(dao, never()).getReceived()
     }
 
-    "return method not allowed when used with anything other than POST" in new Fixtured {
+    "return method not allowed when used with anything other than GET" in new Fixtured {
       Seq(Post, Put, Delete, Patch).foreach { method =>
         method(url) ~> Route.seal(route) ~> check {
           response.status shouldEqual StatusCodes.MethodNotAllowed
@@ -206,6 +206,49 @@ class TextMessageApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
     "return an error when getting the recent text messages fails" in new Fixtured {
       override val dao = mock(classOf[TextMessageDao])
       when(dao.getReceived()).thenReturn(Future.successful(-\/("failed to get them")))
+
+      Get(url) ~> Route.seal(route) ~> check {
+        response.status shouldEqual StatusCodes.InternalServerError
+      }
+    }
+
+  }
+
+  "TextMessageApi#receivedCountRoute" should {
+
+    val url = "/text-messages/num-received"
+
+    "requires authentication with a JWT" in new Fixtured {
+      val jwtAuthDirective = reject(AuthenticationFailedRejection(CredentialsRejected, HttpChallenge("", None)))
+      override val route: Route = new TextMessageApi(dao, memberDao, validApiKey, jwtAuthDirective).route
+
+      Get(url) ~> Route.seal(route) ~> check {
+        response.status shouldEqual StatusCodes.Unauthorized
+      }
+
+      verify(dao, never()).getReceivedCount()
+    }
+
+    "return method not allowed when used with anything other than GET" in new Fixtured {
+      Seq(Post, Put, Delete, Patch).foreach { method =>
+        method(url) ~> Route.seal(route) ~> check {
+          response.status shouldEqual StatusCodes.MethodNotAllowed
+        }
+      }
+
+      verify(dao, never()).getReceivedCount()
+    }
+
+    "return the recent text messages" in new Fixtured {
+      Get(url) ~> Route.seal(route) ~> check {
+        response.status shouldEqual StatusCodes.OK
+        responseAs[NumReceivedMessages] shouldEqual NumReceivedMessages(3)
+      }
+    }
+
+    "return an error when getting the recent text messages fails" in new Fixtured {
+      override val dao = mock(classOf[TextMessageDao])
+      when(dao.getReceivedCount()).thenReturn(Future.successful(-\/("failed to get them")))
 
       Get(url) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.InternalServerError

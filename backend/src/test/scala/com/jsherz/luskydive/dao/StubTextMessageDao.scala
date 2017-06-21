@@ -26,11 +26,11 @@ package com.jsherz.luskydive.dao
 
 import java.util.UUID
 
-import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.TextMessage
-import com.jsherz.luskydive.util.Util
 import com.jsherz.luskydive.json.TextMessageJsonSupport._
+import com.jsherz.luskydive.util.Util
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scalaz.{-\/, \/, \/-}
 
@@ -71,7 +71,9 @@ class StubTextMessageDao extends TextMessageDao {
     Future.successful(\/-(Util.fixture[Vector[TextMessage]]("get_received.json")))
   }
 
-  override def getReceivedCount(): Future[\/[String, Int]] = ???
+  override def getReceivedCount(): Future[\/[String, Int]] = {
+    getReceived().map(_.map(_.size))
+  }
 
 }
 

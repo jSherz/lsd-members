@@ -33,7 +33,7 @@ import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse, StatusC
 import akka.http.scaladsl.server.Directive1
 import akka.http.scaladsl.server.Directives._
 import com.fasterxml.uuid.Generators
-import com.jsherz.luskydive.core.{CommitteeMember, Member, TextMessage, TextMessageStatuses}
+import com.jsherz.luskydive.core._
 import com.jsherz.luskydive.dao.{MemberDao, TextMessageDao}
 import com.jsherz.luskydive.json.TextMessageJsonSupport._
 import com.jsherz.luskydive.util.EitherFutureExtensions._
@@ -103,9 +103,21 @@ class TextMessageApi(val textMessageDao: TextMessageDao,
     }
   }
 
+  val receivedCountRoute = (path("num-received") & get) {
+    committeeAuthDirective { (_) =>
+      onSuccess(textMessageDao.getReceivedCount()) {
+        case \/-(numReceived) => complete(NumReceivedMessages(numReceived))
+        case -\/(error) =>
+          log.error(s"Failed to get number of received text messages: $error")
+          complete(StatusCodes.InternalServerError)
+      }
+    }
+  }
+
   val route = pathPrefix("text-messages") {
     receiveRoute ~
-      receivedRoute
+      receivedRoute ~
+      receivedCountRoute
   }
 
   private def buildMessage(memberUuid: UUID, to: String, from: String, body: String, externalSid: String) = {

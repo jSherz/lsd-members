@@ -25,7 +25,7 @@
 package com.jsherz.luskydive.json
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import com.jsherz.luskydive.core.TextMessage
+import com.jsherz.luskydive.core.{NumReceivedMessages, TextMessage}
 import com.jsherz.luskydive.util.{TimestampJsonFormat, UuidJsonFormat}
 import spray.json.DefaultJsonProtocol
 
@@ -35,5 +35,6 @@ object TextMessageJsonSupport extends DefaultJsonProtocol with SprayJsonSupport 
   implicit val UuidFormat = UuidJsonFormat
   implicit val TimestampFormat = TimestampJsonFormat
   implicit val TextMessageFormat = jsonFormat11(TextMessage)
+  implicit val NumReceivedMessagesFormat = jsonFormat1(NumReceivedMessages)
 
 }
