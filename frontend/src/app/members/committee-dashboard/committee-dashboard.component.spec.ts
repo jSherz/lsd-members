@@ -14,6 +14,9 @@ import {
 
 import {CommitteeDashboardComponent} from './committee-dashboard.component';
 import {HeaderComponent} from '../header';
+import {CommitteeStatsComponent} from './committee-stats';
+import {CommitteeStatsService} from './committee-stats/committee-stats.service';
+import {StubCommitteeStatsService} from './committee-stats/stub-committee-stats.service';
 
 describe('CommitteeDashboardComponent', () => {
 
@@ -27,6 +30,7 @@ describe('CommitteeDashboardComponent', () => {
       ],
       declarations: [
         HeaderComponent,
+        CommitteeStatsComponent,
         CommitteeDashboardComponent
       ],
       providers: [
@@ -36,6 +40,7 @@ describe('CommitteeDashboardComponent', () => {
           useFactory: setupTestingRouter,
           deps: [UrlSerializer, RouterOutletMap, Location, NgModuleFactoryLoader, Compiler, Injector, ROUTES, UrlHandlingStrategy]
         },
+        {provide: CommitteeStatsService, useClass: StubCommitteeStatsService}
       ]
   }).compileComponents();
   }));
