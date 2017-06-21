@@ -71,6 +71,8 @@ class StubTextMessageDao extends TextMessageDao {
     Future.successful(\/-(Util.fixture[Vector[TextMessage]]("get_received.json")))
   }
 
+  override def getReceivedCount(): Future[\/[String, Int]] = ???
+
 }
 
 object StubTextMessageDao {

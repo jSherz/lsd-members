@@ -53,6 +53,8 @@ trait TextMessageDao {
 
   def getReceived(): Future[String \/ Seq[TextMessage]]
 
+  def getReceivedCount(): Future[String \/ Int]
+
 }
 
 /**
@@ -152,6 +154,20 @@ class TextMessageDaoImpl(protected override val databaseService: DatabaseService
       TextMessages
         .filter(_.status === TextMessageStatuses.Received)
         .sortBy(_.createdAt.asc)
+        .result
+    ) withServerError
+  }
+
+  /**
+    * Get the number of text messages that have been received but not yet replied to.
+    *
+    * @return
+    */
+  override def getReceivedCount(): Future[\/[String, Int]] = {
+    db.run(
+      TextMessages
+        .filter(_.status === TextMessageStatuses.Received)
+        .countDistinct
         .result
     ) withServerError
   }

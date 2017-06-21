@@ -244,6 +244,19 @@ class TextMessageDaoSpec extends WordSpec with Matchers {
 
   }
 
+  "TextMessageDao#getReceivedCount" should {
+
+    "return the number of text messages with the received state" in {
+      val result = dao.getReceivedCount().futureValue
+
+      result.isRight shouldBe true
+      result.map {
+        _ shouldEqual 3
+      }
+    }
+
+  }
+
   /**
     * Compare messages, discarding the UUIDs (but ensuring the mass text UUID is either present or not present on both).
     *
