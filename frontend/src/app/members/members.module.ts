@@ -32,8 +32,13 @@ import {
 } from './packing-list';
 import {TheWeatherComponent} from './dashboard';
 import {CanActivateMembers, CanActivateMembersLogin} from './utils';
-import {CommitteeDashboardComponent} from './committee-dashboard';
-import { HeaderComponent } from './header/header.component';
+import {
+  CommitteeDashboardComponent,
+  CommitteeStatsComponent,
+  CommitteeStatsService,
+  CommitteeStatsServiceImpl
+} from './committee-dashboard';
+import {HeaderComponent} from './header/header.component';
 
 @NgModule({
   imports: [
@@ -54,7 +59,8 @@ import { HeaderComponent } from './header/header.component';
     PackingListComponent,
     TheWeatherComponent,
     CommitteeDashboardComponent,
-    HeaderComponent
+    HeaderComponent,
+    CommitteeStatsComponent
   ],
   bootstrap: [],
   providers: [
@@ -64,6 +70,7 @@ import { HeaderComponent } from './header/header.component';
     {provide: JwtService, useClass: JwtServiceImpl},
     {provide: DashboardService, useClass: DashboardServiceImpl},
     {provide: PackingListService, useClass: PackingListServiceImpl},
+    {provide: CommitteeStatsService, useClass: CommitteeStatsServiceImpl},
     CanActivateMembers,
     CanActivateMembersLogin
   ]

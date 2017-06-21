@@ -1,0 +1,22 @@
+<div id="committee-stats-wrapper">
+  <h2>
+    Stats (&lt;3 numbers)
+  </h2>
+
+  <dl>
+    <dt>Number of text messages <strong>not</strong> replied to</dt>
+    <dd>
+      {{numReceived}}
+
+      <span *ngIf="numReceived >= 1">
+        <a id="view-received-messages" href="#" class="button btn-warning">View messages</a>
+      </span>
+    </dd>
+
+    <dt>Number of members</dt>
+    <dd>???</dd>
+
+    <dt>Number of text messages sent</dt>
+    <dd>???</dd>
+  </dl>
+</div>
