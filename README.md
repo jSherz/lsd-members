@@ -1,6 +1,6 @@
 # Leeds University Skydivers - Management system
 
-[![Trello board](https://img.shields.io/badge/Trello-public-green.svg)](https://trello.com/b/Lc8wED62/leedsskydivers-com)
+[![Trello board](https://img.shields.io/badge/Trello-public-green.svg)](https://trello.com/b/Lc8wED62/leedsskydivers-com) [![Build Status](https://travis-ci.org/jSherz/lsd-members.svg?branch=master)](https://travis-ci.org/jSherz/lsd-members)
 
 The Leeds Uni Skydiving club organises a number of people learning to skydive
 each year and this involves collecting some information, arranging transport
