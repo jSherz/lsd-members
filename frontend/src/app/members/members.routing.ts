@@ -7,7 +7,8 @@ import {DashboardComponent} from './dashboard';
 import {NotApprovedComponent} from './not-approved';
 import {PerformLoginComponent} from './social-login';
 import {CanActivateMembers, CanActivateMembersLogin} from './utils';
-import {CommitteeDashboardComponent} from "./committee-dashboard/committee-dashboard.component";
+import {CommitteeDashboardComponent} from './committee-dashboard/committee-dashboard.component';
+import {ReceivedMessagesComponent} from './received-messages';
 
 export const membersRoutes: Routes = [
   {
@@ -18,7 +19,8 @@ export const membersRoutes: Routes = [
       {path: 'dashboard', component: DashboardComponent, canActivate: [CanActivateMembers]},
       {path: 'not-approved', component: NotApprovedComponent},
       {path: 'perform-login', component: PerformLoginComponent},
-      {path: 'committee/dashboard', component: CommitteeDashboardComponent, canActivate: [CanActivateMembers]}
+      {path: 'committee/dashboard', component: CommitteeDashboardComponent, canActivate: [CanActivateMembers]},
+      {path: 'text-messages/received', component: ReceivedMessagesComponent, canActivate: [CanActivateMembers]}
     ]
   }
 ];

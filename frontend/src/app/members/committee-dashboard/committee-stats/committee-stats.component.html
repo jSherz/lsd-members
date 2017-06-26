@@ -9,7 +9,7 @@
       {{numReceived}}
 
       <span *ngIf="numReceived >= 1">
-        <a id="view-received-messages" href="#" class="button btn-warning">View messages</a>
+        <a id="view-received-messages" [routerLink]="['/members/text-messages/received']" class="button btn-warning">View messages</a>
       </span>
     </dd>
 

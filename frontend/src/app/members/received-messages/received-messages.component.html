@@ -1,0 +1,26 @@
+<div id="header-wrapper">
+  <lsd-header></lsd-header>
+</div>
+
+<div id="received-messages-wrapper">
+  <div>
+    <h2>Received messages</h2>
+
+    <p>These are messages that <strong>haven't</strong> been replied to (yet).</p>
+
+    <ul id="received-messages">
+      <li *ngFor="let message of receivedMessages">
+        <dl>
+          <dt class="label-received">Received</dt>
+          <dd class="value-received">{{message.createdAt | date:'medium'}}</dd>
+
+          <dt class="label-from">From</dt>
+          <dd class="value-from">{{message.fromNumber}}</dd>
+
+          <dt class="label-message">Message</dt>
+          <dd class="value-message">{{message.message}}</dd>
+        </dl>
+      </li>
+    </ul>
+  </div>
+</div>

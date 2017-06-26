@@ -39,6 +39,11 @@ import {
   CommitteeStatsServiceImpl
 } from './committee-dashboard';
 import {HeaderComponent} from './header/header.component';
+import {
+  ReceivedMessagesComponent,
+  TextMessagesService,
+  TextMessagesServiceImpl
+} from './received-messages';
 
 @NgModule({
   imports: [
@@ -60,7 +65,8 @@ import {HeaderComponent} from './header/header.component';
     TheWeatherComponent,
     CommitteeDashboardComponent,
     HeaderComponent,
-    CommitteeStatsComponent
+    CommitteeStatsComponent,
+    ReceivedMessagesComponent
   ],
   bootstrap: [],
   providers: [
@@ -71,6 +77,7 @@ import {HeaderComponent} from './header/header.component';
     {provide: DashboardService, useClass: DashboardServiceImpl},
     {provide: PackingListService, useClass: PackingListServiceImpl},
     {provide: CommitteeStatsService, useClass: CommitteeStatsServiceImpl},
+    {provide: TextMessagesService, useClass: TextMessagesServiceImpl},
     CanActivateMembers,
     CanActivateMembersLogin
   ]

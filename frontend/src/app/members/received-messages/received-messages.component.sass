@@ -1,0 +1,35 @@
+@import '../../../assets/css/base'
+
+#received-messages-wrapper
+  @include grid-container()
+
+  & > div
+    @include grid-column(12)
+    padding: 1em
+    background: white
+
+#received-messages
+
+  li
+    margin-bottom: 1em
+    padding: 0.5em
+    background: lighten($lsd-blue, 50%)
+
+.label-received, .value-received, .label-from, .value-from
+  display: inline-block
+
+.label-received, .label-from
+  margin-right: 0.3em
+
+  &:after
+    content: ':'
+
+.value-received
+  margin-right: 1em
+
+.label-message
+  margin: 1em 0 0.5em 0
+
+.value-message
+  padding: 0.5em
+  background-color: lighten($lsd-blue, 55%)
