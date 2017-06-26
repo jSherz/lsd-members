@@ -4,6 +4,18 @@ import {ReceivedMessagesComponent} from './received-messages.component';
 import {TextMessagesService} from './text-messages.service';
 import {Observable} from 'rxjs/Observable';
 import {HeaderComponent} from '../header/header.component';
+import {
+  Router, UrlHandlingStrategy, UrlSerializer, RouterOutletMap, ROUTES
+} from '@angular/router';
+import {RouterTestingModule, setupTestingRouter} from '@angular/router/testing';
+import {Compiler, Injector, NgModuleFactoryLoader} from '@angular/core';
+import {Location} from '@angular/common';
+
+const dummyService = {
+  getReceivedMessages: () => {
+    return Observable.of([]);
+  }
+};
 
 describe('ReceivedMessagesComponent', () => {
   let component: ReceivedMessagesComponent;
@@ -11,18 +23,19 @@ describe('ReceivedMessagesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [RouterTestingModule],
       declarations: [
         HeaderComponent,
         ReceivedMessagesComponent
       ],
       providers: [
+        {provide: UrlHandlingStrategy, useValue: {}},
         {
-          provide: TextMessagesService, useValue: {
-          getReceivedMessages: () => {
-            return Observable.of([]);
-          }
-        }
-        }
+          provide: Router,
+          useFactory: setupTestingRouter,
+          deps: [UrlSerializer, RouterOutletMap, Location, NgModuleFactoryLoader, Compiler, Injector, ROUTES, UrlHandlingStrategy]
+        },
+        {provide: TextMessagesService, useValue: dummyService}
       ]
     }).compileComponents();
   }));
