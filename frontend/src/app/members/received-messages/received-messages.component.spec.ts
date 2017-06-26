@@ -3,6 +3,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {ReceivedMessagesComponent} from './received-messages.component';
 import {TextMessagesService} from './text-messages.service';
 import {Observable} from 'rxjs/Observable';
+import {HeaderComponent} from '../header/header.component';
 
 describe('ReceivedMessagesComponent', () => {
   let component: ReceivedMessagesComponent;
@@ -11,6 +12,7 @@ describe('ReceivedMessagesComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
+        HeaderComponent,
         ReceivedMessagesComponent
       ],
       providers: [
