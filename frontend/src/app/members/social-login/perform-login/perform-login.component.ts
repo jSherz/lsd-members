@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {SocialLoginService} from '../social-login.service';
 import {JwtService} from '../../login/jwt.service';
-import {SocialLoginResponse} from "../model";
+import {SocialLoginResponse} from '../model';
 
 @Component({
   selector: 'lsd-perform-login',
