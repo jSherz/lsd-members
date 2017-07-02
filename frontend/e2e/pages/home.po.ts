@@ -12,4 +12,8 @@ export class HomePage extends PagesPage {
     return element(by.css('#intro-snippet')).getText();
   }
 
+  baseUrl() {
+    return browser.baseUrl;
+  }
+
 }

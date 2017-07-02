@@ -39,4 +39,8 @@ export class SignupForm {
     return element(by.css('button[type=submit]'));
   }
 
+  baseUrl() {
+    return browser.baseUrl;
+  }
+
 }

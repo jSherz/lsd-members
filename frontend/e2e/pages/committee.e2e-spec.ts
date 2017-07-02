@@ -1,12 +1,13 @@
 import {CommitteePage} from './committee.po';
 
-
 describe('Pages: Committee', function () {
 
   let page: CommitteePage;
+  let baseUrl: string;
 
   beforeEach(() => {
     page = new CommitteePage();
+    baseUrl = page.baseUrl();
   });
 
   it('should show the correct committee information', () => {
@@ -18,11 +19,11 @@ describe('Pages: Committee', function () {
     const headers = page.committeeList().map(listItem => listItem.$('h3').getText());
     const roles = page.committeeList().map(listItem => listItem.$('p').getText());
 
-    const baseUrl = 'http://localhost:49152/assets/images/committee/';
+    const assetUrl = baseUrl + 'assets/images/committee/';
 
     expect(imageUrls).toEqual([
-      baseUrl + 'emily.jpg', baseUrl + 'will.jpg', baseUrl + 'angus.jpg', baseUrl + 'jim.jpg', baseUrl + 'nathan.jpg',
-      baseUrl + 'georgia.jpg'
+      assetUrl + 'emily.jpg', assetUrl + 'will.jpg', assetUrl + 'angus.jpg', assetUrl + 'jim.jpg',
+      assetUrl + 'nathan.jpg', assetUrl + 'georgia.jpg'
     ]);
 
     const names = ['Emily', 'Will', 'Angus', 'Jim', 'Nathan', 'Georgia'];

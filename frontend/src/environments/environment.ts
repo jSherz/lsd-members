@@ -5,5 +5,6 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://local-dev.leedsskydivers.com:8080'
+  apiUrl: 'http://local-dev.leedsskydivers.com:8080',
+  baseUrl: 'http://local-dev.leedsskydivers.com:4200'
 };

@@ -35,4 +35,8 @@ export class SignupAltForm {
     return element(by.css('#server-email-errors'));
   }
 
+  baseUrl() {
+    return browser.baseUrl;
+  }
+
 }

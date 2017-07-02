@@ -1,12 +1,13 @@
 import {LoginPage} from './login.po';
 
-
 describe('Login', function () {
 
   let page: LoginPage;
+  let baseUrl: string;
 
   beforeEach(() => {
     page = new LoginPage();
+    baseUrl = page.baseUrl();
   });
 
   it('has a disabled login button when no fields are filled in', () => {
@@ -76,7 +77,7 @@ describe('Login', function () {
 
     page.submitButton().click();
 
-    expect(page.currentUrl()).toEqual('http://localhost:49152/admin/courses/calendar');
+    expect(page.currentUrl()).toEqual(baseUrl + 'admin/courses/calendar');
   });
 
 });

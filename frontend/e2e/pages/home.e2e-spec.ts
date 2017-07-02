@@ -1,12 +1,13 @@
 import {HomePage} from './home.po';
 
-
 describe('Pages: Home', function () {
 
   let page: HomePage;
+  let baseUrl: string;
 
   beforeEach(() => {
     page = new HomePage();
+    baseUrl = page.baseUrl();
   });
 
   it('should display the correct banner', () => {
@@ -32,35 +33,35 @@ describe('Pages: Home', function () {
     page.navigateTo();
     page.getHomeLink().click();
 
-    expect(page.getCurrentUrl()).toEqual('http://localhost:49152/');
+    expect(page.getCurrentUrl()).toEqual(baseUrl);
   });
 
   it('should navigate to the correct page when about is clicked', () => {
     page.navigateTo();
     page.getAboutLink().click();
 
-    expect(page.getCurrentUrl()).toEqual('http://localhost:49152/about-the-club');
+    expect(page.getCurrentUrl()).toEqual(baseUrl + 'about-the-club');
   });
 
   it('should navigate to the correct page when committee is clicked', () => {
     page.navigateTo();
     page.getCommitteeLink().click();
 
-    expect(page.getCurrentUrl()).toEqual('http://localhost:49152/committee');
+    expect(page.getCurrentUrl()).toEqual(baseUrl + 'committee');
   });
 
   it('should navigate to the correct page when prices is clicked', () => {
     page.navigateTo();
     page.getPricesLink().click();
 
-    expect(page.getCurrentUrl()).toEqual('http://localhost:49152/prices');
+    expect(page.getCurrentUrl()).toEqual(baseUrl + 'prices');
   });
 
   it('should navigate to the correct page when FAQ is clicked', () => {
     page.navigateTo();
     page.getFaqLink().click();
 
-    expect(page.getCurrentUrl()).toEqual('http://localhost:49152/faq');
+    expect(page.getCurrentUrl()).toEqual(baseUrl + 'faq');
   });
 
   it('should have the correct link for joining', () => {
@@ -72,7 +73,7 @@ describe('Pages: Home', function () {
     page.navigateTo();
     page.getContactLink().click();
 
-    expect(page.getCurrentUrl()).toEqual('http://localhost:49152/contact');
+    expect(page.getCurrentUrl()).toEqual(baseUrl + 'contact');
   });
 
 });

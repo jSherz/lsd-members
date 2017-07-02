@@ -1,10 +1,13 @@
 import { SignupForm } from './signup.po';
 
 describe('Sign-up form', function() {
+
   let page: SignupForm;
+  let baseUrl: string;
 
   beforeEach(() => {
     page = new SignupForm();
+    baseUrl = page.baseUrl();
   });
 
   it('has a disabled sign-up button when no fields are filled in', () => {
@@ -98,7 +101,7 @@ describe('Sign-up form', function() {
     page.nameField().click(); // Ensure button is enabled after form fill
     page.submitButton().click();
 
-    expect(page.getCurrentUrl()).toEqual('http://localhost:49152/admin/sign-up/thank-you');
+    expect(page.getCurrentUrl()).toEqual(baseUrl + 'admin/sign-up/thank-you');
 
     page.navigateTo();
 

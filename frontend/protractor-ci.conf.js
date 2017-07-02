@@ -14,7 +14,7 @@ exports.config = {
   },
   seleniumAddress: 'http://browsers.int.jsherz.com:4444/wd/hub',
   directConnect: false,
-  baseUrl: 'http://local-dev.leedsskydivers.com:4200/',
+  baseUrl: 'https://dev.leedsskydivers.com/',
   framework: 'jasmine',
   jasmineNodeOpts: {
     showColors: true,

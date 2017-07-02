@@ -12,4 +12,8 @@ export class CommitteePage extends PagesPage {
     return browser.$$('#committee-list li');
   }
 
+  baseUrl() {
+    return browser.baseUrl;
+  }
+
 }

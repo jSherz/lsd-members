@@ -10,8 +10,8 @@
     "build-prod": "ng build --prod --stats --progress=false --aot --output-hashing=all --vendor-chunk=false",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "node $NODE_DEBUG_OPTION node_modules/@angular/cli/bin/ng e2e",
-    "e2e-ci": "node $NODE_DEBUG_OPTION node_modules/@angular/cli/bin/ng e2e --config protractor-ci.conf.js"
+    "e2e": "ng e2e",
+    "e2e-ci": "ng e2e --config protractor-ci.conf.js --serve=false --webdriver-update=false"
   },
   "private": true,
   "dependencies": {
