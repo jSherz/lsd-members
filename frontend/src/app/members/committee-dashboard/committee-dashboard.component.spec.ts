@@ -9,7 +9,7 @@ import {
   UrlHandlingStrategy,
   ROUTES,
   UrlSerializer,
-  RouterOutletMap
+  ChildrenOutletContexts
 } from '@angular/router';
 
 import {CommitteeDashboardComponent} from './committee-dashboard.component';
@@ -38,7 +38,7 @@ describe('CommitteeDashboardComponent', () => {
         {
           provide: Router,
           useFactory: setupTestingRouter,
-          deps: [UrlSerializer, RouterOutletMap, Location, NgModuleFactoryLoader, Compiler, Injector, ROUTES, UrlHandlingStrategy]
+          deps: [UrlSerializer, ChildrenOutletContexts, Location, NgModuleFactoryLoader, Compiler, Injector, ROUTES, UrlHandlingStrategy]
         },
         {provide: CommitteeStatsService, useClass: StubCommitteeStatsService}
       ]

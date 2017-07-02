@@ -14,7 +14,7 @@ describe('PackingListService', () => {
       ],
       providers: [
         {provide: PackingListService, useClass: PackingListServiceImpl},
-        {provide: JwtService, useValue: new StubJwtService('asdf')}
+        {provide: JwtService, useValue: new StubJwtService('asdf', false)}
       ]
     });
   });

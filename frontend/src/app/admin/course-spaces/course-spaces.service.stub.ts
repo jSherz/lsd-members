@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 
 import {CourseSpaceDepositPaidResponse, CourseSpaceMemberResponse} from './model';
 import {CourseSpaceService} from './course-spaces.service';

@@ -8,7 +8,6 @@ import {Observable} from 'rxjs/Observable';
 
 import {JwtLoginService, JwtLoginServiceImpl} from './jwt-login.service';
 import {LoginResult} from './login-result';
-import {JwtService} from './jwt.service';
 import {StubJwtService} from './jwt.service.stub';
 
 describe('JwtLoginService', () => {
@@ -18,11 +17,11 @@ describe('JwtLoginService', () => {
       console.log('JwtLoginService requested ' + url);
 
       if (request === '{"signedRequest":"itzalive"}') {
-        const body = JSON.stringify(new LoginResult(true, null, 'my.little.jwt'));
+        const body = JSON.stringify(new LoginResult(true, null, 'my.little.jwt', false));
 
         return Observable.of(new Response(new ResponseOptions({body, status: 200})));
       } else {
-        const body = JSON.stringify(new LoginResult(false, 'wrong login something', null));
+        const body = JSON.stringify(new LoginResult(false, 'wrong login something', null, false));
 
         return Observable.of(new Response(new ResponseOptions({body, status: 401})));
       }
@@ -40,7 +39,7 @@ describe('JwtLoginService', () => {
   });
 
   it('stores the returned token in the JwtService', async(inject([Http], (http: Http) => {
-    const jwtService = new StubJwtService('original-jwt-value');
+    const jwtService = new StubJwtService('original-jwt-value', false);
     const service = new JwtLoginServiceImpl(http, jwtService);
 
     expect(jwtService.getJwt()).toEqual('original-jwt-value');
@@ -55,7 +54,7 @@ describe('JwtLoginService', () => {
   })));
 
   it('clears the JWT if the login fails', async(inject([Http], (http: Http) => {
-    const jwtService = new StubJwtService('original-jwt-value');
+    const jwtService = new StubJwtService('original-jwt-value', false);
     const service = new JwtLoginServiceImpl(http, jwtService);
 
     expect(jwtService.getJwt()).toEqual('original-jwt-value');

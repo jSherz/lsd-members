@@ -5,7 +5,7 @@ import {TextMessagesService} from './text-messages.service';
 import {Observable} from 'rxjs/Observable';
 import {HeaderComponent} from '../header/header.component';
 import {
-  Router, UrlHandlingStrategy, UrlSerializer, RouterOutletMap, ROUTES
+  Router, UrlHandlingStrategy, UrlSerializer, ChildrenOutletContexts, ROUTES
 } from '@angular/router';
 import {RouterTestingModule, setupTestingRouter} from '@angular/router/testing';
 import {Compiler, Injector, NgModuleFactoryLoader} from '@angular/core';
@@ -33,7 +33,7 @@ describe('ReceivedMessagesComponent', () => {
         {
           provide: Router,
           useFactory: setupTestingRouter,
-          deps: [UrlSerializer, RouterOutletMap, Location, NgModuleFactoryLoader, Compiler, Injector, ROUTES, UrlHandlingStrategy]
+          deps: [UrlSerializer, ChildrenOutletContexts, Location, NgModuleFactoryLoader, Compiler, Injector, ROUTES, UrlHandlingStrategy]
         },
         {provide: TextMessagesService, useValue: dummyService}
       ]

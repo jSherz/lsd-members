@@ -9,7 +9,7 @@ import {
   UrlHandlingStrategy,
   ROUTES,
   UrlSerializer,
-  RouterOutletMap
+  ChildrenOutletContexts
 } from '@angular/router';
 
 import {HeaderComponent} from './header.component';
@@ -31,7 +31,7 @@ describe('HeaderComponent', () => {
         {
           provide: Router,
           useFactory: setupTestingRouter,
-          deps: [UrlSerializer, RouterOutletMap, Location, NgModuleFactoryLoader, Compiler, Injector, ROUTES, UrlHandlingStrategy]
+          deps: [UrlSerializer, ChildrenOutletContexts, Location, NgModuleFactoryLoader, Compiler, Injector, ROUTES, UrlHandlingStrategy]
         },
       ]
     }).compileComponents();

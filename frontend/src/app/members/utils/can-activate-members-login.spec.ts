@@ -16,9 +16,7 @@ describe('CanActivateMembersLogin', () => {
     spyOn(jwtService, 'isAuthenticated').and.returnValue(true);
     spyOn(router, 'navigate');
 
-    canActivate.canActivate(null, null).subscribe(result => {
-      expect(result).toBeFalsy();
-    });
+    expect(canActivate.canActivate(null, null)).toBeFalsy();
     expect(router.navigate).toHaveBeenCalledWith(['/members', 'dashboard']);
   }));
 
@@ -34,9 +32,7 @@ describe('CanActivateMembersLogin', () => {
 
     spyOn(jwtService, 'isAuthenticated').and.returnValue(false);
 
-    canActivate.canActivate(null, null).subscribe(result => {
-      expect(result).toBeTruthy();
-    });
+    expect(canActivate.canActivate(null, null)).toBeTruthy();
   }));
 
 });

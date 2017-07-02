@@ -1,4 +1,6 @@
 import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/throw';
 
 import {SocialLoginResponse, SocialLoginUrlResponse} from './model';
 import {SocialLoginService} from './social-login.service';

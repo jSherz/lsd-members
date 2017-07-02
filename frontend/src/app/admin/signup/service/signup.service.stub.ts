@@ -1,4 +1,6 @@
 import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/throw';
+import 'rxjs/add/observable/of';
 
 import {SignupResult} from './signup-result';
 import {SignupService} from '../index';

@@ -1,4 +1,5 @@
 import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 
 import {JwtLoginService} from './jwt-login.service';
 import {LoginResult} from './login-result';

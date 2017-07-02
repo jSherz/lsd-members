@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 
 import {StrippedCommitteeMember} from './stripped-committee-member';
 import {CommitteeService} from './committee.service';
