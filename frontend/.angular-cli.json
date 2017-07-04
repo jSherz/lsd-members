@@ -18,6 +18,7 @@
       "tsconfig": "tsconfig.app.json",
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "lsd",
+      "serviceWorker": true,
       "styles": [
         "assets/css/application.sass"
       ],
