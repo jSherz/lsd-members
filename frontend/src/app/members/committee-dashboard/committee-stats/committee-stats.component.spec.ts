@@ -6,6 +6,7 @@ import {StubJwtService} from '../../login/jwt.service.stub';
 import {JwtService} from '../../login/jwt.service';
 import {HttpModule} from '@angular/http';
 import {StubCommitteeStatsService} from './stub-committee-stats.service';
+import {RouterTestingModule} from '@angular/router/testing';
 
 describe('CommitteeStatsComponent', () => {
 
@@ -21,7 +22,8 @@ describe('CommitteeStatsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpModule
+        HttpModule,
+        RouterTestingModule
       ],
       declarations: [CommitteeStatsComponent],
       providers: [

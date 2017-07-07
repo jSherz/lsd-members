@@ -1,11 +1,11 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 
 import {ReceivedMessagesComponent} from './received-messages.component';
 import {TextMessagesService} from './text-messages.service';
 import {Observable} from 'rxjs/Observable';
 import {HeaderComponent} from '../header/header.component';
 import {
-  Router, UrlHandlingStrategy, UrlSerializer, ChildrenOutletContexts, ROUTES
+  Router, UrlHandlingStrategy, UrlSerializer, ChildrenOutletContexts, ROUTES, Route
 } from '@angular/router';
 import {RouterTestingModule, setupTestingRouter} from '@angular/router/testing';
 import {Compiler, Injector, NgModuleFactoryLoader} from '@angular/core';
@@ -23,18 +23,17 @@ describe('ReceivedMessagesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
+      imports: [
+        RouterTestingModule.withRoutes([
+          {path: '', component: ReceivedMessagesComponent}
+        ])
+      ],
       declarations: [
         HeaderComponent,
         ReceivedMessagesComponent
       ],
       providers: [
         {provide: UrlHandlingStrategy, useValue: {}},
-        {
-          provide: Router,
-          useFactory: setupTestingRouter,
-          deps: [UrlSerializer, ChildrenOutletContexts, Location, NgModuleFactoryLoader, Compiler, Injector, ROUTES, UrlHandlingStrategy]
-        },
         {provide: TextMessagesService, useValue: dummyService}
       ]
     }).compileComponents();
@@ -46,8 +45,8 @@ describe('ReceivedMessagesComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should be created', () => {
+  it('should be created', async(() => {
     expect(component).toBeTruthy();
-  });
+  }));
 
 });

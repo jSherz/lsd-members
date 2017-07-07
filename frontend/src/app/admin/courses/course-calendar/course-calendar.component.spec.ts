@@ -46,21 +46,19 @@ const mockComp = function (urlParts: [string, Params][] = [['courses', {}], ['ca
   })();
 };
 
-beforeEach(() => {
-  jasmine.addMatchers(MOMENT_MATCHER);
-
-  // TODO: Replace with RouterTestingModule.withRoutes when released
-  TestBed.configureTestingModule({
-    imports: [RouterTestingModule],
-    providers: [
-      {provide: APP_BASE_HREF, useValue: '/'},
-      {provide: Router, useValue: {}}
-    ]
-  });
-});
-
-
 describe('Component: CourseCalendar', () => {
+
+  beforeEach(() => {
+    jasmine.addMatchers(MOMENT_MATCHER);
+
+    // TODO: Replace with RouterTestingModule.withRoutes when released
+    TestBed.configureTestingModule({
+      imports: [RouterTestingModule],
+      providers: [
+        {provide: APP_BASE_HREF, useValue: '/'}
+      ]
+    });
+  });
 
   it('should create an instance', async(() => {
     const app = mockComp();
