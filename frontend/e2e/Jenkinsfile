@@ -1,0 +1,14 @@
+node {
+
+  stage('Checkout') {
+    git credentialsId: 'github-lsd-members',
+        url: 'git@github.com:jSherz/lsd-members.git'
+  }
+
+  dir('frontend') {
+    stage('e2e') {
+      sh 'yarn run e2e-ci'
+    }
+  }
+
+}
