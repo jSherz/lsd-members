@@ -1,6 +1,6 @@
-import { SignupForm } from './signup.po';
+import {SignupForm} from './signup.po';
 
-describe('Sign-up form', function() {
+describe('Sign-up form', function () {
 
   let page: SignupForm;
   let baseUrl: string;
@@ -94,10 +94,12 @@ describe('Sign-up form', function() {
   });
 
   it('actually signs the user up', () => {
+    const phoneNum = '07001' + ('000000' + Math.floor(Math.random() * 100000)).slice(-6);
+
     page.navigateTo();
 
     page.nameField().sendKeys('Testy McTesting');
-    page.phoneNumberField().sendKeys('07001100110');
+    page.phoneNumberField().sendKeys(phoneNum);
     page.nameField().click(); // Ensure button is enabled after form fill
     page.submitButton().click();
 

@@ -11,7 +11,9 @@ node {
     }
 
     stage('e2e') {
-      sh 'yarn run e2e-ci'
+      ansiColor('css') {
+        sh 'yarn run e2e-ci'
+      }
     }
   }
 
