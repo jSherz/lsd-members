@@ -1,11 +1,17 @@
 import {Observable} from 'rxjs/Observable';
 import {environment} from '../../../../environments/environment';
-import {Http, Headers} from '@angular/http';
+import {Http} from '@angular/http';
 import {JwtService} from '../../login/jwt.service';
 import {NumReceivedMessages} from './num-received-messages';
-import {Injectable} from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
+import {BaseService} from '../../utils/base.service';
+import {APP_VERSION} from '../../../app.module';
 
-export abstract class CommitteeStatsService {
+export abstract class CommitteeStatsService extends BaseService {
+
+  constructor(http: Http, jwtService: JwtService, appVersion: string) {
+    super(http, jwtService, appVersion);
+  }
 
   abstract getNumReceivedMessages(): Observable<number>
 
@@ -16,14 +22,12 @@ export class CommitteeStatsServiceImpl extends CommitteeStatsService {
 
   private numReceivedUrl = environment.apiUrl + '/api/v1/text-messages/num-received';
 
-  constructor(private http: Http, private jwtService: JwtService) {
-    super();
+  constructor(http: Http, jwtService: JwtService, @Inject(APP_VERSION) appVersion: string) {
+    super(http, jwtService, appVersion);
   }
 
   getNumReceivedMessages(): Observable<number> {
-    const headers = new Headers({'X-JWT': this.jwtService.getJwt()});
-
-    return this.http.get(this.numReceivedUrl, {headers})
+    return this.get(this.numReceivedUrl)
       .map(r => r.json() as NumReceivedMessages)
       .map(r => r.numReceived);
   }

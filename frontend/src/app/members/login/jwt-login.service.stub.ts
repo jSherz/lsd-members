@@ -7,7 +7,7 @@ import {LoginResult} from './login-result';
 export class JwtLoginServiceStub extends JwtLoginService {
 
   constructor() {
-    super(null);
+    super(null, null, null);
   }
 
   login(signedFbRequest: String): Observable<LoginResult> {

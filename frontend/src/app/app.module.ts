@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {InjectionToken, NgModule} from '@angular/core';
 import {LocationStrategy, PathLocationStrategy} from '@angular/common';
 import {Angulartics2Module, Angulartics2GoogleAnalytics} from 'angulartics2';
 
@@ -17,6 +17,8 @@ import {
   PageNavComponent,
   NotFoundComponent
 } from './pages';
+
+export const APP_VERSION: InjectionToken<string> = new InjectionToken<string>('APP_VERSION');
 
 @NgModule({
   imports: [
@@ -41,7 +43,8 @@ import {
     AppComponent
   ],
   providers: [
-    {provide: LocationStrategy, useClass: PathLocationStrategy}
+    {provide: LocationStrategy, useClass: PathLocationStrategy},
+    {provide: APP_VERSION, useValue: 'placeholder-version-123'}
   ]
 })
 export class AppModule {

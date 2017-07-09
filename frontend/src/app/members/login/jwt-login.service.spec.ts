@@ -12,6 +12,8 @@ import {StubJwtService} from './jwt.service.stub';
 
 describe('JwtLoginService', () => {
 
+  const appVersion = 'jwt-login-service-spec';
+
   const dummyHttp = {
     post: (url, request) => {
       console.log('JwtLoginService requested ' + url);
@@ -40,7 +42,7 @@ describe('JwtLoginService', () => {
 
   it('stores the returned token in the JwtService', async(inject([Http], (http: Http) => {
     const jwtService = new StubJwtService('original-jwt-value', false);
-    const service = new JwtLoginServiceImpl(http, jwtService);
+    const service = new JwtLoginServiceImpl(http, jwtService, appVersion);
 
     expect(jwtService.getJwt()).toEqual('original-jwt-value');
 
@@ -55,7 +57,7 @@ describe('JwtLoginService', () => {
 
   it('clears the JWT if the login fails', async(inject([Http], (http: Http) => {
     const jwtService = new StubJwtService('original-jwt-value', false);
-    const service = new JwtLoginServiceImpl(http, jwtService);
+    const service = new JwtLoginServiceImpl(http, jwtService, appVersion);
 
     expect(jwtService.getJwt()).toEqual('original-jwt-value');
 

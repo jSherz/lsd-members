@@ -26,6 +26,9 @@ node {
     }
 
     stage('Build') {
+      def version = sh returnStdout: true, script: 'git rev-list -1 HEAD'
+
+      sh "sed -i '.bkp' 's/placeholder-version-123/${version}/g' src/app/app.module.ts"
       sh 'yarn run build-' + deployEnv()
       sh 'rm -rv dist/assets/css'
     }

@@ -1,6 +1,9 @@
 import {Headers, Http, RequestOptions, Response} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
+import {JwtService} from '../login/jwt.service';
+import {Inject, Injectable, InjectionToken} from '@angular/core';
+import {APP_VERSION} from '../../app.module';
 
 /**
  * Basic methods shared across services.
@@ -8,42 +11,25 @@ import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 export class BaseService {
 
   http: Http;
+  jwtService: JwtService;
+  appVersion: string;
 
-  constructor(http: Http) {
+  constructor(http: Http, jwtService: JwtService, appVersion: string) {
     this.http = http;
-  }
-
-  /**
-   * Extract the JSON body of a response.
-   *
-   * @param res
-   * @returns
-   */
-  protected extractJson<T>(res: Response): T {
-    const body = res.json();
-    return body || [];
+    this.jwtService = jwtService;
+    this.appVersion = appVersion;
   }
 
   /**
    * Handle a generic error encountered when performing an AJAX request.
    */
-  protected handleError<R, T>() {
-    // We use a closure here to ensure that the reference to this.apiKeyService isn't lost when this error handler is used
-    // const apiKeyService = this.apiKeyService;
+  protected handleError = (response: Response): Response => {
+    if (response.status === 401) {
+      this.jwtService.setJwt('', false);
+    }
 
-    const innerHandler = <R, T>(err: any, caught: Observable<T>): ErrorObservable => {
-      const errMsg = (err.message) ? err.message : err.status ? `${err.status} - ${err.statusText}` : 'Server error';
-      console.error(errMsg);
-
-      if (err.status && err.status === 401) {
-        // apiKeyService.setKey('');
-      }
-
-      return Observable.throw(new Error(errMsg));
-    };
-
-    return innerHandler;
-  }
+    return response;
+  };
 
   /**
    * Build a post request to the given URL with the given data (serialized as JSON).
@@ -56,11 +42,9 @@ export class BaseService {
    */
   protected post(url: string, data: any) {
     const body = JSON.stringify(data);
-    // const headers = new Headers({'Content-Type': 'application/json', 'Api-Key': this.apiKeyService.getKey()});
-    const headers = new Headers({'Content-Type': 'application/json'});
-    const options = new RequestOptions({headers: headers});
 
-    return this.http.post(url, body, options);
+    return this.http.post(url, body, this.makeRequestOptions())
+      .map(this.handleError);
   }
 
   /**
@@ -74,11 +58,9 @@ export class BaseService {
    */
   protected put(url: string, data: any) {
     const body = JSON.stringify(data);
-    // const headers = new Headers({'Content-Type': 'application/json', 'Api-Key': this.apiKeyService.getKey()});
-    const headers = new Headers({'Content-Type': 'application/json'});
-    const options = new RequestOptions({headers: headers});
 
-    return this.http.put(url, body, options);
+    return this.http.put(url, body, this.makeRequestOptions())
+      .map(this.handleError);
   }
 
   /**
@@ -88,11 +70,18 @@ export class BaseService {
    * @returns {Observable<Response>}
    */
   protected get(url: string) {
-    // const headers = new Headers({'Content-Type': 'application/json', 'Api-Key': this.apiKeyService.getKey()});
-    const headers = new Headers({'Content-Type': 'application/json'});
-    const options = new RequestOptions({headers: headers});
+    return this.http.get(url, this.makeRequestOptions())
+      .map(this.handleError);
+  }
 
-    return this.http.get(url, options);
+  private makeRequestOptions(): RequestOptions {
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      'X-App-Version': this.appVersion,
+      'X-JWT': this.jwtService.getJwt()
+    });
+
+    return new RequestOptions({headers});
   }
 
 }
