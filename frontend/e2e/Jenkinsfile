@@ -6,6 +6,10 @@ node {
   }
 
   dir('frontend') {
+    stage('Install') {
+      sh 'yarn install'
+    }
+
     stage('e2e') {
       sh 'yarn run e2e-ci'
     }
