@@ -1,11 +1,18 @@
 export class BasicInfo {
 
-  uuid: String;
+  uuid: string;
 
-  firstName: String;
+  firstName: string;
 
-  lastName: String;
+  lastName: string;
 
-  createdAt: String;
+  createdAt: string;
+
+  constructor(uuid: string, firstName: string, lastName: string, createdAt: string) {
+    this.uuid = uuid;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.createdAt = createdAt;
+  }
 
 }
