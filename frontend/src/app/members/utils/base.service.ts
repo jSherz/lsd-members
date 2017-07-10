@@ -1,9 +1,7 @@
 import {Headers, Http, RequestOptions, Response} from '@angular/http';
-import {Observable} from 'rxjs/Observable';
-import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
+import {Observable, ObservableInput} from 'rxjs/Observable';
 import {JwtService} from '../login/jwt.service';
-import {Inject, Injectable, InjectionToken} from '@angular/core';
-import {APP_VERSION} from '../../app.module';
+import 'rxjs/add/operator/catch';
 
 /**
  * Basic methods shared across services.
@@ -23,12 +21,12 @@ export class BaseService {
   /**
    * Handle a generic error encountered when performing an AJAX request.
    */
-  protected handleError = (response: Response): Response => {
-    if (response.status === 401) {
+  protected handleError = (error: any): Response => {
+    if (error && error.status === 401) {
       this.jwtService.setJwt('', false);
     }
 
-    return response;
+    return error;
   };
 
   /**
@@ -40,11 +38,13 @@ export class BaseService {
    * @param data
    * @returns {Observable<Response>}
    */
-  protected post(url: string, data: any) {
+  protected post(url: string, data: any): Observable<Response> {
     const body = JSON.stringify(data);
 
-    return this.http.post(url, body, this.makeRequestOptions())
-      .map(this.handleError);
+    const response = this.http.post(url, body, this.makeRequestOptions());
+    response.subscribe(() => null, this.handleError);
+
+    return response;
   }
 
   /**
@@ -59,8 +59,10 @@ export class BaseService {
   protected put(url: string, data: any) {
     const body = JSON.stringify(data);
 
-    return this.http.put(url, body, this.makeRequestOptions())
-      .map(this.handleError);
+    const response = this.http.put(url, body, this.makeRequestOptions());
+    response.subscribe(() => null, this.handleError);
+
+    return response;
   }
 
   /**
@@ -70,8 +72,10 @@ export class BaseService {
    * @returns {Observable<Response>}
    */
   protected get(url: string) {
-    return this.http.get(url, this.makeRequestOptions())
-      .map(this.handleError);
+    const response = this.http.get(url, this.makeRequestOptions());
+    response.subscribe(() => null, this.handleError);
+
+    return response;
   }
 
   private makeRequestOptions(): RequestOptions {
