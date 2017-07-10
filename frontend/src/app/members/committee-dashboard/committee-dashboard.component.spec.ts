@@ -1,16 +1,5 @@
-import {Compiler, Injector, NgModuleFactoryLoader} from '@angular/core';
 import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
-import {RouterTestingModule, setupTestingRouter} from '@angular/router/testing';
-import {Location} from '@angular/common';
-
-import {
-  Router,
-  Event,
-  UrlHandlingStrategy,
-  ROUTES,
-  UrlSerializer,
-  ChildrenOutletContexts
-} from '@angular/router';
+import {RouterTestingModule} from '@angular/router/testing';
 
 import {CommitteeDashboardComponent} from './committee-dashboard.component';
 import {HeaderComponent} from '../header';
@@ -34,12 +23,6 @@ describe('CommitteeDashboardComponent', () => {
         CommitteeDashboardComponent
       ],
       providers: [
-        {provide: UrlHandlingStrategy, useValue: {}},
-        {
-          provide: Router,
-          useFactory: setupTestingRouter,
-          deps: [UrlSerializer, ChildrenOutletContexts, Location, NgModuleFactoryLoader, Compiler, Injector, ROUTES, UrlHandlingStrategy]
-        },
         {provide: CommitteeStatsService, useClass: StubCommitteeStatsService}
       ]
   }).compileComponents();
