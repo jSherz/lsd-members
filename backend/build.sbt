@@ -39,7 +39,9 @@ lazy val commonSettings = Seq(
   scalaVersion := scalaV,
   scalacOptions := Seq(
     "-unchecked", "-deprecation", "-encoding", "utf8", "-language:postfixOps", "-language:implicitConversions"
-  )
+  ),
+
+  coverageEnabled := true
 )
 
 lazy val root = (project in file("."))
