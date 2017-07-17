@@ -97,11 +97,12 @@ describe('Alternative sign-up form', function () {
     const now = new Date();
     const emailSuffix = now.getUTCFullYear() + '-' + now.getUTCMonth() + '-' + now.getUTCDate();
     const emailSuffix2 = (Math.random() * 10000).toString().replace('.', '').substring(0, 6);
+    const email = `e2e-auto-${emailSuffix}${emailSuffix2}@mctesting.org.uk`
 
     page.navigateTo();
 
     page.nameField().sendKeys('Testy McTesting');
-    page.emailField().sendKeys(`test${emailSuffix}${emailSuffix2}@mctesting.org.uk`);
+    page.emailField().sendKeys(email);
     page.nameField().click(); // Ensure button is enabled after form fill
     page.submitButton().click();
 
@@ -110,7 +111,7 @@ describe('Alternative sign-up form', function () {
     page.navigateTo();
 
     page.nameField().sendKeys('Testy McTesting');
-    page.emailField().sendKeys('test@mctesting.org.uk');
+    page.emailField().sendKeys(email);
     page.nameField().click(); // Ensure button is enabled after form fill
     page.submitButton().click();
 
