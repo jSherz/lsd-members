@@ -44,7 +44,7 @@ pipeline {
             steps {
                 ansiColor('css') {
                     dir('backend') {
-                        sh 'sbt clean test coverageReport'
+                        sh 'sbt clean test coverage coverageReport'
                         sh 'tar -czf target/scoverage-report-$BUILD_NUMBER.tar.gz -C target/scala-2.11/scoverage-report .'
                     }
                 }
