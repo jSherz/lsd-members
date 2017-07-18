@@ -10,8 +10,7 @@ node {
   dir('backend') {
     stage('Setup DB') {
       withCredentials([
-        file(credentialsId: 'lsd-dev-deploy', variable: 'DEPLOY_KEY'),
-        string(credentialsId: 'fb-test-user-pass', variable: 'FB_TEST_USER_PASS')
+        file(credentialsId: 'lsd-dev-deploy', variable: 'DEPLOY_KEY')
       ]) {
         sh 'chmod 0600 $DEPLOY_KEY'
         sh 'export KEY=$(uuidgen)' +
@@ -30,8 +29,12 @@ node {
     }
 
     stage('e2e') {
-      ansiColor('css') {
-        sh 'yarn run e2e-ci'
+      withCredentials([
+        string(credentialsId: 'fb-test-user-pass', variable: 'FB_TEST_USER_PASS')
+      ]) {
+        ansiColor('css') {
+          sh 'yarn run e2e-ci'
+        }
       }
     }
   }
