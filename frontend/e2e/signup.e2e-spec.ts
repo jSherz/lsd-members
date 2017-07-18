@@ -94,7 +94,7 @@ describe('Sign-up form', function () {
   });
 
   it('actually signs the user up', () => {
-    const phoneNum = '070001' + ('00000' + Math.floor(Math.random() * 100000)).slice(-6);
+    const phoneNum = '070001' + ('00000' + Math.floor(Math.random() * 10000)).slice(-5);
 
     page.navigateTo();
 
