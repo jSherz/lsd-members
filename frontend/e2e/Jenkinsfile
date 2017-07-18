@@ -10,7 +10,8 @@ node {
   dir('backend') {
     stage('Setup DB') {
       withCredentials([
-        file(credentialsId: 'lsd-dev-deploy', variable: 'DEPLOY_KEY')
+        file(credentialsId: 'lsd-dev-deploy', variable: 'DEPLOY_KEY'),
+        string(credentialsId: 'fb-test-user-pass', variable: 'FB_TEST_USER_PASS')
       ]) {
         sh 'chmod 0600 $DEPLOY_KEY'
         sh 'export KEY=$(uuidgen)' +
