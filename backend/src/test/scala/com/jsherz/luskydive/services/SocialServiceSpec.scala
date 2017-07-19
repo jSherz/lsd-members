@@ -181,54 +181,6 @@ class SocialServiceSpec extends WordSpec with Matchers with ScalatestRouteTest {
 
   }
 
-  "SocialService#createLoginUrl" should {
-
-    "use the correct scope" in {
-      val myAppId = "pizzapizzapizza"
-      val redirectUrl = "https://www.example.com"
-      val expectedGeneratedUrl = "https://www.coolurl.org/" + UUID.randomUUID()
-
-      val scopeBuilder = ArgumentCaptor.forClass(classOf[ScopeBuilder])
-
-      val fb = mock(classOf[FacebookClient])
-      when(fb.obtainAppAccessToken(anyString, anyString)).thenReturn(AccessToken.fromQueryString("?access_token=blah"))
-      when(fb.parseSignedRequest("asdasdasd", "asdasdas", classOf[FBSignedRequest]))
-        .thenReturn(dummySignedRequest())
-
-      val unauthenticatedFb = mock(classOf[FacebookClient])
-      when(unauthenticatedFb.getLoginDialogUrl(meq(myAppId), meq(redirectUrl), scopeBuilder.capture()))
-        .thenReturn(expectedGeneratedUrl)
-
-      val factory = factoryFor(fb)
-      when(factory.unauthenticated()).thenReturn(unauthenticatedFb)
-
-      val service = new SocialServiceImpl(factory, myAppId, "katsucurry", redirectUrl)
-
-      service.createLoginUrl() shouldEqual expectedGeneratedUrl
-
-      scopeBuilder.getValue.toString shouldEqual "public_profile,email"
-    }
-
-    "use an unauthenticated client" in {
-      val fb = mock(classOf[FacebookClient])
-      when(fb.obtainAppAccessToken(anyString, anyString)).thenReturn(AccessToken.fromQueryString("?access_token=blah"))
-      when(fb.parseSignedRequest("asdasdasd", "asdasdas", classOf[FBSignedRequest]))
-        .thenReturn(dummySignedRequest())
-
-      val unauthenticatedFb = mock(classOf[FacebookClient])
-      when(unauthenticatedFb.getLoginDialogUrl(anyString, anyString, any[ScopeBuilder]))
-        .thenReturn("no auth, no problem")
-
-      val factory = factoryFor(fb)
-      when(factory.unauthenticated()).thenReturn(unauthenticatedFb)
-
-      val service = new SocialServiceImpl(factory, "asdasdsa", "1238183123", "????")
-
-      service.createLoginUrl() shouldEqual "no auth, no problem"
-    }
-
-  }
-
   private def dummySignedRequest() =
     new FBSignedRequest("666000666", UUID.randomUUID().toString, Random.nextLong(), Random.nextLong())
 

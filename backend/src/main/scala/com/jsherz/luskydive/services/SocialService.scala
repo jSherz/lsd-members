@@ -50,8 +50,6 @@ trait SocialService {
 
   def getProfilePhoto(userId: String): \/[String, String]
 
-  def createLoginUrl(): String
-
 }
 
 /**
@@ -64,7 +62,6 @@ class SocialServiceImpl(fbClientFactory: FbClientFactory, appId: String, appSecr
 
   log.info("Obtaining FB access token...")
   private val fbClient = fbClientFactory.forAppIdAndSecret(appId, appSecret)
-  private val unauthenticatedFbClient = fbClientFactory.unauthenticated()
   log.info(s"FB init complete")
 
   override def parseSignedRequest(signedRequest: String): Option[FBSignedRequest] = try {
@@ -162,13 +159,6 @@ class SocialServiceImpl(fbClientFactory: FbClientFactory, appId: String, appSecr
         log.error(ex, msg)
         -\/(msg)
     }
-  }
-
-  override def createLoginUrl(): String = {
-    val scope = new ScopeBuilder()
-    scope.addPermission(ExtendedPermissions.EMAIL)
-
-    unauthenticatedFbClient.getLoginDialogUrl(appId, loginReturnUrl, scope)
   }
 
 }

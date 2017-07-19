@@ -1,13 +1,3 @@
-export class SocialLoginUrlResponse {
-
-  url: string;
-
-  constructor(url: string) {
-    this.url = url;
-  }
-
-}
-
 export class SocialLoginResponse {
 
   success: boolean;

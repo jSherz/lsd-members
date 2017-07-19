@@ -67,11 +67,6 @@ class SocialLoginApi(
       .fold(invalidSignedRequest)(handleFbRequest)
   }
 
-  val getLoginUrlRoute: Route = (path("url") & get) {
-    complete(SocialLoginUrlResponse(service.createLoginUrl()))
-  }
-
-
   val verifyRoute: Route = (path("verify") & post & entity(as[SocialLoginVerifyRequest])) { req =>
     service.getUserAccessToken(req.verificationCode).fold(_ => verificationFailed, { accessToken =>
       val userRequest = service.getUserForAccessToken(accessToken.getAccessToken)
@@ -159,7 +154,6 @@ class SocialLoginApi(
 
   val route: Route = pathPrefix("social-login") {
     socialLoginRoute ~
-      getLoginUrlRoute ~
       verifyRoute
   }
 

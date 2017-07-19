@@ -8,7 +8,6 @@ export {
 } from './social-login.service.stub';
 
 export {
-  SocialLoginUrlResponse,
   SocialLoginResponse,
   SocialLoginRequest
 } from './model';

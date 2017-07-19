@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 
-import {SocialLoginService} from '../social-login/social-login.service';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'lsd-members-login',
@@ -9,21 +9,10 @@ import {SocialLoginService} from '../social-login/social-login.service';
 })
 export class LoginComponent {
 
-  loginUrl: string = null;
+  private returnUrl = encodeURIComponent(environment.baseUrl + '/members/perform-login');
 
-  loginUnavailable = false;
-
-  constructor(private socialLoginService: SocialLoginService) {
-    this.socialLoginService.getLoginUrl()
-      .subscribe(
-        response => {
-          this.loginUrl = response.url;
-        },
-        error => {
-          console.error('Failed to get login URL:', error);
-          this.loginUnavailable = true;
-        }
-      );
-  }
+  loginUrl: string = `https://www.facebook.com/dialog/oauth?client_id=${environment.fbClientId}` +
+    `&redirect_uri=${this.returnUrl}` +
+    '&scope=public_profile%2Cemail';
 
 }

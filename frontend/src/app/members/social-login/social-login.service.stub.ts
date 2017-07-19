@@ -2,20 +2,12 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
 
-import {SocialLoginResponse, SocialLoginUrlResponse} from './model';
+import {SocialLoginResponse} from './model';
 import {SocialLoginService} from './social-login.service';
 
 export class SocialLoginServiceStub implements SocialLoginService {
 
   failGetLoginUrlRequest = false;
-
-  getLoginUrl(): Observable<SocialLoginUrlResponse> {
-    if (this.failGetLoginUrlRequest) {
-      return Observable.throw('Social login get URL request failed. TEAPOT EXCEPTION!!!!');
-    } else {
-      return Observable.of(new SocialLoginUrlResponse('http://localhost/some/login/url'));
-    }
-  }
 
   login(verificationCode: string): Observable<SocialLoginResponse> {
     if (verificationCode === 'FAIL_LOGIN') {

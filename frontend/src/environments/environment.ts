@@ -6,5 +6,6 @@
 export const environment = {
   production: false,
   apiUrl: 'http://local-dev.leedsskydivers.com:8080',
-  baseUrl: 'http://local-dev.leedsskydivers.com:4200'
+  baseUrl: 'http://local-dev.leedsskydivers.com:4200',
+  fbClientId: '555160587939138'
 };
