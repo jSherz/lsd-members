@@ -14,5 +14,5 @@ install:
   - cd frontend
   - yarn install
 script:
-  - yarn run test -- --progress=false --watch=false --browsers=HeadlessChrome
+  - yarn run test -- --progress=false --watch=false --browsers=ChromeHeadless
   - yarn run build-prod
