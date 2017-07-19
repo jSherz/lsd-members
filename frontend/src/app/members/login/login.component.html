@@ -14,13 +14,9 @@
   <div id="login">
     <p>Login to view your course booking and membership information.</p>
 
-    <p id="login-button" *ngIf="!loginUnavailable">
+    <p id="login-button">
       <a class="button" [href]="loginUrl"><i class="fa fa-facebook"></i> Login with Facebook</a>
     </p>
-
-    <div class="error" *ngIf="loginUnavailable">
-      The members login is currently unavailable. Please try again later.
-    </div>
 
     <hr>
 
