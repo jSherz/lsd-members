@@ -5,6 +5,8 @@ node_js:
 cache:
   directories:
     - "node_modules"
+addons:
+  chrome: stable
 install:
   - wget -O yarn.tar.gz https://yarnpkg.com/latest.tar.gz
   - tar zvxf yarn.tar.gz
@@ -12,5 +14,5 @@ install:
   - cd frontend
   - yarn install
 script:
-  - yarn run test -- --progress=false --watch=false --browsers=PhantomJS
+  - yarn run test -- --progress=false --watch=false --browsers=HeadlessChrome
   - yarn run build-prod

@@ -16,7 +16,7 @@ node {
       }
 
       stage('Test') {
-        sh 'yarn run test -- --browsers PhantomJS --watch false --progress false'
+        sh 'yarn run test -- --browsers HeadlessChrome --watch false --progress false'
       }
     }
   }
