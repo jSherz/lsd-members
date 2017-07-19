@@ -24,9 +24,9 @@ describe('Members login', function () {
     page.fbPasswordBox().sendKeys(process.env['FB_TEST_USER_PASS']);
     page.fbLoginButton().click();
 
-    page.waitForDashboard().then(() => {
-      page.syncOn();
+    page.syncOn();
 
+    page.waitForDashboard().then(() => {
       expect(page.getCurrentUrl()).toMatch(/.*members\/dashboard$/);
       expect(page.profile().getText()).toEqual('Hello, Richard!');
 

@@ -39,7 +39,7 @@ export class MembersLoginPage {
   }
 
   syncOn() {
-    return browser.waitForAngularEnabled(false);
+    return browser.waitForAngularEnabled(true);
   }
 
   waitForDashboard() {
