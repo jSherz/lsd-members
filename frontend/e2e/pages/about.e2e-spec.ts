@@ -24,7 +24,7 @@ describe('Pages: About', function () {
 
   it('should highlight only the about button', () => {
     page.navigateTo();
-    expect(page.getAboutLink().getCssValue('background-color')).toEqual('rgba(217, 244, 255, 1)');
+    expect(page.getAboutLink().getAttribute('class')).toContain('active');
 
     [
       page.getHomeLink(),
@@ -33,7 +33,7 @@ describe('Pages: About', function () {
       page.getFaqLink(),
       page.getJoinLink(),
       page.getContactLink()
-    ].forEach(pageLink => expect(pageLink.getCssValue('background-color')).toEqual('rgba(0, 0, 0, 0)'));
+    ].forEach(pageLink => expect(pageLink.getAttribute('class')).not.toEqual('active'));
   });
 
 });

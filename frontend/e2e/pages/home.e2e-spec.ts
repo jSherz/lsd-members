@@ -17,7 +17,7 @@ describe('Pages: Home', function () {
 
   it('should highlight only the home button', () => {
     page.navigateTo();
-    expect(page.getHomeLink().getCssValue('background-color')).toEqual('rgba(217, 244, 255, 1)');
+    expect(page.getHomeLink().getAttribute('class')).toContain('active');
 
     [
       page.getAboutLink(),
@@ -26,7 +26,7 @@ describe('Pages: Home', function () {
       page.getFaqLink(),
       page.getJoinLink(),
       page.getContactLink()
-    ].forEach(pageLink => expect(pageLink.getCssValue('background-color')).toEqual('rgba(0, 0, 0, 0)'));
+    ].forEach(pageLink => expect(pageLink.getAttribute('class')).not.toContain('active'));
   });
 
   it('should not navigate anywhere when home is clicked', () => {

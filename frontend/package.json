@@ -11,7 +11,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "e2e-ci": "ng e2e --config protractor-ci.conf.js --serve=false --webdriver-update=false"
+    "e2e-ci": "ng e2e --config protractor-ci.conf.js --serve=false"
   },
   "private": true,
   "dependencies": {
@@ -43,6 +43,7 @@
     "@types/node": "~6.0.60",
     "codelyzer": "~3.0.1",
     "jasmine-core": "~2.6.2",
+    "jasmine-reporters": "^2.2.1",
     "jasmine-spec-reporter": "~4.1.0",
     "karma": "^1.7.0",
     "karma-chrome-launcher": "^2.2.0",
