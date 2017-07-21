@@ -1,4 +1,4 @@
-import {browser, element, by} from 'protractor';
+import {browser, element, by, ExpectedConditions} from 'protractor';
 
 export class MembersLoginPage {
 
@@ -15,7 +15,7 @@ export class MembersLoginPage {
   }
 
   loginIntroText() {
-    return element(by.css('#login:nth-child(1) p'));
+    return element(by.css('#login p:nth-child(1)'));
   }
 
   fbUsernameBox() {
@@ -40,6 +40,14 @@ export class MembersLoginPage {
 
   syncOn() {
     return browser.waitForAngularEnabled(true);
+  }
+
+  waitForFacebookLoginPage() {
+    return browser.wait(ExpectedConditions.urlContains('facebook.com'), 5000);
+  }
+
+  waitForAppPage() {
+    return browser.wait(ExpectedConditions.urlContains('members'), 5000);
   }
 
   waitForDashboard() {

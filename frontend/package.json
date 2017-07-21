@@ -11,7 +11,9 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "e2e-ci": "ng e2e --config protractor-ci.conf.js --serve=false"
+    "e2e-ci": "ng e2e --config protractor-ci.conf.js --serve=false",
+    "update-webdriver": "webdriver-manager update",
+    "start-webdriver": "webdriver-manager start"
   },
   "private": true,
   "dependencies": {
