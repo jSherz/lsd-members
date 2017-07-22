@@ -16,7 +16,11 @@ node {
       }
 
       stage('Test') {
-        sh 'yarn run test -- --browsers ChromeHeadless --watch false --progress false'
+        sh 'yarn run test-ci'
+
+        withCredentials([string(credentialsId: 'lsd-members-coveralls', variable: 'COVERALLS_REPO_TOKEN')]) {
+          sh 'COVERALLS_SERVICE_NAME=jenkins yarn run coveralls'
+        }
       }
     }
   }
