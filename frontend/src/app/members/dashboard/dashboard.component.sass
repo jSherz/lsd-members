@@ -1,6 +1,6 @@
 @import '../../../assets/css/base'
 
-#dashboard-wrapper
+#dashboard-wrapper, #dashboard-wrapper-error
   @include grid-container()
 
 // Components
@@ -19,3 +19,13 @@
   background: white
   margin-bottom: 1em
   display: block
+
+#dashboard-error
+  padding: 1em
+  background: white
+  margin-bottom: 1em
+  display: block
+  background: lighten($lsd-red, 40%)
+  border: solid 0.1em $lsd-red
+
+  @include grid-column(12)

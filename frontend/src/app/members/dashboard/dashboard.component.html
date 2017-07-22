@@ -2,7 +2,13 @@
   <lsd-header></lsd-header>
 </div>
 
-<div id="dashboard-wrapper">
+<div id="dashboard-wrapper-error" *ngIf="dashboardLoadFailed">
+  <div id="dashboard-error">
+    <p>I'm sorry, the member's dashboard is not available at this time. Please try again later.</p>
+  </div>
+</div>
+
+<div id="dashboard-wrapper" *ngIf="!dashboardLoadFailed">
   <div id="profile">
     <div>
       <lsd-profile [basicInfo]="basicInfo"></lsd-profile>

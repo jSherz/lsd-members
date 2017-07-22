@@ -11,6 +11,8 @@ export class DashboardComponent implements OnInit {
 
   basicInfo: BasicInfo = null;
 
+  dashboardLoadFailed = false;
+
   constructor(private dashboardService: DashboardService) {
   }
 
@@ -20,6 +22,7 @@ export class DashboardComponent implements OnInit {
         this.basicInfo = basicInfo;
       }, (error) => {
         console.log('Failed to load dashboard:', error);
+        this.dashboardLoadFailed = true;
       });
   }
 
