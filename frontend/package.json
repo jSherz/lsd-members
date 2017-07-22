@@ -8,7 +8,7 @@
     "build": "ng build --environment=local",
     "build-dev": "ng build --environment=dev --stats --progress=false --aot --output-hashing=all --vendor-chunk=false",
     "build-prod": "ng build --prod --stats --progress=false --aot --output-hashing=all --vendor-chunk=false",
-    "coveralls": "cat coverage/coverage.lcov | coveralls",
+    "coveralls": "cat coverage/lcov.info | coveralls",
     "test": "ng test",
     "test-ci": "ng test --browsers ChromeHeadless --watch=false --progress=false --code-coverage=true",
     "lint": "ng lint",
