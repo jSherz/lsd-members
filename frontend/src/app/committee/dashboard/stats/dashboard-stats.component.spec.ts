@@ -1,21 +1,21 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {CommitteeStatsComponent} from './committee-stats.component';
-import {CommitteeStatsService} from './committee-stats.service';
-import {StubJwtService} from '../../login/jwt.service.stub';
-import {JwtService} from '../../login/jwt.service';
+import {DashboardStatsComponent} from './dashboard-stats.component';
+import {DashboardStatsService} from './dashboard-stats.service';
+import {StubJwtService} from '../../../members/login/jwt.service.stub';
+import {JwtService} from '../../../members/login/jwt.service';
 import {HttpModule} from '@angular/http';
-import {StubCommitteeStatsService} from './stub-committee-stats.service';
+import {StubDashboardStatsService} from './stub-committee-stats.service';
 import {RouterTestingModule} from '@angular/router/testing';
 
-describe('CommitteeStatsComponent', () => {
+describe('DashboardStatsComponent', () => {
 
-  let component: CommitteeStatsComponent;
-  let fixture: ComponentFixture<CommitteeStatsComponent>;
-  let service: StubCommitteeStatsService;
+  let component: DashboardStatsComponent;
+  let fixture: ComponentFixture<DashboardStatsComponent>;
+  let service: StubDashboardStatsService;
 
   const serviceFactory = () => {
-    service = new StubCommitteeStatsService();
+    service = new StubDashboardStatsService();
     return service;
   };
 
@@ -25,16 +25,16 @@ describe('CommitteeStatsComponent', () => {
         HttpModule,
         RouterTestingModule
       ],
-      declarations: [CommitteeStatsComponent],
+      declarations: [DashboardStatsComponent],
       providers: [
-        {provide: CommitteeStatsService, useFactory: serviceFactory},
+        {provide: DashboardStatsService, useFactory: serviceFactory},
         {provide: JwtService, useValue: new StubJwtService('asdf', true)}
       ]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CommitteeStatsComponent);
+    fixture = TestBed.createComponent(DashboardStatsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,13 +1,13 @@
 import {Observable} from 'rxjs/Observable';
 import {environment} from '../../../../environments/environment';
 import {Http} from '@angular/http';
-import {JwtService} from '../../login/jwt.service';
+import {JwtService} from '../../../members/login/jwt.service';
 import {NumReceivedMessages} from './num-received-messages';
 import {Inject, Injectable} from '@angular/core';
-import {BaseService} from '../../utils/base.service';
+import {BaseService} from '../../../members/utils/base.service';
 import {APP_VERSION} from '../../../app.module';
 
-export abstract class CommitteeStatsService extends BaseService {
+export abstract class DashboardStatsService extends BaseService {
 
   constructor(http: Http, jwtService: JwtService, appVersion: string) {
     super(http, jwtService, appVersion);
@@ -18,7 +18,7 @@ export abstract class CommitteeStatsService extends BaseService {
 }
 
 @Injectable()
-export class CommitteeStatsServiceImpl extends CommitteeStatsService {
+export class DashboardStatsServiceImpl extends DashboardStatsService {
 
   private numReceivedUrl = environment.apiUrl + '/api/v1/text-messages/num-received';
 

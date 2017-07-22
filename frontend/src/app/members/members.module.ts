@@ -32,12 +32,6 @@ import {
 } from './packing-list';
 import {TheWeatherComponent} from './dashboard';
 import {CanActivateMembers, CanActivateMembersLogin} from './utils';
-import {
-  CommitteeDashboardComponent,
-  CommitteeStatsComponent,
-  CommitteeStatsService,
-  CommitteeStatsServiceImpl
-} from './committee-dashboard';
 import {HeaderComponent} from './header/header.component';
 import {
   ReceivedMessagesComponent,
@@ -63,9 +57,7 @@ import {
     KeyInfoComponent,
     PackingListComponent,
     TheWeatherComponent,
-    CommitteeDashboardComponent,
     HeaderComponent,
-    CommitteeStatsComponent,
     ReceivedMessagesComponent
   ],
   bootstrap: [],
@@ -76,7 +68,6 @@ import {
     {provide: JwtService, useClass: JwtServiceImpl},
     {provide: DashboardService, useClass: DashboardServiceImpl},
     {provide: PackingListService, useClass: PackingListServiceImpl},
-    {provide: CommitteeStatsService, useClass: CommitteeStatsServiceImpl},
     {provide: TextMessagesService, useClass: TextMessagesServiceImpl},
     CanActivateMembers,
     CanActivateMembersLogin

@@ -1,17 +1,17 @@
 import {Component, OnInit} from '@angular/core';
 
-import {CommitteeStatsService} from './committee-stats.service';
+import {DashboardStatsService} from './dashboard-stats.service';
 
 @Component({
   selector: 'lsd-committee-stats',
-  templateUrl: './committee-stats.component.html',
-  styleUrls: ['./committee-stats.component.sass']
+  templateUrl: './dashboard-stats.component.html',
+  styleUrls: ['./dashboard-stats.component.sass']
 })
-export class CommitteeStatsComponent implements OnInit {
+export class DashboardStatsComponent implements OnInit {
 
   numReceived?: number = null;
 
-  constructor(private service: CommitteeStatsService) {
+  constructor(private service: DashboardStatsService) {
   }
 
   ngOnInit() {
