@@ -10,8 +10,7 @@ node {
   dir('backend') {
     stage('Setup DB') {
       withCredentials([
-        file(credentialsId: 'lsd-dev-deploy', variable: 'DEPLOY_KEY'),
-        string(credentialsId: 'lsd-dev-jwt-secret', variable: 'JWT_SECRET')
+        file(credentialsId: 'lsd-dev-deploy', variable: 'DEPLOY_KEY')
       ]) {
         sh 'chmod 0600 $DEPLOY_KEY'
         sh 'scp -i $DEPLOY_KEY src/it/resources/setup-e2e-db.sql deploy@api.dev.leedsskydivers.com:/home/api/scripts'
@@ -27,7 +26,8 @@ node {
 
     stage('e2e') {
       withCredentials([
-        string(credentialsId: 'fb-test-user-pass', variable: 'FB_TEST_USER_PASS')
+        string(credentialsId: 'fb-test-user-pass', variable: 'FB_TEST_USER_PASS'),
+        string(credentialsId: 'lsd-dev-jwt-secret', variable: 'JWT_SECRET')
       ]) {
         ansiColor('css') {
           sh 'yarn run e2e-ci'
