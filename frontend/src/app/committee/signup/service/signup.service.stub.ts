@@ -21,7 +21,7 @@ export class SignupServiceStub extends SignupService {
   static apiFailPhoneNumber = '07827651140';
 
   constructor() {
-    super(null, null);
+    super(null, null, null);
   }
 
   signup(name: string, phoneNumber?: string): Observable<SignupResult> {

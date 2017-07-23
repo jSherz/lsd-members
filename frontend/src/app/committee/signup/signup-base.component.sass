@@ -1,0 +1,30 @@
+@import '../../../assets/css/bourbon/bourbon'
+@import '../../../assets/css/base/base'
+@import '../../../assets/css/neat/neat'
+@import '../../../assets/css/variables'
+
+nav
+  text-align: right
+
+  li
+    display: inline-block
+
+    a
+      padding: 0.5em 1em
+      display: inline-block
+
+      &:hover
+        background-color: lighten($lsd-blue, 50%)
+        color: #000
+
+      &.active
+        background-color: $lsd-blue
+        color: white
+
+        &:hover
+          background-color: $lsd-blue
+          color: white
+
+  @media(max-width: 45em)
+    ul
+      margin-bottom: 1em

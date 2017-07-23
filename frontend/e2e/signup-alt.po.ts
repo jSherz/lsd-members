@@ -1,5 +1,7 @@
 import {browser, element, by} from 'protractor';
 
+import {createJwt} from './util';
+
 export class SignupAltForm {
 
   getCurrentUrl() {
@@ -7,8 +9,11 @@ export class SignupAltForm {
   }
 
   navigateTo() {
-    browser.executeScript('window.localStorage.setItem("API_KEY", "%%KEY%%")');
-    return browser.get('/admin/sign-up/alt');
+    return Promise.all([
+      browser.get('/members/committee/sign-up/alt'),
+      browser.executeScript('window.localStorage.setItem("IS_COMMITTEE", "true")'),
+      browser.executeScript('window.localStorage.setItem("JWT", "' + createJwt() + '")')
+    ]);
   }
 
   nameField() {

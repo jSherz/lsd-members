@@ -9,10 +9,6 @@ import {
   CourseViewComponent,
   CourseAddComponent,
   MassTextComponent,
-  SignupBaseComponent,
-  SignupComponent,
-  SignupAltComponent,
-  ThankYouComponent,
   MemberViewComponent,
   MemberLookupComponent,
   MemberEditComponent,
@@ -36,15 +32,6 @@ export const adminRoutes: Routes = [
       {path: 'members/approval', component: MemberApprovalComponent, canActivate: [CanActivateAdmin]},
       {path: 'members/:uuid/edit', component: MemberEditComponent, canActivate: [CanActivateAdmin]},
       {path: 'members/:uuid', component: MemberViewComponent, canActivate: [CanActivateAdmin]}
-    ]
-  },
-  {
-    path: 'sign-up',
-    component: SignupBaseComponent,
-    children: [
-      {path: '', component: SignupComponent},
-      {path: 'alt', component: SignupAltComponent},
-      {path: 'thank-you', component: ThankYouComponent}
     ]
   }
 ];

@@ -1,10 +1,15 @@
 import {browser, element, by} from 'protractor';
 
+import {createJwt} from './util';
+
 export class SignupForm {
 
   navigateTo() {
-    browser.executeScript('window.localStorage.setItem("API_KEY", "%%KEY%%")');
-    return browser.get('/admin/sign-up');
+    return Promise.all([
+      browser.get('/members/committee/sign-up'),
+      browser.executeScript('window.localStorage.setItem("IS_COMMITTEE", "true")'),
+      browser.executeScript('window.localStorage.setItem("JWT", "' + createJwt() + '")')
+    ]);
   }
 
   getCurrentUrl() {

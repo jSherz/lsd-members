@@ -20,6 +20,15 @@ import {
 import {HeaderComponent} from './header';
 import {CanActivateCommittee} from './utils';
 
+import {
+  SignupBaseComponent,
+  SignupComponent,
+  SignupAltComponent,
+  ThankYouComponent,
+  SignupService,
+  SignupServiceImpl
+} from './signup';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -31,12 +40,17 @@ import {CanActivateCommittee} from './utils';
   declarations: [
     DashboardComponent,
     DashboardStatsComponent,
-    HeaderComponent
+    HeaderComponent,
+    SignupBaseComponent,
+    SignupComponent,
+    SignupAltComponent,
+    ThankYouComponent
   ],
   providers: [
     FormBuilder,
     CanActivateCommittee,
-    {provide: DashboardStatsService, useClass: DashboardStatsServiceImpl}
+    {provide: DashboardStatsService, useClass: DashboardStatsServiceImpl},
+    {provide: SignupService, useClass: SignupServiceImpl}
   ]
 })
 export class CommitteeModule {

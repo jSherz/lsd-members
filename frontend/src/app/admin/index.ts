@@ -45,15 +45,6 @@ export {
 } from './member';
 
 export {
-  SignupService,
-  SignupServiceImpl,
-  SignupBaseComponent,
-  SignupComponent,
-  SignupAltComponent,
-  ThankYouComponent
-} from './signup';
-
-export {
   AdminBaseComponent
 } from './admin-base.component';
 

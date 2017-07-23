@@ -10,13 +10,10 @@ node {
   dir('backend') {
     stage('Setup DB') {
       withCredentials([
-        file(credentialsId: 'lsd-dev-deploy', variable: 'DEPLOY_KEY')
+        file(credentialsId: 'lsd-dev-deploy', variable: 'DEPLOY_KEY'),
+        string(credentialsId: 'lsd-dev-jwt-secret', variable: 'JWT_SECRET')
       ]) {
         sh 'chmod 0600 $DEPLOY_KEY'
-        sh 'export KEY=$(uuidgen)' +
-           ' && sed -i s/%%KEY%%/$KEY/g src/it/resources/setup-e2e-db.sql' +
-           ' && sed -i s/%%KEY%%/$KEY/g ../frontend/e2e/signup.po.ts' +
-           ' && sed -i s/%%KEY%%/$KEY/g ../frontend/e2e/signup-alt.po.ts'
         sh 'scp -i $DEPLOY_KEY src/it/resources/setup-e2e-db.sql deploy@api.dev.leedsskydivers.com:/home/api/scripts'
         sh 'ssh -i $DEPLOY_KEY deploy@api.dev.leedsskydivers.com \'sudo -H /usr/bin/python /opt/setup-e2e-db.py\''
       }

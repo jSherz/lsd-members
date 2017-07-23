@@ -34,8 +34,6 @@ import {
   MassTextComponent,
   ApiKeyService,
   ApiKeyServiceImpl,
-  SignupService,
-  SignupServiceImpl,
   MemberService,
   MemberServiceImpl,
   MemberLookupComponent,
@@ -46,10 +44,6 @@ import {
   CourseSpaceServiceImpl,
   CommitteeService,
   CommitteeServiceImpl,
-  SignupBaseComponent,
-  SignupComponent,
-  SignupAltComponent,
-  ThankYouComponent,
   MemberEditComponent,
   MemberAddComponent
 } from './';
@@ -73,10 +67,6 @@ import {MemberApprovalService, MemberApprovalServiceImpl} from './member-approva
     CourseViewComponent,
     MemberSearchComponent,
     MassTextComponent,
-    SignupBaseComponent,
-    SignupComponent,
-    SignupAltComponent,
-    ThankYouComponent,
     MemberViewComponent,
     MemberLookupComponent,
     MemberEditComponent,
@@ -87,7 +77,6 @@ import {MemberApprovalService, MemberApprovalServiceImpl} from './member-approva
   providers: [
     FormBuilder,
     {provide: ApiKeyService, useClass: ApiKeyServiceImpl},
-    {provide: SignupService, useClass: SignupServiceImpl},
     {provide: LocationStrategy, useClass: PathLocationStrategy},
     {provide: CourseService, useClass: CourseServiceImpl},
     {provide: CourseSpaceService, useClass: CourseSpaceServiceImpl},

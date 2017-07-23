@@ -14,7 +14,7 @@ import {
 
 @Component({
   selector: 'lsd-signup-alt-component',
-  templateUrl: 'signup-alt.component.html'
+  templateUrl: './signup-alt.component.html'
 })
 export class SignupAltComponent {
 
@@ -81,7 +81,7 @@ export class SignupAltComponent {
         this.showThrobber = false;
 
         if (result.success) {
-          this.router.navigate(['admin', 'sign-up', 'thank-you']);
+          this.router.navigate(['members', 'committee', 'sign-up', 'thank-you']);
         } else {
           this.errors = result.errors;
         }

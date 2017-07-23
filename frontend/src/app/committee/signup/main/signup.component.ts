@@ -12,7 +12,7 @@ import {SignupService} from '../service/signup.service';
 
 @Component({
   selector: 'lsd-signup-component',
-  templateUrl: 'signup.component.html'
+  templateUrl: './signup.component.html'
 })
 export class SignupComponent {
 
@@ -80,14 +80,14 @@ export class SignupComponent {
         this.showThrobber = false;
 
         if (result.success) {
-          this.router.navigate(['admin', 'sign-up', 'thank-you']);
+          this.router.navigate(['members', 'committee', 'sign-up', 'thank-you']);
         } else {
           this.errors = result.errors;
         }
       },
       error => {
         // API request failed, show generic error
-        console.log('Sign-up alt failed: ' + error);
+        console.log('Sign-up failed: ' + error);
 
         this.apiRequestFailed = true;
         this.showThrobber = false;

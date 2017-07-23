@@ -65,7 +65,7 @@ class HttpService(
 
   private val jwtDirectives: JwtDirectives = new JwtDirectives(jwtService, memberDao, committeeMemberDao)
 
-  private val authenticateWithJwt: Directive1[Member] = jwtDirectives.authenticateWithJwt
+  private implicit val authenticateWithJwt: Directive1[Member] = jwtDirectives.authenticateWithJwt
 
   private val authenticateCommitteeWithJwt: Directive1[(Member, CommitteeMember)] =
     jwtDirectives.authenticateCommitteeWithJwt

@@ -25,7 +25,6 @@
 package com.jsherz.luskydive.apis
 
 import java.sql.Timestamp
-import java.util.UUID
 
 import akka.event.LoggingAdapter
 import akka.http.scaladsl.server.{Directive1, Route}
@@ -41,7 +40,7 @@ import scalaz.{Failure, Success}
   * The two methods of signing up new members at a fresher's fair (phone number or e-mail).
   */
 class SignupApi(private val memberDao: MemberDao)
-               (implicit ec: ExecutionContext, authDirective: Directive1[UUID], log: LoggingAdapter) {
+               (implicit ec: ExecutionContext, authDirective: Directive1[Member], log: LoggingAdapter) {
 
   import SignupJsonSupport._
 
