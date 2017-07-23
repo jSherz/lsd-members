@@ -3,13 +3,13 @@ import {sign} from 'jsonwebtoken';
 export const createJwt = () => {
   const secret = process.env.JWT_SECRET || 'apples';
 
-  const expires = new Date();
-  expires.setDate((new Date()).getDate() + 1);
+  const options = {
+    algorithm: 'HS384',
+    expiresIn: '1h'
+  };
 
   return sign({
     iss: 'LSD',
-    UUID: 'f5e0e6f1-1786-4702-b2b0-800774e5021b',
-    exp: expires.getTime(),
-    iat: new Date().getTime()
-  }, secret, {algorithm: 'HS384'});
+    UUID: '5f89a942-2704-4442-9d68-f30408b51ca1'
+  }, secret, options);
 };

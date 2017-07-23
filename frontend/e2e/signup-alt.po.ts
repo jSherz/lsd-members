@@ -9,10 +9,12 @@ export class SignupAltForm {
   }
 
   navigateTo() {
+    // Navigate to homepage to allow setting of local storage data, then go to sign-up page
     return Promise.all([
-      browser.get('/members/committee/sign-up/alt'),
+      browser.get('/'),
       browser.executeScript('window.localStorage.setItem("IS_COMMITTEE", "true")'),
-      browser.executeScript('window.localStorage.setItem("JWT", "' + createJwt() + '")')
+      browser.executeScript('window.localStorage.setItem("JWT", "' + createJwt() + '")'),
+      browser.get('/members/committee/sign-up/alt')
     ]);
   }
 
