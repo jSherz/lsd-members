@@ -1,7 +1,9 @@
 import {Headers, Http, RequestOptions, Response} from '@angular/http';
-import {Observable, ObservableInput} from 'rxjs/Observable';
-import {JwtService} from '../login/jwt.service';
+
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
+
+import {JwtService} from '../login/jwt.service';
 
 /**
  * Basic methods shared across services.
@@ -21,12 +23,12 @@ export class BaseService {
   /**
    * Handle a generic error encountered when performing an AJAX request.
    */
-  protected handleError = (error: any): Response => {
+  protected handleError<T>(error: any, caught: Observable<T>): Observable<T> {
     if (error && error.status === 401) {
       this.jwtService.setJwt('', false);
     }
 
-    return error;
+    return caught;
   };
 
   /**
@@ -42,7 +44,7 @@ export class BaseService {
     const body = JSON.stringify(data);
 
     const response = this.http.post(url, body, this.makeRequestOptions());
-    response.subscribe(() => null, this.handleError);
+    response.catch(this.handleError);
 
     return response;
   }
@@ -60,7 +62,7 @@ export class BaseService {
     const body = JSON.stringify(data);
 
     const response = this.http.put(url, body, this.makeRequestOptions());
-    response.subscribe(() => null, this.handleError);
+    response.catch(this.handleError);
 
     return response;
   }
@@ -73,7 +75,7 @@ export class BaseService {
    */
   protected get(url: string) {
     const response = this.http.get(url, this.makeRequestOptions());
-    response.subscribe(() => null, this.handleError);
+    response.catch(this.handleError);
 
     return response;
   }

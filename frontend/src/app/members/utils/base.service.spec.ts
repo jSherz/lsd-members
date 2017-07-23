@@ -53,6 +53,7 @@ describe('Members: base service', () => {
 
     service.get('https://www.example.com/new-pics');
 
+    expect(httpSpy.calls.count()).toEqual(1);
     const httpArgs = httpSpy.calls.argsFor(0);
     expect(httpArgs[0]).toEqual('https://www.example.com/new-pics');
 
@@ -80,6 +81,7 @@ describe('Members: base service', () => {
 
     service.post('https://magical-api-machine.example.org/v1/rest2soap', body);
 
+    expect(httpSpy.calls.count()).toEqual(1);
     const httpArgs = httpSpy.calls.argsFor(0);
     expect(httpArgs[0]).toEqual('https://magical-api-machine.example.org/v1/rest2soap');
     expect(httpArgs[1]).toEqual('{"myKey":"myValue"}');
@@ -108,6 +110,7 @@ describe('Members: base service', () => {
 
     service.put('https://hobbit-factory.example.org/api/hobbits', body);
 
+    expect(httpSpy.calls.count()).toEqual(1);
     const httpArgs = httpSpy.calls.argsFor(0);
     expect(httpArgs[0]).toEqual('https://hobbit-factory.example.org/api/hobbits');
     expect(httpArgs[1]).toEqual('{"another":true}');
@@ -138,6 +141,7 @@ describe('Members: base service', () => {
 
       service.get('https://some-url.example.com')
         .subscribe(() => null, () => {
+          expect(httpSpy.calls.count()).toEqual(1);
           expect(jwtSpy).toHaveBeenCalledWith('', false);
         });
     })));
@@ -158,6 +162,7 @@ describe('Members: base service', () => {
 
       service.post('https://another-bucket-of-s3.example.com', {foo: 'barred'})
         .subscribe(() => null, () => {
+          expect(httpSpy.calls.count()).toEqual(1);
           expect(jwtSpy).toHaveBeenCalledWith('', false);
         });
     })));
@@ -178,6 +183,7 @@ describe('Members: base service', () => {
 
       service.put('https://magical-cloud-factory.example.com', {answer: 42})
         .subscribe(() => null, () => {
+          expect(httpSpy.calls.count()).toEqual(1);
           expect(jwtSpy).toHaveBeenCalledWith('', false);
         });
     })));
