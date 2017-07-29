@@ -1,4 +1,5 @@
 import { Server } from 'hapi';
+import { Sequelize } from 'sequelize-typescript';
 
 import {
     GoodPlugin
@@ -6,12 +7,33 @@ import {
 
 import {
     HelloWorldRoute,
-    HelloYouRoute
+    HelloYouRoute,
+    MembersRoute
 } from './routes';
+
+import {
+    Member
+} from './models';
+
+const sequelize = new Sequelize({
+    username: 'luskydive',
+    password: 'luskydive',
+    name: 'luskydive',
+    host: 'localhost',
+    dialect: 'postgres',
+    pool: {
+        max: 5,
+        min: 1,
+        idle: 10 * 1000,
+    }
+});
+
+sequelize.addModels([Member]);
 
 const server = new Server();
 server.connection({ port: 3000, host: 'localhost' });
 
+server.route(MembersRoute.route);
 server.route(HelloWorldRoute.route);
 server.route(HelloYouRoute.route);
 

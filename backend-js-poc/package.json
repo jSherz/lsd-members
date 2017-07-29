@@ -12,6 +12,10 @@
     "good-console": "^6.4.0",
     "good-squeeze": "^5.0.2",
     "hapi": "^16.5.0",
+    "pg": "^7.0.2",
+    "reflect-metadata": "^0.1.10",
+    "sequelize": "^4.4.2",
+    "sequelize-typescript": "^0.3.5",
     "typescript": "^2.4.2"
   },
   "scripts": {
