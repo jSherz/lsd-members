@@ -1,0 +1,30 @@
+{
+    "variables": {
+        "aws_access_key": "",
+        "aws_secret_key": "",
+        "region": "eu-west-2",
+        "amazon_owner_id": "137112412989"
+    },
+    "builders": [
+        {
+            "type": "amazon-ebs",
+            "access_key": "{{user `aws_access_key`}}",
+            "secret_key": "{{user `aws_secret_key`}}",
+            "region": "{{user `region`}}",
+            "source_ami_filter": {
+                "filters": {
+                    "virtualization-type": "hvm",
+                    "name": "amzn-ami-hvm-*-x86_64-gp2",
+                    "root-device-type": "ebs"
+                },
+                "owners": [
+                    "{{user `amazon_owner_id`}}"
+                ],
+                "most_recent": true
+            },
+            "instance_type": "t2.micro",
+            "ssh_username": "ec2-user",
+            "ami_name": "lsd-backend-{{timestamp}}"
+        }
+    ]
+}
