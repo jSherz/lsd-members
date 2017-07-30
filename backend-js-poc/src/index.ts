@@ -2,6 +2,7 @@ import { Server } from 'hapi';
 import { Sequelize } from 'sequelize-typescript';
 
 import {
+    BlippPlugin,
     GoodPlugin
 } from './plugins';
 
@@ -37,9 +38,12 @@ server.route(MembersRoute.route);
 server.route(HelloWorldRoute.route);
 server.route(HelloYouRoute.route);
 
-server.register(GoodPlugin.plugin, (err) => {
+server.register([
+    GoodPlugin.plugin,
+    BlippPlugin.plugin,
+], (err) => {
     if (err) {
-        server.log('error', 'Failed to initialise good plugin');
+        server.log('error', 'Failed to initialise plugins');
         throw err;
     }
 

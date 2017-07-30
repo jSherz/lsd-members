@@ -1,3 +1,7 @@
 import * as GoodPlugin from './GoodPlugin';
+import * as BlippPlugin from './BlippPlugin';
 
-export { GoodPlugin };
+export {
+    BlippPlugin,
+    GoodPlugin
+};
