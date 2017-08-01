@@ -10,8 +10,8 @@ describe('routes/HelloYouRoute', () => {
     it('greets the user', () => {
         const request: any = {
             params: {
-                name: 'Foobar'
-            }
+                name: 'Foobar',
+            },
         };
         const reply: any = jasmine.createSpy('reply');
         route.handler(request, reply);

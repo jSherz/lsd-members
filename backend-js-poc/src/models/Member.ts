@@ -1,44 +1,44 @@
-import { Table, Column, Model, HasMany, PrimaryKey } from 'sequelize-typescript';
+import { Column, HasMany, Model, PrimaryKey, Table } from 'sequelize-typescript';
 
 @Table({
     createdAt: 'created_at',
-    updatedAt: 'updated_at',
     tableName: 'members',
     timestamps: true,
+    updatedAt: 'updated_at',
 })
 export class Member extends Model<Member> {
 
     @Column({ primaryKey: true })
-    uuid: string;
+    public uuid: string;
 
     @Column({ field: 'first_name' })
-    firstName: string;
+    public firstName: string;
 
     @Column({ field: 'last_name' })
-    lastName: string;
+    public lastName: string;
 
     @Column({ field: 'phone_number' })
-    phoneNumber: string;
+    public phoneNumber: string;
 
     @Column({ field: 'email' })
-    email: string;
+    public email: string;
 
     @Column({ field: 'last_jump' })
-    lastJump: Date;
+    public lastJump: Date;
 
     @Column({ field: 'weight' })
-    weight: number;
+    public weight: number;
 
     @Column({ field: 'height' })
-    height: number;
+    public height: number;
 
     @Column({ field: 'driver' })
-    driver: boolean;
+    public driver: boolean;
 
     @Column({ field: 'organiser' })
-    organiser: boolean;
+    public organiser: boolean;
 
     @Column({ field: 'social_user_id' })
-    socialUserId: string;
+    public socialUserId: string;
 
 }

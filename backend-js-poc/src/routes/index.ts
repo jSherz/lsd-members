@@ -5,5 +5,5 @@ import * as MembersRoute from './MembersRoute';
 export {
     HelloWorldRoute,
     HelloYouRoute,
-    MembersRoute
+    MembersRoute,
 };

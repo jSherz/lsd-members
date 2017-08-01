@@ -1,5 +1,5 @@
-import { plugin } from './GoodPlugin';
 import { register } from 'good';
+import { plugin } from './GoodPlugin';
 
 describe('plugins/GoodPlugin', () => {
 

@@ -1,7 +1,9 @@
-import * as GoodPlugin from './GoodPlugin';
 import * as BlippPlugin from './BlippPlugin';
+import * as BunyanPlugin from './BunyanPlugin';
+import * as GoodPlugin from './GoodPlugin';
 
 export {
     BlippPlugin,
-    GoodPlugin
+    BunyanPlugin,
+    GoodPlugin,
 };
