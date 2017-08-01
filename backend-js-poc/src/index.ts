@@ -39,8 +39,8 @@ server.route(HelloWorldRoute.route);
 server.route(HelloYouRoute.route);
 
 server.register([
-    GoodPlugin.plugin,
     BlippPlugin.plugin,
+    GoodPlugin.plugin('debug'),
 ], (err) => {
     if (err) {
         server.log('error', 'Failed to initialise plugins');
