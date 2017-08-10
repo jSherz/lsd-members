@@ -10,7 +10,7 @@
     "build-prod": "ng build --prod --stats --progress=false --aot --output-hashing=all --vendor-chunk=false --sourcemaps=true --build-optimizer",
     "coveralls": "cat coverage/lcov.info | coveralls",
     "test": "ng test",
-    "test-ci": "ng test --browsers ChromeHeadless --watch=false --progress=false --code-coverage=true --log-level=debug",
+    "test-ci": "ng test --browsers ChromeHeadlessNoSandbox --watch=false --progress=false --code-coverage=true --log-level=debug",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "e2e-ci": "ng e2e --config protractor-ci.conf.js --serve=false",
