@@ -7,7 +7,7 @@
     "start": "ng serve --environment=local --host local-dev.leedsskydivers.com",
     "build": "ng build --environment=local",
     "build-dev": "ng build --target=production --environment=dev --stats --progress=false --aot --output-hashing=all --vendor-chunk=false --sourcemaps=true",
-    "build-prod": "ng build --prod --stats --progress=false --aot --output-hashing=all --vendor-chunk=false --sourcemaps=true",
+    "build-prod": "ng build --prod --stats --progress=false --aot --output-hashing=all --vendor-chunk=false --sourcemaps=true --build-optimizer",
     "coveralls": "cat coverage/lcov.info | coveralls",
     "test": "ng test",
     "test-ci": "ng test --browsers ChromeHeadless --watch=false --progress=false --code-coverage=true",
@@ -39,7 +39,7 @@
     "zone.js": "^0.8.4"
   },
   "devDependencies": {
-    "@angular/cli": "1.2.0",
+    "@angular/cli": "^1.3.0",
     "@angular/compiler-cli": "4.2.4",
     "@angular/language-service": "^4.0.0",
     "@types/jasmine": "2.5.45",
