@@ -455,6 +455,10 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
+bintrees@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/bintrees/-/bintrees-1.0.1.tgz#0e655c9b9c2435eaab68bf4027226d2b55a34524"
+
 blipp@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/blipp/-/blipp-2.3.0.tgz#8477954c015f6ebcbacf994ba89467c6797abddc"
@@ -805,6 +809,12 @@ env-cmd@^5.0.0:
   resolved "https://registry.yarnpkg.com/env-cmd/-/env-cmd-5.1.0.tgz#0236db393c3f033005204fcd0a92ee40723a9c9e"
   dependencies:
     cross-spawn "^5.0.1"
+
+epimetheus@^1.0.54:
+  version "1.0.54"
+  resolved "https://registry.yarnpkg.com/epimetheus/-/epimetheus-1.0.54.tgz#203d0556bbc0d013df89f7d274e8a3e59c0e84ac"
+  dependencies:
+    prom-client "^10.0.0"
 
 errno@^0.1.4:
   version "0.1.4"
@@ -2259,6 +2269,12 @@ process-nextick-args@~1.0.6:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-1.0.7.tgz#150e20b756590ad3f91093f25a4f2ad8bff30ba3"
 
+prom-client@^10.0.0:
+  version "10.0.2"
+  resolved "https://registry.yarnpkg.com/prom-client/-/prom-client-10.0.2.tgz#4c5e04f3f9fd15fe853222127bea913466631ec3"
+  dependencies:
+    tdigest "^0.1.1"
+
 prr@~0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/prr/-/prr-0.0.0.tgz#1a84b85908325501411853d0081ee3fa86e2926a"
@@ -2715,6 +2731,12 @@ supports-color@^3.1.2:
 symbol-tree@^3.2.1:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/symbol-tree/-/symbol-tree-3.2.2.tgz#ae27db38f660a7ae2e1c3b7d1bc290819b8519e6"
+
+tdigest@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/tdigest/-/tdigest-0.1.1.tgz#2e3cb2c39ea449e55d1e6cd91117accca4588021"
+  dependencies:
+    bintrees "1.0.1"
 
 terraformer-wkt-parser@^1.1.2:
   version "1.1.2"

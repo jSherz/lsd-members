@@ -1,5 +1,6 @@
 import { Server } from 'hapi';
 import { Sequelize } from 'sequelize-typescript';
+import * as Epimetheus from 'epimetheus';
 
 import {
     BlippPlugin,
@@ -33,6 +34,8 @@ sequelize.addModels([Member]);
 
 const server = new Server();
 server.connection({ port: 3000, host: 'localhost' });
+
+Epimetheus.instrument(server);
 
 server.route(MembersRoute.route);
 server.route(HelloWorldRoute.route);
