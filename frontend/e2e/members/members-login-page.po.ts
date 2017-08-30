@@ -43,7 +43,10 @@ export class MembersLoginPage {
   }
 
   waitForFacebookLoginPage() {
-    return browser.wait(ExpectedConditions.urlContains('login.php'), 5000)
+    return browser.wait(ExpectedConditions.and(
+      ExpectedConditions.urlContains('login.php'),
+      ExpectedConditions.presenceOf(this.fbUsernameBox())
+    ), 5000);
   }
 
   waitForAppPage() {
@@ -51,7 +54,7 @@ export class MembersLoginPage {
   }
 
   waitForDashboard() {
-    return browser.wait(browser.ExpectedConditions.urlContains('members/dashboard'), 5000);
+    return browser.wait(ExpectedConditions.urlContains('members/dashboard'), 5000);
   }
 
   baseUrl() {
