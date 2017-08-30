@@ -25,6 +25,7 @@ describe('Members login', function () {
     page.waitForFacebookLoginPage();
     expect(page.getCurrentUrl()).toMatch(/https:\/\/www.facebook.com\/login.php\?.*/);
 
+    page.waitForFacebookLoginPageLoaded();
     page.fbUsernameBox().sendKeys('miwnvzsxjg_1500406593@tfbnw.net');
     page.fbPasswordBox().sendKeys(process.env['FB_TEST_USER_PASS']);
     page.fbLoginButton().click();

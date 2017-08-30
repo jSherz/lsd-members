@@ -46,6 +46,10 @@ export class MembersLoginPage {
     return browser.wait(ExpectedConditions.urlContains('facebook.com'), 5000);
   }
 
+  waitForFacebookLoginPageLoaded() {
+    return browser.wait(ExpectedConditions.presenceOf(this.fbUsernameBox()), 5000);
+  }
+
   waitForAppPage() {
     return browser.wait(ExpectedConditions.urlContains('members'), 5000);
   }
