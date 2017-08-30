@@ -134,7 +134,7 @@ describe('Members: base service', () => {
         body: 'Computer says no',
         url: 'https://computer-says-no.example.com'
       }));
-      const dummyResponse = ErrorObservable.of(unauthResponse);
+      const dummyResponse = Observable.throw(unauthResponse);
 
       const httpSpy = spyOn(http, 'get').and.returnValue(dummyResponse);
       const jwtSpy = spyOn(jwtService, 'setJwt').and.callThrough();
@@ -155,7 +155,7 @@ describe('Members: base service', () => {
         body: 'This is not the response you\'re looking for',
         url: 'https://have-another-mint.example.com'
       }));
-      const dummyResponse = ErrorObservable.of(unauthResponse);
+      const dummyResponse = Observable.throw(unauthResponse);
 
       const httpSpy = spyOn(http, 'post').and.returnValue(dummyResponse);
       const jwtSpy = spyOn(jwtService, 'setJwt').and.callThrough();
@@ -176,7 +176,7 @@ describe('Members: base service', () => {
         body: 'ARE U 4 REAL?',
         url: 'https://no-no-no-no-no-auth.example.com'
       }));
-      const dummyResponse = ErrorObservable.of(unauthResponse);
+      const dummyResponse = Observable.throw(unauthResponse);
 
       const httpSpy = spyOn(http, 'put').and.returnValue(dummyResponse);
       const jwtSpy = spyOn(jwtService, 'setJwt').and.callThrough();

@@ -23,12 +23,12 @@ export class BaseService {
   /**
    * Handle a generic error encountered when performing an AJAX request.
    */
-  protected handleError<T>(error: any, caught: Observable<T>): Observable<T> {
+  protected handleError = <T>(error: any, caught: Observable<T>): Observable<T> => {
     if (error && error.status === 401) {
       this.jwtService.setJwt('', false);
     }
 
-    return caught;
+    throw caught;
   };
 
   /**
@@ -44,9 +44,7 @@ export class BaseService {
     const body = JSON.stringify(data);
 
     const response = this.http.post(url, body, this.makeRequestOptions());
-    response.catch(this.handleError);
-
-    return response;
+    return response.catch(this.handleError);
   }
 
   /**
@@ -62,9 +60,7 @@ export class BaseService {
     const body = JSON.stringify(data);
 
     const response = this.http.put(url, body, this.makeRequestOptions());
-    response.catch(this.handleError);
-
-    return response;
+    return response.catch(this.handleError);
   }
 
   /**
@@ -75,9 +71,7 @@ export class BaseService {
    */
   protected get(url: string) {
     const response = this.http.get(url, this.makeRequestOptions());
-    response.catch(this.handleError);
-
-    return response;
+    return response.catch(this.handleError);
   }
 
   private makeRequestOptions(): RequestOptions {
