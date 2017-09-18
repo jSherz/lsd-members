@@ -34,7 +34,7 @@ describe('Pages: Committee', function () {
     expect(headers).toEqual(names);
 
     expect(roles).toEqual([
-      'President', 'Vice-president', 'RAPS Secretary', 'Treasurer', 'Social Secretary'
+      'President', 'Vice-President', 'RAPS Secretary', 'Treasurer', 'Social Secretary'
     ]);
   });
 
