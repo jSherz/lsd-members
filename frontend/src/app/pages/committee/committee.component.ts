@@ -20,12 +20,11 @@ export class CommitteeMember {
 export class CommitteeComponent implements OnInit {
 
   committeeMembers = [
-    new CommitteeMember('emily.jpg', 'Emily', 'President'),
-    new CommitteeMember('will.jpg', 'Will', 'Vice-president'),
-    new CommitteeMember('angus.jpg', 'Angus', 'Treasurer'),
-    new CommitteeMember('jim.jpg', 'Jim', 'RAPS Secretary'),
-    new CommitteeMember('nathan.jpg', 'Nathan', 'Kit Secretary'),
-    new CommitteeMember('georgia.jpg', 'Georgia', 'Social Secretary')
+    new CommitteeMember('phoebe.jpg', 'Phoebe', 'President'),
+    new CommitteeMember('karl.jpg', 'Karl', 'Vice-President'),
+    new CommitteeMember('amber.jpg', 'Amber', 'RAPS Secretary'),
+    new CommitteeMember('ray.jpg', 'Ray', 'Treasurer'),
+    new CommitteeMember('claudia.jpg', 'Claudia', 'Social Secretary'),
   ];
 
   constructor() { }
