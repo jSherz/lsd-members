@@ -25,6 +25,7 @@ export class CommitteeComponent implements OnInit {
     new CommitteeMember('amber.jpg', 'Amber', 'RAPS Secretary'),
     new CommitteeMember('ray.jpg', 'Ray', 'Treasurer'),
     new CommitteeMember('claudia.jpg', 'Claudia', 'Social Secretary'),
+    new CommitteeMember('laura.jpg', 'Laura', 'Social Secretary'),
   ];
 
   constructor() { }
