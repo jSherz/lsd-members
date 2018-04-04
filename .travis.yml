@@ -1,7 +1,7 @@
 language: node_js
 dist: trusty
 node_js:
-  - "6"
+  - "8"
 cache:
   directories:
     - "node_modules"
@@ -14,5 +14,5 @@ install:
   - cd frontend
   - yarn install
 script:
-  - yarn run test -- --progress=false --watch=false --browsers=ChromeHeadless
+  - yarn run test -- --progress=false --watch=false --browsers=ChromeHeadlessNoSandbox
   - yarn run build-prod
