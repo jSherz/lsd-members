@@ -1,7 +1,8 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {InjectionToken, NgModule} from '@angular/core';
 import {LocationStrategy, PathLocationStrategy} from '@angular/common';
-import {Angulartics2Module, Angulartics2GoogleAnalytics} from 'angulartics2';
+import {Angulartics2Module} from 'angulartics2';
+import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
 
 import {AppComponent} from './app.component';
 import {routing} from './app.routing';

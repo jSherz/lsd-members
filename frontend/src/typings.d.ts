@@ -5,7 +5,7 @@ interface NodeModule {
 }
 
 declare namespace jasmine {
-  interface Matchers {
+  interface Matchers<T> {
     toBeSameAs(expected: any): boolean;
   }
 }

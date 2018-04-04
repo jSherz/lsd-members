@@ -40,7 +40,7 @@ export class BaseService {
     // We use a closure here to ensure that the reference to this.apiKeyService isn't lost when this error handler is used
     const apiKeyService = this.apiKeyService;
 
-    const innerHandler = <R, T>(err: any, caught: Observable<T>): ErrorObservable => {
+    const innerHandler = <R2, T2>(err: any, caught: Observable<T>): ErrorObservable => {
       const errMsg = (err.message) ? err.message : err.status ? `${err.status} - ${err.statusText}` : 'Server error';
       console.error(errMsg);
 
