@@ -1,6 +1,7 @@
 # Leeds University Skydivers - Management system
 
 [![Trello board](https://img.shields.io/badge/Trello-public-green.svg)](https://trello.com/b/Lc8wED62/leedsskydivers-com) [![Build Status](https://travis-ci.org/jSherz/lsd-members.svg?branch=master)](https://travis-ci.org/jSherz/lsd-members)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FjSherz%2Flsd-members.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FjSherz%2Flsd-members?ref=badge_shield)
 
 The Leeds Uni Skydiving club organises a number of people learning to skydive
 each year and this involves collecting some information, arranging transport
@@ -18,3 +19,7 @@ An [Angular 2](https://angular.io) project and is managed with [angular-cli](htt
 ## Backend
 
 An [Akka HTTP](http://akka.io/) project, managed with [sbt](http://www.scala-sbt.org/).
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FjSherz%2Flsd-members.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FjSherz%2Flsd-members?ref=badge_large)
