@@ -109,7 +109,7 @@ class MassTextDaoImpl(protected override val databaseService: DatabaseService)
       Future.successful(-\/(MassTextDaoErrors.endDateBeforeStartDate))
     } else {
       db.run(
-        membersCreatedBetween(startDate, endDate).countDistinct.result
+        membersCreatedBetween(startDate, endDate).length.result
       ) withServerError
     }
   }

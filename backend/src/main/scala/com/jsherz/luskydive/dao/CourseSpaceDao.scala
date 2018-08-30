@@ -110,7 +110,7 @@ class CourseSpaceDaoImpl(protected override val databaseService: DatabaseService
 
       (
         for {
-          existingSpaces <- db.run(CourseSpaces.filter(_.courseUuid === courseUuid).countDistinct.result)
+          existingSpaces <- db.run(CourseSpaces.filter(_.courseUuid === courseUuid).length.result)
           if existingSpaces == 0
           createResult <- db.run(createSpacesAction).map(_ => ())
         } yield \/-(createResult)

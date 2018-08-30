@@ -38,11 +38,11 @@ class DatabaseService(jdbcUrl: String, username: String, password: String) {
 
   private val dataSource = new HikariDataSource(hikariConfig)
 
-  val driver = slick.driver.PostgresDriver
+  val driver = slick.jdbc.PostgresProfile
 
   import driver.api._
 
-  val db = Database.forDataSource(dataSource)
+  val db = Database.forDataSource(dataSource, None)
   db.createSession()
 
 }

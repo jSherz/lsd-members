@@ -167,7 +167,7 @@ class TextMessageDaoImpl(protected override val databaseService: DatabaseService
     db.run(
       TextMessages
         .filter(_.status === TextMessageStatuses.Received)
-        .countDistinct
+        .length
         .result
     ) withServerError
   }
