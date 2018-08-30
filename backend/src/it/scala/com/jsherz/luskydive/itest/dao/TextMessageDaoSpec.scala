@@ -26,12 +26,12 @@ package com.jsherz.luskydive.itest.dao
 
 import java.util.UUID
 
-import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
+import akka.event.LoggingAdapter
 import com.jsherz.luskydive.core.TextMessage
 import com.jsherz.luskydive.dao.TextMessageDaoImpl
-import com.jsherz.luskydive.itest.util.{TestUtil, Util}
+import com.jsherz.luskydive.itest.util.Util
 import com.jsherz.luskydive.json.TextMessageJsonSupport._
+import com.jsherz.luskydive.util.NullLogger
 import org.scalatest.concurrent.ScalaFutures._
 import org.scalatest.{Matchers, WordSpec}
 
@@ -39,14 +39,14 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 
 class TextMessageDaoSpec extends WordSpec with Matchers {
-  implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
+  implicit val log: LoggingAdapter = new NullLogger
   val dbService = Util.setupGoldTestDb()
   val dao = new TextMessageDaoImpl(dbService)
 
   "TextMessageDao#all" should {
 
     "return text messages in the correct order" in {
-      implicit val patienceConfig: PatienceConfig = TestUtil.defaultPatienceConfig
+      implicit val patienceConfig: PatienceConfig = Util.defaultPatienceConfig
 
       val result = dao.all().futureValue
 

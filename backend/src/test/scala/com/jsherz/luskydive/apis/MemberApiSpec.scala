@@ -26,32 +26,24 @@ package com.jsherz.luskydive.apis
 
 import java.util.UUID
 
-import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.server.Route
-import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.jsherz.luskydive.core.{Member, TextMessage}
 import com.jsherz.luskydive.dao.{StubMemberDao, StubTextMessageDao}
-import com.jsherz.luskydive.json.MemberSearchRequest
 import com.jsherz.luskydive.json.MemberJsonSupport._
+import com.jsherz.luskydive.json.MemberSearchRequest
 import com.jsherz.luskydive.util.{AuthenticationDirectives, DateUtil, Errors, Util}
 import org.mockito.Matchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.{never, times, verify}
-import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
-
-import scala.concurrent.ExecutionContext
+import spray.json._
 
 /**
   * Ensures the members endpoints function correctly.
   */
-class MemberApiSpec extends WordSpec with Matchers with ScalatestRouteTest with BeforeAndAfter {
-
-  import spray.json._
+class MemberApiSpec extends BaseApiSpec {
 
   private implicit val authDirective = AuthenticationDirectives.allowAll
-  implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
 
   private val searchUrl = "/members/search"
   private val getUrl = "/members/" + StubMemberDao.getExistsUuid.toString

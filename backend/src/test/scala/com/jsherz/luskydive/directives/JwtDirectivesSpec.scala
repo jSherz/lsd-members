@@ -26,8 +26,7 @@ package com.jsherz.luskydive.directives
 
 import java.util.UUID
 
-import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
+import akka.event.LoggingAdapter
 import akka.http.scaladsl.model.headers.RawHeader
 import akka.http.scaladsl.model.{HttpHeader, StatusCodes}
 import akka.http.scaladsl.server.Directives._
@@ -35,20 +34,23 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.jsherz.luskydive.core.{CommitteeMember, Member}
 import com.jsherz.luskydive.dao.{CommitteeMemberDao, MemberDao}
+import com.jsherz.luskydive.json.CommitteeMembersJsonSupport.CommitteeMemberFormat
+import com.jsherz.luskydive.json.MemberJsonSupport._
 import com.jsherz.luskydive.services.JwtService
-import com.jsherz.luskydive.util.Util
+import com.jsherz.luskydive.util.{NullLogger, Util}
+import com.typesafe.config.{Config, ConfigFactory}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.{mock, when}
 import org.scalatest.{Matchers, WordSpec}
-import com.jsherz.luskydive.json.MemberJsonSupport._
-import com.jsherz.luskydive.json.CommitteeMembersJsonSupport.CommitteeMemberFormat
+import scalaz.{-\/, \/, \/-}
 
 import scala.concurrent.Future
-import scalaz.{-\/, \/, \/-}
 
 class JwtDirectivesSpec extends WordSpec with Matchers with ScalatestRouteTest {
 
-  implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
+  implicit val log: LoggingAdapter = new NullLogger
+
+  override def testConfig: Config = ConfigFactory.load("test.conf")
 
   "JwtDirective#authenticateWithJwt" should {
 

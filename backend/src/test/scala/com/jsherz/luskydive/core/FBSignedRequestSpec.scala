@@ -28,12 +28,11 @@ import java.time.Instant
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 
-import akka.http.scaladsl.testkit.ScalatestRouteTest
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Random
 
-class FBSignedRequestSpec extends WordSpec with Matchers with ScalatestRouteTest {
+class FBSignedRequestSpec extends WordSpec with Matchers {
 
   "FBSignedRequest" should {
 

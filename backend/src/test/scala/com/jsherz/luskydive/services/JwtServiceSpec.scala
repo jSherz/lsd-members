@@ -25,20 +25,18 @@
 package com.jsherz.luskydive.services
 
 import java.time.Instant
-import java.time.temporal.{ChronoField, TemporalField}
+import java.time.temporal.ChronoField
 import java.util.{Date, UUID}
 
-import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
-import akka.http.scaladsl.testkit.ScalatestRouteTest
+import akka.event.LoggingAdapter
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import com.jsherz.luskydive.util.Util
+import com.jsherz.luskydive.util.{NullLogger, Util}
 import org.scalatest.{Matchers, WordSpec}
 
-class JwtServiceSpec extends WordSpec with Matchers with ScalatestRouteTest {
+class JwtServiceSpec extends WordSpec with Matchers {
 
-  implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
+  implicit val log: LoggingAdapter = new NullLogger
 
   val jwtService = new JwtServiceImpl("apples")
 
@@ -126,7 +124,7 @@ class JwtServiceSpec extends WordSpec with Matchers with ScalatestRouteTest {
       val uuid = UUID.randomUUID()
 
       // JWT dates are converted to epoch seconds so remove millis
-      val issuedAt = Instant.now() `with` (ChronoField.MILLI_OF_SECOND, 0)
+      val issuedAt = Instant.now() `with`(ChronoField.MILLI_OF_SECOND, 0)
       val expiresAt = Instant.ofEpochSecond(2135425311L)
 
       val jwt = jwtService.createJwt(uuid, issuedAt, expiresAt)

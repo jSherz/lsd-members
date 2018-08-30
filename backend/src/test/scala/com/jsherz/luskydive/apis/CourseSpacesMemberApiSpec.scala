@@ -26,30 +26,22 @@ package com.jsherz.luskydive.apis
 
 import java.util.UUID
 
-import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Route
-import akka.http.scaladsl.testkit.ScalatestRouteTest
-import com.jsherz.luskydive.dao.{StubCourseDao, StubCourseSpaceDao}
+import com.jsherz.luskydive.dao.StubCourseSpaceDao
+import com.jsherz.luskydive.json.CourseSpacesJsonSupport._
 import com.jsherz.luskydive.json.{CourseSpaceDepositPaidRequest, CourseSpaceDepositPaidResponse, CourseSpaceMemberRequest, CourseSpaceMemberResponse}
 import com.jsherz.luskydive.util.AuthenticationDirectives
 import org.mockito.Matchers._
 import org.mockito.Mockito
 import org.mockito.Mockito._
-import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
-
-import scala.concurrent.ExecutionContext
 
 /**
   * Defines the member related behaviour on course spaces.
   */
-class CourseSpacesMemberApiSpec extends WordSpec with Matchers with ScalatestRouteTest with BeforeAndAfter {
-
-  import com.jsherz.luskydive.json.CourseSpacesJsonSupport._
+class CourseSpacesMemberApiSpec extends BaseApiSpec {
 
   private implicit val authDirective = AuthenticationDirectives.allowAll
-  implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
 
   private var dao = Mockito.spy(new StubCourseSpaceDao())
 

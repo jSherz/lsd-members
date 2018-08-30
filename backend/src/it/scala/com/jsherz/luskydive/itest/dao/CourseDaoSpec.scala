@@ -26,28 +26,27 @@ package com.jsherz.luskydive.itest.dao
 
 import java.util.UUID
 
-import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
+import akka.event.LoggingAdapter
 import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.{Course, CourseStatuses, CourseWithOrganisers}
 import com.jsherz.luskydive.dao.{CommitteeMemberDaoImpl, CourseDao, CourseDaoImpl, CourseSpaceDaoImpl}
-import com.jsherz.luskydive.itest.util.{DateUtil, TestUtil, Util}
-import com.jsherz.luskydive.json.{CourseCreateRequest, CourseSpaceWithMember, CourseWithNumSpaces}
-import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
-import org.scalatest.concurrent.ScalaFutures._
+import com.jsherz.luskydive.itest.util.{DateUtil, Util}
 import com.jsherz.luskydive.json.CoursesJsonSupport._
-import org.scalatest.time.{Seconds, Span}
+import com.jsherz.luskydive.json.{CourseCreateRequest, CourseSpaceWithMember, CourseWithNumSpaces}
+import com.jsherz.luskydive.util.NullLogger
+import org.scalatest.concurrent.ScalaFutures._
+import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
+import scalaz.{-\/, \/, \/-}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scalaz.{-\/, \/, \/-}
 
 class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
   private var dao: CourseDao = _
 
   override protected def beforeAll(): Unit = {
-    implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
+    implicit val log: LoggingAdapter = new NullLogger
     val dbService = Util.setupGoldTestDb()
 
     val committeeMemberDao = new CommitteeMemberDaoImpl(dbService)
@@ -153,7 +152,7 @@ class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
     "add valid courses with the correct number of spaces" in {
       val examples = Util.fixture[Seq[CourseCreateRequest]]("valid_examples.json")
 
-      implicit val patienceConfig: PatienceConfig = TestUtil.defaultPatienceConfig
+      implicit val patienceConfig: PatienceConfig = Util.defaultPatienceConfig
 
       examples.foreach(req => {
         // Build a course

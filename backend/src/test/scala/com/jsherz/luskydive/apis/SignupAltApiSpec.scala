@@ -24,35 +24,28 @@
 
 package com.jsherz.luskydive.apis
 
-import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.model.headers.HttpChallenge
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.server.AuthenticationFailedRejection.CredentialsRejected
-import akka.http.scaladsl.server.{AuthenticationFailedRejection, Directive1, Route}
 import akka.http.scaladsl.server.directives.BasicDirectives.provide
 import akka.http.scaladsl.server.directives.RouteDirectives.reject
-import akka.http.scaladsl.testkit.ScalatestRouteTest
+import akka.http.scaladsl.server.{AuthenticationFailedRejection, Directive1, Route}
 import com.jsherz.luskydive.core.Member
 import com.jsherz.luskydive.dao.{MemberDao, StubMemberDao}
-import com.jsherz.luskydive.json.{SignupAltRequest, SignupJsonSupport, SignupResponse}
 import com.jsherz.luskydive.json.MemberJsonSupport.MemberFormat
-import com.jsherz.luskydive.util.{AuthenticationDirectives, Util}
+import com.jsherz.luskydive.json.{SignupAltRequest, SignupJsonSupport, SignupResponse}
+import com.jsherz.luskydive.util.Util
 import org.mockito.Matchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.{never, verify}
-import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
-
-import scala.concurrent.ExecutionContext
 
 /**
   * Ensures the alternative sign-up endpoint functions correctly.
   */
-class SignupAltApiSpec extends WordSpec with Matchers with ScalatestRouteTest with BeforeAndAfter {
+class SignupAltApiSpec extends BaseApiSpec {
 
   private val member = Util.fixture[Member]("6066143f.json")
   private implicit val authDirective: Directive1[Member] = provide(member)
-  implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
 
   private var dao: MemberDao = Mockito.spy(new StubMemberDao())
   private var route = new SignupApi(dao).route

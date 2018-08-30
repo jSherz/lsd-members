@@ -26,9 +26,6 @@ package com.jsherz.luskydive.util
 
 import java.nio.file.Paths
 
-import com.jsherz.luskydive.Main._
-import com.jsherz.luskydive.services.DatabaseService
-
 import scala.io.{Codec, Source}
 
 /**
@@ -39,25 +36,6 @@ object Util {
   import spray.json._
 
   implicit val codec: Codec = Codec.UTF8
-
-  /**
-    * Load the golden database SQL file into our test database.
-    */
-  def setupGoldTestDb(): DatabaseService = {
-    implicit val codec = Codec.UTF8
-    val goldenSql = Source.fromURL(getClass.getResource("/test-data.sql")).mkString
-
-    val service = new DatabaseService(dbUrl, dbUsername, dbPassword)
-
-    service
-      .db
-      .createSession
-      .conn
-      .prepareStatement(goldenSql)
-      .execute()
-
-    service
-  }
 
   /**
     * Parse a JSON fixture into an object.

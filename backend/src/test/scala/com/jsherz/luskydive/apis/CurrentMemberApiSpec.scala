@@ -24,32 +24,21 @@
 
 package com.jsherz.luskydive.apis
 
-import java.util.UUID
-
-import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
-import akka.http.scaladsl.model.{HttpRequest, StatusCodes}
+import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.model.headers.HttpChallenge
-import akka.http.scaladsl.server.{AuthenticationFailedRejection, Route}
 import akka.http.scaladsl.server.AuthenticationFailedRejection.CredentialsRejected
 import akka.http.scaladsl.server.directives.BasicDirectives.provide
 import akka.http.scaladsl.server.directives.RouteDirectives.reject
-import akka.http.scaladsl.testkit.ScalatestRouteTest
+import akka.http.scaladsl.server.{AuthenticationFailedRejection, Route}
 import com.jsherz.luskydive.core.Member
 import com.jsherz.luskydive.dao.MemberDao
-import com.jsherz.luskydive.json.StrippedMember
-import com.jsherz.luskydive.util.{AuthenticationDirectives, Util}
-import com.jsherz.luskydive.util.AuthenticationDirectives.dummyChallenge
-import org.scalatest.{Matchers, WordSpec}
-import org.mockito.Matchers.any
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.{never, verify}
-import com.jsherz.luskydive.json.MemberJsonSupport._
 import com.jsherz.luskydive.json.CoursesJsonSupport.StrippedMemberFormat
+import com.jsherz.luskydive.json.MemberJsonSupport._
+import com.jsherz.luskydive.json.StrippedMember
+import com.jsherz.luskydive.util.Util
+import org.mockito.Mockito.mock
 
-class CurrentMemberApiSpec extends WordSpec with Matchers with ScalatestRouteTest {
-
-  implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
+class CurrentMemberApiSpec extends BaseApiSpec {
 
   "CurrentMemberApi#me" should {
 

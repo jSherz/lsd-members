@@ -26,31 +26,23 @@ package com.jsherz.luskydive.apis
 
 import java.util.UUID
 
-import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Route
-import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.jsherz.luskydive.dao.StubCourseDao
 import com.jsherz.luskydive.json.CoursesJsonSupport
+import com.jsherz.luskydive.json.CoursesJsonSupport._
 import com.jsherz.luskydive.util.AuthenticationDirectives
 import org.mockito.Matchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.{never, verify}
-import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
-
-import scala.concurrent.ExecutionContext
+import spray.json._
 
 /**
   * Ensures the find one course endpoint function correctly.
   */
-class CoursesGetApiSpec extends WordSpec with Matchers with ScalatestRouteTest with BeforeAndAfter {
-
-  import spray.json._
-  import CoursesJsonSupport._
+class CoursesGetApiSpec extends BaseApiSpec {
 
   private implicit val authDirective = AuthenticationDirectives.allowAll
-  implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
 
   private var dao = Mockito.spy(new StubCourseDao())
 

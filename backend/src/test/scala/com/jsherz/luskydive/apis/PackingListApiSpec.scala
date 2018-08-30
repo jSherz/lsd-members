@@ -26,15 +26,12 @@ package com.jsherz.luskydive.apis
 
 import java.util.UUID
 
-import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.model.headers.HttpChallenge
 import akka.http.scaladsl.server.AuthenticationFailedRejection.CredentialsRejected
 import akka.http.scaladsl.server.directives.BasicDirectives.provide
 import akka.http.scaladsl.server.directives.RouteDirectives.reject
 import akka.http.scaladsl.server.{AuthenticationFailedRejection, Route}
-import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.jsherz.luskydive.core.{Member, PackingListItem}
 import com.jsherz.luskydive.dao.PackingListItemDao
 import com.jsherz.luskydive.json.MemberJsonSupport._
@@ -43,15 +40,12 @@ import com.jsherz.luskydive.json.StrippedPackingListItem
 import com.jsherz.luskydive.util.Util
 import org.mockito.Matchers.any
 import org.mockito.Mockito.{mock, verify, when}
-import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
-
-import scala.concurrent.Future
 import scalaz.\/-
 
+import scala.concurrent.Future
 
-class PackingListApiSpec extends WordSpec with Matchers with ScalatestRouteTest with BeforeAndAfter {
 
-  implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
+class PackingListApiSpec extends BaseApiSpec {
 
   private val member = Util.fixture[Member]("6066143f.json")
   private val authDirective = provide(member)

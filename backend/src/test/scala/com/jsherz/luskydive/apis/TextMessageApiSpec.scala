@@ -32,7 +32,6 @@ import akka.http.scaladsl.server.AuthenticationFailedRejection.CredentialsReject
 import akka.http.scaladsl.server.directives.BasicDirectives.provide
 import akka.http.scaladsl.server.directives.RouteDirectives.reject
 import akka.http.scaladsl.server.{AuthenticationFailedRejection, Route}
-import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.jsherz.luskydive.core._
 import com.jsherz.luskydive.dao.{MemberDao, StubMemberDao, StubTextMessageDao, TextMessageDao}
 import com.jsherz.luskydive.json.CommitteeMembersJsonSupport.CommitteeMemberFormat
@@ -42,13 +41,12 @@ import com.jsherz.luskydive.util.Util
 import org.mockito.Matchers.any
 import org.mockito.Mockito.{mock, never, verify, when}
 import org.mockito.{ArgumentCaptor, Mockito}
-import org.scalatest.{Matchers, WordSpec}
-
-import scala.concurrent.Future
 import scalaz.-\/
 
+import scala.concurrent.Future
 
-class TextMessageApiSpec extends WordSpec with Matchers with ScalatestRouteTest {
+
+class TextMessageApiSpec extends BaseApiSpec {
 
   val validApiKey = "1248ytyghbjiytrfdcgvhiuojknygt6r5"
   val validReceiveUrl = s"/text-messages/receive/${validApiKey}"
@@ -70,8 +68,6 @@ class TextMessageApiSpec extends WordSpec with Matchers with ScalatestRouteTest 
   val noMessageSidReceiveRequest = FormData(validReceiveRequest.fields.toMap - "MessageSid")
 
   trait Fixtured {
-    implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
-
     val memberDao: MemberDao = Mockito.spy(new StubMemberDao())
     val dao: TextMessageDao = Mockito.spy(new StubTextMessageDao())
     val member = Util.fixture[Member]("37b50c24.json")

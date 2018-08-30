@@ -30,7 +30,7 @@ import akka.actor.ActorSystem
 import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.jsherz.luskydive.core.FBSignedRequest
-import com.jsherz.luskydive.util.FbClientFactory
+import com.jsherz.luskydive.util.{FbClientFactory, NullLogger}
 import com.restfb.FacebookClient.AccessToken
 import com.restfb.exception.{FacebookJsonMappingException, FacebookSignedRequestParsingException}
 import com.restfb.scope.ScopeBuilder
@@ -43,9 +43,9 @@ import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Random
 
-class SocialServiceSpec extends WordSpec with Matchers with ScalatestRouteTest {
+class SocialServiceSpec extends WordSpec with Matchers {
 
-  implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
+  implicit val log: LoggingAdapter = new NullLogger
 
   "SocialService#parseSignedRequest" should {
 

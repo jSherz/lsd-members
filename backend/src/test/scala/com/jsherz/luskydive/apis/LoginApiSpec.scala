@@ -24,25 +24,19 @@
 
 package com.jsherz.luskydive.apis
 
-import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.server.Route
-import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.jsherz.luskydive.dao._
 import com.jsherz.luskydive.json.LoginJsonSupport._
 import com.jsherz.luskydive.json.{LoginRequest, LoginResponse}
 import org.mockito.Matchers._
 import org.mockito.Mockito
 import org.mockito.Mockito._
-import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
 
 /**
   * Ensures the login functions correctly.
   */
-class LoginApiSpec extends WordSpec with Matchers with ScalatestRouteTest with BeforeAndAfter {
-
-  implicit val log: LoggingAdapter = Logging(ActorSystem(), getClass)
+class LoginApiSpec extends BaseApiSpec {
 
   private var dao: AuthDao = Mockito.spy(new StubAuthDao())
   private var route = new LoginApi(dao).route
