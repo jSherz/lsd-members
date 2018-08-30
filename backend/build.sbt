@@ -25,11 +25,10 @@
 import sbt.Keys._
 import wartremover.WartRemover.autoImport._
 
-val scalaV = "2.11.8"
-val akkaV = "2.4.17"
-val akkaHttpV = "10.0.6"
-val scaldiV = "0.5.7"
-val metricsV = "3.1.0"
+val scalaV = "2.12.6"
+val akkaV = "2.5.16"
+val akkaHttpV = "10.1.4"
+val scaldiV = "0.5.8"
 
 lazy val commonSettings = Seq(
   organization := "com.jsherz",
@@ -59,7 +58,7 @@ lazy val root = (project in file("."))
     libraryDependencies ++= {
       Seq(
         // Utils
-        "org.scalaz" %% "scalaz-core" % "7.2.4",
+        "org.scalaz" %% "scalaz-core" % "7.2.26",
 
         // Web framework
         "com.typesafe.akka" %% "akka-actor" % akkaV,
@@ -83,7 +82,7 @@ lazy val root = (project in file("."))
         // DB
         "org.postgresql" % "postgresql" % "9.4.1208",
         "org.flywaydb" % "flyway-core" % "4.0.3",
-        "com.typesafe.slick" %% "slick" % "3.1.1",
+        "com.typesafe.slick" %% "slick" % "3.2.3",
         "com.zaxxer" % "HikariCP" % "2.4.7",
 
         // Phone number parsing
@@ -93,8 +92,8 @@ lazy val root = (project in file("."))
         "com.twilio.sdk" % "twilio" % "7.0.0-rc-27",
 
         // Testing frameworks
-        "org.scalactic" %% "scalactic" % "2.2.6",
-        "org.scalatest" %% "scalatest" % "2.2.6" % "it,test",
+        "org.scalactic" %% "scalactic" % "3.0.5",
+        "org.scalatest" %% "scalatest" % "3.0.5" % "it,test",
         "org.mockito" % "mockito-core" % "1.10.19" % "it,test",
 
         // Utils
