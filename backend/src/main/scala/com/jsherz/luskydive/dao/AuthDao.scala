@@ -71,7 +71,7 @@ trait AuthDao {
 }
 
 class AuthDaoImpl(protected override val databaseService: DatabaseService)
-                 (implicit val ec: ExecutionContext, implicit val log: LoggingAdapter)
+                 (implicit ec: ExecutionContext, log: LoggingAdapter)
   extends Tables(databaseService) with AuthDao {
 
   import driver.api._

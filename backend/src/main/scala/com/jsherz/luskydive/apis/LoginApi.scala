@@ -41,7 +41,7 @@ import scalaz.{-\/, \/-}
 /**
   * Used to authenticate users.
   */
-class LoginApi(private val dao: AuthDao)(implicit ec: ExecutionContext, log: LoggingAdapter) {
+class LoginApi(dao: AuthDao)(implicit ec: ExecutionContext, log: LoggingAdapter) {
 
   import com.jsherz.luskydive.json.LoginJsonSupport._
 

@@ -24,10 +24,9 @@
 
 package com.jsherz.luskydive.util
 
-import akka.event.LoggingAdapter
+import scalaz.{-\/, \/}
 
 import scala.concurrent.{ExecutionContext, Future}
-import scalaz.{-\/, \/, \/-}
 
 object EitherFutureExtensions {
 

@@ -44,7 +44,7 @@ trait PackingListItemDao {
 }
 
 class PackingListItemDaoImpl(override protected val databaseService: DatabaseService)
-                            (implicit ec: ExecutionContext, implicit val log: LoggingAdapter)
+                            (implicit ec: ExecutionContext, log: LoggingAdapter)
   extends Tables(databaseService) with PackingListItemDao {
 
   import driver.api._

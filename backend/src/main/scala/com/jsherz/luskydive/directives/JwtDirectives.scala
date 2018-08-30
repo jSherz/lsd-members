@@ -35,16 +35,16 @@ import akka.http.scaladsl.server.{AuthenticationFailedRejection, Directive1}
 import com.jsherz.luskydive.core.{CommitteeMember, Member}
 import com.jsherz.luskydive.dao.{CommitteeMemberDao, MemberDao}
 import com.jsherz.luskydive.services.JwtService
-
-import scala.concurrent.{ExecutionContext, Future}
 import scalaz.{-\/, \/, \/-}
 
+import scala.concurrent.{ExecutionContext, Future}
+
 class JwtDirectives(
-                     private val jwtService: JwtService,
-                     private val memberDao: MemberDao,
-                     private val committeeMemberDao: CommitteeMemberDao
+                     jwtService: JwtService,
+                     memberDao: MemberDao,
+                     committeeMemberDao: CommitteeMemberDao
                    )
-                   (implicit val log: LoggingAdapter) {
+                   (implicit log: LoggingAdapter) {
 
   private val authHeader = "X-JWT"
 

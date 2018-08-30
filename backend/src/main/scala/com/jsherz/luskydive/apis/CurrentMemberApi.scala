@@ -32,9 +32,9 @@ import com.jsherz.luskydive.dao.MemberDao
 import com.jsherz.luskydive.json.CoursesJsonSupport._
 import com.jsherz.luskydive.json.StrippedMember
 
-class CurrentMemberApi(private val authDirective: Directive1[Member],
-                       private val memberDao: MemberDao)
-                      (implicit val log: LoggingAdapter) {
+class CurrentMemberApi(authDirective: Directive1[Member],
+                       memberDao: MemberDao)
+                      (implicit log: LoggingAdapter) {
 
   val basicInfoRoute: Route = path("me") {
     (get & authDirective) { member =>

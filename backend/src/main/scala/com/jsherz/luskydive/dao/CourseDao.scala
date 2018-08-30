@@ -32,11 +32,11 @@ import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.{CommitteeMember, Course, CourseWithOrganisers}
 import com.jsherz.luskydive.json._
 import com.jsherz.luskydive.services.DatabaseService
-import com.jsherz.luskydive.util.FutureError._
 import com.jsherz.luskydive.util.EitherFutureExtensions._
+import com.jsherz.luskydive.util.FutureError._
+import scalaz.{-\/, \/, \/-}
 
 import scala.concurrent.{ExecutionContext, Future}
-import scalaz.{-\/, \/, \/-}
 
 /**
   * Access to courses.
@@ -87,12 +87,12 @@ trait CourseDao {
   */
 class CourseDaoImpl(
                      protected override val databaseService: DatabaseService,
-                     private val committeeMemberDao: CommitteeMemberDao,
-                     private val courseSpaceDao: CourseSpaceDao
+                     committeeMemberDao: CommitteeMemberDao,
+                     courseSpaceDao: CourseSpaceDao
                    )
                    (
-                     implicit val ec: ExecutionContext,
-                     implicit val log: LoggingAdapter
+                     implicit ec: ExecutionContext,
+                     log: LoggingAdapter
                    )
   extends Tables(databaseService) with CourseDao {
 
@@ -107,14 +107,14 @@ class CourseDaoImpl(
   override def get(uuid: UUID): Future[Option[CourseWithOrganisers]] = {
     val courseLookup = for {
       ((course, organiser), secondaryOrganiser) <-
-      Courses.filter(_.uuid === uuid) join
-        CommitteeMembers on (_.organiserUuid === _.uuid) joinLeft
-        CommitteeMembers on (_._1.secondaryOrganiserUuid === _.uuid)
+        Courses.filter(_.uuid === uuid) join
+          CommitteeMembers on (_.organiserUuid === _.uuid) joinLeft
+          CommitteeMembers on (_._1.secondaryOrganiserUuid === _.uuid)
     } yield (
       course,
       (organiser.uuid, organiser.name),
       secondaryOrganiser.map(so => (so.uuid, so.name))
-      )
+    )
 
     db.run(courseLookup.result.headOption).map(_.map {
       case (course, org, secOrg) => assembleCourse(course, org, secOrg)
@@ -143,7 +143,7 @@ class CourseDaoImpl(
         course,
         spaces.length,
         spaces.length - spaces.map(_._2.memberUuid).countDefined // calc num free
-        )
+      )
     }
 
     db.run(transform.result.map(_.map(CourseWithNumSpaces.tupled(_))))
@@ -158,8 +158,8 @@ class CourseDaoImpl(
   override def spaces(uuid: UUID): Future[Seq[CourseSpaceWithMember]] = {
     val query = for {
       (space, member) <-
-      CourseSpaces.filter(_.courseUuid === uuid) joinLeft
-        Members on (_.memberUuid === _.uuid)
+        CourseSpaces.filter(_.courseUuid === uuid) joinLeft
+          Members on (_.memberUuid === _.uuid)
     } yield (space, member)
 
     db.run(query.sortBy(_._1.number).result).map {

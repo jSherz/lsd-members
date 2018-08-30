@@ -31,18 +31,18 @@ import java.util.UUID
 import akka.event.LoggingAdapter
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
-import com.jsherz.luskydive.dao.{MassTextDao, MassTextDaoErrors}
+import com.jsherz.luskydive.dao.MassTextDao
 import com.jsherz.luskydive.json.MassTextsJsonSupport._
 import com.jsherz.luskydive.json.{MassTextSendRequest, MassTextSendResponse, TryFilterRequest, TryFilterResponse}
 import com.jsherz.luskydive.util.TextMessageUtil
-
-import scala.concurrent.{ExecutionContext, Future}
 import scalaz.{-\/, \/-}
+
+import scala.concurrent.ExecutionContext
 
 /**
   * Used to send out a text message to many members.
   */
-class MassTextApi(private val dao: MassTextDao)
+class MassTextApi(dao: MassTextDao)
                  (implicit ec: ExecutionContext, authDirective: Directive1[UUID], log: LoggingAdapter) {
 
   val exampleName = "Mary"

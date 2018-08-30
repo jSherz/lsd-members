@@ -30,11 +30,10 @@ import akka.event.LoggingAdapter
 import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.CourseSpace
 import com.jsherz.luskydive.services.DatabaseService
-import com.jsherz.luskydive.util.Errors
-import com.jsherz.luskydive.util.FutureError
+import com.jsherz.luskydive.util.{Errors, FutureError}
+import scalaz.{-\/, \/, \/-}
 
 import scala.concurrent.{ExecutionContext, Future}
-import scalaz.{-\/, \/, \/-}
 
 /**
   * The available slots on a course.
@@ -84,7 +83,7 @@ trait CourseSpaceDao {
   * Stores and retrieves course spaces from the database.
   */
 class CourseSpaceDaoImpl(protected override val databaseService: DatabaseService)
-                        (implicit val ec: ExecutionContext, implicit val log: LoggingAdapter)
+                        (implicit ec: ExecutionContext, log: LoggingAdapter)
   extends Tables(databaseService) with CourseSpaceDao {
 
   import driver.api._

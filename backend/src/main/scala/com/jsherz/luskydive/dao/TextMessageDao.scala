@@ -61,7 +61,7 @@ trait TextMessageDao {
   * Used to create and access text messages stored in the database.
   */
 class TextMessageDaoImpl(protected override val databaseService: DatabaseService)
-                        (implicit val ec: ExecutionContext, implicit val log: LoggingAdapter)
+                        (implicit ec: ExecutionContext, log: LoggingAdapter)
   extends Tables(databaseService) with TextMessageDao {
 
   import driver.api._

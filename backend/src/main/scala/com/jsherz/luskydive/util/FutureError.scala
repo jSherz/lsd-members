@@ -47,7 +47,7 @@ object FutureError {
   * @param future Future to wrap with our custom error
   * @tparam V Type of value produced when the future executes
   */
-class FutureOptionError[V](future: Future[Option[V]])(implicit val log: LoggingAdapter) {
+class FutureOptionError[V](future: Future[Option[V]])(implicit log: LoggingAdapter) {
 
   /**
     * If future returns None, error with errorMessage.
@@ -71,7 +71,7 @@ class FutureOptionError[V](future: Future[Option[V]])(implicit val log: LoggingA
 
 }
 
-class FutureError[V](future: Future[V])(implicit val log: LoggingAdapter) {
+class FutureError[V](future: Future[V])(implicit log: LoggingAdapter) {
 
   /**
     * Catch any [[Throwable]] caused by a [[Future]] failing and replace it with a generic error message.

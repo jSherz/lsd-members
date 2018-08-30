@@ -27,19 +27,19 @@ package com.jsherz.luskydive.apis
 import java.sql.Timestamp
 
 import akka.event.LoggingAdapter
-import akka.http.scaladsl.server.{Directive1, Route}
 import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.server.{Directive1, Route}
 import com.jsherz.luskydive.core.Member
 import com.jsherz.luskydive.dao.MemberDao
 import com.jsherz.luskydive.json.{SignupAltRequest, SignupJsonSupport, SignupRequest, SignupResponse}
+import scalaz.{Failure, Success}
 
 import scala.concurrent.{ExecutionContext, Future}
-import scalaz.{Failure, Success}
 
 /**
   * The two methods of signing up new members at a fresher's fair (phone number or e-mail).
   */
-class SignupApi(private val memberDao: MemberDao)
+class SignupApi(memberDao: MemberDao)
                (implicit ec: ExecutionContext, authDirective: Directive1[Member], log: LoggingAdapter) {
 
   import SignupJsonSupport._

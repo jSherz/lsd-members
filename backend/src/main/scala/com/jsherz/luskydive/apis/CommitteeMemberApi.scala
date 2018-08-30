@@ -36,7 +36,7 @@ import scala.concurrent.ExecutionContext
 /**
   * Used to retrieve information about committee members.
   */
-class CommitteeMemberApi(private val dao: CommitteeMemberDao)
+class CommitteeMemberApi(dao: CommitteeMemberDao)
                         (implicit ec: ExecutionContext, authDirective: Directive1[UUID]) {
 
   /**

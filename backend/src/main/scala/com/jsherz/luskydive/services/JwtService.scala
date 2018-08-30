@@ -49,7 +49,7 @@ trait JwtService {
 
 }
 
-class JwtServiceImpl(private val jwtSecret: String)(implicit val log: LoggingAdapter) extends JwtService {
+class JwtServiceImpl(jwtSecret: String)(implicit log: LoggingAdapter) extends JwtService {
 
   private val algorithm = Algorithm.HMAC384(jwtSecret)
 

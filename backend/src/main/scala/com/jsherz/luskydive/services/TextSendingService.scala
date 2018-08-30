@@ -32,17 +32,17 @@ import com.jsherz.luskydive.dao.TextMessageDao
 import com.twilio.`type`.PhoneNumber
 import com.twilio.http.TwilioRestClient
 import com.twilio.rest.api.v2010.account.Message
-
-import scala.concurrent.{Await, Awaitable}
-import scala.concurrent.duration.Duration
 import scalaz.{-\/, \/-}
+
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Awaitable}
 
 /**
   * Finds texts to send, sends them. Repeats.
   */
-class TextSendingService(val textMessageDao: TextMessageDao,
-                         val twilioClient: TwilioRestClient,
-                         val messagingServiceSid: String)
+class TextSendingService(textMessageDao: TextMessageDao,
+                         twilioClient: TwilioRestClient,
+                         messagingServiceSid: String)
                         (implicit log: LoggingAdapter) {
 
   val errorWaitTime = 10000

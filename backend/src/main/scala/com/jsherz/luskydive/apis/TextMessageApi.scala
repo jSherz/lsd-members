@@ -37,20 +37,20 @@ import com.jsherz.luskydive.core._
 import com.jsherz.luskydive.dao.{MemberDao, TextMessageDao}
 import com.jsherz.luskydive.json.TextMessageJsonSupport._
 import com.jsherz.luskydive.util.EitherFutureExtensions._
+import scalaz.{-\/, \/-}
 
 import scala.concurrent.{ExecutionContext, Future}
-import scalaz.{-\/, \/-}
 
 
 /**
   * Handles querying of text messages & incoming messages delivered by a provider.
   */
-class TextMessageApi(val textMessageDao: TextMessageDao,
-                     val memberDao: MemberDao,
-                     val validApiKey: String,
-                     val committeeAuthDirective: Directive1[(Member, CommitteeMember)])
-                    (implicit val ec: ExecutionContext,
-                     implicit val log: LoggingAdapter) {
+class TextMessageApi(textMessageDao: TextMessageDao,
+                     memberDao: MemberDao,
+                     validApiKey: String,
+                     committeeAuthDirective: Directive1[(Member, CommitteeMember)])
+                    (implicit ec: ExecutionContext,
+                     log: LoggingAdapter) {
 
   val receiveRoute = (path("receive" / Remaining) & post & formFields('To, 'From, 'Body, 'MessageSid)) {
     (apiKey: String, to: String, from: String, body: String, externalSid: String) =>

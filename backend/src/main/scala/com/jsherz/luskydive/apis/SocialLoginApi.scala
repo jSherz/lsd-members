@@ -35,20 +35,20 @@ import akka.http.scaladsl.server.Route
 import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.{CommitteeMember, FBSignedRequest, Member}
 import com.jsherz.luskydive.dao.MemberDao
-import com.jsherz.luskydive.json.{SocialLoginRequest, SocialLoginResponse, SocialLoginUrlResponse, SocialLoginVerifyRequest}
+import com.jsherz.luskydive.json.{SocialLoginRequest, SocialLoginResponse, SocialLoginVerifyRequest}
 import com.jsherz.luskydive.services.{JwtService, SocialService}
 import com.restfb.types.User
+import scalaz.{-\/, \/-}
 
 import scala.concurrent.ExecutionContext
-import scalaz.{-\/, \/-}
 
 /**
   * Used to authenticate users with a social single-sign-on.
   */
 class SocialLoginApi(
-                      private val service: SocialService,
-                      private val memberDao: MemberDao,
-                      private val jwtService: JwtService
+                      service: SocialService,
+                      memberDao: MemberDao,
+                      jwtService: JwtService
                     )
                     (implicit ec: ExecutionContext, log: LoggingAdapter) {
 

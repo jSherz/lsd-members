@@ -31,12 +31,12 @@ import akka.event.LoggingAdapter
 import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.{MassText, Member, TextMessage, TextMessageStatuses}
 import com.jsherz.luskydive.services.DatabaseService
-import com.jsherz.luskydive.util.FutureError._
 import com.jsherz.luskydive.util.EitherFutureExtensions._
+import com.jsherz.luskydive.util.FutureError._
 import com.jsherz.luskydive.util.TextMessageUtil
+import scalaz.{-\/, \/}
 
 import scala.concurrent.{ExecutionContext, Future}
-import scalaz.{-\/, \/, \/-}
 
 /**
   * Handles recording text messages being sent to many members.
@@ -78,8 +78,8 @@ trait MassTextDao {
 
 class MassTextDaoImpl(protected override val databaseService: DatabaseService)
                      (
-                       implicit val ec: ExecutionContext,
-                       implicit val log: LoggingAdapter
+                       implicit ec: ExecutionContext,
+                       log: LoggingAdapter
                      )
   extends Tables(databaseService) with MassTextDao {
 

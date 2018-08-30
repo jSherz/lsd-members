@@ -34,7 +34,7 @@ trait FbClientFactory {
 
 }
 
-class FbClientFactoryImpl(private val version: Version) extends FbClientFactory {
+class FbClientFactoryImpl(version: Version) extends FbClientFactory {
 
   override def forAppIdAndSecret(appId: String, appSecret: String): FacebookClient = {
     val accessToken = new DefaultFacebookClient(version).obtainAppAccessToken(appId, appSecret)

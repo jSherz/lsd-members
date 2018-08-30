@@ -34,13 +34,12 @@ import com.jsherz.luskydive.core.{Member, PackingListItem}
 import com.jsherz.luskydive.dao.PackingListItemDao
 import com.jsherz.luskydive.json.PackingListJsonSupport._
 import com.jsherz.luskydive.json.StrippedPackingListItem
-
 import scalaz.{-\/, \/-}
 
 
-class PackingListApi(private val authDirective: Directive1[Member],
-                     private val dao: PackingListItemDao)
-                    (implicit val log: LoggingAdapter) {
+class PackingListApi(authDirective: Directive1[Member],
+                     dao: PackingListItemDao)
+                    (implicit log: LoggingAdapter) {
 
   private val getRoute: Route = (get & pathEnd & authDirective) { member =>
     onSuccess(dao.getOrDefault(member.uuid.get)) {

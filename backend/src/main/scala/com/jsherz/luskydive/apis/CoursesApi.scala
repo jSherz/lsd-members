@@ -42,7 +42,7 @@ import scalaz.{-\/, \/-}
 /**
   * Used to retrieve and store course information.
   */
-class CoursesApi(private val courseDao: CourseDao)
+class CoursesApi(courseDao: CourseDao)
                 (implicit ec: ExecutionContext, authDirective: Directive1[UUID], log: LoggingAdapter) {
 
   import CoursesJsonSupport._

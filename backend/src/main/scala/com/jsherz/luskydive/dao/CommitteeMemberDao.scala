@@ -66,7 +66,7 @@ trait CommitteeMemberDao {
 /**
   * Database backed committee member DAO.
   */
-class CommitteeMemberDaoImpl(protected override val databaseService: DatabaseService)(implicit val ec: ExecutionContext)
+class CommitteeMemberDaoImpl(protected override val databaseService: DatabaseService)(implicit ec: ExecutionContext)
   extends Tables(databaseService) with CommitteeMemberDao {
 
   import driver.api._

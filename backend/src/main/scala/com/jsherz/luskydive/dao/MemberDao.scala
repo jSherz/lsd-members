@@ -103,7 +103,7 @@ trait MemberDao {
 }
 
 class MemberDaoImpl(override protected val databaseService: DatabaseService)
-                   (implicit ec: ExecutionContext, implicit val log: LoggingAdapter)
+                   (implicit ec: ExecutionContext, log: LoggingAdapter)
   extends Tables(databaseService) with MemberDao {
 
   import driver.api._

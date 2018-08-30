@@ -41,7 +41,7 @@ import scalaz.{-\/, \/-}
 /**
   * Used to retrieve and store course space information.
   */
-class CourseSpacesApi(private val dao: CourseSpaceDao)
+class CourseSpacesApi(dao: CourseSpaceDao)
                      (implicit ec: ExecutionContext,
                       authDirective: Directive1[UUID],
                       log: LoggingAdapter) {
