@@ -30,7 +30,7 @@ import java.util.UUID
 import akka.event.LoggingAdapter
 import com.jsherz.luskydive.core.{MassText, TextMessage}
 import com.jsherz.luskydive.dao._
-import com.jsherz.luskydive.itest.util.{DateUtil, Util}
+import com.jsherz.luskydive.itest.util.{DateUtil, TestUtil, Util}
 import com.jsherz.luskydive.json.MassTextsJsonSupport._
 import com.jsherz.luskydive.util.NullLogger
 import org.scalatest.concurrent.ScalaFutures._
@@ -44,7 +44,7 @@ class MassTextDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
   private var dao: MassTextDao = _
   private var textMessageDao: TextMessageDao = _
 
-  implicit val patienceConfig: PatienceConfig = Util.defaultPatienceConfig
+  implicit val patienceConfig: PatienceConfig = TestUtil.defaultPatienceConfig
 
   override protected def beforeAll(): Unit = {
     implicit val log: LoggingAdapter = new NullLogger

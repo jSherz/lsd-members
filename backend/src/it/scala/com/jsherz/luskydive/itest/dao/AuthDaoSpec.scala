@@ -30,7 +30,7 @@ import java.util.UUID
 import akka.event.LoggingAdapter
 import com.jsherz.luskydive.core.ApiKey
 import com.jsherz.luskydive.dao._
-import com.jsherz.luskydive.itest.util.Util
+import com.jsherz.luskydive.itest.util.{TestUtil, Util}
 import com.jsherz.luskydive.util.NullLogger
 import org.scalatest.concurrent.ScalaFutures._
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
@@ -42,7 +42,7 @@ class AuthDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
   private var dao: AuthDao = _
 
-  implicit val patienceConfig: PatienceConfig = Util.defaultPatienceConfig
+  implicit val patienceConfig: PatienceConfig = TestUtil.defaultPatienceConfig
 
   override protected def beforeAll(): Unit = {
     implicit val log: LoggingAdapter = new NullLogger

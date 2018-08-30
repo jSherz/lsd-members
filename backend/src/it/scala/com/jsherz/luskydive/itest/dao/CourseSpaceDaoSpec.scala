@@ -28,7 +28,7 @@ import java.util.UUID
 
 import akka.event.LoggingAdapter
 import com.jsherz.luskydive.dao._
-import com.jsherz.luskydive.itest.util.Util
+import com.jsherz.luskydive.itest.util.{TestUtil, Util}
 import com.jsherz.luskydive.itest.util.Util._
 import com.jsherz.luskydive.services.DatabaseService
 import com.jsherz.luskydive.util.NullLogger
@@ -48,7 +48,7 @@ class CourseSpaceDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
   private var dao: CourseSpaceDao = _
   private var courseDao: CourseDao = _
 
-  implicit val patienceConfig: PatienceConfig = Util.defaultPatienceConfig
+  implicit val patienceConfig: PatienceConfig = TestUtil.defaultPatienceConfig
 
   override protected def beforeAll(): Unit = {
     implicit val log: LoggingAdapter = new NullLogger
