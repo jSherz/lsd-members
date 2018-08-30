@@ -28,8 +28,8 @@ import java.util.UUID
 
 import akka.event.LoggingAdapter
 import com.jsherz.luskydive.dao._
-import com.jsherz.luskydive.itest.util.{TestUtil, Util}
 import com.jsherz.luskydive.itest.util.Util._
+import com.jsherz.luskydive.itest.util.{TestUtil, Util}
 import com.jsherz.luskydive.services.DatabaseService
 import com.jsherz.luskydive.util.NullLogger
 import org.scalatest.concurrent.ScalaFutures._
