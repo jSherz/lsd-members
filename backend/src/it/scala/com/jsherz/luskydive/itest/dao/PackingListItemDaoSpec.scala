@@ -29,8 +29,7 @@ import java.util.UUID
 import akka.event.LoggingAdapter
 import com.jsherz.luskydive.core.PackingListItem
 import com.jsherz.luskydive.dao.{PackingListItemDao, PackingListItemDaoImpl}
-import com.jsherz.luskydive.itest.util.Util
-import com.jsherz.luskydive.util.NullLogger
+import com.jsherz.luskydive.itest.util.{NullLogger, TestDatabase, Util}
 import org.scalatest.concurrent.ScalaFutures._
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 import scalaz.\/-
@@ -41,14 +40,18 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class PackingListItemDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
   private var dao: PackingListItemDao = _
+  private var cleanup: () => Unit = _
 
   override protected def beforeAll(): Unit = {
     implicit val log: LoggingAdapter = new NullLogger
 
-    val dbService = Util.setupGoldTestDb()
+    val TestDatabase(dbService, cleanupFn) = Util.setupGoldTestDb()
+    cleanup = cleanupFn
 
     dao = new PackingListItemDaoImpl(databaseService = dbService)
   }
+
+  override protected def afterAll(): Unit = cleanup()
 
   "PackingListItemDao#getOrDefault" should {
 

@@ -26,11 +26,14 @@ package com.jsherz.luskydive.itest.util
 
 import java.nio.file.Paths
 
+import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.Main._
 import com.jsherz.luskydive.services.DatabaseService
 import org.flywaydb.core.Flyway
 
 import scala.io.{Codec, Source}
+
+case class TestDatabase(dbService: DatabaseService, cleanup: () => Unit)
 
 /**
   * Ensures the database is setup correctly before each test.
@@ -44,24 +47,40 @@ object Util {
   /**
     * Wipe the test database, run migrations and then load fresh test data.
     */
-  def setupGoldTestDb(): DatabaseService = {
+  def setupGoldTestDb(): TestDatabase = {
     implicit val codec = Codec.UTF8
 
-    val cleanupSql = Source.fromURL(getClass.getResource("/clean-test-db.sql")).mkString
+    //    val cleanupSql = Source.fromURL(getClass.getResource("/clean-test-db.sql")).mkString
     val goldenSql = Source.fromURL(getClass.getResource("/test-data.sql")).mkString
 
-    val service = new DatabaseService(dbUrl, dbUsername, dbPassword)
+    val masterService = new DatabaseService(dbUrl, dbUsername, dbPassword)
 
-    service
+    val schema = s"luskydive_test_${Generators.randomBasedGenerator().generate().toString.split("-")(0)}"
+
+    masterService
       .db
       .createSession
       .conn
-      .prepareStatement(cleanupSql)
+      .prepareCall(s"CREATE DATABASE ${schema} WITH OWNER ${dbUsername};")
       .execute()
 
+    val newDbUrl = {
+      val urlParts = dbUrl.split("/")
+      urlParts.slice(0, urlParts.length - 1).mkString("/") + s"/$schema"
+    }
+
     val flyway = new Flyway()
-    flyway.setDataSource(dbUrl, dbUsername, dbPassword)
+    flyway.setDataSource(newDbUrl, dbUsername, dbPassword)
     flyway.migrate()
+
+    val service = new DatabaseService(newDbUrl, dbUsername, dbPassword, Some(5))
+
+    //    service
+    //      .db
+    //      .createSession
+    //      .conn
+    //      .prepareStatement(cleanupSql)
+    //      .execute()
 
     service
       .db
@@ -70,7 +89,10 @@ object Util {
       .prepareStatement(goldenSql)
       .execute()
 
-    service
+    TestDatabase(service, () => {
+      service.db.close()
+      masterService.db.createSession.conn.prepareCall(s"DROP DATABASE ${schema};").execute()
+    })
   }
 
   /**

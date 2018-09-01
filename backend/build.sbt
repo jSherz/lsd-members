@@ -46,8 +46,6 @@ lazy val root = (project in file("."))
   .settings(commonSettings: _*)
   .settings(Defaults.itSettings: _*)
   .settings(
-    parallelExecution in IntegrationTest := false,
-
     Revolver.settings,
 
     wartremoverErrors ++= Warts.all,

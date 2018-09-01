@@ -30,10 +30,9 @@ import akka.event.LoggingAdapter
 import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.{Course, CourseStatuses, CourseWithOrganisers}
 import com.jsherz.luskydive.dao.{CommitteeMemberDaoImpl, CourseDao, CourseDaoImpl, CourseSpaceDaoImpl}
-import com.jsherz.luskydive.itest.util.{DateUtil, TestUtil, Util}
+import com.jsherz.luskydive.itest.util._
 import com.jsherz.luskydive.json.CoursesJsonSupport._
 import com.jsherz.luskydive.json.{CourseCreateRequest, CourseSpaceWithMember, CourseWithNumSpaces}
-import com.jsherz.luskydive.util.NullLogger
 import org.scalatest.concurrent.ScalaFutures._
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 import scalaz.{-\/, \/, \/-}
@@ -44,15 +43,19 @@ import scala.concurrent.Future
 class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
   private var dao: CourseDao = _
+  private var cleanup: () => Unit = _
 
   override protected def beforeAll(): Unit = {
     implicit val log: LoggingAdapter = new NullLogger
-    val dbService = Util.setupGoldTestDb()
+    val TestDatabase(dbService, cleanupFn) = Util.setupGoldTestDb()
+    cleanup = cleanupFn
 
     val committeeMemberDao = new CommitteeMemberDaoImpl(dbService)
     val courseSpaceDao = new CourseSpaceDaoImpl(dbService)
     dao = new CourseDaoImpl(dbService, committeeMemberDao, courseSpaceDao)
   }
+
+  override protected def afterAll(): Unit = cleanup()
 
   "CourseDao#get" should {
 

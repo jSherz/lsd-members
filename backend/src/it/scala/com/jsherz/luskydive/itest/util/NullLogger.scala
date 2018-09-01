@@ -22,29 +22,26 @@
   * SOFTWARE.
   */
 
-package com.jsherz.luskydive.services
+package com.jsherz.luskydive.itest.util
 
-import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
+import akka.event.LoggingAdapter
 
-/**
-  * A service that creates the HikariCP database pool and the Slick driver.
-  */
-class DatabaseService(jdbcUrl: String, username: String, password: String, maxPoolSize: Option[Int] = None) {
+class NullLogger extends LoggingAdapter {
+  override def isErrorEnabled: Boolean = false
 
-  private val hikariConfig = new HikariConfig()
-  hikariConfig.setJdbcUrl(jdbcUrl)
-  hikariConfig.setUsername(username)
-  hikariConfig.setPassword(password)
+  override def isWarningEnabled: Boolean = false
 
-  maxPoolSize.foreach(hikariConfig.setMaximumPoolSize)
+  override def isInfoEnabled: Boolean = false
 
-  private val dataSource = new HikariDataSource(hikariConfig)
+  override def isDebugEnabled: Boolean = false
 
-  val driver = slick.jdbc.PostgresProfile
+  override protected def notifyError(message: String): Unit = ???
 
-  import driver.api._
+  override protected def notifyError(cause: Throwable, message: String): Unit = ???
 
-  val db = Database.forDataSource(dataSource, None)
-  db.createSession()
+  override protected def notifyWarning(message: String): Unit = ???
 
+  override protected def notifyInfo(message: String): Unit = ???
+
+  override protected def notifyDebug(message: String): Unit = ???
 }

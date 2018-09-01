@@ -28,7 +28,7 @@ import java.util.UUID
 
 import com.jsherz.luskydive.core.CommitteeMember
 import com.jsherz.luskydive.dao.{CommitteeMemberDao, CommitteeMemberDaoImpl}
-import com.jsherz.luskydive.itest.util.Util
+import com.jsherz.luskydive.itest.util.{TestDatabase, Util}
 import com.jsherz.luskydive.json.StrippedCommitteeMember
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 import org.scalatest.concurrent.ScalaFutures._
@@ -42,12 +42,16 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class CommitteeMemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
   private var dao: CommitteeMemberDao = _
+  private var cleanup: () => Unit = _
 
   override protected def beforeAll(): Unit = {
-    val dbService = Util.setupGoldTestDb()
+    val TestDatabase(dbService, cleanupFn) = Util.setupGoldTestDb()
+    cleanup = cleanupFn
 
     dao = new CommitteeMemberDaoImpl(databaseService = dbService)
   }
+
+  override protected def afterAll(): Unit = cleanup()
 
   "CommitteeMemberDao#active" should {
 

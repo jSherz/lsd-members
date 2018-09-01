@@ -30,11 +30,10 @@ import java.util.UUID
 import akka.event.LoggingAdapter
 import com.jsherz.luskydive.core.{CommitteeMember, Member}
 import com.jsherz.luskydive.dao._
-import com.jsherz.luskydive.itest.util.{DateUtil, Util}
+import com.jsherz.luskydive.itest.util.{DateUtil, NullLogger, TestDatabase, Util}
 import com.jsherz.luskydive.json.CommitteeMembersJsonSupport.CommitteeMemberFormat
 import com.jsherz.luskydive.json.MemberJsonSupport._
 import com.jsherz.luskydive.json.MemberSearchResult
-import com.jsherz.luskydive.util.NullLogger
 import org.scalatest.concurrent.ScalaFutures._
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 import scalaz.{-\/, \/-}
@@ -47,14 +46,18 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
   private var dao: MemberDao = _
+  private var cleanup: () => Unit = _
 
   override protected def beforeAll(): Unit = {
     implicit val log: LoggingAdapter = new NullLogger
 
-    val dbService = Util.setupGoldTestDb()
+    val TestDatabase(dbService, cleanupFn) = Util.setupGoldTestDb()
+    cleanup = cleanupFn
 
     dao = new MemberDaoImpl(databaseService = dbService)
   }
+
+  override protected def afterAll(): Unit = cleanup()
 
   "MemberDao#memberExists" should {
 
