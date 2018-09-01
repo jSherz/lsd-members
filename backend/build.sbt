@@ -68,22 +68,22 @@ lazy val root = (project in file("."))
         "com.typesafe.akka" %% "akka-http-core" % akkaHttpV,
         "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpV,
         "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpV,
-        "ch.megard" %% "akka-http-cors" % "0.2.1",
+        "ch.megard" %% "akka-http-cors" % "0.3.0",
 
         // Authentication
-        "com.auth0" % "java-jwt" % "3.2.0",
+        "com.auth0" % "java-jwt" % "3.4.0",
         "com.restfb" % "restfb" % "1.40.1",
 
         // Logging
-        "ch.qos.logback" % "logback-classic" % "1.1.3",
+        "ch.qos.logback" % "logback-classic" % "1.2.3",
         "org.slf4j" % "slf4j-api" % "1.7.21",
         "org.slf4j" % "jul-to-slf4j" % "1.7.25",
 
         // DB
-        "org.postgresql" % "postgresql" % "9.4.1208",
-        "org.flywaydb" % "flyway-core" % "4.0.3",
+        "org.postgresql" % "postgresql" % "42.2.5",
+        "org.flywaydb" % "flyway-core" % "5.1.4",
         "com.typesafe.slick" %% "slick" % "3.2.3",
-        "com.zaxxer" % "HikariCP" % "2.4.7",
+        "com.zaxxer" % "HikariCP" % "2.7.8",
 
         // Phone number parsing
         "com.googlecode.libphonenumber" % "libphonenumber" % "7.4.1",

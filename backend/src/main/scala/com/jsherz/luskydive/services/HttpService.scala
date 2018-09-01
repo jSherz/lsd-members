@@ -27,19 +27,21 @@ package com.jsherz.luskydive.services
 import java.util.UUID
 
 import akka.event.LoggingAdapter
-import akka.http.scaladsl.model.HttpMethods._
+import akka.http.javadsl.model.HttpMethods._
 import akka.http.scaladsl.model.headers.{HttpOrigin, HttpOriginRange}
 import akka.http.scaladsl.model.{HttpEntity, HttpResponse, StatusCodes}
 import akka.http.scaladsl.server
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
+import ch.megard.akka.http.cors.scaladsl.CorsDirectives
+import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
 import ch.megard.akka.http.cors.scaladsl.settings.CorsSettings
-import ch.megard.akka.http.cors.scaladsl.{CorsDirectives, CorsRejection}
 import com.jsherz.luskydive.apis._
 import com.jsherz.luskydive.core.{CommitteeMember, Member}
 import com.jsherz.luskydive.dao._
 import com.jsherz.luskydive.directives.JwtDirectives
 
+import scala.collection.JavaConverters._
 import scala.concurrent.ExecutionContext
 
 /**
@@ -108,13 +110,15 @@ class HttpService(
 
 class Cors(val log: LoggingAdapter) {
 
-  private val settings = CorsSettings.defaultSettings.copy(allowedOrigins = HttpOriginRange(
-    HttpOrigin("http://localhost:4200"),
-    HttpOrigin("http://local-dev.leedsskydivers.com:4200"),
-    HttpOrigin("https://dev.leedsskydivers.com"),
-    HttpOrigin("https://www.leedsskydivers.com"),
-    HttpOrigin("https://leedsskydivers.com")
-  ), allowedMethods = scala.collection.immutable.Seq(GET, PUT, POST, HEAD, OPTIONS))
+  private val settings = CorsSettings.defaultSettings
+    .withAllowedOrigins(HttpOriginRange(
+      HttpOrigin("http://localhost:4200"),
+      HttpOrigin("http://local-dev.leedsskydivers.com:4200"),
+      HttpOrigin("https://dev.leedsskydivers.com"),
+      HttpOrigin("https://www.leedsskydivers.com"),
+      HttpOrigin("https://leedsskydivers.com")
+    ))
+    .withAllowedMethods(Seq(GET, PUT, POST, HEAD, OPTIONS).asJava)
 
   private val notFoundRoute: Route = ctx => {
     log.info(s"HTTP 404: ${ctx.request.uri}")
@@ -133,24 +137,15 @@ class Cors(val log: LoggingAdapter) {
     RejectionHandler.newBuilder()
       .handleNotFound(notFoundRoute)
       .handle {
-        case (AuthorizationFailedRejection | AuthenticationFailedRejection(_, _)) =>
+        case AuthorizationFailedRejection | AuthenticationFailedRejection(_, _) =>
           cors {
             complete {
               HttpResponse(StatusCodes.Unauthorized, entity = HttpEntity("Authorization failed"))
             }
           }
       }
-      .handle {
-        case (CorsRejection(origin, method, _)) =>
-          ctx => {
-            log.info(s"CORS rejection for origin $origin, method $method to ${ctx.request.uri} (${ctx.request.method})")
-
-            ctx.complete {
-              HttpResponse(StatusCodes.Forbidden, entity = HttpEntity("Unauthorized cross-origin request"))
-            }
-          }
-      }
       .result()
+      .withFallback(corsRejectionHandler)
   }
 
 }
