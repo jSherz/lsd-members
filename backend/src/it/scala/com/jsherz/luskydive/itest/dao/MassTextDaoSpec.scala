@@ -180,7 +180,7 @@ class MassTextDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
           massText.isDefined shouldBe true
 
           massText.foreach { mt =>
-            mt.uuid shouldEqual Some(uuid)
+            mt.uuid shouldEqual uuid
             mt.committeeMemberUuid shouldEqual UUID.fromString("f59c7cd7-3aa6-4cf9-ab3e-798b70fae6e5")
             mt.template shouldEqual "Hello, {{ name }}. How are you?!"
           }

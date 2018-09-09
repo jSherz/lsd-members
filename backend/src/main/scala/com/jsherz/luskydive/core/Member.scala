@@ -44,7 +44,7 @@ import java.util.UUID
   * @param updatedAt    When the member's record was last updated
   * @param socialUserId FB user ID
   */
-case class Member(uuid: Option[UUID], firstName: String, lastName: Option[String], phoneNumber: Option[String],
+case class Member(uuid: UUID, firstName: String, lastName: Option[String], phoneNumber: Option[String],
                   email: Option[String], lastJump: Option[Date], weight: Option[Short], height: Option[Short],
                   driver: Boolean, organiser: Boolean, createdAt: Timestamp, updatedAt: Timestamp,
                   socialUserId: Option[String])

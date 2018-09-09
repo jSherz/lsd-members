@@ -61,13 +61,13 @@ class TextMessageApi(textMessageDao: TextMessageDao,
         val lookupAndInsert = memberDao.forPhoneNumber(from).flatMap {
           _ withFutureF {
             case Some(member: Member) => {
-              val message = buildMessage(member.uuid.get, to, from, body, externalSid)
+              val message = buildMessage(member.uuid, to, from, body, externalSid)
 
               textMessageDao.insert(message).map {
                 case \/-(uuid) => {
-                  log.info(s"Text message with SID ${externalSid} saved for member ${member.uuid.get}")
+                  log.info(s"Text message with SID ${externalSid} saved for member ${member.uuid}")
 
-                  \/-(s"""<?xml version="1.0" encoding="UTF-8"?><!-- Recorded as ${message.uuid.get.toString} --><Response></Response>""")
+                  \/-(s"""<?xml version="1.0" encoding="UTF-8"?><!-- Recorded as ${message.uuid.toString} --><Response></Response>""")
                 }
                 case -\/(error) => {
                   log.error("Failed to insert text message: " + error)
@@ -125,7 +125,7 @@ class TextMessageApi(textMessageDao: TextMessageDao,
     val now = Timestamp.valueOf(LocalDateTime.now())
 
     TextMessage(
-      Some(uuid),
+      uuid,
       memberUuid,
       None,
       TextMessageStatuses.Received,

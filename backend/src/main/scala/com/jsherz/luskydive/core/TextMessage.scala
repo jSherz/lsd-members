@@ -31,7 +31,7 @@ import java.util.UUID
   * A text message that will be or has been sent to a member.
   */
 case class TextMessage(
-                        uuid: Option[UUID],
+                        uuid: UUID,
                         memberUuid: UUID,
                         massTextUuid: Option[UUID],
                         status: Short,

@@ -160,7 +160,7 @@ class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       examples.foreach(req => {
         // Build a course
         val uuid = Generators.randomBasedGenerator().generate()
-        val course = Course(Some(uuid), req.date, req.organiserUuid, req.secondaryOrganiserUuid, CourseStatuses.PENDING)
+        val course = Course(uuid, req.date, req.organiserUuid, req.secondaryOrganiserUuid, CourseStatuses.PENDING)
 
         // Insert it with the given num spaces
         val result = dao.create(course, req.numSpaces)
@@ -196,7 +196,7 @@ class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
   private def createWithFixture(fixture: String): Future[String \/ UUID] = {
     val req = Util.fixture[CourseCreateRequest](fixture)
     val uuid = Generators.randomBasedGenerator().generate()
-    val course = Course(Some(uuid), req.date, req.organiserUuid, req.secondaryOrganiserUuid, CourseStatuses.PENDING)
+    val course = Course(uuid, req.date, req.organiserUuid, req.secondaryOrganiserUuid, CourseStatuses.PENDING)
 
     dao.create(course, req.numSpaces)
   }

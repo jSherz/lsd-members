@@ -61,7 +61,7 @@ class MemberApiSpec extends BaseApiSpec {
 
   // TODO: Move to fixture?
   private val exampleUuid = UUID.fromString("a9e6ba54-2040-4060-9297-2f40a64e388c")
-  private val exampleMember = Member(Some(exampleUuid), "Lance", Some("Scott"), Some("+447802070397"),
+  private val exampleMember = Member(exampleUuid, "Lance", Some("Scott"), Some("+447802070397"),
     Some("nathansmith@tucker-estes.com"), Some(DateUtil.makeDate(2012, 12, 24)), None, None, false, false,
     DateUtil.makeTimestamp(2008, 11, 14), DateUtil.makeTimestamp(2016, 1, 29), None)
 
@@ -303,7 +303,7 @@ class MemberApiSpec extends BaseApiSpec {
     }
 
     "return the correct error code and message when creating a member fails" in new Fixtured {
-      val errorMember = exampleMember.copy(uuid = Some(StubMemberDao.createErrorUuid))
+      val errorMember = exampleMember.copy(uuid = StubMemberDao.createErrorUuid)
 
       Post(createMemberUrl, errorMember) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.InternalServerError

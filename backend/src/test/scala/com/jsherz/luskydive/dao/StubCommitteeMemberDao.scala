@@ -55,9 +55,9 @@ class StubCommitteeMemberDao extends CommitteeMemberDao {
     * @return
     */
   override def get(uuid: UUID): Future[Option[CommitteeMember]] = {
-    if (StubCommitteeMemberDao.foundMember.uuid.get.equals(uuid)) {
+    if (StubCommitteeMemberDao.foundMember.uuid == uuid) {
       Future.successful(Some(StubCommitteeMemberDao.foundMember))
-    } else if (StubCommitteeMemberDao.notFoundMemberUuid.equals(uuid)) {
+    } else if (StubCommitteeMemberDao.notFoundMemberUuid == uuid) {
       Future.successful(None)
     } else {
       throw new RuntimeException("Unknown UUID used with stub")

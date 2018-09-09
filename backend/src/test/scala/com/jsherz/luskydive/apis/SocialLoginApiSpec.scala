@@ -277,7 +277,7 @@ class SocialLoginApiSpec extends BaseApiSpec {
         socialResponse.jwt foreach { jwt =>
           val decoded = JWT.decode(jwt)
 
-          decoded.getClaim("UUID").asString() shouldEqual member.uuid.get.toString
+          decoded.getClaim("UUID").asString() shouldEqual member.uuid.toString
         }
       }
     }
@@ -301,7 +301,7 @@ class SocialLoginApiSpec extends BaseApiSpec {
       // Return the passed in UUID when the member is created
       when(memberDao.create(any[Member])).thenAnswer(new Answer[Future[String \/ UUID]]() {
         override def answer(invocation: InvocationOnMock): Future[String \/ UUID] = {
-          Future.successful(\/-(invocation.getArgumentAt(0, classOf[Member]).uuid.get))
+          Future.successful(\/-(invocation.getArgumentAt(0, classOf[Member]).uuid))
         }
       })
 
@@ -328,7 +328,7 @@ class SocialLoginApiSpec extends BaseApiSpec {
           createdMember.email shouldEqual Some("farm@localhost.farms")
 
           val decoded = JWT.decode(jwt)
-          decoded.getClaim("UUID").asString() shouldEqual createdMemberCaptor.getValue.uuid.get.toString
+          decoded.getClaim("UUID").asString() shouldEqual createdMemberCaptor.getValue.uuid.toString
         }
       }
     }

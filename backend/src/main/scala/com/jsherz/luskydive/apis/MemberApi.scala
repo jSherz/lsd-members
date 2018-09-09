@@ -86,7 +86,7 @@ class MemberApi(memberDao: MemberDao, textMessageDao: TextMessageDao)
   }
 
   val updateRoute = (path(JavaUUID) & put & authDirective & entity(as[Member])) { (memberUuid, _, member) =>
-    if (member.uuid.contains(memberUuid)) {
+    if (member.uuid == memberUuid) {
       onSuccess(memberDao.update(member)) {
         case \/-(returnedMember) => complete(returnedMember)
         case -\/(error) => complete(StatusCodes.InternalServerError, error)

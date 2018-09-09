@@ -232,7 +232,7 @@ class CourseSpaceDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
           val spaces = courseDao.spaces(courseUuid).futureValue
 
-          val matchingSpace = spaces.find(_.uuid contains spaceUuid)
+          val matchingSpace = spaces.find(_.uuid == spaceUuid)
 
           matchingSpace shouldBe defined
           matchingSpace.foreach { space =>

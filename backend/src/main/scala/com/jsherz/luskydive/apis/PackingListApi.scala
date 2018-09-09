@@ -42,7 +42,7 @@ class PackingListApi(authDirective: Directive1[Member],
                     (implicit log: LoggingAdapter) {
 
   private val getRoute: Route = (get & pathEnd & authDirective) { member =>
-    onSuccess(dao.getOrDefault(member.uuid.get)) {
+    onSuccess(dao.getOrDefault(member.uuid)) {
       case \/-(packingListItem: PackingListItem) => complete(stripPackingList(packingListItem))
       case -\/(error: String) =>
         log.error(s"Failed to load packing list for ${member.uuid}: $error")
@@ -51,7 +51,7 @@ class PackingListApi(authDirective: Directive1[Member],
   }
 
   private val upsertRoute: Route = (put & pathEnd & authDirective & entity(as[StrippedPackingListItem])) { (member, packingListItem) =>
-    onSuccess(dao.upsert(addUuidToPackingList(member.uuid.get, packingListItem))) {
+    onSuccess(dao.upsert(addUuidToPackingList(member.uuid, packingListItem))) {
       case \/-(_) => complete(StatusCodes.OK)
       case -\/(error: String) =>
         log.error(s"Failed to update packing list for ${member.uuid}: $error")

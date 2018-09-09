@@ -91,7 +91,7 @@ class SocialLoginApi(
   private def useOrCreateMemberAndIssueJwt(maybeMember: Option[(Member, Option[CommitteeMember])], user: User): Route = {
     maybeMember match {
       case Some(member: (Member, Option[CommitteeMember])) =>
-        val jwt = generateJwt(member._1.uuid.get)
+        val jwt = generateJwt(member._1.uuid)
 
         complete(SocialLoginResponse(success = true, None, Some(jwt), committeeMember = member._2.isDefined))
 
@@ -105,7 +105,7 @@ class SocialLoginApi(
   private def issueJwtForMemberLookup(userId: String)(maybeMember: Option[(Member, Option[CommitteeMember])]): Route = {
     maybeMember match {
       case Some(member: (Member, Option[CommitteeMember])) =>
-        val jwt = generateJwt(member._1.uuid.get)
+        val jwt = generateJwt(member._1.uuid)
 
         complete(SocialLoginResponse(success = true, None, Some(jwt), committeeMember = member._2.isDefined))
 
@@ -145,7 +145,7 @@ class SocialLoginApi(
 
   private def buildMemberForSocialId(userId: String, firstName: String, lastName: String, email: String): Member = {
     Member(
-      uuid = Some(Generators.randomBasedGenerator.generate), firstName, Option(lastName), phoneNumber = None,
+      uuid = Generators.randomBasedGenerator.generate(), firstName, Option(lastName), phoneNumber = None,
       email = Option(email), lastJump = None, weight = None, height = None, driver = false, organiser = false,
       createdAt = Timestamp.valueOf(LocalDateTime.now()), updatedAt = Timestamp.valueOf(LocalDateTime.now()),
       socialUserId = Some(userId)

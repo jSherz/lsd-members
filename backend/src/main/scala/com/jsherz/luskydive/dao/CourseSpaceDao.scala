@@ -101,7 +101,7 @@ class CourseSpaceDaoImpl(protected override val databaseService: DatabaseService
       // Prepare a DBIO action to add the spaces
       val createSpacesAction = DBIO.sequence(
         (1 to numSpaces).map { number =>
-          val uuid = Some(Generators.randomBasedGenerator().generate())
+          val uuid = Generators.randomBasedGenerator().generate()
 
           CourseSpaces += CourseSpace(uuid, courseUuid, number, None, depositPaid = false)
         }

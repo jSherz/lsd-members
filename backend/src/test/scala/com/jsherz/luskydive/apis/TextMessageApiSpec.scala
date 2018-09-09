@@ -130,7 +130,7 @@ class TextMessageApiSpec extends BaseApiSpec {
 
         response.status shouldBe StatusCodes.OK
         response.entity.contentType shouldEqual ContentTypes.`text/xml(UTF-8)`
-        responseAs[String] shouldEqual "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!-- Recorded as " + message.uuid.get + " --><Response></Response>"
+        responseAs[String] shouldEqual "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!-- Recorded as " + message.uuid + " --><Response></Response>"
       }
     }
 

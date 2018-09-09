@@ -131,10 +131,8 @@ class MemberDaoImpl(override protected val databaseService: DatabaseService)
     * @return UUID if creation succeeded
     */
   override def create(member: Member): Future[String \/ UUID] = {
-    val uuid = member.uuid.getOrElse(Generators.randomBasedGenerator().generate())
-
     if (member.phoneNumber.isDefined || member.email.isDefined) {
-      db.run((Members returning Members.map(_.uuid)) += member.copy(uuid = Some(uuid))) withServerError
+      db.run((Members returning Members.map(_.uuid)) += member) withServerError
     } else {
       Future.successful(-\/(MemberDaoErrors.noPhoneNumberOrEmail))
     }

@@ -207,7 +207,7 @@ class CourseDaoImpl(
         courseUuid <- organiser withFutureF { _ =>
           secondaryOrganiser withFutureF { maybeSecondaryOrganiser =>
             db.run(coursesReturningUuid +=
-              course.copy(secondaryOrganiserUuid = maybeSecondaryOrganiser.flatMap(_.uuid))) withServerError
+              course.copy(secondaryOrganiserUuid = maybeSecondaryOrganiser.flatMap(co => Some(co.uuid)))) withServerError
           }
         }
         // Add the spaces
@@ -219,8 +219,6 @@ class CourseDaoImpl(
       Future.successful(-\/(CourseSpaceDaoErrors.invalidNumSpaces))
     }
   }
-
-  private def generateUuid(): UUID = Generators.randomBasedGenerator().generate()
 
   private def coursesReturningUuid(): driver.ReturningInsertActionComposer[Course, UUID] =
     Courses returning Courses.map(_.uuid)

@@ -62,5 +62,5 @@ case class MemberSearchRequest(searchTerm: String)
   * @param phoneNumber
   * @param email
   */
-case class MemberSearchResult(uuid: Option[UUID], firstName: String, lastName: Option[String], phoneNumber: Option[String],
+case class MemberSearchResult(uuid: UUID, firstName: String, lastName: Option[String], phoneNumber: Option[String],
                               email: Option[String])

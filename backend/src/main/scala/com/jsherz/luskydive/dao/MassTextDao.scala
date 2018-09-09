@@ -168,7 +168,7 @@ class MassTextDaoImpl(protected override val databaseService: DatabaseService)
 
   private def create(committeeMemberUuid: UUID, template: String, createdAt: Timestamp): Future[UUID] = {
     val massText = MassText(
-      Some(Generators.randomBasedGenerator.generate),
+      Generators.randomBasedGenerator.generate(),
       committeeMemberUuid,
       template,
       createdAt
@@ -181,8 +181,8 @@ class MassTextDaoImpl(protected override val databaseService: DatabaseService)
     val message = TextMessageUtil.parseTemplate(template, member.firstName)
 
     val textMessage = TextMessage(
-      Some(Generators.randomBasedGenerator.generate),
-      member.uuid.get,
+      Generators.randomBasedGenerator.generate(),
+      member.uuid,
       Some(massTextUuid),
       TextMessageStatuses.Pending,
       member.phoneNumber.get,

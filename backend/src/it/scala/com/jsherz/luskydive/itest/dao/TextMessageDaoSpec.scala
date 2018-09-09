@@ -97,7 +97,7 @@ class TextMessageDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
       result.isRight shouldBe true
       result.map { uuid =>
-        Some(uuid) shouldEqual text.uuid
+        uuid shouldEqual text.uuid
 
         val created = dao.get(uuid).futureValue
         created.isRight shouldBe true
@@ -113,7 +113,7 @@ class TextMessageDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
       result.isRight shouldBe true
       result.map { uuid =>
-        Some(uuid) shouldEqual text.uuid
+        uuid shouldEqual text.uuid
 
         val created = dao.get(uuid).futureValue
         created.isRight shouldBe true
@@ -129,7 +129,7 @@ class TextMessageDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
       result.isRight shouldBe true
       result.map { uuid =>
-        Some(uuid) shouldEqual text.uuid
+        uuid shouldEqual text.uuid
 
         val created = dao.get(uuid).futureValue
         created.isRight shouldBe true

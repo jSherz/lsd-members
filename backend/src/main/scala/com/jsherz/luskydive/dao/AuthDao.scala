@@ -226,7 +226,7 @@ class AuthDaoImpl(protected override val databaseService: DatabaseService)
     val createdAt = time
     val expiresAt = addHoursToTimestamp(createdAt, API_KEY_EXPIRES)
 
-    val createdKey = ApiKey(key, committeeMember.uuid.get, createdAt, expiresAt)
+    val createdKey = ApiKey(key, committeeMember.uuid, createdAt, expiresAt)
 
     db.run(
       (ApiKeys += createdKey).map(_ => createdKey)

@@ -30,4 +30,4 @@ import java.util.UUID
 /**
   * A record of a text being sent to a set of members.
   */
-case class MassText(uuid: Option[UUID], committeeMemberUuid: UUID, template: String, createdAt: Timestamp)
+case class MassText(uuid: UUID, committeeMemberUuid: UUID, template: String, createdAt: Timestamp)

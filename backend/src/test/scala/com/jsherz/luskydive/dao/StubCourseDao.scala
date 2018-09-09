@@ -93,7 +93,7 @@ class StubCourseDao()(implicit ec: ExecutionContext) extends CourseDao {
   override def create(course: Course, numSpaces: Int): Future[String \/ UUID] = {
     Future.successful {
       if (numSpaces >= CourseSpaceDaoImpl.MIN_SPACES && numSpaces <= CourseSpaceDaoImpl.MAX_SPACES) {
-        \/-(course.uuid.get)
+        \/-(course.uuid)
       } else {
         -\/("error.invalidNumSpaces")
       }
@@ -106,7 +106,7 @@ object StubCourseDao {
 
   val validCourse = Util.fixture[CourseWithOrganisers]("aaf47dc8.json")
 
-  val validCourseUuid = validCourse.course.uuid.get
+  val validCourseUuid = validCourse.course.uuid
 
   val validCourseSpaces = Util.fixture[Seq[CourseSpaceWithMember]]("aaf47dc8.json")
 

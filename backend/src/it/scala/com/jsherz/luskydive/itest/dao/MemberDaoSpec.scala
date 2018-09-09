@@ -117,7 +117,7 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       val createdAt = Timestamp.valueOf("2016-08-13 21:13:37.10101")
       val updatedAt = Timestamp.valueOf("2016-08-13 21:14:10.00101")
 
-      val member = Member(None, "Tegan", Some("Harper"), None, None, None, None, None, false, false, createdAt,
+      val member = Member(UUID.fromString("2fb4b6bd-9567-42cf-b466-2124c02a49f6"), "Tegan", Some("Harper"), None, None, None, None, None, false, false, createdAt,
         updatedAt, None)
       val result = dao.create(member)
 
@@ -128,7 +128,7 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       val createdAt = Timestamp.valueOf("2009-01-20 10:19:59.10101")
       val updatedAt = Timestamp.valueOf("2009-01-21 18:10:10.123814")
 
-      val member = Member(None, "Keira", Some("Rahman"), Some("+447916149532"), Some("KeiraRahman@armyspy.com"),
+      val member = Member(UUID.fromString("31a43b3a-b4a7-4b79-b22d-75e517ab2e0f"), "Keira", Some("Rahman"), Some("+447916149532"), Some("KeiraRahman@armyspy.com"),
         Some(DateUtil.makeDate(2011, 5, 9)), None, None, false, false, createdAt, updatedAt, None)
 
       val futureResult = dao.create(member)
@@ -138,7 +138,7 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
       result.map { uuid =>
         val foundMember = dao.get(uuid)
-        foundMember.futureValue shouldBe \/-(Some(member.copy(uuid = Some(uuid))))
+        foundMember.futureValue shouldBe \/-(Some(member.copy(uuid = uuid)))
       }
     }
 
@@ -146,7 +146,7 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       val createdAt = Timestamp.valueOf("2009-01-20 10:19:59.10101")
       val updatedAt = Timestamp.valueOf("2009-01-21 18:10:10.812728")
 
-      val member = Member(Some(UUID.fromString("da53db07-72b5-40e5-88a6-caa4e3d41403")), "Spencer", Some("Burton"),
+      val member = Member(UUID.fromString("da53db07-72b5-40e5-88a6-caa4e3d41403"), "Spencer", Some("Burton"),
         Some("+447938921821"), Some("sburton@theburtons.xyz"), None, None, None, false, false, createdAt, updatedAt,
         None)
 
@@ -159,34 +159,6 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
         val foundMember = dao.get(uuid)
         foundMember.futureValue shouldBe \/-(Some(member))
       }
-    }
-
-    "generates a different UUID with each creation" in {
-      val createdAt = Timestamp.valueOf("2016-08-14 12:13:00")
-      val updatedAt = Timestamp.valueOf("2016-08-14 12:13:01")
-      val memberA = Member(None, "Alisha", Some("Stevens"), Some("+447985203839"), Some("AlishaStevens@yahoo.com"),
-        None, None, None, false, false, createdAt, updatedAt, None)
-      val memberB = Member(None, "Hollie", Some("Hammond"), Some("+447885929137"), Some("x_x_hollie_x_x@fanmail.com"),
-        None, None, None, false, false, createdAt, updatedAt, None)
-      val memberC = Member(None, "Kayleigh", Some("Barker"), Some("+447043025413"), Some("kay_kay100101@hotmail.co.uk"),
-        None, None, None, false, false, createdAt, updatedAt, None)
-
-      val memberAUuid = dao.create(memberA).futureValue
-      val memberBUuid = dao.create(memberB).futureValue
-      val memberCUuid = dao.create(memberC).futureValue
-
-      memberAUuid.isRight shouldBe true
-      memberBUuid.isRight shouldBe true
-      memberCUuid.isRight shouldBe true
-
-      memberAUuid shouldNot equal(memberBUuid)
-      memberAUuid shouldNot equal(memberCUuid)
-
-      memberBUuid shouldNot equal(memberAUuid)
-      memberBUuid shouldNot equal(memberCUuid)
-
-      memberCUuid shouldNot equal(memberAUuid)
-      memberCUuid shouldNot equal(memberBUuid)
     }
 
   }
@@ -306,7 +278,7 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       result.isRight shouldBe true
       result.map(_ shouldEqual memberWithDiffInfo)
 
-      val doubleCheck = dao.get(memberWithDiffInfo.uuid.get).futureValue
+      val doubleCheck = dao.get(memberWithDiffInfo.uuid).futureValue
 
       doubleCheck.isRight shouldBe true
       doubleCheck.map(_ shouldEqual Some(memberWithDiffInfo))

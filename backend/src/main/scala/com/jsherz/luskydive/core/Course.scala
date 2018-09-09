@@ -30,7 +30,7 @@ import java.util.UUID
 /**
   * A (typically static line) course, booked on a particular day.
   */
-case class Course(uuid: Option[UUID], date: Date, organiserUuid: UUID, secondaryOrganiserUuid: Option[UUID], status: Int)
+case class Course(uuid: UUID, date: Date, organiserUuid: UUID, secondaryOrganiserUuid: Option[UUID], status: Int)
 
 /**
   * Possible states that a course can be in.

@@ -113,7 +113,7 @@ class Tables(protected val databaseService: DatabaseService) {
 
     def socialUserId: Rep[Option[String]] = column[Option[String]]("social_user_id")
 
-    def * = (uuid.?, firstName, lastName, phoneNumber, email, lastJump,
+    def * = (uuid, firstName, lastName, phoneNumber, email, lastJump,
       weight, height, driver, organiser, createdAt, updatedAt, socialUserId) <> (Member.tupled, Member.unapply)
 
   }
@@ -135,7 +135,7 @@ class Tables(protected val databaseService: DatabaseService) {
 
     def createdAt: Rep[Timestamp] = column[Timestamp]("created_at")
 
-    def * = (uuid.?, committeeMemberUuid, template, createdAt) <> (MassText.tupled, MassText.unapply)
+    def * = (uuid, committeeMemberUuid, template, createdAt) <> (MassText.tupled, MassText.unapply)
 
   }
 
@@ -170,7 +170,7 @@ class Tables(protected val databaseService: DatabaseService) {
 
     def updatedAt: Rep[Timestamp] = column[Timestamp]("updated_at")
 
-    def * = (uuid.?, memberUuid, massTextUuid, status, toNumber, fromNumber, message, externalId, fromMember, createdAt,
+    def * = (uuid, memberUuid, massTextUuid, status, toNumber, fromNumber, message, externalId, fromMember, createdAt,
       updatedAt) <> (TextMessage.tupled, TextMessage.unapply)
 
   }
@@ -223,7 +223,7 @@ class Tables(protected val databaseService: DatabaseService) {
 
     def updatedAt: Rep[Timestamp] = column[Timestamp]("updated_at")
 
-    def * = (uuid.?, memberUuid, name, email, password, salt, locked, createdAt, updatedAt) <> (CommitteeMember.tupled, CommitteeMember.unapply)
+    def * = (uuid, memberUuid, name, email, password, salt, locked, createdAt, updatedAt) <> (CommitteeMember.tupled, CommitteeMember.unapply)
 
   }
 
@@ -246,7 +246,7 @@ class Tables(protected val databaseService: DatabaseService) {
 
     def status: Rep[Int] = column[Int]("status")
 
-    def * = (uuid.?, date, organiserUuid, secondaryOrganiserUuid, status) <> (Course.tupled, Course.unapply)
+    def * = (uuid, date, organiserUuid, secondaryOrganiserUuid, status) <> (Course.tupled, Course.unapply)
 
   }
 
@@ -272,7 +272,7 @@ class Tables(protected val databaseService: DatabaseService) {
     def course: ForeignKeyQuery[CoursesTable, Course] =
       foreignKey("course_spaces_course_uuid_number_key", courseUuid, Courses)(_.uuid, ForeignKeyAction.Cascade)
 
-    def * = (uuid.?, courseUuid, number, memberUuid, depositPaid) <> (CourseSpace.tupled, CourseSpace.unapply)
+    def * = (uuid, courseUuid, number, memberUuid, depositPaid) <> (CourseSpace.tupled, CourseSpace.unapply)
 
   }
 

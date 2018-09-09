@@ -62,7 +62,7 @@ class TextSendingService(textMessageDao: TextMessageDao,
 
         for (text <- texts) {
           try {
-            log.info(s"Attempting to send text ${text.uuid.get} to ${text.toNumber}")
+            log.info(s"Attempting to send text ${text.uuid} to ${text.toNumber}")
 
             val message = Message.create(
               new PhoneNumber(text.toNumber),
@@ -79,7 +79,7 @@ class TextSendingService(textMessageDao: TextMessageDao,
               status = TextMessageStatuses.Sent
             )))
 
-            log.info(s"Updated text message ${text.uuid.get} to have status Sent")
+            log.info(s"Updated text message ${text.uuid} to have status Sent")
 
             try {
               log.info("Trying to get message from number (sleeping first)")
@@ -118,7 +118,7 @@ class TextSendingService(textMessageDao: TextMessageDao,
                 status = TextMessageStatuses.Error
               )))
 
-              log.info(s"Updated text message ${text.uuid.get} to have status Error.")
+              log.info(s"Updated text message ${text.uuid} to have status Error.")
             }
           }
         }

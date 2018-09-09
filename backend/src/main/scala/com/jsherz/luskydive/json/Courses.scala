@@ -71,7 +71,7 @@ case class CourseWithNumSpaces(course: Course, totalSpaces: Int, spacesFree: Int
   * @param lastName
   * @param createdAt The date the member joined
   */
-case class StrippedMember(uuid: Option[UUID], firstName: String, lastName: Option[String], createdAt: Timestamp)
+case class StrippedMember(uuid: UUID, firstName: String, lastName: Option[String], createdAt: Timestamp)
 
 /**
   * A course space, including stripped member.
@@ -81,7 +81,7 @@ case class StrippedMember(uuid: Option[UUID], firstName: String, lastName: Optio
   * @param number
   * @param member
   */
-case class CourseSpaceWithMember(uuid: Option[UUID], courseUuid: UUID, number: Int, depositPaid: Boolean,
+case class CourseSpaceWithMember(uuid: UUID, courseUuid: UUID, number: Int, depositPaid: Boolean,
                                  member: Option[StrippedMember])
 
 /**

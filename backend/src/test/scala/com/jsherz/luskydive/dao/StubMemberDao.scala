@@ -62,10 +62,10 @@ class StubMemberDao()(implicit val ec: ExecutionContext) extends MemberDao {
     */
   override def create(member: Member): Future[String \/ UUID] = {
     Future.successful {
-      member.uuid match {
-        case Some(StubMemberDao.createErrorUuid) => -\/(Errors.internalServer)
-        case Some(uuid) => \/-(uuid)
-        case None => \/-(Generators.randomBasedGenerator().generate())
+      if (member.uuid == StubMemberDao.createErrorUuid) {
+        -\/(Errors.internalServer)
+      } else {
+        \/-(member.uuid)
       }
     }
   }
@@ -144,9 +144,9 @@ class StubMemberDao()(implicit val ec: ExecutionContext) extends MemberDao {
     */
   override def update(member: Member): Future[\/[String, Member]] = {
     Future.successful {
-      if (member.uuid.contains(StubMemberDao.updateUuid)) {
+      if (member.uuid == StubMemberDao.updateUuid) {
         \/-(member)
-      } else if (member.uuid.contains(StubMemberDao.updateErrorUuid)) {
+      } else if (member.uuid == StubMemberDao.updateErrorUuid) {
         -\/(Errors.internalServer)
       } else {
         throw new RuntimeException("unknown uuid used with stub")

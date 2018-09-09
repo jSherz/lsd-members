@@ -44,7 +44,7 @@ class StubTextMessageDao extends TextMessageDao {
   override def get(uuid: UUID): Future[\/[String, Option[TextMessage]]] = ???
 
   override def insert(textMessage: TextMessage): Future[\/[String, UUID]] = {
-    Future.successful(\/-(textMessage.uuid.get))
+    Future.successful(\/-(textMessage.uuid))
   }
 
   override def forMember(memberUuid: UUID): Future[String \/ Seq[TextMessage]] = {

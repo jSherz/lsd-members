@@ -29,6 +29,7 @@ import java.sql.Timestamp
 import akka.event.LoggingAdapter
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{Directive1, Route}
+import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.Member
 import com.jsherz.luskydive.dao.MemberDao
 import com.jsherz.luskydive.json.{SignupAltRequest, SignupJsonSupport, SignupRequest, SignupResponse}
@@ -56,7 +57,8 @@ class SignupApi(memberDao: MemberDao)
           case true => Future.successful(SignupResponse(false, Map("phoneNumber" -> "error.inUse")))
           case false => {
             val createdAt = currentTimestamp()
-            val member = Member(None, req.name, None, Some(phoneNumber), None, None, None, None, false, false,
+            val uuid = Generators.randomBasedGenerator().generate()
+            val member = Member(uuid, req.name, None, Some(phoneNumber), None, None, None, None, false, false,
               createdAt, createdAt, None)
 
             memberDao.create(member).map { _ =>
@@ -91,7 +93,8 @@ class SignupApi(memberDao: MemberDao)
           case true => Future.successful(SignupResponse(false, Map("email" -> "error.inUse")))
           case false => {
             val createdAt = currentTimestamp()
-            val member = Member(None, req.name, None, None, Some(req.email), None, None, None, false, false, createdAt,
+            val uuid = Generators.randomBasedGenerator().generate()
+            val member = Member(uuid, req.name, None, None, Some(req.email), None, None, None, false, false, createdAt,
               createdAt, None)
 
             memberDao.create(member).map { _ =>

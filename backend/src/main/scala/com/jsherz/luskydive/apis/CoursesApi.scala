@@ -27,17 +27,17 @@ package com.jsherz.luskydive.apis
 import java.util.UUID
 
 import akka.event.LoggingAdapter
-import akka.http.scaladsl.server.{Directive1, Route}
-import akka.http.scaladsl.server.PathMatchers.JavaUUID
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.server.PathMatchers.JavaUUID
+import akka.http.scaladsl.server.{Directive1, Route}
 import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.{Course, CourseStatuses}
 import com.jsherz.luskydive.dao.CourseDao
 import com.jsherz.luskydive.json.{CourseCreateRequest, CourseCreateResponse, CoursesJsonSupport, CoursesListRequest}
+import scalaz.{-\/, \/-}
 
 import scala.concurrent.ExecutionContext
-import scalaz.{-\/, \/-}
 
 /**
   * Used to retrieve and store course information.
@@ -127,9 +127,9 @@ class CoursesApi(courseDao: CourseDao)
     val uuid = Generators.randomBasedGenerator().generate()
 
     (
-      Course(Some(uuid), req.date, req.organiserUuid, req.secondaryOrganiserUuid, CourseStatuses.PENDING),
+      Course(uuid, req.date, req.organiserUuid, req.secondaryOrganiserUuid, CourseStatuses.PENDING),
       req.numSpaces
-      )
+    )
   }
 
 }

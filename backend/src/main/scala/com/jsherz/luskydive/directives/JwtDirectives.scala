@@ -52,7 +52,7 @@ class JwtDirectives(
     */
   def authenticateCommitteeWithJwt: Directive1[(Member, CommitteeMember)] = {
     authenticateWithJwt.flatMap { member =>
-      onSuccess(committeeMemberDao.get(member.uuid.get)).flatMap {
+      onSuccess(committeeMemberDao.get(member.uuid)).flatMap {
         case Some(committeeMember) =>
           if (committeeMember.locked) {
             log.error(s"member ${member.uuid} attempted to authenticate but was locked")

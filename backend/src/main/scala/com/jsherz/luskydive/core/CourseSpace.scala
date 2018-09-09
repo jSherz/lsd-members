@@ -29,4 +29,4 @@ import java.util.UUID
 /**
   * One space on a course that may be filled (shown by member UUID being present).
   */
-case class CourseSpace(uuid: Option[UUID], courseUuid: UUID, number: Int, memberUuid: Option[UUID], depositPaid: Boolean)
+case class CourseSpace(uuid: UUID, courseUuid: UUID, number: Int, memberUuid: Option[UUID], depositPaid: Boolean)
