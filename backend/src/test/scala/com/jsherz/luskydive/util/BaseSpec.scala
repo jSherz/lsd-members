@@ -24,35 +24,6 @@
 
 package com.jsherz.luskydive.util
 
-/**
-  * Ensures the text message sending utilities work correctly.
-  */
-class TextMessageUtilSpec extends BaseSpec {
+import org.scalatest.{Matchers, WordSpec}
 
-  "TextMessageUtil#parseTemplate" should {
-
-    "not match any tags that aren't name" in {
-      val result = TextMessageUtil.parseTemplate("{{ names }}", "Jonathan")
-
-      result shouldEqual "{{ names }}" + TextMessageUtil.optOut
-    }
-
-    "replace the name tag multiple times" in {
-      val result = TextMessageUtil.parseTemplate("Hello, {{ name }}. Your name is {{ name}}!", "Michelle")
-
-      result shouldEqual "Hello, Michelle. Your name is Michelle!" + TextMessageUtil.optOut
-    }
-
-    "replace tags with spaces around the word 'name'" in {
-      val examples = Seq("{{name}}", "{{  name  }}", "{{name }}", "{{ name}}")
-
-      examples.foreach { example =>
-        val result = TextMessageUtil.parseTemplate(example, "Sharon")
-
-        result shouldEqual "Sharon" + TextMessageUtil.optOut
-      }
-    }
-
-  }
-
-}
+class BaseSpec extends WordSpec with Matchers

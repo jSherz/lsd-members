@@ -27,12 +27,22 @@ package com.jsherz.luskydive.util
 import java.sql.{Date, Timestamp}
 import java.util.GregorianCalendar
 
-import org.scalatest.{Matchers, WordSpec}
-
 /**
   * Utility method for working with [[java.sql.Date]]s.
   */
 object DateUtil {
+
+  /**
+    * Create an SQL timestamp at midnight on the given day.
+    *
+    * @param year  Year (4 digits plz)
+    * @param month One indexed month
+    * @param day   Day of month
+    * @return
+    */
+  def makeTimestamp(year: Int, month: Int, day: Int): Timestamp = {
+    new Timestamp(makeDate(year, month, day).getTime)
+  }
 
   /**
     * Create an SQL Date with the given year, month and day.
@@ -49,21 +59,9 @@ object DateUtil {
     ).getTime.getTime)
   }
 
-  /**
-    * Create an SQL timestamp at midnight on the given day.
-    *
-    * @param year  Year (4 digits plz)
-    * @param month One indexed month
-    * @param day   Day of month
-    * @return
-    */
-  def makeTimestamp(year: Int, month: Int, day: Int): Timestamp = {
-    new Timestamp(makeDate(year, month, day).getTime)
-  }
-
 }
 
-class DateUtilSpec extends WordSpec with Matchers {
+class DateUtilSpec extends BaseSpec {
 
   "DateUtil#makeDate" should {
 

@@ -26,24 +26,19 @@ package com.jsherz.luskydive.services
 
 import java.util.UUID
 
-import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
-import akka.http.scaladsl.testkit.ScalatestRouteTest
+import akka.event.LoggingAdapter
 import com.jsherz.luskydive.core.FBSignedRequest
-import com.jsherz.luskydive.util.{FbClientFactory, NullLogger}
+import com.jsherz.luskydive.util.{BaseSpec, FbClientFactory, NullLogger}
 import com.restfb.FacebookClient.AccessToken
 import com.restfb.exception.{FacebookJsonMappingException, FacebookSignedRequestParsingException}
-import com.restfb.scope.ScopeBuilder
 import com.restfb.types.User
 import com.restfb.{FacebookClient, Parameter}
-import org.mockito.ArgumentCaptor
-import org.mockito.Matchers.{any, anyString, eq => meq}
+import org.mockito.Matchers.{any, anyString}
 import org.mockito.Mockito.{mock, when}
-import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Random
 
-class SocialServiceSpec extends WordSpec with Matchers {
+class SocialServiceSpec extends BaseSpec {
 
   implicit val log: LoggingAdapter = new NullLogger
 

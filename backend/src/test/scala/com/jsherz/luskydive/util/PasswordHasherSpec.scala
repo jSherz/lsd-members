@@ -24,12 +24,10 @@
 
 package com.jsherz.luskydive.util
 
-import org.scalatest.{Matchers, WordSpec}
-
 /**
   * Ensures passwords are hashed and checked correctly.
   */
-class PasswordHasherSpec extends WordSpec with Matchers {
+class PasswordHasherSpec extends BaseSpec {
 
   "PasswordHasher#hashPassword" should {
 

@@ -31,10 +31,9 @@ import java.util.{Date, UUID}
 import akka.event.LoggingAdapter
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import com.jsherz.luskydive.util.{NullLogger, Util}
-import org.scalatest.{Matchers, WordSpec}
+import com.jsherz.luskydive.util.{BaseSpec, NullLogger, Util}
 
-class JwtServiceSpec extends WordSpec with Matchers {
+class JwtServiceSpec extends BaseSpec {
 
   implicit val log: LoggingAdapter = new NullLogger
 

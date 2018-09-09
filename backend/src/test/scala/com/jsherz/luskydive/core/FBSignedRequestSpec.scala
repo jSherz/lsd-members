@@ -28,11 +28,11 @@ import java.time.Instant
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 
-import org.scalatest.{Matchers, WordSpec}
+import com.jsherz.luskydive.util.BaseSpec
 
 import scala.util.Random
 
-class FBSignedRequestSpec extends WordSpec with Matchers {
+class FBSignedRequestSpec extends BaseSpec {
 
   "FBSignedRequest" should {
 

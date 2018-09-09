@@ -26,13 +26,12 @@ package com.jsherz.luskydive.util
 
 import java.util.UUID
 
-import org.scalatest.{Matchers, WordSpec}
 import spray.json.{DeserializationException, JsArray, JsNull, JsNumber, JsObject, JsString}
 
 /**
   * Exercises [[UuidJsonFormat]].
   */
-class UuidJsonFormatSpec extends WordSpec with Matchers {
+class UuidJsonFormatSpec extends BaseSpec {
 
   "UuidJsonFormat" should {
 

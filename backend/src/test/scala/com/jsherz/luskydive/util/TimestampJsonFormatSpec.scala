@@ -26,13 +26,12 @@ package com.jsherz.luskydive.util
 
 import java.sql.Timestamp
 
-import org.scalatest.{Matchers, WordSpec}
 import spray.json.{DeserializationException, JsArray, JsNull, JsNumber, JsObject, JsString}
 
 /**
   * Ensures timestamps are properly (de)serialized by [[TimestampJsonFormat]].
   */
-class TimestampJsonFormatSpec extends WordSpec with Matchers {
+class TimestampJsonFormatSpec extends BaseSpec {
 
   private val testTimestamps: Map[JsString, Timestamp] = Map(
     JsString("2016-08-09 08:36:32.469") -> Timestamp.valueOf("2016-08-09 08:36:32.469"),

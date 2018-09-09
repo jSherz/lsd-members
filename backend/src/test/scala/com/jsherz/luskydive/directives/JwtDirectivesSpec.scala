@@ -37,16 +37,15 @@ import com.jsherz.luskydive.dao.{CommitteeMemberDao, MemberDao}
 import com.jsherz.luskydive.json.CommitteeMembersJsonSupport.CommitteeMemberFormat
 import com.jsherz.luskydive.json.MemberJsonSupport._
 import com.jsherz.luskydive.services.JwtService
-import com.jsherz.luskydive.util.{NullLogger, Util}
+import com.jsherz.luskydive.util.{BaseSpec, NullLogger, Util}
 import com.typesafe.config.{Config, ConfigFactory}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.{mock, when}
-import org.scalatest.{Matchers, WordSpec}
 import scalaz.{-\/, \/, \/-}
 
 import scala.concurrent.Future
 
-class JwtDirectivesSpec extends WordSpec with Matchers with ScalatestRouteTest {
+class JwtDirectivesSpec extends BaseSpec with ScalatestRouteTest {
 
   implicit val log: LoggingAdapter = new NullLogger
 

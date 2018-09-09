@@ -26,13 +26,12 @@ package com.jsherz.luskydive.util
 
 import java.sql.Date
 
-import org.scalatest.{Matchers, WordSpec}
 import spray.json.{DeserializationException, JsArray, JsNull, JsNumber, JsObject, JsString}
 
 /**
   * Ensures dates are properly (de)serialized by [[DateJsonFormat]].
   */
-class DateJsonFormatSpec extends WordSpec with Matchers {
+class DateJsonFormatSpec extends BaseSpec {
 
   private val testDates: Map[JsString, Date] = Map(
     JsString("2014-01-28") -> DateUtil.makeDate(2014, 1, 28),
