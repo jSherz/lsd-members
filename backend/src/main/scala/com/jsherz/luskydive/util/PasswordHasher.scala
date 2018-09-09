@@ -26,9 +26,10 @@ package com.jsherz.luskydive.util
 
 import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
-import java.security.NoSuchAlgorithmException
+import java.security.{NoSuchAlgorithmException, SecureRandom}
 import java.security.spec.InvalidKeySpecException
 import java.util.Base64
+
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.PBEKeySpec
 
@@ -37,11 +38,13 @@ import javax.crypto.spec.PBEKeySpec
   */
 object PasswordHasher {
 
-  val NUM_ITERATIONS = 25000
+  private val numIterations = 25000
 
-  val KEY_LENGTH = 512
+  private val keyLength = 512
 
-  val KEY_ALGO = "PBKDF2WithHmacSHA512"
+  private val keyAlgo = "PBKDF2WithHmacSHA512"
+
+  private val random = new SecureRandom()
 
   /**
     * Based on the OWASP Java guide (https://www.owasp.org/index.php/Hashing_Java).
@@ -54,8 +57,8 @@ object PasswordHasher {
     val saltBytes = Base64.getDecoder.decode(salt)
 
     try {
-      val skf = SecretKeyFactory.getInstance(KEY_ALGO)
-      val spec = new PBEKeySpec(password.toCharArray, saltBytes, NUM_ITERATIONS, KEY_LENGTH)
+      val skf = SecretKeyFactory.getInstance(keyAlgo)
+      val spec = new PBEKeySpec(password.toCharArray, saltBytes, numIterations, keyLength)
       val key = skf.generateSecret(spec)
 
       val withTwoEquals = Base64.getEncoder.encodeToString(key.getEncoded)
@@ -65,6 +68,13 @@ object PasswordHasher {
       case ex @ (_: NoSuchAlgorithmException | _: InvalidKeySpecException) =>
         throw new RuntimeException(ex);
     }
+  }
+
+  def generateSalt(): String = {
+    val bytes = new Array[Byte](128 / 8)
+    random.nextBytes(bytes)
+
+    Base64.getEncoder.encodeToString(bytes)
   }
 
   /**
