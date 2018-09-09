@@ -24,14 +24,14 @@ export class PackingListServiceImpl extends PackingListService {
   }
 
   getPackingList(): Observable<PackingListItems> {
-    const headers = new Headers({'X-JWT': this.jwtService.getJwt()});
+    const headers = new Headers({'Authorization': 'Bearer ' + this.jwtService.getJwt()});
 
     return this.http.get(PackingListServiceImpl.ApiUrl, {headers})
       .map(r => r.json() as PackingListItems);
   }
 
   putPackingList(packingListItems: PackingListItems): Observable<Response> {
-    const headers = new Headers({'X-JWT': this.jwtService.getJwt()});
+    const headers = new Headers({'Authorization': 'Bearer ' + this.jwtService.getJwt()});
 
     return this.http.put(PackingListServiceImpl.ApiUrl, packingListItems, {headers});
   }

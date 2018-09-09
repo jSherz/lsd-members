@@ -63,7 +63,7 @@ describe('Members: base service', () => {
     const headers: Headers = options.headers;
 
     expect(headers.get('Content-Type')).toEqual('application/json');
-    expect(headers.get('X-JWT')).toEqual('842374872874');
+    expect(headers.get('Authorization')).toEqual('Bearer 842374872874');
     expect(headers.get('X-App-Version')).toEqual(appVersion);
   }));
 
@@ -92,7 +92,7 @@ describe('Members: base service', () => {
     const headers: Headers = options.headers;
 
     expect(headers.get('Content-Type')).toEqual('application/json');
-    expect(headers.get('X-JWT')).toEqual('842374872874');
+    expect(headers.get('Authorization')).toEqual('Bearer 842374872874');
     expect(headers.get('X-App-Version')).toEqual(appVersion);
   }));
 
@@ -121,7 +121,7 @@ describe('Members: base service', () => {
     const headers: Headers = options.headers;
 
     expect(headers.get('Content-Type')).toEqual('application/json');
-    expect(headers.get('X-JWT')).toEqual('842374872874');
+    expect(headers.get('Authorization')).toEqual('Bearer 842374872874');
     expect(headers.get('X-App-Version')).toEqual(appVersion);
   }));
 

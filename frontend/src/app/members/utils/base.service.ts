@@ -78,7 +78,7 @@ export class BaseService {
     const headers = new Headers({
       'Content-Type': 'application/json',
       'X-App-Version': this.appVersion,
-      'X-JWT': this.jwtService.getJwt()
+      'Authorization': 'Bearer' + this.jwtService.getJwt()
     });
 
     return new RequestOptions({headers});

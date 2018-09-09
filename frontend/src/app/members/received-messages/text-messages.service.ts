@@ -21,7 +21,7 @@ export class TextMessagesServiceImpl extends TextMessagesService {
   }
 
   getReceivedMessages(): Observable<TextMessage[]> {
-    const headers = new Headers({'X-JWT': this.jwtService.getJwt()});
+    const headers = new Headers({'Authorization': 'Bearer ' + this.jwtService.getJwt()});
 
     return this.http.get(this.getReceivedUrl, {headers})
       .map(r => r.json() as TextMessage[]);
