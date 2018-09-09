@@ -25,7 +25,6 @@
 package com.jsherz.luskydive
 
 import java.time.{Duration, Instant}
-import java.util.logging.{LogManager, Logger}
 
 import akka.actor.ActorSystem
 import akka.event.{Logging, LoggingAdapter}
@@ -34,11 +33,10 @@ import akka.stream.ActorMaterializer
 import com.jsherz.luskydive.dao._
 import com.jsherz.luskydive.services._
 import com.jsherz.luskydive.util.{Config, FbClientFactoryImpl}
-import com.restfb.{DefaultFacebookClient, Version}
-import org.flywaydb.core.Flyway
+import com.restfb.Version
 import org.slf4j.bridge.SLF4JBridgeHandler
 
-import scala.io.{Codec, Source}
+import scala.concurrent.ExecutionContextExecutor
 
 /**
   * The main application service that bootstraps all other components and runs the HTTP server.
@@ -47,29 +45,14 @@ object Main extends App with Config {
 
   val bootStarted = Instant.now()
 
-
-  implicit val actorSystem = ActorSystem()
-  implicit val executor = actorSystem.dispatcher
-  implicit val log: LoggingAdapter = Logging(actorSystem, getClass)
-  implicit val materializer = ActorMaterializer()
-
-  // What is an application without an ASCII-art banner?
-  log.info(Source.fromURL(getClass.getResource("/banner.txt"))(Codec.UTF8).mkString)
-
   SLF4JBridgeHandler.install()
 
-  log.info("SLF4J bridge created")
+  implicit val actorSystem: ActorSystem = ActorSystem()
+  implicit val executor: ExecutionContextExecutor = actorSystem.dispatcher
+  implicit val log: LoggingAdapter = Logging(actorSystem, getClass)
+  implicit val materializer: ActorMaterializer = ActorMaterializer()
 
   val databaseService = new DatabaseService(dbUrl, dbUsername, dbPassword)
-
-  log.info("Checking for and running migrations")
-
-  // Automatically run migrations
-  val flyway = new Flyway()
-  flyway.setDataSource(dbUrl, dbUsername, dbPassword)
-  flyway.migrate()
-
-  log.info("Migrations complete")
 
   val memberDao = new MemberDaoImpl(databaseService)
   val committeeMemberDao = new CommitteeMemberDaoImpl(databaseService)

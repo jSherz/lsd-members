@@ -48,7 +48,7 @@ class CurrentMemberApiSpec extends BaseApiSpec {
 
       val api = new CurrentMemberApi(authDirective, memberDao)
 
-      Get("/me") ~> addHeader("X-JWT", "asdfasf") ~> Route.seal(api.route) ~> check {
+      Get("/me") ~> addHeader("Authorization", "asdfasf") ~> Route.seal(api.route) ~> check {
         response.status shouldBe StatusCodes.Unauthorized
       }
     }
@@ -60,7 +60,7 @@ class CurrentMemberApiSpec extends BaseApiSpec {
 
       val api = new CurrentMemberApi(authDirective, memberDao)
 
-      Get("/me") ~> addHeader("X-JWT", "123123123") ~> Route.seal(api.route) ~> check {
+      Get("/me") ~> addHeader("Authorization", "123123123") ~> Route.seal(api.route) ~> check {
         response.status shouldBe StatusCodes.OK
         responseAs[StrippedMember] shouldEqual StrippedMember(
           uuid = member.uuid,

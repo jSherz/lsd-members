@@ -34,7 +34,7 @@ import com.jsherz.luskydive.services.DatabaseService
 import com.jsherz.luskydive.util.FutureError._
 
 import scala.concurrent.{ExecutionContext, Future}
-import scalaz.{-\/, \/}
+import scalaz.{-\/, \/, \/-}
 
 /**
   * Data Access Object to retrieve and store Member information.

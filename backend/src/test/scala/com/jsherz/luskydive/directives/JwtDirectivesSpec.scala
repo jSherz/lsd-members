@@ -170,7 +170,7 @@ class JwtDirectivesSpec extends BaseSpec with ScalatestRouteTest {
     when(memberDao.get(any())).thenReturn(member)
 
     val committeeMemberDao = mock(classOf[CommitteeMemberDao])
-    when(committeeMemberDao.forMember(any())).thenReturn(committeeMember)
+    when(committeeMemberDao.get(any())).thenReturn(committeeMember)
 
     new JwtDirectives(service, memberDao, committeeMemberDao).authenticateCommitteeWithJwt { _ =>
       complete("Hello, world!")
@@ -190,7 +190,7 @@ class JwtDirectivesSpec extends BaseSpec with ScalatestRouteTest {
   }
 
   private def jwtHeader(value: String): HttpHeader = {
-    RawHeader("X-JWT", value)
+    RawHeader("Authorization", value)
   }
 
 }

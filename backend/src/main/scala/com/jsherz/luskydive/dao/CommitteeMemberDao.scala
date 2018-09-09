@@ -39,12 +39,8 @@ trait CommitteeMemberDao {
 
   /**
     * Find the committee record for a member.
-    *
-    * @param uuid Member's UUID
-    * @return
     */
-  def forMember(uuid: Option[UUID]): Future[Option[CommitteeMember]]
-
+  def forMember(uuid: UUID): Future[Option[CommitteeMember]]
 
   /**
     * Get active committee members, sorted by name.
@@ -100,10 +96,8 @@ class CommitteeMemberDaoImpl(protected override val databaseService: DatabaseSer
     * @param maybeUuid Member's UUID
     * @return
     */
-  override def forMember(maybeUuid: Option[UUID]): Future[Option[CommitteeMember]] = {
-    maybeUuid.fold(Future.successful(None: Option[CommitteeMember])) { uuid =>
-      db.run(CommitteeMembers.filter(_.memberUuid === uuid).result.headOption)
-    }
+  override def forMember(uuid: UUID): Future[Option[CommitteeMember]] = {
+    db.run(CommitteeMembers.filter(_.memberUuid === uuid).result.headOption)
   }
 
 }

@@ -83,6 +83,7 @@ class HttpService(
   val currentMemberApi = new CurrentMemberApi(authenticateWithJwt, memberDao)
   val versionApi = new VersionApi
   val packingListApi = new PackingListApi(authenticateWithJwt, packingListDao)
+  val migrateApi = new MigrateApi(authenticateCommitteeWithJwt)
 
   val loginApi = new LoginApi(authDao)
 
@@ -102,7 +103,8 @@ class HttpService(
           socialLoginApi.route ~
           currentMemberApi.route ~
           versionApi.route ~
-          packingListApi.route
+          packingListApi.route ~
+          migrateApi.route
       }
     }
 

@@ -33,9 +33,8 @@ import com.jsherz.luskydive.dao._
 import com.jsherz.luskydive.services.{DatabaseService, TextSendingService}
 import com.jsherz.luskydive.util.Config
 import com.twilio.http.TwilioRestClient
-import org.flywaydb.core.Flyway
 
-import scala.io.{Codec, Source}
+import scala.concurrent.ExecutionContextExecutor
 
 /**
   * Runs as a daemon to send SMS' to members.
@@ -44,30 +43,13 @@ object TextSenderMain extends App with Config {
 
   val bootStarted = Instant.now()
 
-
-  implicit val actorSystem = ActorSystem()
-  implicit val executor = actorSystem.dispatcher
+  implicit val actorSystem: ActorSystem = ActorSystem()
+  implicit val executor: ExecutionContextExecutor = actorSystem.dispatcher
   implicit val log: LoggingAdapter = Logging(actorSystem, getClass)
-  implicit val materializer = ActorMaterializer()
-
-  // What is an application without an ASCII-art banner?
-  implicit val codec = Codec.UTF8
-  log.info(Source.fromURL(getClass.getResource("/banner.txt")).mkString)
-
-  log.info("Connecting to DB")
+  implicit val materializer: ActorMaterializer = ActorMaterializer()
 
   val databaseService = new DatabaseService(dbUrl, dbUsername, dbPassword)
 
-  log.info("Running migrations")
-
-  // Automatically run migrations
-  val flyway = new Flyway()
-  flyway.setDataSource(dbUrl, dbUsername, dbPassword)
-  flyway.migrate()
-
-  log.info("Creating text sending service")
-
-  // val massTextDao = new MassTextDaoImpl(databaseService)
   val textMessageDao = new TextMessageDaoImpl(databaseService)
 
   val twilioClient = new TwilioRestClient.Builder(twilioAccountSid, twilioAuthToken).build()

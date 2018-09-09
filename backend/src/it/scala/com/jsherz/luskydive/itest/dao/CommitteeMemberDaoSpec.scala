@@ -83,20 +83,14 @@ class CommitteeMemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterA
 
   "CommitteeMemberDao#forMember" should {
 
-    "return None if a None uuid was provided" in {
-      val result = dao.forMember(None)
-
-      result.futureValue shouldBe None
-    }
-
     "return None when no committee member is found" in {
-      val result = dao.forMember(Some(UUID.fromString("13e67105-c103-49d6-b434-19ab0524dc02")))
+      val result = dao.forMember(UUID.fromString("13e67105-c103-49d6-b434-19ab0524dc02"))
 
       result.futureValue shouldBe None
     }
 
     "return Some(committeeMember) when found for a member" in {
-      val result = dao.forMember(Some(UUID.fromString("5f89a942-2704-4442-9d68-f30408b51ca1")))
+      val result = dao.forMember(UUID.fromString("5f89a942-2704-4442-9d68-f30408b51ca1"))
 
       result.futureValue shouldEqual Some(Util.fixture[CommitteeMember]("f5e0e6f1.json"))
     }
