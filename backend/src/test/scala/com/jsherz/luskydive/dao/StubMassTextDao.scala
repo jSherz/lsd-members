@@ -42,23 +42,21 @@ class StubMassTextDao extends MassTextDao {
     * @param uuid
     * @return
     */
-  override def get(uuid: UUID): Future[String \/ Option[MassText]] = {
-    if (StubMassTextDao.existsMassTextUuid.equals(uuid)) {
-      Future.successful(\/-(
+  override def get(uuid: UUID): Future[Option[MassText]] = {
+    Future.successful {
+      if (StubMassTextDao.existsMassTextUuid.equals(uuid)) {
         Some(MassText(
-          UUID.fromString("b1266b65-40b2-4874-a551-854bf2e2ef26"),
-          UUID.fromString("a8df22ad-c2a4-40b6-9939-852421d9b30e"),
-          "Roll up, roll up {{ name }}, it's time to get yourself down to our skydiving G.I.A.G - meet you there :D " +
-            "#excited #skydiving - Reply \"NOFUN\" to stop these messages.",
-          Timestamp.valueOf("2012-09-25 00:00:00.000000")
-        )))
-      )
-    } else if (StubMassTextDao.unknownMassTextUuid.equals(uuid)) {
-      Future.successful(\/-(None))
-    } else if (StubMassTextDao.serverErrorMassTextUuid.equals(uuid)) {
-      Future.successful(-\/(Errors.internalServer))
-    } else {
-      throw new RuntimeException("unknown uuid used with stub")
+            UUID.fromString("b1266b65-40b2-4874-a551-854bf2e2ef26"),
+            UUID.fromString("a8df22ad-c2a4-40b6-9939-852421d9b30e"),
+            "Roll up, roll up {{ name }}, it's time to get yourself down to our skydiving G.I.A.G - meet you there :D " +
+              "#excited #skydiving - Reply \"NOFUN\" to stop these messages.",
+            Timestamp.valueOf("2012-09-25 00:00:00.000000")
+          ))
+      } else if (StubMassTextDao.unknownMassTextUuid.equals(uuid)) {
+        None
+      } else {
+        throw new RuntimeException(s"unknown uuid $uuid used with stub")
+      }
     }
   }
 
@@ -69,11 +67,11 @@ class StubMassTextDao extends MassTextDao {
     * @param endDate   End date (exclusive)
     * @return
     */
-  override def filterCount(startDate: Date, endDate: Date): Future[\/[String, Int]] = {
+  override def filterCount(startDate: Date, endDate: Date): String \/ Future[Int] = {
     if (StubMassTextDao.validStartDate.equals(startDate) && StubMassTextDao.validEndDate.equals(endDate)) {
-      Future.successful(\/-(StubMassTextDao.validFilterCount))
+      \/-(Future.successful(StubMassTextDao.validFilterCount))
     } else if (StubMassTextDao.serverErrorStartDate.equals(startDate) && StubMassTextDao.serverErrorEndDate.equals(endDate)) {
-      Future.successful(-\/(Errors.internalServer))
+      -\/(Errors.internalServer)
     } else {
       throw new RuntimeException("unknown dates used with stub")
     }

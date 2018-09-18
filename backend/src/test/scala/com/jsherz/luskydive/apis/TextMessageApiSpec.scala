@@ -199,15 +199,6 @@ class TextMessageApiSpec extends BaseApiSpec {
       }
     }
 
-    "return an error when getting the recent text messages fails" in new Fixtured {
-      override val dao = mock(classOf[TextMessageDao])
-      when(dao.getReceived()).thenReturn(Future.successful(-\/("failed to get them")))
-
-      Get(url) ~> Route.seal(route) ~> check {
-        response.status shouldEqual StatusCodes.InternalServerError
-      }
-    }
-
   }
 
   "TextMessageApi#receivedCountRoute" should {
@@ -239,15 +230,6 @@ class TextMessageApiSpec extends BaseApiSpec {
       Get(url) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.OK
         responseAs[NumReceivedMessages] shouldEqual NumReceivedMessages(3)
-      }
-    }
-
-    "return an error when getting the recent text messages fails" in new Fixtured {
-      override val dao = mock(classOf[TextMessageDao])
-      when(dao.getReceivedCount()).thenReturn(Future.successful(-\/("failed to get them")))
-
-      Get(url) ~> Route.seal(route) ~> check {
-        response.status shouldEqual StatusCodes.InternalServerError
       }
     }
 

@@ -31,12 +31,11 @@ import akka.event.LoggingAdapter
 import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.{ApiKey, CommitteeMember}
 import com.jsherz.luskydive.services.DatabaseService
-import com.jsherz.luskydive.util.EitherFutureExtensions._
 import com.jsherz.luskydive.util.FutureError._
 import com.jsherz.luskydive.util.PasswordHasher
+import scalaz.{-\/, \/, \/-}
 
 import scala.concurrent.{ExecutionContext, Future}
-import scalaz.{-\/, \/, \/-}
 
 
 trait AuthDao {
@@ -96,7 +95,10 @@ class AuthDaoImpl(protected override val databaseService: DatabaseService)
     for {
       lookupResult <- lookup ifNone AuthDaoErrors.invalidApiKey
       validateResult <- Future.successful(lookupResult.flatMap(validateKey(time)))
-      authResult <- validateResult withFutureF extendKeyExpiry(time)
+      authResult <- validateResult match {
+        case \/-(validKey) => extendKeyExpiry(time)(validKey).map(r => \/-(r))
+        case -\/(error) => Future.successful(-\/(error))
+      }
     } yield authResult
   }
 
@@ -134,14 +136,29 @@ class AuthDaoImpl(protected override val databaseService: DatabaseService)
     * @param apiKey
     * @return
     */
-  private def extendKeyExpiry(time: Timestamp)(apiKey: ApiKey): Future[String \/ UUID] = {
+  private def extendKeyExpiry(time: Timestamp)(apiKey: ApiKey): Future[UUID] = {
     val newExpiry = addHoursToTimestamp(time, API_KEY_EXPIRES)
 
     db.run(
       ApiKeys.filter(_.uuid === apiKey.uuid).map(_.expiresAt).update(newExpiry)
     ).map {
       _ => apiKey.committeeMemberUuid
-    } withServerError
+    }
+  }
+
+  /**
+    * Create a new [[Timestamp]] by adding a number of hours to an existing one.
+    *
+    * @param time
+    * @param hours
+    * @return
+    */
+  private def addHoursToTimestamp(time: Timestamp, hours: Int): Timestamp = {
+    val calendar = Calendar.getInstance()
+    calendar.setTime(time)
+    calendar.add(Calendar.HOUR, API_KEY_EXPIRES)
+
+    new Timestamp(calendar.getTime.getTime)
   }
 
   /**
@@ -166,23 +183,11 @@ class AuthDaoImpl(protected override val databaseService: DatabaseService)
     for {
       committeeMember <- db.run(CommitteeMembers.filter(cm => cm.email === email).result.headOption)
       passwordCheckResult <- Future.successful(checkPasswordAndLocked(committeeMember, password))
-      apiKeyResult <- passwordCheckResult withFutureF generateApiKey(time)
-    } yield apiKeyResult.map(_.uuid)
-  }
-
-  /**
-    * Create a new [[Timestamp]] by adding a number of hours to an existing one.
-    *
-    * @param time
-    * @param hours
-    * @return
-    */
-  private def addHoursToTimestamp(time: Timestamp, hours: Int): Timestamp = {
-    val calendar = Calendar.getInstance()
-    calendar.setTime(time)
-    calendar.add(Calendar.HOUR, API_KEY_EXPIRES)
-
-    new Timestamp(calendar.getTime.getTime)
+      apiKeyResult <- passwordCheckResult match {
+        case \/-(cm) => generateApiKey(time)(cm).map(f => \/-(f.uuid))
+        case -\/(error) => Future.successful(-\/(error))
+      }
+    } yield apiKeyResult
   }
 
   /**
@@ -221,16 +226,14 @@ class AuthDaoImpl(protected override val databaseService: DatabaseService)
     * @param committeeMember
     * @return
     */
-  private def generateApiKey(time: Timestamp)(committeeMember: CommitteeMember): Future[String \/ ApiKey] = {
+  private def generateApiKey(time: Timestamp)(committeeMember: CommitteeMember): Future[ApiKey] = {
     val key = Generators.randomBasedGenerator.generate
     val createdAt = time
     val expiresAt = addHoursToTimestamp(createdAt, API_KEY_EXPIRES)
 
     val createdKey = ApiKey(key, committeeMember.uuid, createdAt, expiresAt)
 
-    db.run(
-      (ApiKeys += createdKey).map(_ => createdKey)
-    ) withServerError
+    db.run((ApiKeys += createdKey).map(_ => createdKey))
   }
 
 }

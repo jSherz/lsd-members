@@ -260,12 +260,7 @@ class CourseSpaceDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
         setDepositPaid("a3b34e2f-b97a-4578-989d-880497c72ed8", depositPaid = false)
       )
 
-      results.foreach { result =>
-        result.isRight shouldBe true
-        result.map {
-          _ shouldEqual 1
-        }
-      }
+      results.foreach(_ shouldEqual 1)
 
       courseDao
         .spaces(UUID.fromString("c9ffcedd-7f4b-4764-acff-db089b4b1222"))
@@ -275,7 +270,7 @@ class CourseSpaceDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
   }
 
-  private def setDepositPaid(uuid: String, depositPaid: Boolean): String \/ Int = {
+  private def setDepositPaid(uuid: String, depositPaid: Boolean): Int = {
     dao.setDepositPaid(UUID.fromString(uuid), depositPaid).futureValue
   }
 

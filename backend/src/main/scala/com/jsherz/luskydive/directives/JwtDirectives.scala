@@ -76,19 +76,15 @@ class JwtDirectives(
       } yield uuid
 
       verifiedUuid.map { uuid =>
-        onSuccess(memberDao.get(uuid)).flatMap {
-          case -\/(error: String) =>
-            log.error(s"failed to get member for authenticateWithJwt: $error")
-            badCreds[Member]
-          case \/-(maybeMember: Option[Member]) =>
-            maybeMember match {
-              case Some(m: Member) =>
-                log.debug(s"member ${m.uuid} authenticated")
-                provide(m)
-              case None =>
-                log.error(s"no member found for UUID $uuid")
-                badCreds[Member]
-            }
+        onSuccess(memberDao.get(uuid)).flatMap { maybeMember: Option[Member] =>
+          maybeMember match {
+            case Some(m: Member) =>
+              log.debug(s"member ${m.uuid} authenticated")
+              provide(m)
+            case None =>
+              log.error(s"no member found for UUID $uuid")
+              badCreds[Member]
+          }
         }
       }.getOrElse(credsMissing[Member])
     }

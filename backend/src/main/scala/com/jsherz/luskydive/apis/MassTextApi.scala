@@ -54,8 +54,10 @@ class MassTextApi(dao: MassTextDao)
   val tryFilterRoute = (path("try-filter") & post & authDirective & entity(as[TryFilterRequest])) { (_, request) =>
     val result = dao.filterCount(request.startDate, request.endDate)
 
-    onSuccess(result) {
-      case \/-(count: Int) => complete(TryFilterResponse(success = true, Some(count), None))
+    result match {
+      case \/-(futureCount) => onSuccess(futureCount) { count =>
+        complete(TryFilterResponse(success = true, Some(count), None))
+      }
       case -\/(error: String) => {
         log.error("Trying a filter for mass texting failed: " + error)
 

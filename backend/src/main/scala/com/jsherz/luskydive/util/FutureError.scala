@@ -34,10 +34,10 @@ object FutureError {
   implicit def futureOptionEitherConversion[T](future: Future[Option[T]])(implicit log: LoggingAdapter): FutureOptionError[T] = {
     new FutureOptionError(future)
   }
-
-  implicit def futureEitherConversion[T](future: Future[T])(implicit log: LoggingAdapter): FutureError[T] = {
-    new FutureError(future)
-  }
+//
+//  implicit def futureEitherConversion[T](future: Future[T])(implicit log: LoggingAdapter): FutureError[T] = {
+//    new FutureError(future)
+//  }
 
 }
 
@@ -62,26 +62,6 @@ class FutureOptionError[V](future: Future[Option[V]])(implicit log: LoggingAdapt
     future.map {
       case Some(value: V @unchecked) => \/-(value)
       case None => -\/(errorMessage)
-    }.recover {
-      case ex: Throwable =>
-        log.error(ex.getMessage)
-        -\/(Errors.internalServer)
-    }
-  }
-
-}
-
-class FutureError[V](future: Future[V])(implicit log: LoggingAdapter) {
-
-  /**
-    * Catch any [[Throwable]] caused by a [[Future]] failing and replace it with a generic error message.
-    *
-    * @param ec
-    * @return
-    */
-  def withServerError()(implicit ec: ExecutionContext): Future[String \/ V] = {
-    future.map {
-      \/-(_)
     }.recover {
       case ex: Throwable =>
         log.error(ex.getMessage)

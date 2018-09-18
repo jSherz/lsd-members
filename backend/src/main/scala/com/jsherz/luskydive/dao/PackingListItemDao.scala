@@ -29,7 +29,6 @@ import java.util.UUID
 import akka.event.LoggingAdapter
 import com.jsherz.luskydive.core.PackingListItem
 import com.jsherz.luskydive.services.DatabaseService
-import com.jsherz.luskydive.util.FutureError._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scalaz.\/
@@ -37,9 +36,9 @@ import scalaz.\/
 
 trait PackingListItemDao {
 
-  def getOrDefault(uuid: UUID): Future[String \/ PackingListItem]
+  def getOrDefault(uuid: UUID): Future[PackingListItem]
 
-  def upsert(packingListItem: PackingListItem): Future[String \/ Int]
+  def upsert(packingListItem: PackingListItem): Future[Int]
 
 }
 
@@ -49,17 +48,17 @@ class PackingListItemDaoImpl(override protected val databaseService: DatabaseSer
 
   import driver.api._
 
-  override def getOrDefault(uuid: UUID): Future[String \/ PackingListItem] = {
+  override def getOrDefault(uuid: UUID): Future[PackingListItem] = {
     db.run(
       PackingListItems.filter(_.uuid === uuid)
         .result
         .headOption
         .map(packingListOrDefault(uuid))
-    ) withServerError
+    )
   }
 
-  override def upsert(packingListItem: PackingListItem): Future[String \/ Int] = {
-    db.run(PackingListItems.insertOrUpdate(packingListItem)) withServerError
+  override def upsert(packingListItem: PackingListItem): Future[Int] = {
+    db.run(PackingListItems.insertOrUpdate(packingListItem))
   }
 
   private def packingListOrDefault(uuid: UUID)(packingListItem: Option[PackingListItem]) = {

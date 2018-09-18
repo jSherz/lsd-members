@@ -31,15 +31,13 @@ import java.util.UUID
 import akka.event.LoggingAdapter
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse, StatusCodes}
 import akka.http.scaladsl.server.Directive1
-import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.server.Directives.{complete, _}
 import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core._
 import com.jsherz.luskydive.dao.{MemberDao, TextMessageDao}
 import com.jsherz.luskydive.json.TextMessageJsonSupport._
-import com.jsherz.luskydive.util.EitherFutureExtensions._
-import scalaz.{-\/, \/-}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 
 /**
@@ -58,58 +56,41 @@ class TextMessageApi(textMessageDao: TextMessageDao,
         complete(StatusCodes.Unauthorized, "Unauthorized.")
       } else {
         // Find member and, if found, insert text message
-        val lookupAndInsert = memberDao.forPhoneNumber(from).flatMap {
-          _ withFutureF {
-            case Some(member: Member) => {
-              val message = buildMessage(member.uuid, to, from, body, externalSid)
+        onSuccess(memberDao.forPhoneNumber(from)) {
+          case Some(member: Member) => {
+            val message = buildMessage(member.uuid, to, from, body, externalSid)
 
-              textMessageDao.insert(message).map {
-                case \/-(uuid) => {
-                  log.info(s"Text message with SID ${externalSid} saved for member ${member.uuid}")
+            onSuccess(textMessageDao.insert(message)) { uuid =>
+              log.info(s"Text message with SID $externalSid saved for member ${member.uuid}")
 
-                  \/-(s"""<?xml version="1.0" encoding="UTF-8"?><!-- Recorded as ${message.uuid.toString} --><Response></Response>""")
-                }
-                case -\/(error) => {
-                  log.error("Failed to insert text message: " + error)
+              val entity = HttpEntity(ContentTypes.`text/xml(UTF-8)`,
+                s"""<?xml version="1.0" encoding="UTF-8"?><!-- Recorded as ${uuid.toString} --><Response></Response>"""
+              )
 
-                  -\/(error)
-                }
-              }
-            }
-            case None => {
-              log.info(s"No member found with the phone number ${from} - not saving message ${body}.")
-
-              Future.successful(-\/(TextMessageApiErrors.receiveMemberNotFound))
+              complete(StatusCodes.OK, entity)
             }
           }
-        }
+          case None => {
+            log.info(s"No member found with the phone number $from - not saving message $body.")
 
-        onSuccess(lookupAndInsert) {
-          case \/-(uuid) => complete(HttpResponse(entity = HttpEntity(ContentTypes.`text/xml(UTF-8)`, uuid)))
-          case -\/(TextMessageApiErrors.receiveMemberNotFound) => complete(StatusCodes.NotFound, TextMessageApiErrors.receiveMemberNotFound)
-          case -\/(error) => complete(StatusCodes.InternalServerError, error)
+            complete(StatusCodes.NotFound, TextMessageApiErrors.receiveMemberNotFound)
+          }
         }
       }
   }
 
   val receivedRoute = (path("received") & get) {
-    committeeAuthDirective { (_) =>
-      onSuccess(textMessageDao.getReceived()) {
-        case \/-(texts) => complete(texts)
-        case -\/(error) =>
-          log.error(s"Failed to get received text messages: $error")
-          complete(StatusCodes.InternalServerError)
+    committeeAuthDirective { _ =>
+      onSuccess(textMessageDao.getReceived()) { texts =>
+        complete(texts)
       }
     }
   }
 
   val receivedCountRoute = (path("num-received") & get) {
-    committeeAuthDirective { (_) =>
-      onSuccess(textMessageDao.getReceivedCount()) {
-        case \/-(numReceived) => complete(NumReceivedMessages(numReceived))
-        case -\/(error) =>
-          log.error(s"Failed to get number of received text messages: $error")
-          complete(StatusCodes.InternalServerError)
+    committeeAuthDirective { _ =>
+      onSuccess(textMessageDao.getReceivedCount()) { numReceived =>
+        complete(NumReceivedMessages(numReceived))
       }
     }
   }

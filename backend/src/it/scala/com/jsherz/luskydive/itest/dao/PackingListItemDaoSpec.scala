@@ -60,21 +60,21 @@ class PackingListItemDaoSpec extends WordSpec with Matchers with BeforeAndAfterA
 
       val result = dao.getOrDefault(memberUuid)
 
-      result.futureValue shouldEqual \/-(PackingListItem(memberUuid, warmClothes = false, sleepingBag = false,
-        sturdyShoes = false, cash = false, toiletries = false))
+      result.futureValue shouldEqual PackingListItem(memberUuid, warmClothes = false, sleepingBag = false,
+        sturdyShoes = false, cash = false, toiletries = false)
     }
 
     "return the stored information for a member" in {
       val result = dao.getOrDefault(UUID.fromString("29b8cb2f-c3fb-4730-8abc-6d81b74fbf4f"))
 
-      result.futureValue shouldEqual \/-(PackingListItem(
+      result.futureValue shouldEqual PackingListItem(
         UUID.fromString("29b8cb2f-c3fb-4730-8abc-6d81b74fbf4f"),
         warmClothes = true,
         sleepingBag = true,
         sturdyShoes = false,
         cash = false,
         toiletries = true
-      ))
+      )
     }
 
   }
@@ -94,18 +94,18 @@ class PackingListItemDaoSpec extends WordSpec with Matchers with BeforeAndAfterA
       )
 
       // Empty (doesn't exist)
-      dao.getOrDefault(uuid).futureValue shouldEqual \/-(PackingListItem(
+      dao.getOrDefault(uuid).futureValue shouldEqual PackingListItem(
         uuid,
         warmClothes = false,
         sleepingBag = false,
         sturdyShoes = false,
         cash = false,
         toiletries = false
-      ))
+      )
 
-      dao.upsert(item).futureValue shouldEqual \/-(1)
+      dao.upsert(item).futureValue shouldEqual 1
 
-      dao.getOrDefault(uuid).futureValue shouldEqual \/-(item)
+      dao.getOrDefault(uuid).futureValue shouldEqual item
     }
 
     "updates an existing entry" in {
@@ -120,7 +120,7 @@ class PackingListItemDaoSpec extends WordSpec with Matchers with BeforeAndAfterA
         toiletries = false
       )
 
-      dao.getOrDefault(uuid).futureValue shouldEqual \/-(item)
+      dao.getOrDefault(uuid).futureValue shouldEqual item
 
       val updated = PackingListItem(
         uuid,
@@ -131,9 +131,9 @@ class PackingListItemDaoSpec extends WordSpec with Matchers with BeforeAndAfterA
         toiletries = true
       )
 
-      dao.upsert(updated).futureValue shouldEqual \/-(1)
+      dao.upsert(updated).futureValue shouldEqual 1
 
-      dao.getOrDefault(uuid).futureValue shouldEqual \/-(updated)
+      dao.getOrDefault(uuid).futureValue shouldEqual updated
     }
 
   }

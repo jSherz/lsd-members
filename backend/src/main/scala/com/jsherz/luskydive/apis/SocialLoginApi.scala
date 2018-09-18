@@ -72,11 +72,8 @@ class SocialLoginApi(
       val userRequest = service.getUserForAccessToken(accessToken.getAccessToken)
 
       userRequest.fold(_ => verificationFailed, { user =>
-        onSuccess(memberDao.forSocialId(user.getId)) {
-          case \/-(maybeMember: Option[(Member, Option[CommitteeMember])]) => {
-            useOrCreateMemberAndIssueJwt(maybeMember, user)
-          }
-          case -\/(error: String) => complete(StatusCodes.InternalServerError, error)
+        onSuccess(memberDao.forSocialId(user.getId)) { maybeMember =>
+          useOrCreateMemberAndIssueJwt(maybeMember, user)
         }
       })
     })
@@ -84,7 +81,7 @@ class SocialLoginApi(
 
   private def handleFbRequest(request: FBSignedRequest): Route = {
     onSuccess(memberDao.forSocialId(request.userId)) {
-      _.fold(lookupFailed, issueJwtForMemberLookup(request.userId))
+      issueJwtForMemberLookup(request.userId)
     }
   }
 
@@ -120,15 +117,17 @@ class SocialLoginApi(
 
   private def createMember(userId: String)(firstName: String, lastName: String, email: String): Route = {
     val member = buildMemberForSocialId(userId, firstName, lastName, email)
-    onSuccess(memberDao.create(member)) {
-      case \/-(newMemberUuid: UUID) =>
-        val jwt = generateJwt(newMemberUuid)
+    memberDao.create(member) match {
+      case \/-(futureUuid) =>
+        onSuccess(futureUuid) { newMemberUuid: UUID =>
+          val jwt = generateJwt(newMemberUuid)
 
-        complete(StatusCodes.OK, SocialLoginResponse(success = true, None, Some(jwt), committeeMember = false))
-
-      case -\/(error: String) =>
-        log.error(s"Failed to create member: $error")
-        genericError
+          complete(StatusCodes.OK, SocialLoginResponse(success = true, None, Some(jwt), committeeMember = false))
+        }
+        case -\/(error: String) => {
+          log.error(s"Failed to create member: $error")
+          complete(StatusCodes.InternalServerError, "Login failed - please try again later.")
+        }
     }
   }
 

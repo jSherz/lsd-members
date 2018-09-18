@@ -60,13 +60,11 @@ class StubMemberDao()(implicit val ec: ExecutionContext) extends MemberDao {
     * @param member
     * @return
     */
-  override def create(member: Member): Future[String \/ UUID] = {
-    Future.successful {
-      if (member.uuid == StubMemberDao.createErrorUuid) {
-        -\/(Errors.internalServer)
-      } else {
-        \/-(member.uuid)
-      }
+  override def create(member: Member): String \/ Future[UUID] = {
+    if (member.uuid == StubMemberDao.createErrorUuid) {
+      -\/(Errors.internalServer)
+    } else {
+      \/-(Future.successful(member.uuid))
     }
   }
 
@@ -76,16 +74,14 @@ class StubMemberDao()(implicit val ec: ExecutionContext) extends MemberDao {
     * @param uuid
     * @return
     */
-  override def get(uuid: UUID): Future[String \/ Option[Member]] = {
+  override def get(uuid: UUID): Future[Option[Member]] = {
     Future.successful {
       if (StubMemberDao.getExistsUuid.equals(uuid)) {
-        \/-(Some(StubMemberDao.getExistsMember))
+        Some(StubMemberDao.getExistsMember)
       } else if (StubMemberDao.getNotFoundUuid.equals(uuid)) {
-        \/-(None)
-      } else if (StubMemberDao.getErrorUuid.equals(uuid)) {
-        -\/(Errors.internalServer)
+        None
       } else {
-        throw new RuntimeException("unknown uuid used with stub")
+        throw new RuntimeException(s"unknown uuid $uuid used with stub")
       }
     }
   }
@@ -96,13 +92,11 @@ class StubMemberDao()(implicit val ec: ExecutionContext) extends MemberDao {
     * @param term
     * @return
     */
-  override def search(term: String): Future[\/[String, Seq[MemberSearchResult]]] = {
-    Future {
-      if (term.trim.length >= 3) {
-        \/-(StubMemberDao.searchResults)
-      } else {
-        -\/(MemberDaoErrors.invalidSearchTerm)
-      }
+  override def search(term: String): String \/ Future[Seq[MemberSearchResult]] = {
+    if (term.trim.length >= 3) {
+      \/-(Future.successful(StubMemberDao.searchResults))
+    } else {
+      -\/(MemberDaoErrors.invalidSearchTerm)
     }
   }
 
@@ -112,14 +106,12 @@ class StubMemberDao()(implicit val ec: ExecutionContext) extends MemberDao {
     * @param phoneNumber
     * @return
     */
-  override def forPhoneNumber(phoneNumber: String): Future[String \/ Option[Member]] = {
+  override def forPhoneNumber(phoneNumber: String): Future[Option[Member]] = {
     Future.successful {
       if (StubMemberDao.forPhoneNumber.equals(phoneNumber)) {
-        \/-(Some(StubMemberDao.forPhoneNumberMember))
+        Some(StubMemberDao.forPhoneNumberMember)
       } else if (StubMemberDao.forPhoneNumberNotFound.equals(phoneNumber)) {
-        \/-(None)
-      } else if (StubMemberDao.forPhoneNumberError.equals(phoneNumber)) {
-        -\/(Errors.internalServer)
+        None
       } else {
         throw new RuntimeException("unknown phone number used with stub")
       }
@@ -132,8 +124,8 @@ class StubMemberDao()(implicit val ec: ExecutionContext) extends MemberDao {
     * @param socialId
     * @return
     */
-  override def forSocialId(socialId: String): Future[String \/ Option[(Member, Option[CommitteeMember])]] = {
-    Future.successful(-\/("Stub not configured"))
+  override def forSocialId(socialId: String): Future[Option[(Member, Option[CommitteeMember])]] = {
+    Future.successful(None)
   }
 
   /**
@@ -142,14 +134,12 @@ class StubMemberDao()(implicit val ec: ExecutionContext) extends MemberDao {
     * @param member
     * @return
     */
-  override def update(member: Member): Future[\/[String, Member]] = {
+  override def update(member: Member): Future[Member] = {
     Future.successful {
       if (member.uuid == StubMemberDao.updateUuid) {
-        \/-(member)
-      } else if (member.uuid == StubMemberDao.updateErrorUuid) {
-        -\/(Errors.internalServer)
+        member
       } else {
-        throw new RuntimeException("unknown uuid used with stub")
+        throw new RuntimeException(s"unknown uuid ${member.uuid} used with stub")
       }
     }
   }
@@ -168,7 +158,6 @@ object StubMemberDao {
 
   val getExistsUuid = UUID.fromString("6d9db71d-d910-4993-bdff-d5301664d5b2")
   val getExistsMember = Util.fixture[Member]("6d9db71d.json")
-  val getErrorUuid = UUID.fromString("6c4b9c7f-0e08-42b9-bc99-4dd72d099497")
   val getNotFoundUuid = UUID.fromString("323f8275-f5c8-407a-adc2-d7a0ddb420a1")
 
   val forPhoneNumber = "+447881072696"
@@ -177,7 +166,6 @@ object StubMemberDao {
   val forPhoneNumberMember = Util.fixture[Member]("a70dba8b.json")
 
   val updateUuid = UUID.fromString("1f390207-5d92-4e56-828b-0c229c92f21a")
-  val updateErrorUuid = UUID.fromString("c740a4dc-b190-4aba-9f9e-5a1b93c581b1")
 
   val createErrorUuid = UUID.fromString("92dd62ad-aed6-4287-9f45-970322cc0ca5")
 

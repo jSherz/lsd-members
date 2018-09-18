@@ -48,14 +48,11 @@ class MemberApiSpec extends BaseApiSpec {
   private val searchUrl = "/members/search"
   private val getUrl = "/members/" + StubMemberDao.getExistsUuid.toString
   private val getUrlNotFound = "/members/" + StubMemberDao.getNotFoundUuid.toString
-  private val getUrlError = "/members/" + StubMemberDao.getErrorUuid.toString
   private val textMessagesUrl = s"/members/${StubTextMessageDao.forMemberUuid}/text-messages"
   private val textMessagesNotFoundUrl = s"/members/${StubTextMessageDao.forMemberNotFoundUuid}/text-messages"
-  private val textMessagesErrorUrl = s"/members/${StubTextMessageDao.forMemberErrorUuid}/text-messages"
   private val updateUrl = s"/members/${StubMemberDao.updateUuid}"
   private val updateWrongMemberUrl = "/members/45da34bc-01f0-4b88-b822-fb9b07a64c10"
   private val updateMember = Util.fixture[Member]("1f390207.json")
-  private val updateErrorUrl = s"/members/${StubMemberDao.updateErrorUuid}"
   private val updateErrorMember = Util.fixture[Member]("c740a4dc.json")
   private val createMemberUrl = "/members/create"
 
@@ -167,12 +164,6 @@ class MemberApiSpec extends BaseApiSpec {
       verify(dao, times(1)).get(StubMemberDao.getNotFoundUuid)
     }
 
-    "return 500 when the lookup fails" in new Fixtured {
-      Get(getUrlError) ~> route ~> check {
-        response.status shouldEqual StatusCodes.InternalServerError
-      }
-    }
-
   }
 
   "MemberApi#textMessages" should {
@@ -211,12 +202,6 @@ class MemberApiSpec extends BaseApiSpec {
         response.status shouldEqual StatusCodes.OK
 
         responseAs[Seq[TextMessage]] shouldEqual Seq.empty
-      }
-    }
-
-    "return 500 when the lookup fails" in new Fixtured {
-      Get(textMessagesErrorUrl) ~> route ~> check {
-        response.status shouldEqual StatusCodes.InternalServerError
       }
     }
 
@@ -261,13 +246,6 @@ class MemberApiSpec extends BaseApiSpec {
       }
 
       verify(dao).update(updateMember)
-    }
-
-    "return an error with the correct status" in new Fixtured {
-      Put(updateErrorUrl, updateErrorMember) ~> Route.seal(route) ~> check {
-        response.status shouldEqual StatusCodes.InternalServerError
-        responseAs[String] shouldEqual Errors.internalServer
-      }
     }
 
   }

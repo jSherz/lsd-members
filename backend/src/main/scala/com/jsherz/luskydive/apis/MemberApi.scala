@@ -49,8 +49,10 @@ class MemberApi(memberDao: MemberDao, textMessageDao: TextMessageDao)
       authDirective { _ =>
         entity(as[MemberSearchRequest]) { req =>
           if (req.searchTerm.trim.length >= 3) {
-            onSuccess(memberDao.search(req.searchTerm)) {
-              case \/-(results) => complete(results)
+            val searchResult = memberDao.search(req.searchTerm)
+
+            searchResult match {
+              case \/-(futureResults) => onSuccess(futureResults) { complete(_) }
               case -\/(error) => {
                 log.error("Failed to perform member search" + error)
 
@@ -71,25 +73,19 @@ class MemberApi(memberDao: MemberDao, textMessageDao: TextMessageDao)
     val lookup = memberDao.get(memberUuid)
 
     onSuccess(lookup) {
-      case \/-(maybeMember: Option[Member]) => {
-        maybeMember match {
-          case Some(member: Member) => complete(member)
-          case None => {
-            log.info(s"Could not get member with UUID '${memberUuid}'")
+      case Some(member: Member) => complete(member)
+      case None => {
+        log.info(s"Could not get member with UUID '${memberUuid}'")
 
-            complete(StatusCodes.NotFound, "Member not found")
-          }
-        }
+        complete(StatusCodes.NotFound, "Member not found")
       }
-      case -\/(error) => complete(StatusCodes.InternalServerError, error)
     }
   }
 
   val updateRoute = (path(JavaUUID) & put & authDirective & entity(as[Member])) { (memberUuid, _, member) =>
     if (member.uuid == memberUuid) {
-      onSuccess(memberDao.update(member)) {
-        case \/-(returnedMember) => complete(returnedMember)
-        case -\/(error) => complete(StatusCodes.InternalServerError, error)
+      onSuccess(memberDao.update(member)) { returnedMember =>
+        complete(returnedMember)
       }
     } else {
       complete(StatusCodes.BadRequest, MemberApiErrors.uuidUrlBodyMismatch)
@@ -97,15 +93,16 @@ class MemberApi(memberDao: MemberDao, textMessageDao: TextMessageDao)
   }
 
   val textMessagesRoute = (path(JavaUUID / "text-messages") & get & authDirective) { (memberUuid, _) =>
-    onSuccess(textMessageDao.forMember(memberUuid)) {
-      case \/-(textMessages: Seq[TextMessage]) => complete(textMessages)
-      case -\/(error) => complete(StatusCodes.InternalServerError, error)
+    onSuccess(textMessageDao.forMember(memberUuid)) { messages: Seq[TextMessage] =>
+      complete(messages)
     }
   }
 
   val createRoute = (path("create") & post & authDirective & entity(as[Member])) { (_, member) =>
-    onSuccess(memberDao.create(member)) {
-      case \/-(uuid) => complete(uuid)
+    val createResult = memberDao.create(member)
+
+    createResult match {
+      case \/-(futureUuid) => onSuccess(futureUuid) { complete(_) }
       case -\/(error) => complete(StatusCodes.InternalServerError, error)
     }
   }

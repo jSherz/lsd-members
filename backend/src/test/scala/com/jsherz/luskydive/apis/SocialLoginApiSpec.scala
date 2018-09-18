@@ -83,21 +83,6 @@ class SocialLoginApiSpec extends BaseApiSpec {
       }
     }
 
-    "reject signed requests when member lookup fails" in {
-      val (api, _, _) = buildApi(
-        fbReq("14712371237123"),
-        anError("YOU'VE GOT FAIL"),
-        noNewMemberUuid
-      )
-
-      val request = SocialLoginRequest("blah blah blah")
-
-      Post("/social-login", request) ~> Route.seal(api) ~> check {
-        response.status shouldEqual StatusCodes.InternalServerError
-        responseAs[String] shouldEqual "Login failed - please try again later."
-      }
-    }
-
     "issues a JWT if the signed request is for a valid member" in {
       val (api, _, _) = buildApi(
         fbReq("14712371237123"),
@@ -182,7 +167,7 @@ class SocialLoginApiSpec extends BaseApiSpec {
       val (api, socialService, _) = buildApi(
         fbReq("12312314113"),
         noMember(),
-        Future.successful(-\/("member creation failed - error in matrix"))
+        -\/("member creation failed - error in matrix")
       )
 
       when(socialService.getNameAndEmail(any())).thenReturn(\/-("Frap", "Hat", "head.protection@iiiiiiii.js"))
@@ -299,10 +284,8 @@ class SocialLoginApiSpec extends BaseApiSpec {
       when(socialService.getUserForAccessToken(anyString)).thenReturn(\/-(expectedUser))
 
       // Return the passed in UUID when the member is created
-      when(memberDao.create(any[Member])).thenAnswer(new Answer[Future[String \/ UUID]]() {
-        override def answer(invocation: InvocationOnMock): Future[String \/ UUID] = {
-          Future.successful(\/-(invocation.getArgumentAt(0, classOf[Member]).uuid))
-        }
+      when(memberDao.create(any[Member])).thenAnswer((invocation: InvocationOnMock) => {
+        \/-(Future.successful(invocation.getArgumentAt(0, classOf[Member]).uuid))
       })
 
       val request = SocialLoginVerifyRequest("blah-blah-blah")
@@ -337,8 +320,8 @@ class SocialLoginApiSpec extends BaseApiSpec {
 
   private def buildApi(
                         fbReq: Option[FBSignedRequest],
-                        member: Future[String \/ Option[(Member, Option[CommitteeMember])]],
-                        newMemberUuid: Future[\/[String, UUID]]
+                        member: Future[Option[(Member, Option[CommitteeMember])]],
+                        newMemberUuid: String \/ Future[UUID]
                       ): (Route, SocialService, MemberDao) = {
 
     val socialService = mock(classOf[SocialService])
@@ -358,17 +341,14 @@ class SocialLoginApiSpec extends BaseApiSpec {
   private def aMember(
                        member: Member,
                        committeeMember: Option[CommitteeMember] = None
-                     ): Future[String \/ Option[(Member, Option[CommitteeMember])]] = {
-    Future.successful(\/-(Some(member, committeeMember)))
+                     ): Future[Option[(Member, Option[CommitteeMember])]] = {
+    Future.successful(Some(member, committeeMember))
   }
 
-  private def noMember(): Future[String \/ Option[(Member, Option[CommitteeMember])]] = {
-    Future.successful(\/-(None))
+  private def noMember(): Future[Option[(Member, Option[CommitteeMember])]] = {
+    Future.successful(None)
   }
 
-  private def anError(error: String): Future[String \/ Option[(Member, Some[CommitteeMember])]] = {
-    Future.successful(-\/(error))
-  }
 
   private def fbReq(userId: String): Option[FBSignedRequest] = {
     Some(new FBSignedRequest(
@@ -379,11 +359,11 @@ class SocialLoginApiSpec extends BaseApiSpec {
     ))
   }
 
-  private val noNewMemberUuid: Future[\/[String, UUID]] =
-    Future.successful(-\/("noNewMemberUuid"))
+  private val noNewMemberUuid: String \/ Future[UUID] =
+    -\/("noNewMemberUuid")
 
-  private def newMemberUuid(uuid: UUID): Future[\/[String, UUID]] = {
-    Future.successful(\/-(uuid))
+  private def newMemberUuid(uuid: UUID): String \/ Future[UUID] = {
+    \/-(Future.successful(uuid))
   }
 
 }

@@ -190,19 +190,6 @@ class CourseSpacesMemberApiSpec extends BaseApiSpec {
       }
     }
 
-    "return the correct response for the request failing" in {
-      val request = CourseSpaceDepositPaidRequest(depositPaid = true)
-
-      Put(depositPaidUrl.format(StubCourseSpaceDao.setDepositPaidErrorUuid.toString), request) ~> Route.seal(route) ~> check {
-        response.status shouldEqual StatusCodes.OK
-
-        val res = responseAs[CourseSpaceDepositPaidResponse]
-
-        res.success shouldEqual false
-        res.error shouldEqual Some("error.internalServer")
-      }
-    }
-
   }
 
 }

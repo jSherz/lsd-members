@@ -147,7 +147,7 @@ class JwtDirectivesSpec extends BaseSpec with ScalatestRouteTest {
 
   }
 
-  private def buildDirective(serviceResponse: Option[UUID], member: Future[String \/ Option[Member]]): Route = {
+  private def buildDirective(serviceResponse: Option[UUID], member: Future[Option[Member]]): Route = {
     val service = mock(classOf[JwtService])
     when(service.verifyJwt(any())).thenReturn(serviceResponse)
 
@@ -161,7 +161,7 @@ class JwtDirectivesSpec extends BaseSpec with ScalatestRouteTest {
     }
   }
 
-  private def buildCommitteeDirective(serviceResponse: Option[UUID], member: Future[String \/ Option[Member]],
+  private def buildCommitteeDirective(serviceResponse: Option[UUID], member: Future[Option[Member]],
                                       committeeMember: Future[Option[CommitteeMember]]): Route = {
     val service = mock(classOf[JwtService])
     when(service.verifyJwt(any())).thenReturn(serviceResponse)
@@ -177,16 +177,12 @@ class JwtDirectivesSpec extends BaseSpec with ScalatestRouteTest {
     }
   }
 
-  private def aMember(member: Option[Member]): Future[\/[String, Option[Member]]] = {
-    Future.successful(\/-(member))
+  private def aMember(member: Option[Member]): Future[Option[Member]] = {
+    Future.successful(member)
   }
 
   private def aCommitteeMember(committeeMember: Option[CommitteeMember]): Future[Option[CommitteeMember]] = {
     Future.successful(committeeMember)
-  }
-
-  private def anError(error: String): Future[\/[String, Option[Member]]] = {
-    Future.successful(-\/(error))
   }
 
   private def jwtHeader(value: String): HttpHeader = {

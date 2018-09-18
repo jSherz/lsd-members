@@ -28,7 +28,6 @@ import java.sql.Date
 import java.util.UUID
 
 import akka.event.LoggingAdapter
-import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.{CommitteeMember, Course, CourseWithOrganisers}
 import com.jsherz.luskydive.json._
 import com.jsherz.luskydive.services.DatabaseService
@@ -199,22 +198,20 @@ class CourseDaoImpl(
   override def create(course: Course, numSpaces: Int): Future[String \/ UUID] = {
     if (numSpaces >= CourseSpaceDaoImpl.MIN_SPACES && numSpaces <= CourseSpaceDaoImpl.MAX_SPACES) {
       for {
-        // Lookup main organiser
-        organiser <- committeeMemberDao.get(course.organiserUuid) ifNone CourseDaoErrors.invalidOrganiser
-        // Lookup secondary organiser, if defined
-        secondaryOrganiser <- lookupSecondaryOrganiser(course.secondaryOrganiserUuid)
-        // Add the course record if the given organisers were found
-        courseUuid <- organiser withFutureF { _ =>
-          secondaryOrganiser withFutureF { maybeSecondaryOrganiser =>
-            db.run(coursesReturningUuid +=
-              course.copy(secondaryOrganiserUuid = maybeSecondaryOrganiser.flatMap(co => Some(co.uuid)))) withServerError
-          }
+        organiser <- committeeMemberDao.get(course.organiserUuid)
+        secondaryOrganiser <- course.secondaryOrganiserUuid match {
+          case Some(soUuid) => committeeMemberDao.get(soUuid)
+          case None => Future.successful(None)
         }
-        // Add the spaces
-        spacesResult <- courseUuid withFutureF { uuid: UUID =>
-          courseSpaceDao.createForCourse(uuid, numSpaces)
-        }
-      } yield courseUuid
+
+        if organiser.isDefined
+
+        courseUuid <- db.run(
+          coursesReturningUuid += course.copy(secondaryOrganiserUuid = secondaryOrganiser.map(_.uuid))
+        )
+
+        _ <- courseSpaceDao.createForCourse(courseUuid, numSpaces)
+      } yield \/-(courseUuid)
     } else {
       Future.successful(-\/(CourseSpaceDaoErrors.invalidNumSpaces))
     }
@@ -223,22 +220,10 @@ class CourseDaoImpl(
   private def coursesReturningUuid(): driver.ReturningInsertActionComposer[Course, UUID] =
     Courses returning Courses.map(_.uuid)
 
-  private def lookupSecondaryOrganiser(maybeUuid: Option[UUID]): Future[String \/ Option[CommitteeMember]] = {
-    maybeUuid match {
-      case Some(uuid) => committeeMemberDao.get(uuid).map {
-        case Some(committeeMember) => \/-(Some(committeeMember))
-        case None => -\/(CourseDaoErrors.invalidSecondaryOrganiser)
-      }
-      case None => Future.successful(\/-(None))
-    }
+  private def lookupSecondaryOrganiser(maybeUuid: Option[UUID]): Future[Option[CommitteeMember]] = maybeUuid match {
+    case Some(uuid) => committeeMemberDao.get(uuid)
+    case None => Future.successful(None)
   }
 
 }
 
-object CourseDaoErrors {
-
-  val invalidOrganiser = "error.invalidOrganiser"
-
-  val invalidSecondaryOrganiser = "error.invalidSecondaryOrganiser"
-
-}

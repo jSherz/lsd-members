@@ -60,7 +60,7 @@ class StubCommitteeMemberDao extends CommitteeMemberDao {
     } else if (StubCommitteeMemberDao.notFoundMemberUuid == uuid) {
       Future.successful(None)
     } else {
-      throw new RuntimeException("Unknown UUID used with stub")
+      throw new RuntimeException(s"Unknown UUID $uuid used with stub")
     }
   }
 

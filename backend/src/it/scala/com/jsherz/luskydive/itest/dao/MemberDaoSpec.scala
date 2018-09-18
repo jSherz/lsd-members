@@ -39,6 +39,7 @@ import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 import scalaz.{-\/, \/-}
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 /**
   * Ensures the member DAO works correctly with the golden test DB.
@@ -121,7 +122,7 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
         updatedAt, None)
       val result = dao.create(member)
 
-      result.futureValue shouldBe -\/(MemberDaoErrors.noPhoneNumberOrEmail)
+      result shouldBe -\/(MemberDaoErrors.noPhoneNumberOrEmail)
     }
 
     "generate a valid UUID (if not supplied) and inserts a member with the correct information" in {
@@ -131,14 +132,14 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       val member = Member(UUID.fromString("31a43b3a-b4a7-4b79-b22d-75e517ab2e0f"), "Keira", Some("Rahman"), Some("+447916149532"), Some("KeiraRahman@armyspy.com"),
         Some(DateUtil.makeDate(2011, 5, 9)), None, None, false, false, createdAt, updatedAt, None)
 
-      val futureResult = dao.create(member)
-      val result = futureResult.futureValue
+      val result = dao.create(member)
 
       result.isRight shouldBe true
 
-      result.map { uuid =>
+      result.map { futureUuid =>
+        val uuid = futureUuid.futureValue
         val foundMember = dao.get(uuid)
-        foundMember.futureValue shouldBe \/-(Some(member.copy(uuid = uuid)))
+        foundMember.futureValue shouldBe Some(member.copy(uuid = uuid))
       }
     }
 
@@ -150,14 +151,14 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
         Some("+447938921821"), Some("sburton@theburtons.xyz"), None, None, None, false, false, createdAt, updatedAt,
         None)
 
-      val futureResult = dao.create(member)
-      val result = futureResult.futureValue
+      val result = dao.create(member)
 
       result.isRight shouldBe true
 
-      result.map { uuid =>
+      result.map { futureUuid =>
+        val uuid = futureUuid.futureValue
         val foundMember = dao.get(uuid)
-        foundMember.futureValue shouldBe \/-(Some(member))
+        foundMember.futureValue shouldBe Some(member)
       }
     }
 
@@ -168,13 +169,13 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
     "return None if the member was not found" in {
       val member = dao.get(UUID.fromString("d8418dda-aed4-4e58-9dc1-38a8ea720120"))
 
-      member.futureValue shouldBe \/-(None)
+      member.futureValue shouldBe None
     }
 
     "return Some(member) if a valid UUID was given" in {
       val member = dao.get(UUID.fromString("0d0fa940-6d3f-45f9-9be0-07b08ec4e240"))
 
-      member.futureValue shouldEqual \/-(Some(Util.fixture[Member]("0d0fa940.json")))
+      member.futureValue shouldEqual Some(Util.fixture[Member]("0d0fa940.json"))
     }
 
   }
@@ -185,7 +186,7 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       val testCases = Seq("", "a", "Ja", "  ", "  Br  ")
 
       testCases.foreach { example =>
-        dao.search(example).futureValue shouldEqual -\/("error.invalidSearchTerm")
+        dao.search(example) shouldEqual -\/("error.invalidSearchTerm")
       }
     }
 
@@ -193,7 +194,10 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       val testCases = Seq("Brucey", "+451182", "freestyler")
 
       testCases.foreach { example =>
-        dao.search(example).futureValue shouldEqual \/-(Seq.empty)
+        val result = dao.search(example)
+
+        result.isRight shouldBe true
+        result.foreach(_.futureValue shouldEqual Seq.empty)
       }
     }
 
@@ -205,7 +209,11 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       )
 
       testCases.foreach {
-        case (term, expected) => dao.search(term).futureValue shouldEqual \/-(expected)
+        case (term, expected) => {
+          val result = dao.search(term)
+          result.isRight shouldBe true
+          result.foreach(_.futureValue shouldEqual expected)
+        }
       }
     }
 
@@ -216,7 +224,12 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       )
 
       testCases.foreach {
-        case (term, expected) => dao.search(term).futureValue shouldEqual \/-(expected)
+        case (term, expected) => {
+          val result = dao.search(term)
+
+          result.isRight shouldBe true
+          result.foreach(_.futureValue shouldEqual expected)
+        }
       }
     }
 
@@ -227,15 +240,13 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
     "return Right(Some(member)) if a member exists with the phone number" in {
       val member = dao.forPhoneNumber("+447526188767").futureValue
 
-      member.isRight shouldBe true
-      member.map(_ shouldEqual Some(Util.fixture[Member]("e5b8abf1.json")))
+      member shouldEqual Some(Util.fixture[Member]("e5b8abf1.json"))
     }
 
     "return Right(None) if a member isn't found with the given phone number" in {
       val member = dao.forPhoneNumber("+447888888888").futureValue
 
-      member.isRight shouldBe true
-      member.map(_ shouldEqual None)
+      member shouldEqual None
     }
 
   }
@@ -245,8 +256,7 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
     "return the member if one exists with the given social ID (no committee record)" in {
       val member = dao.forSocialId("1231415124123").futureValue
 
-      member.isRight shouldBe true
-      member.map(_ shouldEqual Some((Util.fixture[Member]("0ac54c4b.json"), None)))
+      member shouldEqual Some((Util.fixture[Member]("0ac54c4b.json"), None))
     }
 
     "return the member & committee record if one exists with the given social ID" in {
@@ -255,15 +265,13 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       val expectedMember = Util.fixture[Member]("ddc4ca00.json")
       val expectedCommitteeMember = Util.fixture[CommitteeMember]("f59c7cd7.json")
 
-      member.isRight shouldBe true
-      member.map(_ shouldEqual Some((expectedMember, Some(expectedCommitteeMember))))
+      member shouldEqual Some((expectedMember, Some(expectedCommitteeMember)))
     }
 
     "return Right(None) if a member isn't found with the given social ID" in {
       val member = dao.forSocialId("145781284798").futureValue
 
-      member.isRight shouldBe true
-      member.map(_ shouldEqual None)
+      member shouldEqual None
     }
 
   }
@@ -275,13 +283,11 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
       val result = dao.update(memberWithDiffInfo).futureValue
 
-      result.isRight shouldBe true
-      result.map(_ shouldEqual memberWithDiffInfo)
+      result shouldEqual memberWithDiffInfo
 
       val doubleCheck = dao.get(memberWithDiffInfo.uuid).futureValue
 
-      doubleCheck.isRight shouldBe true
-      doubleCheck.map(_ shouldEqual Some(memberWithDiffInfo))
+      doubleCheck shouldEqual Some(memberWithDiffInfo)
     }
 
   }

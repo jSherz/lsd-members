@@ -31,7 +31,6 @@ import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.{CommitteeMember, Member}
 import com.jsherz.luskydive.json.MemberSearchResult
 import com.jsherz.luskydive.services.DatabaseService
-import com.jsherz.luskydive.util.FutureError._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scalaz.{-\/, \/, \/-}
@@ -53,12 +52,10 @@ trait MemberDao {
   /**
     * Insert a member into the database.
     *
-    * NB: It will generate a UUID if one is not provided.
-    *
     * @param member
     * @return UUID if creation succeeded
     */
-  def create(member: Member): Future[String \/ UUID]
+  def create(member: Member): String \/ Future[UUID]
 
   /**
     * Get a member with the provided UUID.
@@ -66,7 +63,7 @@ trait MemberDao {
     * @param uuid
     * @return
     */
-  def get(uuid: UUID): Future[String \/ Option[Member]]
+  def get(uuid: UUID): Future[Option[Member]]
 
   /**
     * Perform a search for members by matching on names, phone numbers and e-mails.
@@ -74,7 +71,7 @@ trait MemberDao {
     * @param term
     * @return
     */
-  def search(term: String): Future[String \/ Seq[MemberSearchResult]]
+  def search(term: String): String \/ Future[Seq[MemberSearchResult]]
 
   /**
     * Look for a member with the given phone number.
@@ -82,7 +79,7 @@ trait MemberDao {
     * @param phoneNumber
     * @return
     */
-  def forPhoneNumber(phoneNumber: String): Future[String \/ Option[Member]]
+  def forPhoneNumber(phoneNumber: String): Future[Option[Member]]
 
   /**
     * Look for a member with the given social user ID.
@@ -90,7 +87,7 @@ trait MemberDao {
     * @param socialId
     * @return
     */
-  def forSocialId(socialId: String): Future[String \/ Option[(Member, Option[CommitteeMember])]]
+  def forSocialId(socialId: String): Future[Option[(Member, Option[CommitteeMember])]]
 
   /**
     * Update a member's information.
@@ -98,7 +95,7 @@ trait MemberDao {
     * @param member
     * @return
     */
-  def update(member: Member): Future[String \/ Member]
+  def update(member: Member): Future[Member]
 
 }
 
@@ -130,11 +127,11 @@ class MemberDaoImpl(override protected val databaseService: DatabaseService)
     * @param member
     * @return UUID if creation succeeded
     */
-  override def create(member: Member): Future[String \/ UUID] = {
+  override def create(member: Member): String \/ Future[UUID] = {
     if (member.phoneNumber.isDefined || member.email.isDefined) {
-      db.run((Members returning Members.map(_.uuid)) += member) withServerError
+      \/-(db.run((Members returning Members.map(_.uuid)) += member))
     } else {
-      Future.successful(-\/(MemberDaoErrors.noPhoneNumberOrEmail))
+      -\/(MemberDaoErrors.noPhoneNumberOrEmail)
     }
   }
 
@@ -144,8 +141,8 @@ class MemberDaoImpl(override protected val databaseService: DatabaseService)
     * @param uuid
     * @return
     */
-  override def get(uuid: UUID): Future[String \/ Option[Member]] = {
-    db.run(Members.filter(_.uuid === uuid).result.headOption) withServerError
+  override def get(uuid: UUID): Future[Option[Member]] = {
+    db.run(Members.filter(_.uuid === uuid).result.headOption)
   }
 
   /**
@@ -156,7 +153,7 @@ class MemberDaoImpl(override protected val databaseService: DatabaseService)
     * @param term
     * @return
     */
-  override def search(term: String): Future[String \/ Seq[MemberSearchResult]] = {
+  override def search(term: String): String \/ Future[Seq[MemberSearchResult]] = {
     val termTrimmed = term.trim
 
     if (termTrimmed.length >= 3) {
@@ -174,9 +171,9 @@ class MemberDaoImpl(override protected val databaseService: DatabaseService)
         })
       )
 
-      query.withServerError
+      \/-(query)
     } else {
-      Future.successful(-\/(MemberDaoErrors.invalidSearchTerm))
+      -\/(MemberDaoErrors.invalidSearchTerm)
     }
   }
 
@@ -186,8 +183,8 @@ class MemberDaoImpl(override protected val databaseService: DatabaseService)
     * @param phoneNumber
     * @return
     */
-  override def forPhoneNumber(phoneNumber: String): Future[String \/ Option[Member]] = {
-    db.run(Members.filter(_.phoneNumber === phoneNumber).result.headOption) withServerError
+  override def forPhoneNumber(phoneNumber: String): Future[Option[Member]] = {
+    db.run(Members.filter(_.phoneNumber === phoneNumber).result.headOption)
   }
 
   /**
@@ -196,13 +193,13 @@ class MemberDaoImpl(override protected val databaseService: DatabaseService)
     * @param socialId
     * @return
     */
-  override def forSocialId(socialId: String): Future[String \/ Option[(Member, Option[CommitteeMember])]] = {
+  override def forSocialId(socialId: String): Future[Option[(Member, Option[CommitteeMember])]] = {
     val lookup = for {
       (member, committeeMember) <- Members.filter(_.socialUserId === socialId) joinLeft
         CommitteeMembers on (_.uuid === _.memberUuid)
     } yield (member, committeeMember)
 
-    db.run(lookup.result.headOption) withServerError
+    db.run(lookup.result.headOption)
   }
 
   /**
@@ -211,8 +208,8 @@ class MemberDaoImpl(override protected val databaseService: DatabaseService)
     * @param member
     * @return
     */
-  override def update(member: Member): Future[String \/ Member] = {
-    db.run(Members.filter(_.uuid === member.uuid).update(member)).map(_ => member) withServerError
+  override def update(member: Member): Future[Member] = {
+    db.run(Members.filter(_.uuid === member.uuid).update(member)).map(_ => member)
   }
 
 }

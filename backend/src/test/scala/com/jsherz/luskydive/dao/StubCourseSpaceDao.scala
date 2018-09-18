@@ -73,7 +73,7 @@ class StubCourseSpaceDao extends CourseSpaceDao {
     } else if (StubCourseSpaceDao.invalidSpaceUuid.equals(spaceUuid)) {
       Future.successful(-\/(CourseSpaceDaoErrors.unknownSpace))
     } else {
-      throw new RuntimeException("unknown UUID used with stub")
+      throw new RuntimeException(s"unknown UUID $spaceUuid used with stub")
     }
   }
 
@@ -84,16 +84,14 @@ class StubCourseSpaceDao extends CourseSpaceDao {
     * @param depositPaid
     * @return
     */
-  override def setDepositPaid(spaceUuid: UUID, depositPaid: Boolean): Future[String \/ Int] = {
+  override def setDepositPaid(spaceUuid: UUID, depositPaid: Boolean): Future[Int] = {
     Future.successful {
       if (StubCourseSpaceDao.setDepositPaidValidUuid.equals(spaceUuid)) {
-        \/-(1)
+        1
       } else if (StubCourseSpaceDao.setDepositPaidNotFoundUuid.equals(spaceUuid)) {
-        \/-(0)
-      } else if (StubCourseSpaceDao.setDepositPaidErrorUuid.equals(spaceUuid)) {
-        -\/(CourseSpaceDaoErrors.internalServer)
+        0
       } else {
-        throw new RuntimeException("unknown uuid used with stub")
+        throw new RuntimeException(s"unknown uuid $spaceUuid used with stub")
       }
     }
   }

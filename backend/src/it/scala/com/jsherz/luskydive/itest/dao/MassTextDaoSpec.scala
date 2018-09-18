@@ -62,16 +62,13 @@ class MassTextDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
     "return None if the given UUID does not exist" in {
       val result = dao.get(UUID.fromString("318edeb0-f8cd-49fe-a581-1d03252f390e")).futureValue
 
-      result shouldEqual \/-(None)
+      result shouldEqual None
     }
 
     "return Some(massText) if the given UUID matches a mass text" in {
       val result = dao.get(UUID.fromString("0e02581c-df85-4200-bedd-55a667740486")).futureValue
 
-      result.isRight shouldBe true
-      result.map {
-        _ shouldEqual Some(Util.fixture[MassText]("0e02581c.json"))
-      }
+      result shouldEqual Some(Util.fixture[MassText]("0e02581c.json"))
     }
 
   }
@@ -79,12 +76,10 @@ class MassTextDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
   "MassTextDao#filterCount" should {
 
     "return 0 if no members are matched between the given dates" in {
-      val result = dao.filterCount(DateUtil.makeDate(1850, 1, 1), DateUtil.makeDate(1851, 1, 1)).futureValue
+      val result = dao.filterCount(DateUtil.makeDate(1850, 1, 1), DateUtil.makeDate(1851, 1, 1))
 
       result.isRight shouldBe true
-      result.map { count =>
-        count shouldEqual 0
-      }
+      result.foreach(_.futureValue shouldEqual 0)
     }
 
     "return the correct number of members, filtered correctly" in {
@@ -94,31 +89,23 @@ class MassTextDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       )
 
       examples.foreach { case (dates, expectedCount) =>
-        val result = dao.filterCount(dates._1, dates._2).futureValue
+        val result = dao.filterCount(dates._1, dates._2)
 
         result.isRight shouldBe true
-        result.map { count =>
-          count shouldEqual expectedCount
-        }
+        result.foreach(_.futureValue shouldEqual expectedCount)
       }
     }
 
     "return an error if the end date is before the start date" in {
-      val result = dao.filterCount(DateUtil.makeDate(2010, 5, 4), DateUtil.makeDate(2010, 4, 4)).futureValue
+      val result = dao.filterCount(DateUtil.makeDate(2010, 5, 4), DateUtil.makeDate(2010, 4, 4))
 
-      result.isLeft shouldBe true
-      result.map { error =>
-        error shouldEqual MassTextDaoErrors.endDateBeforeStartDate
-      }
+      result.leftMap(_ shouldEqual MassTextDaoErrors.endDateBeforeStartDate)
     }
 
     "return an error if the end date and start date are the same" in {
-      val result = dao.filterCount(DateUtil.makeDate(2015, 12, 20), DateUtil.makeDate(2015, 12, 20)).futureValue
+      val result = dao.filterCount(DateUtil.makeDate(2015, 12, 20), DateUtil.makeDate(2015, 12, 20))
 
-      result.isLeft shouldBe true
-      result.map { error =>
-        error shouldEqual MassTextDaoErrors.endDateStartDateSame
-      }
+      result.leftMap(_ shouldEqual MassTextDaoErrors.endDateStartDateSame)
     }
 
   }
@@ -175,42 +162,36 @@ class MassTextDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
       result.map { uuid =>
         val createdMassText = dao.get(uuid).futureValue
 
-        createdMassText.isRight shouldBe true
-        createdMassText.map { massText =>
-          massText.isDefined shouldBe true
+        createdMassText.isDefined shouldBe true
 
-          massText.foreach { mt =>
-            mt.uuid shouldEqual uuid
-            mt.committeeMemberUuid shouldEqual UUID.fromString("f59c7cd7-3aa6-4cf9-ab3e-798b70fae6e5")
-            mt.template shouldEqual "Hello, {{ name }}. How are you?!"
-          }
+        createdMassText.foreach { mt =>
+          mt.uuid shouldEqual uuid
+          mt.committeeMemberUuid shouldEqual UUID.fromString("f59c7cd7-3aa6-4cf9-ab3e-798b70fae6e5")
+          mt.template shouldEqual "Hello, {{ name }}. How are you?!"
         }
 
-        val createdTextMessages = textMessageDao.forMassText(uuid).futureValue
+        val messages = textMessageDao.forMassText(uuid).futureValue
 
-        createdTextMessages.isRight shouldBe true
-        createdTextMessages.map { messages =>
-          messages.size shouldEqual 12
+        messages.size shouldEqual 12
 
-          // Load in our expected text messages and ensure each one was made
-          val expectedMessages = Util.fixture[Vector[TextMessage]]("mass_text_creates.json")
+        // Load in our expected text messages and ensure each one was made
+        val expectedMessages = Util.fixture[Vector[TextMessage]]("mass_text_creates.json")
 
-          expectedMessages.foreach { expected =>
-            val maybeMessage = messages.find(_.toNumber == expected.toNumber)
+        expectedMessages.foreach { expected =>
+          val maybeMessage = messages.find(_.toNumber == expected.toNumber)
 
-            maybeMessage.isDefined shouldBe true
+          maybeMessage.isDefined shouldBe true
 
-            maybeMessage.foreach { m =>
-              m.createdAt shouldEqual expected.createdAt
-              m.externalId shouldEqual expected.externalId
-              m.fromNumber shouldEqual expected.fromNumber
-              m.massTextUuid shouldEqual Some(uuid)
-              m.memberUuid shouldEqual expected.memberUuid
-              m.message shouldEqual expected.message
-              m.status shouldEqual expected.status
-              m.updatedAt shouldEqual expected.updatedAt
-              m.fromMember shouldEqual expected.fromMember
-            }
+          maybeMessage.foreach { m =>
+            m.createdAt shouldEqual expected.createdAt
+            m.externalId shouldEqual expected.externalId
+            m.fromNumber shouldEqual expected.fromNumber
+            m.massTextUuid shouldEqual Some(uuid)
+            m.memberUuid shouldEqual expected.memberUuid
+            m.message shouldEqual expected.message
+            m.status shouldEqual expected.status
+            m.updatedAt shouldEqual expected.updatedAt
+            m.fromMember shouldEqual expected.fromMember
           }
         }
       }

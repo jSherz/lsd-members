@@ -39,40 +39,38 @@ import scalaz.{-\/, \/, \/-}
   */
 class StubTextMessageDao extends TextMessageDao {
 
-  override def all(): Future[\/[String, Seq[TextMessage]]] = ???
+  override def all(): Future[Seq[TextMessage]] = ???
 
-  override def get(uuid: UUID): Future[\/[String, Option[TextMessage]]] = ???
+  override def get(uuid: UUID): Future[Option[TextMessage]] = ???
 
-  override def insert(textMessage: TextMessage): Future[\/[String, UUID]] = {
-    Future.successful(\/-(textMessage.uuid))
+  override def insert(textMessage: TextMessage): Future[UUID] = {
+    Future.successful(textMessage.uuid)
   }
 
-  override def forMember(memberUuid: UUID): Future[String \/ Seq[TextMessage]] = {
+  override def forMember(memberUuid: UUID): Future[Seq[TextMessage]] = {
     Future.successful {
       if (StubTextMessageDao.forMemberUuid.equals(memberUuid)) {
-        \/-(StubTextMessageDao.forMember)
+        StubTextMessageDao.forMember
       } else if (StubTextMessageDao.forMemberNotFoundUuid.equals(memberUuid)) {
-        \/-(Seq.empty)
-      } else if (StubTextMessageDao.forMemberErrorUuid.equals(memberUuid)) {
-        -\/("error.internalServer")
+        Seq.empty
       } else {
-        throw new RuntimeException("unknown uuid used with stub")
+        throw new RuntimeException(s"unknown uuid $memberUuid used with stub")
       }
     }
   }
 
-  override def update(textMessage: TextMessage): Future[\/[String, Int]] = ???
+  override def update(textMessage: TextMessage): Future[Int] = ???
 
-  override def forMassText(massTextUuid: UUID): Future[\/[String, Seq[TextMessage]]] = ???
+  override def forMassText(massTextUuid: UUID): Future[Seq[TextMessage]] = ???
 
-  override def toSend(): Future[\/[String, Seq[TextMessage]]] = ???
+  override def toSend(): Future[Seq[TextMessage]] = ???
 
-  override def getReceived(): Future[\/[String, Seq[TextMessage]]] = {
-    Future.successful(\/-(Util.fixture[Vector[TextMessage]]("get_received.json")))
+  override def getReceived(): Future[Seq[TextMessage]] = {
+    Future.successful(Util.fixture[Vector[TextMessage]]("get_received.json"))
   }
 
-  override def getReceivedCount(): Future[\/[String, Int]] = {
-    getReceived().map(_.map(_.size))
+  override def getReceivedCount(): Future[Int] = {
+    getReceived().map(_.size)
   }
 
 }
@@ -82,6 +80,5 @@ object StubTextMessageDao {
   val forMemberUuid = UUID.fromString("d99d8680-296a-40db-9788-b182ce3a6935")
   val forMember = Util.fixture[Vector[TextMessage]]("for_member.json")
   val forMemberNotFoundUuid = UUID.fromString("98ab3642-923a-4d51-ba06-63c2c2981587")
-  val forMemberErrorUuid = UUID.fromString("605cfaed-ce58-4449-9a4d-b4a87b206a21")
 
 }

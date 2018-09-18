@@ -52,7 +52,7 @@ class StubCourseDao()(implicit ec: ExecutionContext) extends CourseDao {
     } else if (StubCourseDao.notFoundCourseUuid.equals(uuid)) {
       Future.successful(None)
     } else {
-      throw new RuntimeException("unknown uuid used with stub")
+      throw new RuntimeException(s"unknown uuid $uuid used with stub")
     }
   }
 
@@ -79,7 +79,7 @@ class StubCourseDao()(implicit ec: ExecutionContext) extends CourseDao {
     } else if (StubCourseDao.notFoundCourseUuid.equals(uuid)) {
       Future.successful(Seq())
     } else {
-      throw new RuntimeException("unknown uuid used with stub")
+      throw new RuntimeException(s"unknown uuid $uuid used with stub")
     }
   }
 

@@ -29,31 +29,29 @@ import java.util.UUID
 import akka.event.LoggingAdapter
 import com.jsherz.luskydive.core.{TextMessage, TextMessageStatuses}
 import com.jsherz.luskydive.services.DatabaseService
-import com.jsherz.luskydive.util.FutureError._
 
 import scala.concurrent.{ExecutionContext, Future}
-import scalaz.\/
 
 
 trait TextMessageDao {
 
-  def all(): Future[String \/ Seq[TextMessage]]
+  def all(): Future[Seq[TextMessage]]
 
-  def get(uuid: UUID): Future[String \/ Option[TextMessage]]
+  def get(uuid: UUID): Future[Option[TextMessage]]
 
-  def insert(textMessage: TextMessage): Future[String \/ UUID]
+  def insert(textMessage: TextMessage): Future[UUID]
 
-  def forMember(memberUuid: UUID): Future[String \/ Seq[TextMessage]]
+  def forMember(memberUuid: UUID): Future[Seq[TextMessage]]
 
-  def update(textMessage: TextMessage): Future[String \/ Int]
+  def update(textMessage: TextMessage): Future[Int]
 
-  def forMassText(massTextUuid: UUID): Future[String \/ Seq[TextMessage]]
+  def forMassText(massTextUuid: UUID): Future[Seq[TextMessage]]
 
-  def toSend(): Future[String \/ Seq[TextMessage]]
+  def toSend(): Future[Seq[TextMessage]]
 
-  def getReceived(): Future[String \/ Seq[TextMessage]]
+  def getReceived(): Future[Seq[TextMessage]]
 
-  def getReceivedCount(): Future[String \/ Int]
+  def getReceivedCount(): Future[Int]
 
 }
 
@@ -71,8 +69,8 @@ class TextMessageDaoImpl(protected override val databaseService: DatabaseService
     *
     * @return Left(error) or Right(messages)
     */
-  def all(): Future[String \/ Seq[TextMessage]] = {
-    db.run(TextMessages.sortBy(_.updatedAt.desc).result) withServerError
+  def all(): Future[Seq[TextMessage]] = {
+    db.run(TextMessages.sortBy(_.updatedAt.desc).result)
   }
 
   /**
@@ -81,8 +79,8 @@ class TextMessageDaoImpl(protected override val databaseService: DatabaseService
     * @param uuid
     * @return Left(error) or Right(Some(message) if found, otherwise None)
     */
-  def get(uuid: UUID): Future[String \/ Option[TextMessage]] = {
-    db.run(TextMessages.filter(_.uuid === uuid).result.headOption) withServerError
+  def get(uuid: UUID): Future[Option[TextMessage]] = {
+    db.run(TextMessages.filter(_.uuid === uuid).result.headOption)
   }
 
   /**
@@ -91,8 +89,8 @@ class TextMessageDaoImpl(protected override val databaseService: DatabaseService
     * @param textMessage
     * @return
     */
-  def insert(textMessage: TextMessage): Future[String \/ UUID] = {
-    db.run((TextMessages returning TextMessages.map(_.uuid)) += textMessage) withServerError
+  def insert(textMessage: TextMessage): Future[UUID] = {
+    db.run((TextMessages returning TextMessages.map(_.uuid)) += textMessage)
   }
 
   /**
@@ -101,8 +99,8 @@ class TextMessageDaoImpl(protected override val databaseService: DatabaseService
     * @param memberUuid
     * @return
     */
-  def forMember(memberUuid: UUID): Future[String \/ Seq[TextMessage]] = {
-    db.run(TextMessages.filter(_.memberUuid === memberUuid).sortBy(_.updatedAt.desc).result) withServerError
+  def forMember(memberUuid: UUID): Future[Seq[TextMessage]] = {
+    db.run(TextMessages.filter(_.memberUuid === memberUuid).sortBy(_.updatedAt.desc).result)
   }
 
   /**
@@ -111,8 +109,8 @@ class TextMessageDaoImpl(protected override val databaseService: DatabaseService
     * @param textMessage Text message to update (matched on UUID)
     * @return Left(error) or Right(num rows updated)
     */
-  def update(textMessage: TextMessage): Future[String \/ Int] = {
-    db.run(TextMessages.filter(_.uuid === textMessage.uuid).update(textMessage)) withServerError
+  def update(textMessage: TextMessage): Future[Int] = {
+    db.run(TextMessages.filter(_.uuid === textMessage.uuid).update(textMessage))
   }
 
   /**
@@ -121,13 +119,13 @@ class TextMessageDaoImpl(protected override val databaseService: DatabaseService
     * @param massTextUuid
     * @return
     */
-  override def forMassText(massTextUuid: UUID): Future[String \/ Seq[TextMessage]] = {
+  override def forMassText(massTextUuid: UUID): Future[Seq[TextMessage]] = {
     db.run(
       TextMessages
         .filter(_.massTextUuid === massTextUuid)
         .sortBy(_.updatedAt.desc)
         .result
-    ) withServerError
+    )
   }
 
   /**
@@ -135,13 +133,13 @@ class TextMessageDaoImpl(protected override val databaseService: DatabaseService
     *
     * @return
     */
-  override def toSend(): Future[\/[String, Seq[TextMessage]]] = {
+  override def toSend(): Future[Seq[TextMessage]] = {
     db.run(
       TextMessages
         .filter(_.status === TextMessageStatuses.Pending)
         .sortBy(m => (m.createdAt.asc, m.updatedAt.asc))
         .result
-    ) withServerError
+    )
   }
 
   /**
@@ -149,13 +147,13 @@ class TextMessageDaoImpl(protected override val databaseService: DatabaseService
     *
     * @return
     */
-  override def getReceived(): Future[String \/ Seq[TextMessage]] = {
+  override def getReceived(): Future[Seq[TextMessage]] = {
     db.run(
       TextMessages
         .filter(_.status === TextMessageStatuses.Received)
         .sortBy(_.createdAt.asc)
         .result
-    ) withServerError
+    )
   }
 
   /**
@@ -163,13 +161,13 @@ class TextMessageDaoImpl(protected override val databaseService: DatabaseService
     *
     * @return
     */
-  override def getReceivedCount(): Future[\/[String, Int]] = {
+  override def getReceivedCount(): Future[Int] = {
     db.run(
       TextMessages
         .filter(_.status === TextMessageStatuses.Received)
         .length
         .result
-    ) withServerError
+    )
   }
 
 }

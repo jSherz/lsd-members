@@ -57,12 +57,10 @@ class PackingListApiSpec extends BaseApiSpec {
     api = new PackingListApi(authDirective, dao).route
 
     when(dao.getOrDefault(UUID.fromString("6066143f-4bb9-41cc-ba22-ce41126752bf")))
-      .thenReturn(Future.successful(\/-(
-        Util.fixture[PackingListItem]("example.json")
-      )))
+      .thenReturn(Future.successful(Util.fixture[PackingListItem]("example.json")))
 
     when(dao.upsert(any(classOf[PackingListItem])))
-      .thenReturn(Future.successful(\/-(1)))
+      .thenReturn(Future.successful(1))
   }
 
   "PackingListApi#GET" should {

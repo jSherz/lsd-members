@@ -51,81 +51,72 @@ class TextSendingService(textMessageDao: TextMessageDao,
   val messageCreationWaitTime = 1000
 
   while (true) {
-
     log.info("Starting sending process...")
 
-    val textsToSend = sync(textMessageDao.toSend())
+    val texts = sync(textMessageDao.toSend())
 
-    textsToSend match {
-      case \/-(texts) => {
-        log.info(s"Got ${texts.length} texts to send.")
+    log.info(s"Got ${texts.length} texts to send.")
 
-        for (text <- texts) {
-          try {
-            log.info(s"Attempting to send text ${text.uuid} to ${text.toNumber}")
+    for (text <- texts) {
+      try {
+        log.info(s"Attempting to send text ${text.uuid} to ${text.toNumber}")
 
-            val message = Message.create(
-              new PhoneNumber(text.toNumber),
-              messagingServiceSid,
-              text.message
-            )
+        val message = Message.create(
+          new PhoneNumber(text.toNumber),
+          messagingServiceSid,
+          text.message
+        )
 
-            val result = message.execute(twilioClient)
+        val result = message.execute(twilioClient)
 
-            log.info(s"Sent message - ${result.getSid}")
+        log.info(s"Sent message - ${result.getSid}")
+
+        sync(textMessageDao.update(text.copy(
+          externalId = Some(result.getSid),
+          status = TextMessageStatuses.Sent
+        )))
+
+        log.info(s"Updated text message ${text.uuid} to have status Sent")
+
+        try {
+          log.info("Trying to get message from number (sleeping first)")
+
+          Thread.sleep(messageCreationWaitTime)
+
+          val messageResult = Message.fetch(result.getSid).execute(twilioClient)
+
+          //noinspection ScalaStyle
+          if (messageResult != null) {
+            log.info("Found message to update our record with.")
 
             sync(textMessageDao.update(text.copy(
               externalId = Some(result.getSid),
-              status = TextMessageStatuses.Sent
+              status = TextMessageStatuses.Sent,
+              fromNumber = messageResult.getFrom.toString
             )))
 
-            log.info(s"Updated text message ${text.uuid} to have status Sent")
-
-            try {
-              log.info("Trying to get message from number (sleeping first)")
-
-              Thread.sleep(messageCreationWaitTime)
-
-              val messageResult = Message.fetch(result.getSid).execute(twilioClient)
-
-              //noinspection ScalaStyle
-              if (messageResult != null) {
-                log.info("Found message to update our record with.")
-
-                sync(textMessageDao.update(text.copy(
-                  externalId = Some(result.getSid),
-                  status = TextMessageStatuses.Sent,
-                  fromNumber = messageResult.getFrom.toString
-                )))
-
-                log.info(s"Updated our records with from number ${messageResult.getFrom}")
-              } else {
-                log.error(s"Could not find message with ${result.getSid} to get from number")
-              }
-            } catch {
-              case ex: Exception => {
-                log.error(ex, "Failed to get from number for message.")
-              }
-            }
-
-            log.info("Sleeping...")
-            Thread.sleep(okWaitTime)
-          } catch {
-            case ex: Exception => {
-              log.error(ex, "Failed to send text.")
-
-              sync(textMessageDao.update(text.copy(
-                status = TextMessageStatuses.Error
-              )))
-
-              log.info(s"Updated text message ${text.uuid} to have status Error.")
-            }
+            log.info(s"Updated our records with from number ${messageResult.getFrom}")
+          } else {
+            log.error(s"Could not find message with ${result.getSid} to get from number")
+          }
+        } catch {
+          case ex: Exception => {
+            log.error(ex, "Failed to get from number for message.")
           }
         }
-      }
-      case -\/(error) => {
-        log.error("Failed to get texts to send: " + error)
-        Thread.sleep(errorWaitTime)
+
+        log.info("Sleeping...")
+        Thread.sleep(okWaitTime)
+      } catch {
+        case ex: Exception => {
+          log.error(ex, "Failed to send text.")
+
+          sync(textMessageDao.update(text.copy(
+            status = TextMessageStatuses.Error
+          )))
+
+          log.info(s"Updated text message ${text.uuid} to have status Error.")
+        }
       }
     }
 

@@ -30,7 +30,7 @@ import akka.event.LoggingAdapter
 import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.CourseSpace
 import com.jsherz.luskydive.services.DatabaseService
-import com.jsherz.luskydive.util.{Errors, FutureError}
+import com.jsherz.luskydive.util.Errors
 import scalaz.{-\/, \/, \/-}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -75,7 +75,7 @@ trait CourseSpaceDao {
     * @param depositPaid
     * @return
     */
-  def setDepositPaid(spaceUuid: UUID, depositPaid: Boolean): Future[String \/ Int]
+  def setDepositPaid(spaceUuid: UUID, depositPaid: Boolean): Future[Int]
 
 }
 
@@ -198,12 +198,12 @@ class CourseSpaceDaoImpl(protected override val databaseService: DatabaseService
     * @param depositPaid
     * @return
     */
-  override def setDepositPaid(spaceUuid: UUID, depositPaid: Boolean): Future[String \/ Int] = {
-    new FutureError(db.run(
+  override def setDepositPaid(spaceUuid: UUID, depositPaid: Boolean): Future[Int] = {
+    db.run(
       CourseSpaces.filter(_.uuid === spaceUuid)
         .map(_.depositPaid)
         .update(depositPaid)
-    )) withServerError
+    )
   }
 
 }

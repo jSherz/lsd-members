@@ -33,7 +33,7 @@ import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.Member
 import com.jsherz.luskydive.dao.MemberDao
 import com.jsherz.luskydive.json.{SignupAltRequest, SignupJsonSupport, SignupRequest, SignupResponse}
-import scalaz.{Failure, Success}
+import scalaz.{-\/, Failure, Success, \/-}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -50,27 +50,30 @@ class SignupApi(memberDao: MemberDao)
     *
     * Requires a name and e-mail address.
     */
-  private val signupRoute = (path("sign-up") & post & authDirective & entity(as[SignupRequest])) { (_, req) =>
+  private val signupRoute = (path("sign-up") & post & authDirective & entity(as[SignupRequest])) { (_, req: SignupRequest) =>
     req.validate() match {
       case Success(phoneNumber) => {
-        val createAction = memberDao.memberExists(Some(phoneNumber), None).flatMap {
-          case true => Future.successful(SignupResponse(false, Map("phoneNumber" -> "error.inUse")))
+        onSuccess(memberDao.memberExists(Some(phoneNumber), None)) {
+          case true => complete(SignupResponse(false, Map("phoneNumber" -> "error.inUse")))
           case false => {
             val createdAt = currentTimestamp()
             val uuid = Generators.randomBasedGenerator().generate()
             val member = Member(uuid, req.name, None, Some(phoneNumber), None, None, None, None, false, false,
               createdAt, createdAt, None)
 
-            memberDao.create(member).map { _ =>
-              log.info(s"Signed up member with name '${req.name}' and phone number '${req.phoneNumber}'.")
+            val createResult = memberDao.create(member)
 
-              SignupResponse(true, Map.empty)
+            createResult match {
+              case \/-(futureUuid) => onSuccess(futureUuid) { _ =>
+                log.info(s"Signed up member with name '${req.name}' and phone number '${req.phoneNumber}'.")
+
+                complete(SignupResponse(true, Map.empty))
+              }
+              case -\/(error) => {
+                complete(SignupResponse(false, Map.empty))
+              }
             }
           }
-        }
-
-        onSuccess(createAction) { result =>
-          complete(result)
         }
       }
       case Failure(reason) => {
@@ -89,24 +92,23 @@ class SignupApi(memberDao: MemberDao)
   private val signupAltRoute = (path("sign-up" / "alt") & post & authDirective & entity(as[SignupAltRequest])) { (_, req) =>
     req.validate() match {
       case Success(_) => {
-        val createAction = memberDao.memberExists(None, Some(req.email)).flatMap {
-          case true => Future.successful(SignupResponse(false, Map("email" -> "error.inUse")))
+        onSuccess(memberDao.memberExists(None, Some(req.email))) {
+          case true => complete(SignupResponse(false, Map("email" -> "error.inUse")))
           case false => {
             val createdAt = currentTimestamp()
             val uuid = Generators.randomBasedGenerator().generate()
             val member = Member(uuid, req.name, None, None, Some(req.email), None, None, None, false, false, createdAt,
               createdAt, None)
 
-            memberDao.create(member).map { _ =>
-              log.info(s"Signed up member with name '${req.name}' and e-mail '${req.email}'.")
+            memberDao.create(member) match {
+              case \/-(_) => {
+                log.info(s"Signed up member with name '${req.name}' and e-mail '${req.email}'.")
 
-              SignupResponse(true, Map.empty)
+                complete(SignupResponse(true, Map.empty))
+              }
+              case -\/(error) => complete(SignupResponse(false, Map.empty))
             }
           }
-        }
-
-        onSuccess(createAction) { result =>
-          complete(result)
         }
       }
       case Failure(reason) => {
