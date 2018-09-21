@@ -22,11 +22,11 @@ describe('Pages: Committee', function () {
     const assetUrl = baseUrl + 'assets/images/committee/';
 
     expect(imageUrls).toEqual([
-      assetUrl + 'phoebe.jpg', assetUrl + 'karl.jpg', assetUrl + 'amber.jpg', assetUrl + 'ray.jpg',
-      assetUrl + 'claudia.jpg', assetUrl + 'laura.jpg'
+      assetUrl + 'amber.jpg', assetUrl + 'ruby.jpg', assetUrl + 'will.jpg', assetUrl + 'sean.jpg',
+      assetUrl + 'tom.jpg', assetUrl + 'tom2.jpg', assetUrl + 'emma.jpg'
     ]);
 
-    const names = ['Phoebe', 'Karl', 'Amber', 'Ray', 'Claudia', 'Laura'];
+    const names = ['Amber', 'Ruby', 'Will', 'Sean', 'Tom', 'Tom', 'Emma'];
 
     expect(imageTitles).toEqual(names);
     expect(imageAlts).toEqual(names);
@@ -34,7 +34,8 @@ describe('Pages: Committee', function () {
     expect(headers).toEqual(names);
 
     expect(roles).toEqual([
-      'President', 'Vice-President', 'RAPS Secretary', 'Treasurer', 'Social Secretary', 'Social Secretary'
+      'President', 'Vice-President', 'RAPS Secretary', 'Treasurer', 'Social Secretary', 'Social Secretary',
+      'Kit Secretary'
     ]);
   });
 
