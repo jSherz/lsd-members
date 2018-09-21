@@ -20,7 +20,7 @@ export class CommitteeMember {
 export class CommitteeComponent implements OnInit {
 
   committeeMembers = [
-    new CommitteeMember('amber.jpg', 'Amber', 'President'),
+    new CommitteeMember('amber.jpg', 'Padders', 'President'),
     new CommitteeMember('ruby.jpg', 'Ruby', 'Vice-President'),
     new CommitteeMember('will.jpg', 'Will', 'RAPS Secretary'),
     new CommitteeMember('sean.jpg', 'Sean', 'Treasurer'),

@@ -26,7 +26,7 @@ describe('Pages: Committee', function () {
       assetUrl + 'tom.jpg', assetUrl + 'tom2.jpg', assetUrl + 'emma.jpg'
     ]);
 
-    const names = ['Amber', 'Ruby', 'Will', 'Sean', 'Tom', 'Tom', 'Emma'];
+    const names = ['Padders', 'Ruby', 'Will', 'Sean', 'Tom', 'Tom', 'Emma'];
 
     expect(imageTitles).toEqual(names);
     expect(imageAlts).toEqual(names);
