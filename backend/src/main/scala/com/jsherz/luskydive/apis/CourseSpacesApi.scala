@@ -31,6 +31,7 @@ import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.PathMatchers.JavaUUID
 import akka.http.scaladsl.server._
+import com.jsherz.luskydive.core.{CommitteeMember, Member}
 import com.jsherz.luskydive.dao.CourseSpaceDao
 import com.jsherz.luskydive.json._
 import scalaz.{-\/, \/-}
@@ -42,7 +43,7 @@ import scala.concurrent.ExecutionContext
   */
 class CourseSpacesApi(dao: CourseSpaceDao)
                      (implicit ec: ExecutionContext,
-                      authDirective: Directive1[UUID],
+                      authDirective: Directive1[(Member, CommitteeMember)],
                       log: LoggingAdapter) {
 
   import com.jsherz.luskydive.json.CourseSpacesJsonSupport._

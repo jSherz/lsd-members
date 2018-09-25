@@ -24,13 +24,14 @@
 
 package com.jsherz.luskydive.util
 
-import java.util.UUID
-
 import akka.http.scaladsl.model.headers.HttpChallenge
 import akka.http.scaladsl.server.AuthenticationFailedRejection.CredentialsRejected
-import akka.http.scaladsl.server.{AuthenticationFailedRejection, Directive1}
 import akka.http.scaladsl.server.directives.BasicDirectives.provide
 import akka.http.scaladsl.server.directives.RouteDirectives._
+import akka.http.scaladsl.server.{AuthenticationFailedRejection, Directive1}
+import com.jsherz.luskydive.core.{CommitteeMember, Member}
+import com.jsherz.luskydive.json.CommitteeMembersJsonSupport.CommitteeMemberFormat
+import com.jsherz.luskydive.json.MemberJsonSupport._
 
 /**
   * Some dummy directives that can be used to test APIs that require authentication.
@@ -42,17 +43,20 @@ object AuthenticationDirectives {
     */
   private val dummyChallenge = HttpChallenge("", None)
 
+  private val member = Util.fixture[Member]("6066143f.json")
+
+  private val committeeMember = Util.fixture[CommitteeMember]("956610c8.json")
+
   /**
     * Allows any request, regardless of API key header.
     */
-  val allowAll: Directive1[UUID] = {
-    provide(UUID.randomUUID())
+  val allowAll: Directive1[(Member, CommitteeMember)] = {
+    provide(member, committeeMember)
   }
-
   /**
     * Rejects any request, regardless of API key header.
     */
-  val denyAll: Directive1[UUID] = {
+  val denyAll: Directive1[(Member, CommitteeMember)] = {
     reject(AuthenticationFailedRejection(CredentialsRejected, dummyChallenge))
   }
 

@@ -33,7 +33,7 @@ import spray.json.{DefaultJsonProtocol, RootJsonFormat}
 
 case class LoginRequest(email: String, password: String)
 
-case class LoginResponse(success: Boolean, errors: Map[String, String], apiKey: Option[UUID])
+case class LoginResponse(success: Boolean, errors: Map[String, String], apiKey: Option[String])
 
 object LoginJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
 

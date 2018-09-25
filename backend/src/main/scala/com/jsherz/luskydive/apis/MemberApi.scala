@@ -30,7 +30,7 @@ import akka.event.LoggingAdapter
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
-import com.jsherz.luskydive.core.{Member, TextMessage}
+import com.jsherz.luskydive.core.{CommitteeMember, Member, TextMessage}
 import com.jsherz.luskydive.dao.{MemberDao, MemberDaoErrors, TextMessageDao}
 import com.jsherz.luskydive.json.MemberJsonSupport._
 import com.jsherz.luskydive.json.MemberSearchRequest
@@ -42,7 +42,7 @@ import scala.concurrent.ExecutionContext
   * Used to retrieve member information.
   */
 class MemberApi(memberDao: MemberDao, textMessageDao: TextMessageDao)
-               (implicit ec: ExecutionContext, authDirective: Directive1[UUID], log: LoggingAdapter) {
+               (implicit ec: ExecutionContext, authDirective: Directive1[(Member, CommitteeMember)], log: LoggingAdapter) {
 
   val searchRoute = path("search") {
     post {

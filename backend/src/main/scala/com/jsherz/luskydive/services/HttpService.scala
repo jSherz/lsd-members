@@ -63,13 +63,11 @@ class HttpService(
                  (implicit executionContext: ExecutionContext,
                   log: LoggingAdapter) {
 
-  implicit val auth: Directive1[UUID] = new ApiKeyAuthenticator(authDao).authenticateWithApiKey
-
   private val jwtDirectives: JwtDirectives = new JwtDirectives(jwtService, memberDao, committeeMemberDao)
 
   private implicit val authenticateWithJwt: Directive1[Member] = jwtDirectives.authenticateWithJwt
 
-  private val authenticateCommitteeWithJwt: Directive1[(Member, CommitteeMember)] =
+  private implicit val authenticateCommitteeWithJwt: Directive1[(Member, CommitteeMember)] =
     jwtDirectives.authenticateCommitteeWithJwt
 
   val signupRoutes = new SignupApi(memberDao)
@@ -85,7 +83,7 @@ class HttpService(
   val packingListApi = new PackingListApi(authenticateWithJwt, packingListDao)
   val migrateApi = new MigrateApi(authenticateCommitteeWithJwt)
 
-  val loginApi = new LoginApi(authDao)
+  val loginApi = new LoginApi(authDao, jwtService)
 
   val cors: Cors = new Cors(log)
 

@@ -24,14 +24,9 @@
 
 package com.jsherz.luskydive.dao
 
-import java.sql.Timestamp
-import java.util.{Calendar, UUID}
-
 import akka.event.LoggingAdapter
-import com.fasterxml.uuid.Generators
-import com.jsherz.luskydive.core.{ApiKey, CommitteeMember}
+import com.jsherz.luskydive.core.CommitteeMember
 import com.jsherz.luskydive.services.DatabaseService
-import com.jsherz.luskydive.util.FutureError._
 import com.jsherz.luskydive.util.PasswordHasher
 import scalaz.{-\/, \/, \/-}
 
@@ -40,32 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait AuthDao {
 
-  /**
-    * Authenticate a user, either returning the Left(error) or Right(memberUuid).
-    *
-    * @param apiKey
-    * @param time Time at which access is required
-    * @return
-    */
-  def authenticate(apiKey: UUID, time: Timestamp): Future[String \/ UUID]
-
-  /**
-    * Get the API key with the given UUID / key.
-    *
-    * @param apiKey
-    * @return
-    */
-  def get(apiKey: UUID): Future[Option[ApiKey]]
-
-  /**
-    * Attempt to authenticate a user and generate an API key for them.
-    *
-    * @param email
-    * @param password
-    * @param time
-    * @return An API key, if login succeeded
-    */
-  def login(email: String, password: String, time: Timestamp): Future[String \/ UUID]
+  def login(email: String, password: String): Future[String \/ CommitteeMember]
 
 }
 
@@ -76,118 +46,16 @@ class AuthDaoImpl(protected override val databaseService: DatabaseService)
   import driver.api._
 
   /**
-    * Number of hours an API key lasts for after being created or reissued.
+    * Attempt to authenticate and return their
     */
-  val API_KEY_EXPIRES = 24
-
-  /**
-    * Authenticate a user, either returning the Left(error) or Right(memberUuid).
-    *
-    * @param apiKey
-    * @param time Time at which access is required
-    * @return
-    */
-  override def authenticate(apiKey: UUID, time: Timestamp): Future[String \/ UUID] = {
-    val lookup = db.run(
-      ApiKeys.filter(_.uuid === apiKey).join(CommitteeMembers).on(_.committeeMemberUuid === _.uuid).result.headOption
-    )
-
-    for {
-      lookupResult <- lookup ifNone AuthDaoErrors.invalidApiKey
-      validateResult <- Future.successful(lookupResult.flatMap(validateKey(time)))
-      authResult <- validateResult match {
-        case \/-(validKey) => extendKeyExpiry(time)(validKey).map(r => \/-(r))
-        case -\/(error) => Future.successful(-\/(error))
-      }
-    } yield authResult
-  }
-
-  /**
-    * Test to see if the given API key is valid at the provided time.
-    *
-    * Checks that the key hasn't expired and the attached committee member hasn't been locked.
-    *
-    * @param time
-    * @param keyAndCommittee
-    * @return
-    */
-  private def validateKey(time: Timestamp)(keyAndCommittee: (ApiKey, CommitteeMember)): String \/ ApiKey = {
-    keyAndCommittee match {
-      case (apiKey, committeeMember) => {
-        // Ensure key hasn't expired
-        if (apiKey.expiresAt.after(time)) {
-          // Ensure committee member is allowed to login
-          if (!committeeMember.locked) {
-            \/-(apiKey)
-          } else {
-            -\/(AuthDaoErrors.accountLocked)
-          }
-        } else {
-          -\/(AuthDaoErrors.invalidApiKey)
-        }
-      }
-    }
-  }
-
-  /**
-    * Extend the given key's expiry date by the current time + X hours.
-    *
-    * @param time
-    * @param apiKey
-    * @return
-    */
-  private def extendKeyExpiry(time: Timestamp)(apiKey: ApiKey): Future[UUID] = {
-    val newExpiry = addHoursToTimestamp(time, API_KEY_EXPIRES)
-
-    db.run(
-      ApiKeys.filter(_.uuid === apiKey.uuid).map(_.expiresAt).update(newExpiry)
-    ).map {
-      _ => apiKey.committeeMemberUuid
-    }
-  }
-
-  /**
-    * Create a new [[Timestamp]] by adding a number of hours to an existing one.
-    *
-    * @param time
-    * @param hours
-    * @return
-    */
-  private def addHoursToTimestamp(time: Timestamp, hours: Int): Timestamp = {
-    val calendar = Calendar.getInstance()
-    calendar.setTime(time)
-    calendar.add(Calendar.HOUR, API_KEY_EXPIRES)
-
-    new Timestamp(calendar.getTime.getTime)
-  }
-
-  /**
-    * Get the API key with the given UUID / key.
-    *
-    * @param apiKey
-    * @return
-    */
-  override def get(apiKey: UUID): Future[Option[ApiKey]] = {
-    db.run(ApiKeys.filter(_.uuid === apiKey).result.headOption)
-  }
-
-  /**
-    * Attempt to authenticate a user and generate an API key for them.
-    *
-    * @param email
-    * @param password
-    * @param time
-    * @return An API key, if login succeeded
-    */
-  override def login(email: String, password: String, time: Timestamp): Future[String \/ UUID] = {
+  override def login(email: String, password: String): Future[String \/ CommitteeMember] = {
     for {
       committeeMember <- db.run(CommitteeMembers.filter(cm => cm.email === email).result.headOption)
-      passwordCheckResult <- Future.successful(checkPasswordAndLocked(committeeMember, password))
-      apiKeyResult <- passwordCheckResult match {
-        case \/-(cm) => generateApiKey(time)(cm).map(f => \/-(f.uuid))
-        case -\/(error) => Future.successful(-\/(error))
-      }
-    } yield apiKeyResult
+      passwordCheckResult = checkPasswordAndLocked(committeeMember, password)
+    } yield passwordCheckResult match {
+      case \/-(cm) => \/-(cm)
+      case -\/(error) => -\/(error)
+    }
   }
 
   /**
@@ -196,10 +64,6 @@ class AuthDaoImpl(protected override val databaseService: DatabaseService)
     * - maybeCommitteeMember is defined
     * - the password given is correct
     * - the committee member isn't locked
-    *
-    * @param maybeCommitteeMember
-    * @param password
-    * @return
     */
   private def checkPasswordAndLocked(maybeCommitteeMember: Option[CommitteeMember], password: String): String \/ CommitteeMember = {
     maybeCommitteeMember match {
@@ -217,23 +81,6 @@ class AuthDaoImpl(protected override val databaseService: DatabaseService)
       }
       case None => -\/(AuthDaoErrors.invalidEmailPass)
     }
-  }
-
-  /**
-    * Generate a new API key that's valid for [[API_KEY_EXPIRES]] hours.
-    *
-    * @param time
-    * @param committeeMember
-    * @return
-    */
-  private def generateApiKey(time: Timestamp)(committeeMember: CommitteeMember): Future[ApiKey] = {
-    val key = Generators.randomBasedGenerator.generate
-    val createdAt = time
-    val expiresAt = addHoursToTimestamp(createdAt, API_KEY_EXPIRES)
-
-    val createdKey = ApiKey(key, committeeMember.uuid, createdAt, expiresAt)
-
-    db.run((ApiKeys += createdKey).map(_ => createdKey))
   }
 
 }

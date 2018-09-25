@@ -26,11 +26,11 @@ package com.jsherz.luskydive.apis
 
 import java.sql.Timestamp
 import java.time.LocalDateTime
-import java.util.UUID
 
 import akka.event.LoggingAdapter
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
+import com.jsherz.luskydive.core.{CommitteeMember, Member}
 import com.jsherz.luskydive.dao.MassTextDao
 import com.jsherz.luskydive.json.MassTextsJsonSupport._
 import com.jsherz.luskydive.json.{MassTextSendRequest, MassTextSendResponse, TryFilterRequest, TryFilterResponse}
@@ -43,7 +43,7 @@ import scala.concurrent.ExecutionContext
   * Used to send out a text message to many members.
   */
 class MassTextApi(dao: MassTextDao)
-                 (implicit ec: ExecutionContext, authDirective: Directive1[UUID], log: LoggingAdapter) {
+                 (implicit ec: ExecutionContext, authDirective: Directive1[(Member, CommitteeMember)], log: LoggingAdapter) {
 
   val exampleName = "Mary"
 
@@ -79,7 +79,7 @@ class MassTextApi(dao: MassTextDao)
 
       complete(MassTextSendResponse(success = false, Some(MassTextApiErrors.templateRenderMismatch), None))
     } else {
-      val result = dao.send(sender, request.startDate, request.endDate, request.template, Timestamp.valueOf(LocalDateTime.now))
+      val result = dao.send(sender._1.uuid, request.startDate, request.endDate, request.template, Timestamp.valueOf(LocalDateTime.now))
 
       onSuccess(result) {
         case \/-(uuid) => complete(MassTextSendResponse(success = true, None, Some(uuid)))

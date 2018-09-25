@@ -25,8 +25,7 @@
 package com.jsherz.luskydive.apis
 
 import java.sql.Timestamp
-import java.time.LocalDateTime
-import java.util.Date
+import java.util.{Calendar, Date}
 
 import akka.event.LoggingAdapter
 import akka.http.scaladsl.model.StatusCodes
@@ -34,25 +33,33 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import com.jsherz.luskydive.dao.{AuthDao, AuthDaoErrors}
 import com.jsherz.luskydive.json.{LoginRequest, LoginResponse}
+import com.jsherz.luskydive.services.JwtService
+import scalaz.{-\/, \/-}
 
 import scala.concurrent.ExecutionContext
-import scalaz.{-\/, \/-}
 
 /**
   * Used to authenticate users.
   */
-class LoginApi(dao: AuthDao)(implicit ec: ExecutionContext, log: LoggingAdapter) {
+class LoginApi(dao: AuthDao, jwtService: JwtService)(implicit ec: ExecutionContext, log: LoggingAdapter) {
 
   import com.jsherz.luskydive.json.LoginJsonSupport._
+
+  /**
+    * Number of hours an API key lasts for after being created or reissued.
+    */
+  val API_KEY_EXPIRES = 24
 
   val loginRoute = pathEnd {
     post {
       entity(as[LoginRequest]) { req =>
         val time = new Timestamp(new Date().getTime)
-        val loginResult = dao.login(req.email, req.password, time)
+        val loginResult = dao.login(req.email, req.password)
 
         onSuccess(loginResult) {
-          case \/-(uuid) => complete(LoginResponse(true, Map.empty, Some(uuid)))
+          case \/-(cm) =>
+            val jwt = jwtService.createJwt(cm.uuid, time.toInstant, addHoursToTimestamp(time, API_KEY_EXPIRES).toInstant)
+            complete(LoginResponse(true, Map.empty, Some(jwt)))
           case -\/(error) => {
             if (AuthDaoErrors.invalidEmailPass.equals(error)) {
               log.info(s"Login failed - invalid e-mail '${req.email}' or password.")
@@ -75,6 +82,21 @@ class LoginApi(dao: AuthDao)(implicit ec: ExecutionContext, log: LoggingAdapter)
 
   val route: Route = pathPrefix("login") {
     loginRoute
+  }
+
+  /**
+    * Create a new [[Timestamp]] by adding a number of hours to an existing one.
+    *
+    * @param time
+    * @param hours
+    * @return
+    */
+  private def addHoursToTimestamp(time: Timestamp, hours: Int): Timestamp = {
+    val calendar = Calendar.getInstance()
+    calendar.setTime(time)
+    calendar.add(Calendar.HOUR, API_KEY_EXPIRES)
+
+    new Timestamp(calendar.getTime.getTime)
   }
 
 }

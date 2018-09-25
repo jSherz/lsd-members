@@ -3,7 +3,6 @@
 -- Cleanup all relevant tables
 --
 
-DROP TABLE IF EXISTS api_keys;
 DROP TABLE IF EXISTS course_spaces;
 DROP TABLE IF EXISTS courses;
 DROP TABLE IF EXISTS text_messages;

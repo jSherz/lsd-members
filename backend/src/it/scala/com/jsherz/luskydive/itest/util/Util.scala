@@ -50,8 +50,10 @@ object Util {
   def setupGoldTestDb(): TestDatabase = {
     implicit val codec = Codec.UTF8
 
-    //    val cleanupSql = Source.fromURL(getClass.getResource("/clean-test-db.sql")).mkString
     val goldenSql = Source.fromURL(getClass.getResource("/test-data.sql")).mkString
+
+    // Ensure the driver loads and registers itself with the DriverManager (resolves "No suitable driver" error)
+    Class.forName("org.postgresql.Driver")
 
     val masterService = new DatabaseService(dbUrl, dbUsername, dbPassword)
 
@@ -92,6 +94,7 @@ object Util {
     TestDatabase(service, () => {
       service.db.close()
       masterService.db.createSession.conn.prepareCall(s"DROP DATABASE ${schema};").execute()
+      masterService.db.close()
     })
   }
 

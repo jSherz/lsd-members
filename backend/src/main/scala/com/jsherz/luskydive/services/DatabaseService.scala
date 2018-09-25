@@ -31,6 +31,8 @@ import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
   */
 class DatabaseService(jdbcUrl: String, username: String, password: String, maxPoolSize: Option[Int] = None) {
 
+  private val MAX_CONNECTIONS = 20
+
   private val hikariConfig = new HikariConfig()
   hikariConfig.setJdbcUrl(jdbcUrl)
   hikariConfig.setUsername(username)
@@ -44,7 +46,9 @@ class DatabaseService(jdbcUrl: String, username: String, password: String, maxPo
 
   import driver.api._
 
-  val db = Database.forDataSource(dataSource, None)
+  val executor = AsyncExecutor.default("AsyncExecutor.default", MAX_CONNECTIONS)
+
+  val db: driver.backend.DatabaseDef = Database.forDataSource(dataSource, maxPoolSize, executor)
   db.createSession()
 
 }
