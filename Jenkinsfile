@@ -1,10 +1,10 @@
 pipeline {
   agent any
   stages {
-    stage('Test') {
+    stage('Backend Test') {
       steps {
         sh '''cd backend
-sbt test'''
+/opt/sbt/bin/sbt test'''
       }
     }
   }
