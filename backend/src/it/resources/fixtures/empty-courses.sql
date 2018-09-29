@@ -1,6 +1,6 @@
-INSERT INTO courses (uuid, date, organiser_uuid, secondary_organiser_uuid, status) VALUES ('ef5c13a0-8fa4-4fcd-91c3-48942ae95d06', '2016-09-05', '52abe905-4d2c-4f38-819c-fc6b5d6b851f', NULL, 0);
-INSERT INTO courses (uuid, date, organiser_uuid, secondary_organiser_uuid, status) VALUES ('8bc6a2e3-a403-4630-9ad2-90b3d9fa1f4b', '2010-10-29', '50b7fec4-a416-44b4-a0be-c28d0f1c01ca', '36b7cfde-486d-4b66-a645-54cd641035d4', 1);
-INSERT INTO courses (uuid, date, organiser_uuid, secondary_organiser_uuid, status) VALUES ('019b7077-b994-42be-924c-015275d44b55', '2011-04-09', '89afafe2-37a9-4483-8e25-77ad925aa8ed', NULL, 1);
-INSERT INTO courses (uuid, date, organiser_uuid, secondary_organiser_uuid, status) VALUES ('f920c658-62fa-44c2-aec7-2c46182ca9f3', '2007-09-05', 'b0632bbb-ee6b-45df-9fdd-65fae209e2f2', NULL, 1);
-INSERT INTO courses (uuid, date, organiser_uuid, secondary_organiser_uuid, status) VALUES ('c1c6f7ee-424f-4672-8741-2483cf83c6f4', '2009-04-05', 'bf5e8752-69ea-4a4b-a76e-343afb105483', NULL, 1);
-INSERT INTO courses (uuid, date, organiser_uuid, secondary_organiser_uuid, status) VALUES ('5f83767e-96db-4c7d-a221-a38288307481', '2009-02-20', '2b35ed41-7915-4fce-8fcf-e11449593c4e', '6627f5e3-c92c-46ed-8888-24959af3bf6d', 1);
+INSERT INTO courses (uuid, date, organiser_uuid, secondary_organiser_uuid, status) VALUES ('ef5c13a0-8fa4-4fcd-91c3-48942ae95d06', '2016-09-05', '3e9a20d3-56c1-41eb-a56d-7da0143541c0', NULL, 0);
+INSERT INTO courses (uuid, date, organiser_uuid, secondary_organiser_uuid, status) VALUES ('8bc6a2e3-a403-4630-9ad2-90b3d9fa1f4b', '2010-10-29', '38f82a47-9d3c-478a-9879-f3b14ca596ed', 'aa62f42f-2b35-48e4-9f59-dcb92da7d82b', 1);
+INSERT INTO courses (uuid, date, organiser_uuid, secondary_organiser_uuid, status) VALUES ('019b7077-b994-42be-924c-015275d44b55', '2011-04-09', 'e0230894-4ff4-424b-aa92-e832d6d00052', NULL, 1);
+INSERT INTO courses (uuid, date, organiser_uuid, secondary_organiser_uuid, status) VALUES ('f920c658-62fa-44c2-aec7-2c46182ca9f3', '2007-09-05', 'a0e47933-73ff-4412-a432-1ee5227fce3f', NULL, 1);
+INSERT INTO courses (uuid, date, organiser_uuid, secondary_organiser_uuid, status) VALUES ('c1c6f7ee-424f-4672-8741-2483cf83c6f4', '2009-04-05', 'dded8497-c78a-47a6-9f4f-25aa4ff30270', NULL, 1);
+INSERT INTO courses (uuid, date, organiser_uuid, secondary_organiser_uuid, status) VALUES ('5f83767e-96db-4c7d-a221-a38288307481', '2009-02-20', '26285e82-0dbc-4ef8-93da-eb84f95372d5', '6ed3a5d1-66e8-44bf-8f84-3c5bf882d0cf', 1);

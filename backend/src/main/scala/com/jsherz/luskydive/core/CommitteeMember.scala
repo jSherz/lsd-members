@@ -30,5 +30,5 @@ import java.util.UUID
 /**
   * An administrator.
   */
-case class CommitteeMember(uuid: UUID, memberUuid: UUID, name: String, email: String, password: String,
-                           salt: String, locked: Boolean, createdAt: Timestamp, updatedAt: Timestamp)
+case class CommitteeMember(memberUuid: UUID, name: String, email: String, password: String, salt: String,
+                           locked: Boolean, createdAt: Timestamp, updatedAt: Timestamp)

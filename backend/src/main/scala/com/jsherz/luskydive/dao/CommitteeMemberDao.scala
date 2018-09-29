@@ -75,7 +75,7 @@ class CommitteeMemberDaoImpl(protected override val databaseService: DatabaseSer
   override def active(): Future[Seq[StrippedCommitteeMember]] = {
     val lookup = for {
       committee <- CommitteeMembers.filter(_.locked === false).sortBy(_.name)
-    } yield (committee.uuid, committee.name)
+    } yield (committee.memberUuid, committee.name)
 
     db.run(lookup.result).map(_.map(StrippedCommitteeMember.tupled(_)))
   }
@@ -87,7 +87,7 @@ class CommitteeMemberDaoImpl(protected override val databaseService: DatabaseSer
     * @return
     */
   override def get(uuid: UUID): Future[Option[CommitteeMember]] = {
-    db.run(CommitteeMembers.filter(_.uuid === uuid).result.headOption)
+    db.run(CommitteeMembers.filter(_.memberUuid === uuid).result.headOption)
   }
 
   /**

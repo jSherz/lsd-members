@@ -107,12 +107,12 @@ class CourseDaoImpl(
     val courseLookup = for {
       ((course, organiser), secondaryOrganiser) <-
         Courses.filter(_.uuid === uuid) join
-          CommitteeMembers on (_.organiserUuid === _.uuid) joinLeft
-          CommitteeMembers on (_._1.secondaryOrganiserUuid === _.uuid)
+          CommitteeMembers on (_.organiserUuid === _.memberUuid) joinLeft
+          CommitteeMembers on (_._1.secondaryOrganiserUuid === _.memberUuid)
     } yield (
       course,
-      (organiser.uuid, organiser.name),
-      secondaryOrganiser.map(so => (so.uuid, so.name))
+      (organiser.memberUuid, organiser.name),
+      secondaryOrganiser.map(so => (so.memberUuid, so.name))
     )
 
     db.run(courseLookup.result.headOption).map(_.map {
@@ -207,7 +207,7 @@ class CourseDaoImpl(
         if organiser.isDefined
 
         courseUuid <- db.run(
-          coursesReturningUuid += course.copy(secondaryOrganiserUuid = secondaryOrganiser.map(_.uuid))
+          coursesReturningUuid += course.copy(secondaryOrganiserUuid = secondaryOrganiser.map(_.memberUuid))
         )
 
         _ <- courseSpaceDao.createForCourse(courseUuid, numSpaces)

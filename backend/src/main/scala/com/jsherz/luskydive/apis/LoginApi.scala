@@ -58,7 +58,7 @@ class LoginApi(dao: AuthDao, jwtService: JwtService)(implicit ec: ExecutionConte
 
         onSuccess(loginResult) {
           case \/-(cm) =>
-            val jwt = jwtService.createJwt(cm.uuid, time.toInstant, addHoursToTimestamp(time, API_KEY_EXPIRES).toInstant)
+            val jwt = jwtService.createJwt(cm.memberUuid, time.toInstant, addHoursToTimestamp(time, API_KEY_EXPIRES).toInstant)
             complete(LoginResponse(true, Map.empty, Some(jwt)))
           case -\/(error) => {
             if (AuthDaoErrors.invalidEmailPass.equals(error)) {

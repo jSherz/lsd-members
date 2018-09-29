@@ -55,7 +55,7 @@ class StubCommitteeMemberDao extends CommitteeMemberDao {
     * @return
     */
   override def get(uuid: UUID): Future[Option[CommitteeMember]] = {
-    if (StubCommitteeMemberDao.foundMember.uuid == uuid) {
+    if (StubCommitteeMemberDao.foundMember.memberUuid == uuid) {
       Future.successful(Some(StubCommitteeMemberDao.foundMember))
     } else if (StubCommitteeMemberDao.notFoundMemberUuid == uuid) {
       Future.successful(None)

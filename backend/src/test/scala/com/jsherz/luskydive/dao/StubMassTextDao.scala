@@ -47,7 +47,7 @@ class StubMassTextDao extends MassTextDao {
       if (StubMassTextDao.existsMassTextUuid.equals(uuid)) {
         Some(MassText(
             UUID.fromString("b1266b65-40b2-4874-a551-854bf2e2ef26"),
-            UUID.fromString("a8df22ad-c2a4-40b6-9939-852421d9b30e"),
+            UUID.fromString("2c7eb9b0-65bb-4c5c-b9f4-7194659fed2c"),
             "Roll up, roll up {{ name }}, it's time to get yourself down to our skydiving G.I.A.G - meet you there :D " +
               "#excited #skydiving - Reply \"NOFUN\" to stop these messages.",
             Timestamp.valueOf("2012-09-25 00:00:00.000000")

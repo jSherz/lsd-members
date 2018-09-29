@@ -205,8 +205,6 @@ class Tables(protected val databaseService: DatabaseService) {
     */
   protected class CommitteeMemberTables(tag: Tag) extends Table[CommitteeMember](tag, "committee_members") {
 
-    def uuid: Rep[UUID] = column[UUID]("uuid", O.PrimaryKey)
-
     def memberUuid: Rep[UUID] = column[UUID]("member_uuid")
 
     def name: Rep[String] = column[String]("name")
@@ -223,7 +221,7 @@ class Tables(protected val databaseService: DatabaseService) {
 
     def updatedAt: Rep[Timestamp] = column[Timestamp]("updated_at")
 
-    def * = (uuid, memberUuid, name, email, password, salt, locked, createdAt, updatedAt) <> (CommitteeMember.tupled, CommitteeMember.unapply)
+    def * = (memberUuid, name, email, password, salt, locked, createdAt, updatedAt) <> (CommitteeMember.tupled, CommitteeMember.unapply)
 
   }
 

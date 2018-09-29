@@ -114,7 +114,7 @@ class MassTextDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
     "refuse to send a message to no-one" in {
       val result = dao.send(
-        UUID.fromString("329ad322-fe4a-4bdc-9c5b-030431766e36"),
+        UUID.fromString("73d7b6d0-5e38-4b31-9142-8a7264a51507"),
         DateUtil.makeDate(1990, 1, 1),
         DateUtil.makeDate(1991, 1, 1),
         "This is a test message. Goodbye {{ name }}!",
@@ -126,7 +126,7 @@ class MassTextDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
     "return an error if the end date is before the start date" in {
       val result = dao.send(
-        UUID.fromString("ade89632-2ccd-4b9f-93f1-44f5adf9704c"),
+        UUID.fromString("d24da23c-e4d0-494d-829e-e6e367ede02a"),
         DateUtil.makeDate(2016, 9, 25),
         DateUtil.makeDate(2016, 9, 24),
         "Ello {{ name }} - how are things?",
@@ -138,7 +138,7 @@ class MassTextDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
     "return an error if the end date and start date are the same" in {
       val result = dao.send(
-        UUID.fromString("0bca1521-2757-4d58-a2b1-7cd751ec9b14"),
+        UUID.fromString("73a7a27e-afd0-4d6f-b7fe-1c01c941ee37"),
         DateUtil.makeDate(2015, 10, 4),
         DateUtil.makeDate(2015, 10, 4),
         "{{ name }}... {{ name }}? {{ name }}???? Is this thing on?",
@@ -151,7 +151,7 @@ class MassTextDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
     "add a mass text record and text message for each matching member" in {
       val createdAt = Timestamp.valueOf("2016-09-09 21:50:55")
       val result = dao.send(
-        UUID.fromString("f59c7cd7-3aa6-4cf9-ab3e-798b70fae6e5"),
+        UUID.fromString("ddc4ca00-cd7f-4192-a165-2c7dd42cae6d"),
         DateUtil.makeDate(2015, 1, 1),
         DateUtil.makeDate(2015, 2, 1),
         "Hello, {{ name }}. How are you?!",
@@ -166,7 +166,7 @@ class MassTextDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
 
         createdMassText.foreach { mt =>
           mt.uuid shouldEqual uuid
-          mt.committeeMemberUuid shouldEqual UUID.fromString("f59c7cd7-3aa6-4cf9-ab3e-798b70fae6e5")
+          mt.committeeMemberUuid shouldEqual UUID.fromString("ddc4ca00-cd7f-4192-a165-2c7dd42cae6d")
           mt.template shouldEqual "Hello, {{ name }}. How are you?!"
         }
 
