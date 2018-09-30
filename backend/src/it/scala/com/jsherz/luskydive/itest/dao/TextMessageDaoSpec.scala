@@ -26,10 +26,9 @@ package com.jsherz.luskydive.itest.dao
 
 import java.util.UUID
 
-import akka.event.LoggingAdapter
 import com.jsherz.luskydive.core.TextMessage
 import com.jsherz.luskydive.dao.TextMessageDaoImpl
-import com.jsherz.luskydive.itest.util.{NullLogger, TestDatabase, TestUtil, Util}
+import com.jsherz.luskydive.itest.util.{TestDatabase, TestUtil, Util}
 import com.jsherz.luskydive.json.TextMessageJsonSupport._
 import org.scalatest.concurrent.ScalaFutures._
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
@@ -38,7 +37,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 
 class TextMessageDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
-  implicit val log: LoggingAdapter = new NullLogger
   val TestDatabase(dbService, cleanup) = Util.setupGoldTestDb()
   val dao = new TextMessageDaoImpl(dbService)
 

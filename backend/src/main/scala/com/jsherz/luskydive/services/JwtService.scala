@@ -28,10 +28,10 @@ import java.io.UnsupportedEncodingException
 import java.time.Instant
 import java.util.{Date, UUID}
 
-import akka.event.LoggingAdapter
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.{JWTCreationException, JWTVerificationException}
+import org.slf4j.{Logger, LoggerFactory}
 
 object JwtService {
 
@@ -49,9 +49,11 @@ trait JwtService {
 
 }
 
-class JwtServiceImpl(jwtSecret: String)(implicit log: LoggingAdapter) extends JwtService {
+class JwtServiceImpl(jwtSecret: String) extends JwtService {
 
   private val algorithm = Algorithm.HMAC384(jwtSecret)
+
+  private val log: Logger = LoggerFactory.getLogger(getClass)
 
   /**
     * Attempt to verify a JWT and retrieve a member's UUID from it.
@@ -91,11 +93,11 @@ class JwtServiceImpl(jwtSecret: String)(implicit log: LoggingAdapter) extends Jw
     } catch {
       case ex: UnsupportedOperationException => {
         val msg = "Failed to parse JWT - UTF-8 encoding not supported."
-        log.error(ex, msg)
+        log.error(msg, ex)
         throw new RuntimeException(msg, ex)
       }
       case ex: JWTVerificationException => {
-        log.warning(s"Failed to parse JWT: ${ex.getMessage} ${ex.getCause}")
+        log.warn(s"Failed to parse JWT: ${ex.getMessage} ${ex.getCause}")
 
         None
       }
@@ -123,11 +125,11 @@ class JwtServiceImpl(jwtSecret: String)(implicit log: LoggingAdapter) extends Jw
     } catch {
       case ex: UnsupportedEncodingException =>
         val msg = "Failed to parse JWT - UTF-8 encoding not supported."
-        log.error(ex, msg)
+        log.error(msg, ex)
         throw new RuntimeException(msg, ex)
       case ex: JWTCreationException =>
         val msg = s"Failed to create JWT."
-        log.error(ex, msg)
+        log.error(msg, ex)
         throw new RuntimeException(msg, ex)
     }
   }

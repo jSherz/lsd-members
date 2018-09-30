@@ -76,6 +76,7 @@ lazy val root = (project in file("."))
         "ch.qos.logback" % "logback-classic" % "1.2.3",
         "org.slf4j" % "slf4j-api" % "1.7.21",
         "org.slf4j" % "jul-to-slf4j" % "1.7.25",
+        "net.logstash.logback" % "logstash-logback-encoder" % "5.2",
 
         // DB
         "org.postgresql" % "postgresql" % "42.2.5",

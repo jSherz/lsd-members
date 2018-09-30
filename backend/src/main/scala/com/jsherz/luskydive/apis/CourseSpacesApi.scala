@@ -26,7 +26,8 @@ package com.jsherz.luskydive.apis
 
 import java.util.UUID
 
-import akka.event.LoggingAdapter
+import akka.actor.ActorSystem
+import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.PathMatchers.JavaUUID
@@ -43,10 +44,13 @@ import scala.concurrent.ExecutionContext
   */
 class CourseSpacesApi(dao: CourseSpaceDao)
                      (implicit ec: ExecutionContext,
-                      authDirective: Directive1[(Member, CommitteeMember)],
-                      log: LoggingAdapter) {
+                      authDirective: Directive1[(Member, CommitteeMember)]) {
 
   import com.jsherz.luskydive.json.CourseSpacesJsonSupport._
+  import org.slf4j.Logger
+  import org.slf4j.LoggerFactory
+
+  private val log: Logger = LoggerFactory.getLogger(getClass)
 
   val addMemberRoute = path(JavaUUID / "add-member") { uuid =>
     post {
@@ -82,7 +86,7 @@ class CourseSpacesApi(dao: CourseSpaceDao)
 
           complete(CourseSpaceDepositPaidResponse(success = true, None))
         } else {
-          log.warning(s"Received request to update course space $uuid that doesn't exist.")
+          log.warn(s"Received request to update course space $uuid that doesn't exist.")
 
           complete(StatusCodes.NotFound, "No course space found with that UUID.")
         }

@@ -24,7 +24,6 @@
 
 package com.jsherz.luskydive.apis
 
-import akka.event.LoggingAdapter
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.PathMatchers.JavaUUID
@@ -33,6 +32,7 @@ import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.{CommitteeMember, Course, CourseStatuses, Member}
 import com.jsherz.luskydive.dao.CourseDao
 import com.jsherz.luskydive.json.{CourseCreateRequest, CourseCreateResponse, CoursesJsonSupport, CoursesListRequest}
+import org.slf4j.{Logger, LoggerFactory}
 import scalaz.{-\/, \/-}
 
 import scala.concurrent.ExecutionContext
@@ -41,9 +41,11 @@ import scala.concurrent.ExecutionContext
   * Used to retrieve and store course information.
   */
 class CoursesApi(courseDao: CourseDao)
-                (implicit ec: ExecutionContext, authDirective: Directive1[(Member, CommitteeMember)], log: LoggingAdapter) {
+                (implicit ec: ExecutionContext, authDirective: Directive1[(Member, CommitteeMember)]) {
 
   import CoursesJsonSupport._
+
+  private val log: Logger = LoggerFactory.getLogger(getClass)
 
   /**
     * Shows the courses that are

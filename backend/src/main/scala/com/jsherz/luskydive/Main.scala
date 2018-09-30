@@ -49,8 +49,11 @@ object Main extends App with Config {
 
   implicit val actorSystem: ActorSystem = ActorSystem()
   implicit val executor: ExecutionContextExecutor = actorSystem.dispatcher
-  implicit val log: LoggingAdapter = Logging(actorSystem, getClass)
+  val log: LoggingAdapter = Logging(actorSystem, getClass)
   implicit val materializer: ActorMaterializer = ActorMaterializer()
+
+  val actorBootTime = Duration.between(bootStarted, Instant.now())
+  log.info(s"Actor system startup took ${actorBootTime.toMillis} ms")
 
   val databaseService = new DatabaseService(dbUrl, dbUsername, dbPassword)
 

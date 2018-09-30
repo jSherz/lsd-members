@@ -26,14 +26,13 @@ package com.jsherz.luskydive.itest.dao
 
 import java.util.UUID
 
-import akka.event.LoggingAdapter
 import com.jsherz.luskydive.dao._
 import com.jsherz.luskydive.itest.util.Util._
-import com.jsherz.luskydive.itest.util.{NullLogger, TestDatabase, TestUtil, Util}
+import com.jsherz.luskydive.itest.util.{TestDatabase, TestUtil, Util}
 import com.jsherz.luskydive.services.DatabaseService
 import org.scalatest.concurrent.ScalaFutures._
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
-import scalaz.{-\/, \/, \/-}
+import scalaz.{-\/, \/-}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.io.Source
@@ -51,7 +50,6 @@ class CourseSpaceDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
   implicit val patienceConfig: PatienceConfig = TestUtil.defaultPatienceConfig
 
   override protected def beforeAll(): Unit = {
-    implicit val log: LoggingAdapter = new NullLogger
     val TestDatabase(theDbService, cleanupFn) = Util.setupGoldTestDb()
     dbService = theDbService
     cleanup = cleanupFn

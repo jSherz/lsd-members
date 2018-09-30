@@ -1,13 +1,11 @@
 <configuration>
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>./logs/application.log</file>
-        <encoder>
-            <pattern>%date [%level] from %logger in %thread - %message%n%xException</pattern>
-        </encoder>
+        <file>./logs/application.json</file>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>./logs/application.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>./logs/application.%d{yyyy-MM-dd}.json</fileNamePattern>
 
             <maxHistory>30</maxHistory>
             <totalSizeCap>3GB</totalSizeCap>

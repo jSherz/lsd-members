@@ -24,10 +24,10 @@
 
 package com.jsherz.luskydive.itest.dao
 
-import akka.event.LoggingAdapter
+import akka.actor.ActorSystem
 import com.jsherz.luskydive.core.CommitteeMember
 import com.jsherz.luskydive.dao._
-import com.jsherz.luskydive.itest.util.{NullLogger, TestDatabase, TestUtil, Util}
+import com.jsherz.luskydive.itest.util.{TestDatabase, TestUtil, Util}
 import com.jsherz.luskydive.json.CommitteeMembersJsonSupport.CommitteeMemberFormat
 import org.scalatest.concurrent.ScalaFutures._
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
@@ -106,7 +106,6 @@ class AuthDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
   }
 
   override protected def beforeAll(): Unit = {
-    implicit val log: LoggingAdapter = new NullLogger
     val TestDatabase(dbService, cleanupFn) = Util.setupGoldTestDb()
     cleanup = cleanupFn
 

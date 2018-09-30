@@ -24,7 +24,6 @@
 
 package com.jsherz.luskydive.directives
 
-import akka.event.LoggingAdapter
 import akka.http.scaladsl.model.headers.HttpChallenge
 import akka.http.scaladsl.server.AuthenticationFailedRejection.{CredentialsMissing, CredentialsRejected}
 import akka.http.scaladsl.server.Directives._
@@ -35,14 +34,15 @@ import akka.http.scaladsl.server.{AuthenticationFailedRejection, Directive1}
 import com.jsherz.luskydive.core.{CommitteeMember, Member}
 import com.jsherz.luskydive.dao.{CommitteeMemberDao, MemberDao}
 import com.jsherz.luskydive.services.JwtService
-import scalaz.{-\/, \/-}
+import org.slf4j.{Logger, LoggerFactory}
 
 class JwtDirectives(
                      jwtService: JwtService,
                      memberDao: MemberDao,
                      committeeMemberDao: CommitteeMemberDao
-                   )
-                   (implicit log: LoggingAdapter) {
+                   ) {
+
+  private val log: Logger = LoggerFactory.getLogger(getClass)
 
   private val authHeader = "Authorization"
   private val dummyChallenge = HttpChallenge("", None)

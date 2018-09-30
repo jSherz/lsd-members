@@ -24,7 +24,6 @@
 
 package com.jsherz.luskydive.dao
 
-import akka.event.LoggingAdapter
 import com.jsherz.luskydive.core.CommitteeMember
 import com.jsherz.luskydive.services.DatabaseService
 import com.jsherz.luskydive.util.PasswordHasher
@@ -40,7 +39,7 @@ trait AuthDao {
 }
 
 class AuthDaoImpl(protected override val databaseService: DatabaseService)
-                 (implicit ec: ExecutionContext, log: LoggingAdapter)
+                 (implicit ec: ExecutionContext)
   extends Tables(databaseService) with AuthDao {
 
   import driver.api._

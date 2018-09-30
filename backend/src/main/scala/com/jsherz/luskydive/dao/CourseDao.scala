@@ -27,12 +27,12 @@ package com.jsherz.luskydive.dao
 import java.sql.Date
 import java.util.UUID
 
-import akka.event.LoggingAdapter
+import akka.actor.ActorSystem
+import akka.event.{Logging, LoggingAdapter}
 import com.jsherz.luskydive.core.{CommitteeMember, Course, CourseWithOrganisers}
 import com.jsherz.luskydive.json._
 import com.jsherz.luskydive.services.DatabaseService
-import com.jsherz.luskydive.util.EitherFutureExtensions._
-import com.jsherz.luskydive.util.FutureError._
+import org.slf4j.{Logger, LoggerFactory}
 import scalaz.{-\/, \/, \/-}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -89,13 +89,12 @@ class CourseDaoImpl(
                      committeeMemberDao: CommitteeMemberDao,
                      courseSpaceDao: CourseSpaceDao
                    )
-                   (
-                     implicit ec: ExecutionContext,
-                     log: LoggingAdapter
-                   )
+                   (implicit ec: ExecutionContext)
   extends Tables(databaseService) with CourseDao {
 
   import driver.api._
+
+  private val log: Logger = LoggerFactory.getLogger(getClass)
 
   /**
     * Try and find a course with the given UUID, including finding the primary and secondary organisers.
@@ -118,6 +117,22 @@ class CourseDaoImpl(
     db.run(courseLookup.result.headOption).map(_.map {
       case (course, org, secOrg) => assembleCourse(course, org, secOrg)
     })
+  }
+
+  /**
+    * Turn the raw returned course and organiser information into a class ready for serialization.
+    *
+    * @param course
+    * @param organiser
+    * @param secondaryOrganiser
+    * @return
+    */
+  private def assembleCourse(course: Course, organiser: (UUID, String), secondaryOrganiser: Option[(UUID, String)]): CourseWithOrganisers = {
+    CourseWithOrganisers(
+      course,
+      StrippedCommitteeMember.tupled(organiser),
+      secondaryOrganiser.map(x => StrippedCommitteeMember.tupled(x))
+    )
   }
 
   /**
@@ -170,22 +185,6 @@ class CourseDaoImpl(
           )
       }
     }
-  }
-
-  /**
-    * Turn the raw returned course and organiser information into a class ready for serialization.
-    *
-    * @param course
-    * @param organiser
-    * @param secondaryOrganiser
-    * @return
-    */
-  private def assembleCourse(course: Course, organiser: (UUID, String), secondaryOrganiser: Option[(UUID, String)]): CourseWithOrganisers = {
-    CourseWithOrganisers(
-      course,
-      StrippedCommitteeMember.tupled(organiser),
-      secondaryOrganiser.map(x => StrippedCommitteeMember.tupled(x))
-    )
   }
 
   /**

@@ -24,9 +24,8 @@
 
 package com.jsherz.luskydive.apis
 
-import akka.event.LoggingAdapter
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import com.jsherz.luskydive.util.{BaseSpec, NullLogger}
+import com.jsherz.luskydive.util.BaseSpec
 import com.typesafe.config.{Config, ConfigFactory}
 import org.scalatest.BeforeAndAfter
 
@@ -36,7 +35,5 @@ class BaseApiSpec extends BaseSpec with ScalatestRouteTest with BeforeAndAfter {
     * Override the configuration provided by ScalatestRouteTest that would use application.conf.
     */
   override def testConfig: Config = ConfigFactory.load("test.conf")
-
-  implicit val log: LoggingAdapter = new NullLogger
 
 }

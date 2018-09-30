@@ -26,11 +26,11 @@ package com.jsherz.luskydive.dao
 
 import java.util.UUID
 
-import akka.event.LoggingAdapter
 import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.CourseSpace
 import com.jsherz.luskydive.services.DatabaseService
 import com.jsherz.luskydive.util.Errors
+import org.slf4j.{Logger, LoggerFactory}
 import scalaz.{-\/, \/, \/-}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -83,10 +83,12 @@ trait CourseSpaceDao {
   * Stores and retrieves course spaces from the database.
   */
 class CourseSpaceDaoImpl(protected override val databaseService: DatabaseService)
-                        (implicit ec: ExecutionContext, log: LoggingAdapter)
+                        (implicit ec: ExecutionContext)
   extends Tables(databaseService) with CourseSpaceDao {
 
   import driver.api._
+
+  private val log: Logger = LoggerFactory.getLogger(getClass)
 
   /**
     * Create the given number of spaces and attach them to a course.

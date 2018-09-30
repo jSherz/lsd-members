@@ -26,7 +26,6 @@ package com.jsherz.luskydive.itest.dao
 
 import java.util.UUID
 
-import akka.event.LoggingAdapter
 import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.{Course, CourseStatuses, CourseWithOrganisers}
 import com.jsherz.luskydive.dao.{CommitteeMemberDaoImpl, CourseDao, CourseDaoImpl, CourseSpaceDaoImpl}
@@ -46,7 +45,6 @@ class CourseDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
   private var cleanup: () => Unit = _
 
   override protected def beforeAll(): Unit = {
-    implicit val log: LoggingAdapter = new NullLogger
     val TestDatabase(dbService, cleanupFn) = Util.setupGoldTestDb()
     cleanup = cleanupFn
 

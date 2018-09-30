@@ -26,12 +26,13 @@ package com.jsherz.luskydive.dao
 
 import java.util.UUID
 
-import akka.event.LoggingAdapter
+import akka.actor.ActorSystem
+import akka.event.{Logging, LoggingAdapter}
 import com.jsherz.luskydive.core.PackingListItem
 import com.jsherz.luskydive.services.DatabaseService
+import org.slf4j.{Logger, LoggerFactory}
 
 import scala.concurrent.{ExecutionContext, Future}
-import scalaz.\/
 
 
 trait PackingListItemDao {
@@ -43,10 +44,12 @@ trait PackingListItemDao {
 }
 
 class PackingListItemDaoImpl(override protected val databaseService: DatabaseService)
-                            (implicit ec: ExecutionContext, log: LoggingAdapter)
+                            (implicit ec: ExecutionContext)
   extends Tables(databaseService) with PackingListItemDao {
 
   import driver.api._
+
+  private val log: Logger = LoggerFactory.getLogger(getClass)
 
   override def getOrDefault(uuid: UUID): Future[PackingListItem] = {
     db.run(
@@ -57,10 +60,6 @@ class PackingListItemDaoImpl(override protected val databaseService: DatabaseSer
     )
   }
 
-  override def upsert(packingListItem: PackingListItem): Future[Int] = {
-    db.run(PackingListItems.insertOrUpdate(packingListItem))
-  }
-
   private def packingListOrDefault(uuid: UUID)(packingListItem: Option[PackingListItem]) = {
     packingListItem.fold(defaultPackingListFor(uuid))(identity)
   }
@@ -68,6 +67,10 @@ class PackingListItemDaoImpl(override protected val databaseService: DatabaseSer
   private def defaultPackingListFor(uuid: UUID): PackingListItem = {
     PackingListItem(uuid, warmClothes = false, sleepingBag = false, sturdyShoes = false, cash = false,
       toiletries = false)
+  }
+
+  override def upsert(packingListItem: PackingListItem): Future[Int] = {
+    db.run(PackingListItems.insertOrUpdate(packingListItem))
   }
 
 }

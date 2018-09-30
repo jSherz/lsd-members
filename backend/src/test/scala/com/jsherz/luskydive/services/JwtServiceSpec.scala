@@ -28,14 +28,11 @@ import java.time.Instant
 import java.time.temporal.ChronoField
 import java.util.{Date, UUID}
 
-import akka.event.LoggingAdapter
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import com.jsherz.luskydive.util.{BaseSpec, NullLogger, Util}
+import com.jsherz.luskydive.util.{BaseSpec, Util}
 
 class JwtServiceSpec extends BaseSpec {
-
-  implicit val log: LoggingAdapter = new NullLogger
 
   val jwtService = new JwtServiceImpl("apples")
 

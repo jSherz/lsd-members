@@ -26,13 +26,15 @@ package com.jsherz.luskydive.apis
 
 import java.sql.Timestamp
 
-import akka.event.LoggingAdapter
+import akka.actor.ActorSystem
+import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{Directive1, Route}
 import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.Member
 import com.jsherz.luskydive.dao.MemberDao
 import com.jsherz.luskydive.json.{SignupAltRequest, SignupJsonSupport, SignupRequest, SignupResponse}
+import org.slf4j.{Logger, LoggerFactory}
 import scalaz.{-\/, Failure, Success, \/-}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -41,9 +43,11 @@ import scala.concurrent.{ExecutionContext, Future}
   * The two methods of signing up new members at a fresher's fair (phone number or e-mail).
   */
 class SignupApi(memberDao: MemberDao)
-               (implicit ec: ExecutionContext, authDirective: Directive1[Member], log: LoggingAdapter) {
+               (implicit ec: ExecutionContext, authDirective: Directive1[Member]) {
 
   import SignupJsonSupport._
+
+  private val log: Logger = LoggerFactory.getLogger(getClass)
 
   /**
     * The primary method of signing up new members.

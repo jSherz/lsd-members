@@ -37,7 +37,7 @@ import com.jsherz.luskydive.dao.{CommitteeMemberDao, MemberDao}
 import com.jsherz.luskydive.json.CommitteeMembersJsonSupport.CommitteeMemberFormat
 import com.jsherz.luskydive.json.MemberJsonSupport._
 import com.jsherz.luskydive.services.JwtService
-import com.jsherz.luskydive.util.{BaseSpec, NullLogger, Util}
+import com.jsherz.luskydive.util.{BaseSpec, Util}
 import com.typesafe.config.{Config, ConfigFactory}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.{mock, when}
@@ -46,8 +46,6 @@ import scalaz.{-\/, \/, \/-}
 import scala.concurrent.Future
 
 class JwtDirectivesSpec extends BaseSpec with ScalatestRouteTest {
-
-  implicit val log: LoggingAdapter = new NullLogger
 
   override def testConfig: Config = ConfigFactory.load("test.conf")
 

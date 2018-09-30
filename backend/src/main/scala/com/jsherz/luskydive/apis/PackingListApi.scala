@@ -26,7 +26,6 @@ package com.jsherz.luskydive.apis
 
 import java.util.UUID
 
-import akka.event.LoggingAdapter
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{Directive1, Route}
@@ -34,28 +33,26 @@ import com.jsherz.luskydive.core.{Member, PackingListItem}
 import com.jsherz.luskydive.dao.PackingListItemDao
 import com.jsherz.luskydive.json.PackingListJsonSupport._
 import com.jsherz.luskydive.json.StrippedPackingListItem
-import scalaz.{-\/, \/-}
+import org.slf4j.{Logger, LoggerFactory}
 
 
 class PackingListApi(authDirective: Directive1[Member],
-                     dao: PackingListItemDao)
-                    (implicit log: LoggingAdapter) {
+                     dao: PackingListItemDao) {
 
+  val route: Route = pathPrefix("packing-list") {
+    getRoute ~
+      upsertRoute
+  }
+  private val log: Logger = LoggerFactory.getLogger(getClass)
   private val getRoute: Route = (get & pathEnd & authDirective) { member =>
     onSuccess(dao.getOrDefault(member.uuid)) { packingListItem: PackingListItem =>
       complete(stripPackingList(packingListItem))
     }
   }
-
   private val upsertRoute: Route = (put & pathEnd & authDirective & entity(as[StrippedPackingListItem])) { (member, packingListItem) =>
     onSuccess(dao.upsert(addUuidToPackingList(member.uuid, packingListItem))) { _ =>
       complete(StatusCodes.OK)
     }
-  }
-
-  val route: Route = pathPrefix("packing-list") {
-    getRoute ~
-      upsertRoute
   }
 
   private def stripPackingList(packingListItem: PackingListItem) = {

@@ -28,7 +28,8 @@ import java.sql.Timestamp
 import java.time.LocalDateTime
 import java.util.UUID
 
-import akka.event.LoggingAdapter
+import akka.actor.ActorSystem
+import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse, StatusCodes}
 import akka.http.scaladsl.server.Directive1
 import akka.http.scaladsl.server.Directives.{complete, _}
@@ -36,6 +37,7 @@ import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core._
 import com.jsherz.luskydive.dao.{MemberDao, TextMessageDao}
 import com.jsherz.luskydive.json.TextMessageJsonSupport._
+import org.slf4j.{Logger, LoggerFactory}
 
 import scala.concurrent.ExecutionContext
 
@@ -47,8 +49,9 @@ class TextMessageApi(textMessageDao: TextMessageDao,
                      memberDao: MemberDao,
                      validApiKey: String,
                      committeeAuthDirective: Directive1[(Member, CommitteeMember)])
-                    (implicit ec: ExecutionContext,
-                     log: LoggingAdapter) {
+                    (implicit ec: ExecutionContext) {
+
+  private val log: Logger = LoggerFactory.getLogger(getClass)
 
   val receiveRoute = (path("receive" / Remaining) & post & formFields('To, 'From, 'Body, 'MessageSid)) {
     (apiKey: String, to: String, from: String, body: String, externalSid: String) =>

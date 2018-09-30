@@ -27,13 +27,15 @@ package com.jsherz.luskydive.apis
 import java.sql.Timestamp
 import java.util.{Calendar, Date}
 
-import akka.event.LoggingAdapter
+import akka.actor.ActorSystem
+import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import com.jsherz.luskydive.dao.{AuthDao, AuthDaoErrors}
 import com.jsherz.luskydive.json.{LoginRequest, LoginResponse}
 import com.jsherz.luskydive.services.JwtService
+import org.slf4j.{Logger, LoggerFactory}
 import scalaz.{-\/, \/-}
 
 import scala.concurrent.ExecutionContext
@@ -41,9 +43,11 @@ import scala.concurrent.ExecutionContext
 /**
   * Used to authenticate users.
   */
-class LoginApi(dao: AuthDao, jwtService: JwtService)(implicit ec: ExecutionContext, log: LoggingAdapter) {
+class LoginApi(dao: AuthDao, jwtService: JwtService)(implicit ec: ExecutionContext) {
 
   import com.jsherz.luskydive.json.LoginJsonSupport._
+
+  private val log: Logger = LoggerFactory.getLogger(getClass)
 
   /**
     * Number of hours an API key lasts for after being created or reissued.

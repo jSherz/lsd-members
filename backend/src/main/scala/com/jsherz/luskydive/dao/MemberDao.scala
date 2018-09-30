@@ -26,11 +26,14 @@ package com.jsherz.luskydive.dao
 
 import java.util.UUID
 
-import akka.event.LoggingAdapter
+import akka.actor.ActorSystem
+import akka.event.{Logging, LoggingAdapter}
 import com.fasterxml.uuid.Generators
+import com.jsherz.luskydive.Main.{actorSystem, getClass}
 import com.jsherz.luskydive.core.{CommitteeMember, Member}
 import com.jsherz.luskydive.json.MemberSearchResult
 import com.jsherz.luskydive.services.DatabaseService
+import org.slf4j.{Logger, LoggerFactory}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scalaz.{-\/, \/, \/-}
@@ -100,10 +103,12 @@ trait MemberDao {
 }
 
 class MemberDaoImpl(override protected val databaseService: DatabaseService)
-                   (implicit ec: ExecutionContext, log: LoggingAdapter)
+                   (implicit ec: ExecutionContext)
   extends Tables(databaseService) with MemberDao {
 
   import driver.api._
+
+  private val log: Logger = LoggerFactory.getLogger(getClass)
 
   /**
     * Does a member exist in the DB with the given e-mail or phone number?

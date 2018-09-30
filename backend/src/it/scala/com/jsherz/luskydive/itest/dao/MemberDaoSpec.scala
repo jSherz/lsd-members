@@ -27,19 +27,17 @@ package com.jsherz.luskydive.itest.dao
 import java.sql.Timestamp
 import java.util.UUID
 
-import akka.event.LoggingAdapter
 import com.jsherz.luskydive.core.{CommitteeMember, Member}
 import com.jsherz.luskydive.dao._
-import com.jsherz.luskydive.itest.util.{DateUtil, NullLogger, TestDatabase, Util}
+import com.jsherz.luskydive.itest.util.{DateUtil, TestDatabase, Util}
 import com.jsherz.luskydive.json.CommitteeMembersJsonSupport.CommitteeMemberFormat
 import com.jsherz.luskydive.json.MemberJsonSupport._
 import com.jsherz.luskydive.json.MemberSearchResult
 import org.scalatest.concurrent.ScalaFutures._
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
-import scalaz.{-\/, \/-}
+import scalaz.-\/
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 
 /**
   * Ensures the member DAO works correctly with the golden test DB.
@@ -50,8 +48,6 @@ class MemberDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
   private var cleanup: () => Unit = _
 
   override protected def beforeAll(): Unit = {
-    implicit val log: LoggingAdapter = new NullLogger
-
     val TestDatabase(dbService, cleanupFn) = Util.setupGoldTestDb()
     cleanup = cleanupFn
 

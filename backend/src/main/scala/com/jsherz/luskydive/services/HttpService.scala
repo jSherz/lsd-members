@@ -26,7 +26,8 @@ package com.jsherz.luskydive.services
 
 import java.util.UUID
 
-import akka.event.LoggingAdapter
+import akka.actor.ActorSystem
+import akka.event.{Logging, LoggingAdapter}
 import akka.http.javadsl.model.HttpMethods._
 import akka.http.scaladsl.model.headers.{HttpOrigin, HttpOriginRange}
 import akka.http.scaladsl.model.{HttpEntity, HttpResponse, StatusCodes}
@@ -40,6 +41,7 @@ import com.jsherz.luskydive.apis._
 import com.jsherz.luskydive.core.{CommitteeMember, Member}
 import com.jsherz.luskydive.dao._
 import com.jsherz.luskydive.directives.JwtDirectives
+import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters._
 import scala.concurrent.ExecutionContext
@@ -60,8 +62,9 @@ class HttpService(
                    jwtService: JwtService,
                    packingListDao: PackingListItemDao
                  )
-                 (implicit executionContext: ExecutionContext,
-                  log: LoggingAdapter) {
+                 (implicit executionContext: ExecutionContext) {
+
+  private val log: Logger = LoggerFactory.getLogger(getClass)
 
   private val jwtDirectives: JwtDirectives = new JwtDirectives(jwtService, memberDao, committeeMemberDao)
 
@@ -85,7 +88,7 @@ class HttpService(
 
   val loginApi = new LoginApi(authDao, jwtService)
 
-  val cors: Cors = new Cors(log)
+  val cors: Cors = new Cors()
 
   val routes: server.Route =
     handleRejections(cors.rejectionHandler) {
@@ -108,7 +111,9 @@ class HttpService(
 
 }
 
-class Cors(val log: LoggingAdapter) {
+class Cors {
+
+  private val log: Logger = LoggerFactory.getLogger(getClass)
 
   private val settings = CorsSettings.defaultSettings
     .withAllowedOrigins(HttpOriginRange(

@@ -27,7 +27,6 @@ package com.jsherz.luskydive.apis
 import java.sql.Timestamp
 import java.time.LocalDateTime
 
-import akka.event.LoggingAdapter
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
 import com.jsherz.luskydive.core.{CommitteeMember, Member}
@@ -35,6 +34,7 @@ import com.jsherz.luskydive.dao.MassTextDao
 import com.jsherz.luskydive.json.MassTextsJsonSupport._
 import com.jsherz.luskydive.json.{MassTextSendRequest, MassTextSendResponse, TryFilterRequest, TryFilterResponse}
 import com.jsherz.luskydive.util.TextMessageUtil
+import org.slf4j.{Logger, LoggerFactory}
 import scalaz.{-\/, \/-}
 
 import scala.concurrent.ExecutionContext
@@ -43,7 +43,9 @@ import scala.concurrent.ExecutionContext
   * Used to send out a text message to many members.
   */
 class MassTextApi(dao: MassTextDao)
-                 (implicit ec: ExecutionContext, authDirective: Directive1[(Member, CommitteeMember)], log: LoggingAdapter) {
+                 (implicit ec: ExecutionContext, authDirective: Directive1[(Member, CommitteeMember)]) {
+
+  private val log: Logger = LoggerFactory.getLogger(getClass)
 
   val exampleName = "Mary"
 

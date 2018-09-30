@@ -24,15 +24,10 @@
 
 package com.jsherz.luskydive
 
-import java.time.Instant
-
-import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
 import com.jsherz.luskydive.util.Config
 import org.flywaydb.core.Flyway
 import org.slf4j.bridge.SLF4JBridgeHandler
-
-import scala.concurrent.ExecutionContextExecutor
+import org.slf4j.{Logger, LoggerFactory}
 
 /**
   * The main application service that bootstraps all other components and runs the HTTP server.
@@ -41,16 +36,12 @@ object MigrateMain extends App with Config {
 
   SLF4JBridgeHandler.install()
 
-  implicit val actorSystem: ActorSystem = ActorSystem()
-  implicit val executor: ExecutionContextExecutor = actorSystem.dispatcher
-  implicit val log: LoggingAdapter = Logging(actorSystem, getClass)
+  private val log: Logger = LoggerFactory.getLogger(getClass)
 
   val flyway = new Flyway()
   flyway.setDataSource(dbUrl, dbUsername, dbPassword)
   val numMigrations = flyway.migrate()
 
   log.info(s"Ran $numMigrations migrations.")
-
-  actorSystem.terminate()
 
 }

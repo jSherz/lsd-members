@@ -24,9 +24,6 @@
 
 package com.jsherz.luskydive.apis
 
-import java.util.UUID
-
-import akka.event.LoggingAdapter
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
@@ -34,6 +31,7 @@ import com.jsherz.luskydive.core.{CommitteeMember, Member, TextMessage}
 import com.jsherz.luskydive.dao.{MemberDao, MemberDaoErrors, TextMessageDao}
 import com.jsherz.luskydive.json.MemberJsonSupport._
 import com.jsherz.luskydive.json.MemberSearchRequest
+import org.slf4j.{Logger, LoggerFactory}
 import scalaz.{-\/, \/-}
 
 import scala.concurrent.ExecutionContext
@@ -42,7 +40,9 @@ import scala.concurrent.ExecutionContext
   * Used to retrieve member information.
   */
 class MemberApi(memberDao: MemberDao, textMessageDao: TextMessageDao)
-               (implicit ec: ExecutionContext, authDirective: Directive1[(Member, CommitteeMember)], log: LoggingAdapter) {
+               (implicit ec: ExecutionContext, authDirective: Directive1[(Member, CommitteeMember)]) {
+
+  private val log: Logger = LoggerFactory.getLogger(getClass)
 
   val searchRoute = path("search") {
     post {
@@ -52,7 +52,9 @@ class MemberApi(memberDao: MemberDao, textMessageDao: TextMessageDao)
             val searchResult = memberDao.search(req.searchTerm)
 
             searchResult match {
-              case \/-(futureResults) => onSuccess(futureResults) { complete(_) }
+              case \/-(futureResults) => onSuccess(futureResults) {
+                complete(_)
+              }
               case -\/(error) => {
                 log.error("Failed to perform member search" + error)
 
@@ -102,7 +104,9 @@ class MemberApi(memberDao: MemberDao, textMessageDao: TextMessageDao)
     val createResult = memberDao.create(member)
 
     createResult match {
-      case \/-(futureUuid) => onSuccess(futureUuid) { complete(_) }
+      case \/-(futureUuid) => onSuccess(futureUuid) {
+        complete(_)
+      }
       case -\/(error) => complete(StatusCodes.InternalServerError, error)
     }
   }
