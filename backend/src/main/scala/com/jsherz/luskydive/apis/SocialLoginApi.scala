@@ -28,7 +28,8 @@ import java.sql.Timestamp
 import java.time.{Duration, Instant, LocalDateTime}
 import java.util.UUID
 
-import akka.event.LoggingAdapter
+import akka.actor.ActorSystem
+import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
@@ -38,6 +39,7 @@ import com.jsherz.luskydive.dao.MemberDao
 import com.jsherz.luskydive.json.{SocialLoginRequest, SocialLoginResponse, SocialLoginVerifyRequest}
 import com.jsherz.luskydive.services.{JwtService, SocialService}
 import com.restfb.types.User
+import org.slf4j.{Logger, LoggerFactory}
 import scalaz.{-\/, \/-}
 
 import scala.concurrent.ExecutionContext
@@ -50,9 +52,11 @@ class SocialLoginApi(
                       memberDao: MemberDao,
                       jwtService: JwtService
                     )
-                    (implicit ec: ExecutionContext, log: LoggingAdapter) {
+                    (implicit ec: ExecutionContext) {
 
   import com.jsherz.luskydive.json.SocialLoginJsonSupport._
+
+  private val log: Logger = LoggerFactory.getLogger(getClass)
 
   private val tokenValidHours = 24
 
