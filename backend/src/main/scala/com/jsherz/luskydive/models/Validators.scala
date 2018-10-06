@@ -147,7 +147,7 @@ object Validators {
     * @return
     */
   def withFieldName[A, B](fieldName: String, validation: Validation[A, B]): Validation[(String, A), B] =
-  validation.fold(error => Failure(fieldName, error), result => Success(result))
+  validation.fold(error => Failure((fieldName, error)), result => Success(result))
 
 
 }

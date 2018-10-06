@@ -29,7 +29,6 @@ import java.util.UUID
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Route
 import com.jsherz.luskydive.dao.StubCourseDao
-import com.jsherz.luskydive.json.CoursesJsonSupport
 import com.jsherz.luskydive.json.CoursesJsonSupport._
 import com.jsherz.luskydive.util.AuthenticationDirectives
 import org.mockito.Matchers.any

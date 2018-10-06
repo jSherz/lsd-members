@@ -24,10 +24,6 @@
 
 package com.jsherz.luskydive.apis
 
-import java.util.UUID
-
-import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.PathMatchers.JavaUUID
@@ -37,18 +33,14 @@ import com.jsherz.luskydive.dao.CourseSpaceDao
 import com.jsherz.luskydive.json._
 import scalaz.{-\/, \/-}
 
-import scala.concurrent.ExecutionContext
-
 /**
   * Used to retrieve and store course space information.
   */
 class CourseSpacesApi(dao: CourseSpaceDao)
-                     (implicit ec: ExecutionContext,
-                      authDirective: Directive1[(Member, CommitteeMember)]) {
+                     (implicit authDirective: Directive1[(Member, CommitteeMember)]) {
 
   import com.jsherz.luskydive.json.CourseSpacesJsonSupport._
-  import org.slf4j.Logger
-  import org.slf4j.LoggerFactory
+  import org.slf4j.{Logger, LoggerFactory}
 
   private val log: Logger = LoggerFactory.getLogger(getClass)
 
@@ -57,7 +49,7 @@ class CourseSpacesApi(dao: CourseSpaceDao)
       authDirective { _ =>
         entity(as[CourseSpaceMemberRequest]) { req =>
           onSuccess(dao.addMember(uuid, req.memberUuid)) {
-            case \/-(uuid) => complete(CourseSpaceMemberResponse(true, None))
+            case \/-(_) => complete(CourseSpaceMemberResponse(true, None))
             case -\/(error) => complete(CourseSpaceMemberResponse(false, Some(error)))
           }
         }
@@ -70,7 +62,7 @@ class CourseSpacesApi(dao: CourseSpaceDao)
       authDirective { _ =>
         entity(as[CourseSpaceMemberRequest]) { req =>
           onSuccess(dao.removeMember(uuid, req.memberUuid)) {
-            case \/-(uuid) => complete(CourseSpaceMemberResponse(true, None))
+            case \/-(_) => complete(CourseSpaceMemberResponse(true, None))
             case -\/(error) => complete(CourseSpaceMemberResponse(false, Some(error)))
           }
         }
@@ -88,7 +80,7 @@ class CourseSpacesApi(dao: CourseSpaceDao)
         } else {
           log.warn(s"Received request to update course space $uuid that doesn't exist.")
 
-          complete(StatusCodes.NotFound, "No course space found with that UUID.")
+          complete(StatusCodes.NotFound -> "No course space found with that UUID.")
         }
       }
     }

@@ -26,7 +26,7 @@ package com.jsherz.luskydive.util
 
 import scalaz.{-\/, \/}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 object EitherFutureExtensions {
 
@@ -50,7 +50,7 @@ class EitherWithError[X](either: String \/ X) {
     * @param f
     * @return
     */
-  def withFutureF[V](f: X => Future[String \/ V])(implicit ec: ExecutionContext): Future[String \/ V] = {
+  def withFutureF[V](f: X => Future[String \/ V]): Future[String \/ V] = {
     either.fold(error => Future.successful(-\/(error)), f(_))
   }
 

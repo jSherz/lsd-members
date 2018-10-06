@@ -24,8 +24,6 @@
 
 package com.jsherz.luskydive.apis
 
-import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.model.headers.HttpChallenge
 import akka.http.scaladsl.model.{ContentTypes, FormData, StatusCodes}
 import akka.http.scaladsl.server.AuthenticationFailedRejection.CredentialsRejected
@@ -39,11 +37,8 @@ import com.jsherz.luskydive.json.MemberJsonSupport._
 import com.jsherz.luskydive.json.TextMessageJsonSupport.NumReceivedMessagesFormat
 import com.jsherz.luskydive.util.Util
 import org.mockito.Matchers.any
-import org.mockito.Mockito.{mock, never, verify, when}
+import org.mockito.Mockito.{never, verify}
 import org.mockito.{ArgumentCaptor, Mockito}
-import scalaz.-\/
-
-import scala.concurrent.Future
 
 
 class TextMessageApiSpec extends BaseApiSpec {
@@ -116,7 +111,7 @@ class TextMessageApiSpec extends BaseApiSpec {
         val messageCaptor = ArgumentCaptor.forClass[TextMessage](TextMessage.getClass.asInstanceOf[Class[TextMessage]])
         verify(dao).insert(messageCaptor.capture())
         verify(memberDao).forPhoneNumber("+447881072696")
-        verify(memberDao, never()).create(any())
+        verify(memberDao, never()).create(any[Member])
 
         val message = messageCaptor.getAllValues.get(0)
 

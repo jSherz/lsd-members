@@ -51,7 +51,7 @@ object AuthenticationDirectives {
     * Allows any request, regardless of API key header.
     */
   val allowAll: Directive1[(Member, CommitteeMember)] = {
-    provide(member, committeeMember)
+    provide((member, committeeMember))
   }
   /**
     * Rejects any request, regardless of API key header.

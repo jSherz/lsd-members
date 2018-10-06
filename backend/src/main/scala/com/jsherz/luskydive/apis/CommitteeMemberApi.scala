@@ -24,21 +24,17 @@
 
 package com.jsherz.luskydive.apis
 
-import java.util.UUID
-
-import com.jsherz.luskydive.dao.CommitteeMemberDao
-import com.jsherz.luskydive.json.CommitteeMembersJsonSupport._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
 import com.jsherz.luskydive.core.{CommitteeMember, Member}
-
-import scala.concurrent.ExecutionContext
+import com.jsherz.luskydive.dao.CommitteeMemberDao
+import com.jsherz.luskydive.json.CommitteeMembersJsonSupport._
 
 /**
   * Used to retrieve information about committee members.
   */
 class CommitteeMemberApi(dao: CommitteeMemberDao)
-                        (implicit ec: ExecutionContext, authDirective: Directive1[(Member, CommitteeMember)]) {
+                        (implicit authDirective: Directive1[(Member, CommitteeMember)]) {
 
   /**
     * Get currently active committee members.

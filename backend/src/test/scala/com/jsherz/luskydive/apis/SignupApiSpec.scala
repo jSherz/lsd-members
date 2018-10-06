@@ -73,7 +73,6 @@ class SignupApiSpec extends BaseApiSpec {
     "return success with no errors if a valid username & phone number are given" in {
       val name = "Toby Howard"
       val phoneNumber = "07918323440"
-      val phoneNumberFormatted = "+447918323440"
 
       val request = SignupRequest(name, phoneNumber)
 
@@ -83,7 +82,7 @@ class SignupApiSpec extends BaseApiSpec {
         responseAs[SignupResponse].errors shouldBe empty
 
         // TODO: Try making this more specific
-        verify(dao).create(any())
+        verify(dao).create(any[Member])
       }
     }
 
@@ -94,7 +93,7 @@ class SignupApiSpec extends BaseApiSpec {
         Post(url, request) ~> Route.seal(route) ~> check {
           response.status shouldEqual StatusCodes.UnsupportedMediaType
 
-          verify(dao, never()).create(any())
+          verify(dao, never()).create(any[Member])
         }
       }
     }
@@ -105,7 +104,7 @@ class SignupApiSpec extends BaseApiSpec {
       Post(url, request) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.BadRequest
 
-        verify(dao, never()).create(any())
+        verify(dao, never()).create(any[Member])
       }
     }
 
@@ -115,7 +114,7 @@ class SignupApiSpec extends BaseApiSpec {
       Post(url, request) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.BadRequest
 
-        verify(dao, never()).create(any())
+        verify(dao, never()).create(any[Member])
       }
     }
 
@@ -125,7 +124,7 @@ class SignupApiSpec extends BaseApiSpec {
       Post(url, request) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.BadRequest
 
-        verify(dao, never()).create(any())
+        verify(dao, never()).create(any[Member])
       }
     }
 
@@ -142,7 +141,7 @@ class SignupApiSpec extends BaseApiSpec {
         response.status shouldEqual StatusCodes.MethodNotAllowed
       }
 
-      verify(dao, never()).create(any())
+      verify(dao, never()).create(any[Member])
     }
 
     "return failed with an error if a blank name (only spaces) is given" in {
@@ -154,7 +153,7 @@ class SignupApiSpec extends BaseApiSpec {
           responseAs[SignupResponse].success shouldEqual false
           responseAs[SignupResponse].errors shouldBe Map("name" -> "error.required")
 
-          verify(dao, never()).create(any())
+          verify(dao, never()).create(any[Member])
         }
       }
     }
@@ -167,7 +166,7 @@ class SignupApiSpec extends BaseApiSpec {
         responseAs[SignupResponse].success shouldEqual false
         responseAs[SignupResponse].errors shouldBe Map("phoneNumber" -> "error.inUse")
 
-        verify(dao, never()).create(any())
+        verify(dao, never()).create(any[Member])
       }
     }
 
@@ -179,7 +178,7 @@ class SignupApiSpec extends BaseApiSpec {
         responseAs[SignupResponse].success shouldEqual false
         responseAs[SignupResponse].errors shouldBe Map("phoneNumber" -> "error.invalid")
 
-        verify(dao, never()).create(any())
+        verify(dao, never()).create(any[Member])
       }
     }
 

@@ -24,10 +24,6 @@
 
 package com.jsherz.luskydive.services
 
-import java.util.UUID
-
-import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
 import akka.http.javadsl.model.HttpMethods._
 import akka.http.scaladsl.model.headers.{HttpOrigin, HttpOriginRange}
 import akka.http.scaladsl.model.{HttpEntity, HttpResponse, StatusCodes}
@@ -44,7 +40,6 @@ import com.jsherz.luskydive.directives.JwtDirectives
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters._
-import scala.concurrent.ExecutionContext
 
 /**
   * The holder of all configured routes.
@@ -61,10 +56,7 @@ class HttpService(
                    socialService: SocialService,
                    jwtService: JwtService,
                    packingListDao: PackingListItemDao
-                 )
-                 (implicit executionContext: ExecutionContext) {
-
-  private val log: Logger = LoggerFactory.getLogger(getClass)
+                 ) {
 
   private val jwtDirectives: JwtDirectives = new JwtDirectives(jwtService, memberDao, committeeMemberDao)
 
@@ -81,7 +73,7 @@ class HttpService(
   val massTextApi = new MassTextApi(massTextDao)
   val textMessageApi = new TextMessageApi(textMessageDao, memberDao, textMessageReceiveApiKey, authenticateCommitteeWithJwt)
   val socialLoginApi = new SocialLoginApi(socialService, memberDao, jwtService)
-  val currentMemberApi = new CurrentMemberApi(authenticateWithJwt, memberDao)
+  val currentMemberApi = new CurrentMemberApi(authenticateWithJwt)
   val versionApi = new VersionApi
   val packingListApi = new PackingListApi(authenticateWithJwt, packingListDao)
   val migrateApi = new MigrateApi(authenticateCommitteeWithJwt)

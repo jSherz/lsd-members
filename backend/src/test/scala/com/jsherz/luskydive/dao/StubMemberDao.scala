@@ -26,15 +26,13 @@ package com.jsherz.luskydive.dao
 
 import java.util.UUID
 
-import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.{CommitteeMember, Member}
-import com.jsherz.luskydive.util.Util
-import com.jsherz.luskydive.json.MemberSearchResult
 import com.jsherz.luskydive.json.MemberJsonSupport._
-import com.jsherz.luskydive.util.Errors
+import com.jsherz.luskydive.json.MemberSearchResult
+import com.jsherz.luskydive.util.{Errors, Util}
+import scalaz.{-\/, \/, \/-}
 
 import scala.concurrent.{ExecutionContext, Future}
-import scalaz.{-\/, \/, \/-}
 
 /**
   * A testing implementation of the MemberDAO that responds to a set of pre-defined inputs.

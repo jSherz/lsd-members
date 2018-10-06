@@ -82,8 +82,8 @@ class JwtServiceImpl(jwtSecret: String) extends JwtService {
           try {
             Some(UUID.fromString(uuid))
           } catch {
-            case ex: IllegalArgumentException =>
-              log.error(s"Mangled UUID in JWT claim - ${uuid}")
+            case _: IllegalArgumentException =>
+              log.error(s"Mangled UUID in JWT claim - $uuid")
               None
           }
         case _ =>

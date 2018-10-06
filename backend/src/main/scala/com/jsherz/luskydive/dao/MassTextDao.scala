@@ -27,13 +27,10 @@ package com.jsherz.luskydive.dao
 import java.sql.{Date, Timestamp}
 import java.util.UUID
 
-import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
 import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.{MassText, Member, TextMessage, TextMessageStatuses}
 import com.jsherz.luskydive.services.DatabaseService
 import com.jsherz.luskydive.util.TextMessageUtil
-import org.slf4j.{Logger, LoggerFactory}
 import scalaz.{-\/, \/, \/-}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -80,8 +77,6 @@ class MassTextDaoImpl(protected override val databaseService: DatabaseService)(i
   extends Tables(databaseService) with MassTextDao {
 
   import driver.api._
-
-  private val log: Logger = LoggerFactory.getLogger(getClass)
 
   /**
     * Get the mass text with the given UUID.

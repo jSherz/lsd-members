@@ -26,11 +26,8 @@ package com.jsherz.luskydive.dao
 
 import java.util.UUID
 
-import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
 import com.jsherz.luskydive.core.PackingListItem
 import com.jsherz.luskydive.services.DatabaseService
-import org.slf4j.{Logger, LoggerFactory}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -48,8 +45,6 @@ class PackingListItemDaoImpl(override protected val databaseService: DatabaseSer
   extends Tables(databaseService) with PackingListItemDao {
 
   import driver.api._
-
-  private val log: Logger = LoggerFactory.getLogger(getClass)
 
   override def getOrDefault(uuid: UUID): Future[PackingListItem] = {
     db.run(

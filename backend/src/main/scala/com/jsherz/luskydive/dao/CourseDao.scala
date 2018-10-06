@@ -27,12 +27,9 @@ package com.jsherz.luskydive.dao
 import java.sql.Date
 import java.util.UUID
 
-import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
-import com.jsherz.luskydive.core.{CommitteeMember, Course, CourseWithOrganisers}
+import com.jsherz.luskydive.core.{Course, CourseWithOrganisers}
 import com.jsherz.luskydive.json._
 import com.jsherz.luskydive.services.DatabaseService
-import org.slf4j.{Logger, LoggerFactory}
 import scalaz.{-\/, \/, \/-}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -93,8 +90,6 @@ class CourseDaoImpl(
   extends Tables(databaseService) with CourseDao {
 
   import driver.api._
-
-  private val log: Logger = LoggerFactory.getLogger(getClass)
 
   /**
     * Try and find a course with the given UUID, including finding the primary and secondary organisers.
@@ -218,11 +213,6 @@ class CourseDaoImpl(
 
   private def coursesReturningUuid(): driver.ReturningInsertActionComposer[Course, UUID] =
     Courses returning Courses.map(_.uuid)
-
-  private def lookupSecondaryOrganiser(maybeUuid: Option[UUID]): Future[Option[CommitteeMember]] = maybeUuid match {
-    case Some(uuid) => committeeMemberDao.get(uuid)
-    case None => Future.successful(None)
-  }
 
 }
 

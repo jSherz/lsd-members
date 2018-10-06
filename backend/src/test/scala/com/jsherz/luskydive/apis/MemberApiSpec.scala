@@ -33,7 +33,7 @@ import com.jsherz.luskydive.dao.{StubMemberDao, StubTextMessageDao}
 import com.jsherz.luskydive.json.MemberJsonSupport._
 import com.jsherz.luskydive.json.MemberSearchRequest
 import com.jsherz.luskydive.util.{AuthenticationDirectives, DateUtil, Errors, Util}
-import org.mockito.Matchers.any
+import org.mockito.Matchers.{any, anyString}
 import org.mockito.Mockito
 import org.mockito.Mockito.{never, times, verify}
 import spray.json._
@@ -53,7 +53,6 @@ class MemberApiSpec extends BaseApiSpec {
   private val updateUrl = s"/members/${StubMemberDao.updateUuid}"
   private val updateWrongMemberUrl = "/members/45da34bc-01f0-4b88-b822-fb9b07a64c10"
   private val updateMember = Util.fixture[Member]("1f390207.json")
-  private val updateErrorMember = Util.fixture[Member]("c740a4dc.json")
   private val createMemberUrl = "/members/create"
 
   // TODO: Move to fixture?
@@ -86,7 +85,7 @@ class MemberApiSpec extends BaseApiSpec {
         }
       }
 
-      verify(dao, never()).search(any[String])
+      verify(dao, never()).search(anyString)
     }
 
     "return bad request if the search term provided is under three characters" in new Fixtured {
@@ -104,7 +103,7 @@ class MemberApiSpec extends BaseApiSpec {
         }
       }
 
-      verify(dao, never()).search(any[String])
+      verify(dao, never()).search(anyString)
     }
 
     "return the correct results" in new Fixtured {

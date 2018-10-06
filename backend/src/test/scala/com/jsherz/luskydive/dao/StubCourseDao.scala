@@ -28,17 +28,17 @@ import java.sql.Date
 import java.util.UUID
 
 import com.jsherz.luskydive.core.{Course, CourseWithOrganisers}
+import com.jsherz.luskydive.json.CoursesJsonSupport._
 import com.jsherz.luskydive.json.{CourseSpaceWithMember, CourseWithNumSpaces}
 import com.jsherz.luskydive.util.Util
-import com.jsherz.luskydive.json.CoursesJsonSupport._
-
-import scala.concurrent.{ExecutionContext, Future}
 import scalaz.{-\/, \/, \/-}
+
+import scala.concurrent.Future
 
 /**
   * A [[CourseDao]] that returns canned responses.
   */
-class StubCourseDao()(implicit ec: ExecutionContext) extends CourseDao {
+class StubCourseDao extends CourseDao {
 
   /**
     * Try and find a course with the given UUID.

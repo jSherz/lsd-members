@@ -24,7 +24,6 @@
 
 package com.jsherz.luskydive.itest.dao
 
-import akka.actor.ActorSystem
 import com.jsherz.luskydive.core.CommitteeMember
 import com.jsherz.luskydive.dao._
 import com.jsherz.luskydive.itest.util.{TestDatabase, TestUtil, Util}

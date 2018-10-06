@@ -27,12 +27,11 @@ package com.jsherz.luskydive.dao
 import java.util.UUID
 
 import com.jsherz.luskydive.core.CommitteeMember
-import com.jsherz.luskydive.util.Util
-import com.jsherz.luskydive.json.StrippedCommitteeMember
 import com.jsherz.luskydive.json.CommitteeMembersJsonSupport._
+import com.jsherz.luskydive.json.StrippedCommitteeMember
+import com.jsherz.luskydive.util.Util
 
 import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   * An implementation of [[CommitteeMemberDao]] that returns canned values.

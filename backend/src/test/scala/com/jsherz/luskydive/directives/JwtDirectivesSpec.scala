@@ -26,7 +26,6 @@ package com.jsherz.luskydive.directives
 
 import java.util.UUID
 
-import akka.event.LoggingAdapter
 import akka.http.scaladsl.model.headers.RawHeader
 import akka.http.scaladsl.model.{HttpHeader, StatusCodes}
 import akka.http.scaladsl.server.Directives._
@@ -39,9 +38,8 @@ import com.jsherz.luskydive.json.MemberJsonSupport._
 import com.jsherz.luskydive.services.JwtService
 import com.jsherz.luskydive.util.{BaseSpec, Util}
 import com.typesafe.config.{Config, ConfigFactory}
-import org.mockito.Matchers.any
+import org.mockito.Matchers.{any, anyString}
 import org.mockito.Mockito.{mock, when}
-import scalaz.{-\/, \/, \/-}
 
 import scala.concurrent.Future
 
@@ -147,10 +145,10 @@ class JwtDirectivesSpec extends BaseSpec with ScalatestRouteTest {
 
   private def buildDirective(serviceResponse: Option[UUID], member: Future[Option[Member]]): Route = {
     val service = mock(classOf[JwtService])
-    when(service.verifyJwt(any())).thenReturn(serviceResponse)
+    when(service.verifyJwt(anyString)).thenReturn(serviceResponse)
 
     val memberDao = mock(classOf[MemberDao])
-    when(memberDao.get(any())).thenReturn(member)
+    when(memberDao.get(any[UUID])).thenReturn(member)
 
     val committeeMemberDao = mock(classOf[CommitteeMemberDao])
 
@@ -162,13 +160,13 @@ class JwtDirectivesSpec extends BaseSpec with ScalatestRouteTest {
   private def buildCommitteeDirective(serviceResponse: Option[UUID], member: Future[Option[Member]],
                                       committeeMember: Future[Option[CommitteeMember]]): Route = {
     val service = mock(classOf[JwtService])
-    when(service.verifyJwt(any())).thenReturn(serviceResponse)
+    when(service.verifyJwt(anyString)).thenReturn(serviceResponse)
 
     val memberDao = mock(classOf[MemberDao])
-    when(memberDao.get(any())).thenReturn(member)
+    when(memberDao.get(any[UUID])).thenReturn(member)
 
     val committeeMemberDao = mock(classOf[CommitteeMemberDao])
-    when(committeeMemberDao.get(any())).thenReturn(committeeMember)
+    when(committeeMemberDao.get(any[UUID])).thenReturn(committeeMember)
 
     new JwtDirectives(service, memberDao, committeeMemberDao).authenticateCommitteeWithJwt { _ =>
       complete("Hello, world!")

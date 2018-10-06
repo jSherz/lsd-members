@@ -32,7 +32,6 @@ import com.jsherz.luskydive.util.Util
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scalaz.{-\/, \/, \/-}
 
 /**
   * Created by james on 22/09/2016.

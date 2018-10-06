@@ -26,9 +26,9 @@ package com.jsherz.luskydive.dao
 
 import java.util.UUID
 
-import scala.concurrent.Future
 import scalaz.{-\/, \/, \/-}
-import scala.concurrent.ExecutionContext.Implicits.global
+
+import scala.concurrent.Future
 
 /**
   * Fake course space DAO.

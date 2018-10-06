@@ -28,10 +28,10 @@ import java.sql.{Date, Timestamp}
 import java.util.UUID
 
 import com.jsherz.luskydive.core.MassText
-import com.jsherz.luskydive.util.{AuthenticationDirectives, DateUtil, Errors}
+import com.jsherz.luskydive.util.{DateUtil, Errors}
+import scalaz.{-\/, \/, \/-}
 
 import scala.concurrent.Future
-import scalaz.{-\/, \/, \/-}
 
 
 class StubMassTextDao extends MassTextDao {

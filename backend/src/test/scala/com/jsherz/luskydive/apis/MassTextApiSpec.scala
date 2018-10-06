@@ -24,13 +24,16 @@
 
 package com.jsherz.luskydive.apis
 
+import java.sql.{Timestamp, Date}
+import java.util.UUID
+
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Route
 import com.jsherz.luskydive.dao.{MassTextDaoErrors, StubMassTextDao}
 import com.jsherz.luskydive.json.MassTextsJsonSupport._
 import com.jsherz.luskydive.json._
 import com.jsherz.luskydive.util.{AuthenticationDirectives, Errors}
-import org.mockito.Matchers.any
+import org.mockito.Matchers.{any, anyString}
 import org.mockito.Mockito._
 
 
@@ -103,18 +106,17 @@ class MassTextApiSpec extends BaseApiSpec {
       val route = new MassTextApi(dao).route
 
       Post(sendUrl, request) ~> route ~> check {
-        val t = responseAs[MassTextSendResponse]
         response.status shouldEqual StatusCodes.OK
         responseAs[MassTextSendResponse].success shouldEqual true
         responseAs[MassTextSendResponse].error shouldBe None
         responseAs[MassTextSendResponse].uuid shouldEqual Some(StubMassTextDao.validCreatedUuid)
 
         verify(dao).send(
-          any(),
+          any[UUID],
           org.mockito.Matchers.eq(StubMassTextDao.validStartDate),
           org.mockito.Matchers.eq(StubMassTextDao.validEndDate),
           org.mockito.Matchers.eq("Hello, {{ name }}!"),
-          any()
+          any[Timestamp]
         )
       }
     }
@@ -131,7 +133,7 @@ class MassTextApiSpec extends BaseApiSpec {
         responseAs[MassTextSendResponse].error shouldEqual Some(MassTextDaoErrors.noMembersMatched)
         responseAs[MassTextSendResponse].uuid shouldBe None
 
-        verify(dao).send(any(), any(), any(), any(), any())
+        verify(dao).send(any[UUID], any[Date], any[Date], anyString, any[Timestamp])
       }
     }
 
@@ -147,7 +149,7 @@ class MassTextApiSpec extends BaseApiSpec {
         responseAs[MassTextSendResponse].error shouldEqual Some(MassTextApiErrors.templateRenderMismatch)
         responseAs[MassTextSendResponse].uuid shouldBe None
 
-        verify(dao, never()).send(any(), any(), any(), any(), any())
+        verify(dao, never()).send(any[UUID], any[Date], any[Date], anyString, any[Timestamp])
       }
     }
 
@@ -162,7 +164,7 @@ class MassTextApiSpec extends BaseApiSpec {
         responseAs[MassTextSendResponse].error shouldEqual Some(MassTextApiErrors.blankTemplate)
         responseAs[MassTextSendResponse].uuid shouldBe None
 
-        verify(dao, never()).send(any(), any(), any(), any(), any())
+        verify(dao, never()).send(any[UUID], any[Date], any[Date], anyString, any[Timestamp])
       }
     }
 

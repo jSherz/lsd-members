@@ -61,7 +61,8 @@ class SocialServiceSpec extends BaseSpec {
     "catch FacebookExceptions and return None" in {
       val fb = mock(classOf[FacebookClient])
       when(fb.obtainAppAccessToken(anyString, anyString)).thenReturn(AccessToken.fromQueryString("?access_token=blah"))
-      when(fb.parseSignedRequest(any, any, any)).thenThrow(new FacebookSignedRequestParsingException("Boaty McBoatface"))
+      when(fb.parseSignedRequest(anyString, anyString, any[Class[Any]]))
+        .thenThrow(new FacebookSignedRequestParsingException("Boaty McBoatface"))
 
       val service = new SocialServiceImpl(factoryFor(fb), "BLAHBLAHBLAH", "SSSHHHSECRET", "https://localhost")
 

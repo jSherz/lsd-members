@@ -24,8 +24,6 @@
 
 package com.jsherz.luskydive.json
 
-import java.util.UUID
-
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import com.jsherz.luskydive.util.UuidJsonFormat
 import spray.json.{DefaultJsonProtocol, RootJsonFormat}

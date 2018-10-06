@@ -32,7 +32,6 @@ import com.jsherz.luskydive.dao.TextMessageDao
 import com.twilio.`type`.PhoneNumber
 import com.twilio.http.TwilioRestClient
 import com.twilio.rest.api.v2010.account.Message
-import scalaz.{-\/, \/-}
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Awaitable}

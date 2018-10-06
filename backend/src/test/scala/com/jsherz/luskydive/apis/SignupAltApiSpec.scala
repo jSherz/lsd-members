@@ -82,7 +82,7 @@ class SignupAltApiSpec extends BaseApiSpec {
         responseAs[SignupResponse].errors shouldBe empty
 
         // TODO: Try making this more specific
-        verify(dao).create(any())
+        verify(dao).create(any[Member])
       }
     }
 
@@ -93,7 +93,7 @@ class SignupAltApiSpec extends BaseApiSpec {
         Post(url, request) ~> Route.seal(route) ~> check {
           response.status shouldEqual StatusCodes.UnsupportedMediaType
 
-          verify(dao, never()).create(any())
+          verify(dao, never()).create(any[Member])
         }
       }
     }
@@ -104,7 +104,7 @@ class SignupAltApiSpec extends BaseApiSpec {
       Post(url, request) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.BadRequest
 
-        verify(dao, never()).create(any())
+        verify(dao, never()).create(any[Member])
       }
     }
 
@@ -114,7 +114,7 @@ class SignupAltApiSpec extends BaseApiSpec {
       Post(url, request) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.BadRequest
 
-        verify(dao, never()).create(any())
+        verify(dao, never()).create(any[Member])
       }
     }
 
@@ -124,7 +124,7 @@ class SignupAltApiSpec extends BaseApiSpec {
       Post(url, request) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.BadRequest
 
-        verify(dao, never()).create(any())
+        verify(dao, never()).create(any[Member])
       }
     }
 
@@ -141,7 +141,7 @@ class SignupAltApiSpec extends BaseApiSpec {
         response.status shouldEqual StatusCodes.MethodNotAllowed
       }
 
-      verify(dao, never()).create(any())
+      verify(dao, never()).create(any[Member])
     }
 
     "return failed with an error if a blank name (only spaces) is given" in {
@@ -155,7 +155,7 @@ class SignupAltApiSpec extends BaseApiSpec {
         }
       }
 
-      verify(dao, never()).create(any())
+      verify(dao, never()).create(any[Member])
     }
 
     "return failed with an appropriate error if the e-mail is in use" in {
@@ -166,7 +166,7 @@ class SignupAltApiSpec extends BaseApiSpec {
         responseAs[SignupResponse].success shouldEqual false
         responseAs[SignupResponse].errors shouldBe Map("email" -> "error.inUse")
 
-        verify(dao, never()).create(any())
+        verify(dao, never()).create(any[Member])
       }
     }
 
@@ -178,7 +178,7 @@ class SignupAltApiSpec extends BaseApiSpec {
         responseAs[SignupResponse].success shouldEqual false
         responseAs[SignupResponse].errors shouldBe Map("email" -> "error.invalid")
 
-        verify(dao, never()).create(any())
+        verify(dao, never()).create(any[Member])
       }
     }
 

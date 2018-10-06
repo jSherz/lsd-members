@@ -37,13 +37,11 @@ import com.jsherz.luskydive.util.TextMessageUtil
 import org.slf4j.{Logger, LoggerFactory}
 import scalaz.{-\/, \/-}
 
-import scala.concurrent.ExecutionContext
-
 /**
   * Used to send out a text message to many members.
   */
 class MassTextApi(dao: MassTextDao)
-                 (implicit ec: ExecutionContext, authDirective: Directive1[(Member, CommitteeMember)]) {
+                 (implicit authDirective: Directive1[(Member, CommitteeMember)]) {
 
   private val log: Logger = LoggerFactory.getLogger(getClass)
 

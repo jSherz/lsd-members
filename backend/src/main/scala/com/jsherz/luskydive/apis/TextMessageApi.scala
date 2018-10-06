@@ -28,9 +28,7 @@ import java.sql.Timestamp
 import java.time.LocalDateTime
 import java.util.UUID
 
-import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse, StatusCodes}
+import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.server.Directive1
 import akka.http.scaladsl.server.Directives.{complete, _}
 import com.fasterxml.uuid.Generators
@@ -39,8 +37,6 @@ import com.jsherz.luskydive.dao.{MemberDao, TextMessageDao}
 import com.jsherz.luskydive.json.TextMessageJsonSupport._
 import org.slf4j.{Logger, LoggerFactory}
 
-import scala.concurrent.ExecutionContext
-
 
 /**
   * Handles querying of text messages & incoming messages delivered by a provider.
@@ -48,15 +44,14 @@ import scala.concurrent.ExecutionContext
 class TextMessageApi(textMessageDao: TextMessageDao,
                      memberDao: MemberDao,
                      validApiKey: String,
-                     committeeAuthDirective: Directive1[(Member, CommitteeMember)])
-                    (implicit ec: ExecutionContext) {
+                     committeeAuthDirective: Directive1[(Member, CommitteeMember)]) {
 
   private val log: Logger = LoggerFactory.getLogger(getClass)
 
-  val receiveRoute = (path("receive" / Remaining) & post & formFields('To, 'From, 'Body, 'MessageSid)) {
+  val receiveRoute = (path("receive" / Remaining) & post & formFields(('To, 'From, 'Body, 'MessageSid))) {
     (apiKey: String, to: String, from: String, body: String, externalSid: String) =>
       if (apiKey.isEmpty || !validApiKey.equals(apiKey)) {
-        complete(StatusCodes.Unauthorized, "Unauthorized.")
+        complete(StatusCodes.Unauthorized -> "Unauthorized.")
       } else {
         // Find member and, if found, insert text message
         onSuccess(memberDao.forPhoneNumber(from)) {
@@ -70,13 +65,13 @@ class TextMessageApi(textMessageDao: TextMessageDao,
                 s"""<?xml version="1.0" encoding="UTF-8"?><!-- Recorded as ${uuid.toString} --><Response></Response>"""
               )
 
-              complete(StatusCodes.OK, entity)
+              complete(StatusCodes.OK -> entity)
             }
           }
           case None => {
             log.info(s"No member found with the phone number $from - not saving message $body.")
 
-            complete(StatusCodes.NotFound, TextMessageApiErrors.receiveMemberNotFound)
+            complete(StatusCodes.NotFound -> TextMessageApiErrors.receiveMemberNotFound)
           }
         }
       }

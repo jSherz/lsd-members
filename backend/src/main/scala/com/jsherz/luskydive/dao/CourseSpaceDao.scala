@@ -30,7 +30,6 @@ import com.fasterxml.uuid.Generators
 import com.jsherz.luskydive.core.CourseSpace
 import com.jsherz.luskydive.services.DatabaseService
 import com.jsherz.luskydive.util.Errors
-import org.slf4j.{Logger, LoggerFactory}
 import scalaz.{-\/, \/, \/-}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -87,8 +86,6 @@ class CourseSpaceDaoImpl(protected override val databaseService: DatabaseService
   extends Tables(databaseService) with CourseSpaceDao {
 
   import driver.api._
-
-  private val log: Logger = LoggerFactory.getLogger(getClass)
 
   /**
     * Create the given number of spaces and attach them to a course.
@@ -173,7 +170,7 @@ class CourseSpaceDaoImpl(protected override val databaseService: DatabaseService
         if (space.memberUuid.contains(memberUuid)) {
           db.run(CourseSpaces.filter(_.uuid === uuid)
             .map(space => (space.memberUuid, space.depositPaid))
-            .update(None, false) // Deposit can't be paid with no-one in space
+            .update((None, false)) // Deposit can't be paid with no-one in space
           ).map(_ => \/-(uuid))
         } else {
           Future.successful(-\/(CourseSpaceDaoErrors.memberNotInSpace))

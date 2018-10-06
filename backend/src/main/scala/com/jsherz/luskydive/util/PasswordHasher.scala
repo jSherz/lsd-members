@@ -24,10 +24,8 @@
 
 package com.jsherz.luskydive.util
 
-import java.nio.ByteBuffer
-import java.nio.charset.StandardCharsets
-import java.security.{NoSuchAlgorithmException, SecureRandom}
 import java.security.spec.InvalidKeySpecException
+import java.security.{NoSuchAlgorithmException, SecureRandom}
 import java.util.Base64
 
 import javax.crypto.SecretKeyFactory

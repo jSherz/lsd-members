@@ -28,8 +28,6 @@ import java.sql.Timestamp
 import java.time.{Duration, Instant, LocalDateTime}
 import java.util.UUID
 
-import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
@@ -42,8 +40,6 @@ import com.restfb.types.User
 import org.slf4j.{Logger, LoggerFactory}
 import scalaz.{-\/, \/-}
 
-import scala.concurrent.ExecutionContext
-
 /**
   * Used to authenticate users with a social single-sign-on.
   */
@@ -51,8 +47,7 @@ class SocialLoginApi(
                       service: SocialService,
                       memberDao: MemberDao,
                       jwtService: JwtService
-                    )
-                    (implicit ec: ExecutionContext) {
+                    ) {
 
   import com.jsherz.luskydive.json.SocialLoginJsonSupport._
 
@@ -61,10 +56,10 @@ class SocialLoginApi(
   private val tokenValidHours = 24
 
   private val invalidSignedRequest: Route =
-    complete(StatusCodes.Unauthorized, SocialLoginResponse(success = false, Some("Invalid signed request."), None,
+    complete(StatusCodes.Unauthorized -> SocialLoginResponse(success = false, Some("Invalid signed request."), None,
       committeeMember = false))
 
-  private val verificationFailed = complete(StatusCodes.Unauthorized, "Verification failed.")
+  private val verificationFailed = complete(StatusCodes.Unauthorized -> "Verification failed.")
 
   val socialLoginRoute: Route = (pathEnd & post & entity(as[SocialLoginRequest])) { req =>
     service.parseSignedRequest(req.signedRequest)
@@ -126,11 +121,11 @@ class SocialLoginApi(
         onSuccess(futureUuid) { newMemberUuid: UUID =>
           val jwt = generateJwt(newMemberUuid)
 
-          complete(StatusCodes.OK, SocialLoginResponse(success = true, None, Some(jwt), committeeMember = false))
+          complete(StatusCodes.OK -> SocialLoginResponse(success = true, None, Some(jwt), committeeMember = false))
         }
         case -\/(error: String) => {
           log.error(s"Failed to create member: $error")
-          complete(StatusCodes.InternalServerError, "Login failed - please try again later.")
+          complete(StatusCodes.InternalServerError -> "Login failed - please try again later.")
         }
     }
   }
@@ -139,12 +134,7 @@ class SocialLoginApi(
     jwtService.createJwt(memberUuid, Instant.now(), Instant.now().plus(Duration.ofHours(tokenValidHours)))
   }
 
-  private val genericError = complete(StatusCodes.InternalServerError, "Login failed - please try again later.")
-
-  private def lookupFailed(error: String): Route = {
-    log.error(s"Error while looking up member by social ID: $error")
-    genericError
-  }
+  private val genericError = complete(StatusCodes.InternalServerError -> "Login failed - please try again later.")
 
   private def buildMemberForSocialId(userId: String, firstName: String, lastName: String, email: String): Member = {
     Member(

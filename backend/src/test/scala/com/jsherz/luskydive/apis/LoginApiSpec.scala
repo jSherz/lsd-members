@@ -32,7 +32,7 @@ import akka.http.scaladsl.server.Route
 import com.jsherz.luskydive.dao._
 import com.jsherz.luskydive.json.LoginJsonSupport._
 import com.jsherz.luskydive.json.{LoginRequest, LoginResponse}
-import com.jsherz.luskydive.services.{JwtService, JwtServiceImpl}
+import com.jsherz.luskydive.services.JwtService
 import org.mockito.Matchers._
 import org.mockito.Mockito
 import org.mockito.Mockito._
@@ -44,7 +44,7 @@ class LoginApiSpec extends BaseApiSpec {
 
   private val url = "/login"
   private var dao: AuthDao = Mockito.spy(new StubAuthDao())
-  private var jwtService: JwtService = new JwtService {
+  private val jwtService: JwtService = new JwtService {
     override def verifyJwt(token: String): Option[UUID] = ???
 
     override def createJwt(uuid: UUID, issuedAt: Instant, expiresAt: Instant): String = "a.b.c"
@@ -67,7 +67,7 @@ class LoginApiSpec extends BaseApiSpec {
         responseAs[LoginResponse].errors shouldBe empty
         responseAs[LoginResponse].apiKey shouldBe Some("a.b.c")
 
-        verify(dao).login(any(), any())
+        verify(dao).login(anyString, anyString)
       }
     }
 
@@ -78,7 +78,7 @@ class LoginApiSpec extends BaseApiSpec {
         Post(url, request) ~> Route.seal(route) ~> check {
           response.status shouldEqual StatusCodes.UnsupportedMediaType
 
-          verify(dao, never()).login(any(), any())
+          verify(dao, never()).login(anyString, anyString)
         }
       }
     }
@@ -89,7 +89,7 @@ class LoginApiSpec extends BaseApiSpec {
       Post(url, request) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.BadRequest
 
-        verify(dao, never()).login(any(), any())
+        verify(dao, never()).login(anyString, anyString)
       }
     }
 
@@ -99,7 +99,7 @@ class LoginApiSpec extends BaseApiSpec {
       Post(url, request) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.BadRequest
 
-        verify(dao, never()).login(any(), any())
+        verify(dao, never()).login(anyString, anyString)
       }
     }
 
@@ -109,7 +109,7 @@ class LoginApiSpec extends BaseApiSpec {
       Post(url, request) ~> Route.seal(route) ~> check {
         response.status shouldEqual StatusCodes.BadRequest
 
-        verify(dao, never()).login(any(), any())
+        verify(dao, never()).login(anyString, anyString)
       }
     }
 
@@ -120,7 +120,7 @@ class LoginApiSpec extends BaseApiSpec {
         }
       }
 
-      verify(dao, never()).login(any(), any())
+      verify(dao, never()).login(anyString, anyString)
     }
 
     "return failed with an error if the login information is incorrect" in {
@@ -134,7 +134,7 @@ class LoginApiSpec extends BaseApiSpec {
         )
         responseAs[LoginResponse].apiKey shouldBe None
 
-        verify(dao).login(any(), any())
+        verify(dao).login(anyString, anyString)
       }
     }
 
@@ -149,7 +149,7 @@ class LoginApiSpec extends BaseApiSpec {
         )
         responseAs[LoginResponse].apiKey shouldBe None
 
-        verify(dao).login(any(), any())
+        verify(dao).login(anyString, anyString)
       }
     }
 

@@ -25,10 +25,9 @@
 package com.jsherz.luskydive.apis
 
 import java.sql.Timestamp
+import java.time.Instant
 import java.util.{Calendar, Date}
 
-import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
@@ -38,12 +37,10 @@ import com.jsherz.luskydive.services.JwtService
 import org.slf4j.{Logger, LoggerFactory}
 import scalaz.{-\/, \/-}
 
-import scala.concurrent.ExecutionContext
-
 /**
   * Used to authenticate users.
   */
-class LoginApi(dao: AuthDao, jwtService: JwtService)(implicit ec: ExecutionContext) {
+class LoginApi(dao: AuthDao, jwtService: JwtService) {
 
   import com.jsherz.luskydive.json.LoginJsonSupport._
 
@@ -57,12 +54,14 @@ class LoginApi(dao: AuthDao, jwtService: JwtService)(implicit ec: ExecutionConte
   val loginRoute = pathEnd {
     post {
       entity(as[LoginRequest]) { req =>
-        val time = new Timestamp(new Date().getTime)
+        val issuedAt = new Timestamp(new Date().getTime).toInstant
+        val expiresAt = createExpiryInstant
+
         val loginResult = dao.login(req.email, req.password)
 
         onSuccess(loginResult) {
           case \/-(cm) =>
-            val jwt = jwtService.createJwt(cm.memberUuid, time.toInstant, addHoursToTimestamp(time, API_KEY_EXPIRES).toInstant)
+            val jwt = jwtService.createJwt(cm.memberUuid, issuedAt, expiresAt)
             complete(LoginResponse(true, Map.empty, Some(jwt)))
           case -\/(error) => {
             if (AuthDaoErrors.invalidEmailPass.equals(error)) {
@@ -76,7 +75,7 @@ class LoginApi(dao: AuthDao, jwtService: JwtService)(implicit ec: ExecutionConte
             } else {
               log.error("Login failed: " + error)
 
-              complete(StatusCodes.InternalServerError, error)
+              complete(StatusCodes.InternalServerError -> error)
             }
           }
         }
@@ -88,19 +87,14 @@ class LoginApi(dao: AuthDao, jwtService: JwtService)(implicit ec: ExecutionConte
     loginRoute
   }
 
-  /**
-    * Create a new [[Timestamp]] by adding a number of hours to an existing one.
-    *
-    * @param time
-    * @param hours
-    * @return
-    */
-  private def addHoursToTimestamp(time: Timestamp, hours: Int): Timestamp = {
+  private def createExpiryInstant: Instant = {
+    val time = new Timestamp(new Date().getTime)
+
     val calendar = Calendar.getInstance()
     calendar.setTime(time)
     calendar.add(Calendar.HOUR, API_KEY_EXPIRES)
 
-    new Timestamp(calendar.getTime.getTime)
+    new Timestamp(calendar.getTime.getTime).toInstant
   }
 
 }

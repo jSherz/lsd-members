@@ -31,22 +31,19 @@ import akka.http.scaladsl.server.directives.BasicDirectives.provide
 import akka.http.scaladsl.server.directives.RouteDirectives.reject
 import akka.http.scaladsl.server.{AuthenticationFailedRejection, Route}
 import com.jsherz.luskydive.core.Member
-import com.jsherz.luskydive.dao.MemberDao
 import com.jsherz.luskydive.json.CoursesJsonSupport.StrippedMemberFormat
 import com.jsherz.luskydive.json.MemberJsonSupport._
 import com.jsherz.luskydive.json.StrippedMember
 import com.jsherz.luskydive.util.Util
-import org.mockito.Mockito.mock
 
 class CurrentMemberApiSpec extends BaseApiSpec {
 
   "CurrentMemberApi#me" should {
 
     "return an error if the authentication fails" in {
-      val memberDao = mock(classOf[MemberDao])
       val authDirective = reject(AuthenticationFailedRejection(CredentialsRejected, HttpChallenge("", None)))
 
-      val api = new CurrentMemberApi(authDirective, memberDao)
+      val api = new CurrentMemberApi(authDirective)
 
       Get("/me") ~> addHeader("Authorization", "asdfasf") ~> Route.seal(api.route) ~> check {
         response.status shouldBe StatusCodes.Unauthorized
@@ -56,9 +53,8 @@ class CurrentMemberApiSpec extends BaseApiSpec {
     "return a stripped down version of the member's info" in {
       val member = Util.fixture[Member]("6066143f.json")
       val authDirective = provide(member)
-      val memberDao = mock(classOf[MemberDao])
 
-      val api = new CurrentMemberApi(authDirective, memberDao)
+      val api = new CurrentMemberApi(authDirective)
 
       Get("/me") ~> addHeader("Authorization", "123123123") ~> Route.seal(api.route) ~> check {
         response.status shouldBe StatusCodes.OK

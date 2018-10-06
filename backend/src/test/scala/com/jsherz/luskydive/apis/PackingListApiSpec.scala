@@ -40,7 +40,6 @@ import com.jsherz.luskydive.json.StrippedPackingListItem
 import com.jsherz.luskydive.util.Util
 import org.mockito.Matchers.any
 import org.mockito.Mockito.{mock, verify, when}
-import scalaz.\/-
 
 import scala.concurrent.Future
 

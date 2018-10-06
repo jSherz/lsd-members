@@ -35,13 +35,11 @@ import com.jsherz.luskydive.json.{CourseCreateRequest, CourseCreateResponse, Cou
 import org.slf4j.{Logger, LoggerFactory}
 import scalaz.{-\/, \/-}
 
-import scala.concurrent.ExecutionContext
-
 /**
   * Used to retrieve and store course information.
   */
 class CoursesApi(courseDao: CourseDao)
-                (implicit ec: ExecutionContext, authDirective: Directive1[(Member, CommitteeMember)]) {
+                (implicit authDirective: Directive1[(Member, CommitteeMember)]) {
 
   import CoursesJsonSupport._
 
@@ -57,7 +55,7 @@ class CoursesApi(courseDao: CourseDao)
           if (req.endDate.before(req.startDate)) {
             log.info("Bad course list request - endDate before startDate")
 
-            complete(StatusCodes.BadRequest, "endDate must be after startDate")
+            complete(StatusCodes.BadRequest -> "endDate must be after startDate")
           } else {
             complete(courseDao.find(req.startDate, req.endDate))
           }
@@ -84,7 +82,7 @@ class CoursesApi(courseDao: CourseDao)
           case None => {
             log.info(s"Could not get course with UUID ${uuid} - not found.")
 
-            complete(StatusCodes.NotFound, "No course found with that UUID")
+            complete(StatusCodes.NotFound -> "No course found with that UUID")
           }
         }
       }

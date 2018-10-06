@@ -34,13 +34,11 @@ import com.jsherz.luskydive.json.MemberSearchRequest
 import org.slf4j.{Logger, LoggerFactory}
 import scalaz.{-\/, \/-}
 
-import scala.concurrent.ExecutionContext
-
 /**
   * Used to retrieve member information.
   */
 class MemberApi(memberDao: MemberDao, textMessageDao: TextMessageDao)
-               (implicit ec: ExecutionContext, authDirective: Directive1[(Member, CommitteeMember)]) {
+               (implicit authDirective: Directive1[(Member, CommitteeMember)]) {
 
   private val log: Logger = LoggerFactory.getLogger(getClass)
 
@@ -58,13 +56,13 @@ class MemberApi(memberDao: MemberDao, textMessageDao: TextMessageDao)
               case -\/(error) => {
                 log.error("Failed to perform member search" + error)
 
-                complete(StatusCodes.InternalServerError, error)
+                complete(StatusCodes.InternalServerError -> error)
               }
             }
           } else {
             log.info(s"Search request too small: '${req.searchTerm}'")
 
-            complete(StatusCodes.BadRequest, MemberDaoErrors.invalidSearchTerm)
+            complete(StatusCodes.BadRequest -> MemberDaoErrors.invalidSearchTerm)
           }
         }
       }
@@ -79,7 +77,7 @@ class MemberApi(memberDao: MemberDao, textMessageDao: TextMessageDao)
       case None => {
         log.info(s"Could not get member with UUID '${memberUuid}'")
 
-        complete(StatusCodes.NotFound, "Member not found")
+        complete(StatusCodes.NotFound -> "Member not found")
       }
     }
   }
@@ -90,7 +88,7 @@ class MemberApi(memberDao: MemberDao, textMessageDao: TextMessageDao)
         complete(returnedMember)
       }
     } else {
-      complete(StatusCodes.BadRequest, MemberApiErrors.uuidUrlBodyMismatch)
+      complete(StatusCodes.BadRequest -> MemberApiErrors.uuidUrlBodyMismatch)
     }
   }
 
@@ -107,7 +105,7 @@ class MemberApi(memberDao: MemberDao, textMessageDao: TextMessageDao)
       case \/-(futureUuid) => onSuccess(futureUuid) {
         complete(_)
       }
-      case -\/(error) => complete(StatusCodes.InternalServerError, error)
+      case -\/(error) => complete(StatusCodes.InternalServerError -> error)
     }
   }
 

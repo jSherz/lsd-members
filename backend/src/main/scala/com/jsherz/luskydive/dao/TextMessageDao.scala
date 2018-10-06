@@ -26,13 +26,10 @@ package com.jsherz.luskydive.dao
 
 import java.util.UUID
 
-import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
 import com.jsherz.luskydive.core.{TextMessage, TextMessageStatuses}
 import com.jsherz.luskydive.services.DatabaseService
-import org.slf4j.{Logger, LoggerFactory}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 
 trait TextMessageDao {
@@ -61,12 +58,9 @@ trait TextMessageDao {
   * Used to create and access text messages stored in the database.
   */
 class TextMessageDaoImpl(protected override val databaseService: DatabaseService)
-                        (implicit ec: ExecutionContext)
   extends Tables(databaseService) with TextMessageDao {
 
   import driver.api._
-
-  private val log: Logger = LoggerFactory.getLogger(getClass)
 
   /**
     * Get all text messages that will or have been sent, ordered by the date they were last updated, descending.

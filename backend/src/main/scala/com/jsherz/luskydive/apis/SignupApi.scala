@@ -26,8 +26,6 @@ package com.jsherz.luskydive.apis
 
 import java.sql.Timestamp
 
-import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{Directive1, Route}
 import com.fasterxml.uuid.Generators
@@ -37,13 +35,11 @@ import com.jsherz.luskydive.json.{SignupAltRequest, SignupJsonSupport, SignupReq
 import org.slf4j.{Logger, LoggerFactory}
 import scalaz.{-\/, Failure, Success, \/-}
 
-import scala.concurrent.{ExecutionContext, Future}
-
 /**
   * The two methods of signing up new members at a fresher's fair (phone number or e-mail).
   */
 class SignupApi(memberDao: MemberDao)
-               (implicit ec: ExecutionContext, authDirective: Directive1[Member]) {
+               (implicit authDirective: Directive1[Member]) {
 
   import SignupJsonSupport._
 
@@ -74,6 +70,7 @@ class SignupApi(memberDao: MemberDao)
                 complete(SignupResponse(true, Map.empty))
               }
               case -\/(error) => {
+                log.error(s"Signup failed: $error")
                 complete(SignupResponse(false, Map.empty))
               }
             }
@@ -110,7 +107,9 @@ class SignupApi(memberDao: MemberDao)
 
                 complete(SignupResponse(true, Map.empty))
               }
-              case -\/(error) => complete(SignupResponse(false, Map.empty))
+              case -\/(error) =>
+                log.error(s"Alt signup failed: $error")
+                complete(SignupResponse(false, Map.empty))
             }
           }
         }

@@ -37,7 +37,17 @@ lazy val commonSettings = Seq(
 
   scalaVersion := scalaV,
   scalacOptions := Seq(
-    "-unchecked", "-deprecation", "-encoding", "utf8", "-language:postfixOps", "-language:implicitConversions"
+    "-unchecked",
+    "-deprecation",
+    "-encoding", "utf8",
+    "-language:postfixOps",
+    "-language:implicitConversions",
+    "-explaintypes",
+    "-feature",
+    "-Xfatal-warnings",
+    "-Ywarn-dead-code",
+    "-Ywarn-unused:_",
+    "-Xlint:_"
   )
 )
 

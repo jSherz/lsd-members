@@ -33,8 +33,6 @@ import com.jsherz.luskydive.json.TextMessageJsonSupport._
 import org.scalatest.concurrent.ScalaFutures._
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 
-import scala.concurrent.ExecutionContext.Implicits.global
-
 
 class TextMessageDaoSpec extends WordSpec with Matchers with BeforeAndAfterAll {
   val TestDatabase(dbService, cleanup) = Util.setupGoldTestDb()

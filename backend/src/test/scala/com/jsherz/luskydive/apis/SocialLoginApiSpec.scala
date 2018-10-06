@@ -44,7 +44,6 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.{any, anyString}
 import org.mockito.Mockito.{mock, verify, when}
 import org.mockito.invocation.InvocationOnMock
-import org.mockito.stubbing.Answer
 import scalaz.{-\/, \/, \/-}
 
 import scala.concurrent.Future
@@ -117,7 +116,7 @@ class SocialLoginApiSpec extends BaseApiSpec {
         newMemberUuid(expectedUuid)
       )
 
-      when(socialService.getNameAndEmail(userId)).thenReturn(\/-("Betty", "Smith", "betty.smith@hotmail.co.uk"))
+      when(socialService.getNameAndEmail(userId)).thenReturn(\/-(("Betty", "Smith", "betty.smith@hotmail.co.uk")))
 
       val request = SocialLoginRequest("pssst: this isn't actually used")
 
@@ -170,7 +169,7 @@ class SocialLoginApiSpec extends BaseApiSpec {
         -\/("member creation failed - error in matrix")
       )
 
-      when(socialService.getNameAndEmail(any())).thenReturn(\/-("Frap", "Hat", "head.protection@iiiiiiii.js"))
+      when(socialService.getNameAndEmail(anyString)).thenReturn(\/-(("Frap", "Hat", "head.protection@iiiiiiii.js")))
 
       val request = SocialLoginRequest("pssst: this isn't actually used")
 
@@ -187,7 +186,7 @@ class SocialLoginApiSpec extends BaseApiSpec {
         newMemberUuid(UUID.randomUUID())
       )
 
-      when(socialService.getNameAndEmail(any())).thenReturn(-\/("random FB error"))
+      when(socialService.getNameAndEmail(anyString)).thenReturn(-\/("random FB error"))
 
       val request = SocialLoginRequest("pssst: this isn't actually used")
 
@@ -325,13 +324,13 @@ class SocialLoginApiSpec extends BaseApiSpec {
                       ): (Route, SocialService, MemberDao) = {
 
     val socialService = mock(classOf[SocialService])
-    when(socialService.parseSignedRequest(any())).thenReturn(fbReq)
+    when(socialService.parseSignedRequest(anyString)).thenReturn(fbReq)
 
     val jwtService = new JwtServiceImpl("falafel")
 
     val memberDao = mock(classOf[MemberDao])
-    when(memberDao.forSocialId(any())).thenReturn(member)
-    when(memberDao.create(any())).thenReturn(newMemberUuid)
+    when(memberDao.forSocialId(anyString)).thenReturn(member)
+    when(memberDao.create(any[Member])).thenReturn(newMemberUuid)
 
     val socialLoginApi = new SocialLoginApi(socialService, memberDao, jwtService)
 
@@ -342,7 +341,7 @@ class SocialLoginApiSpec extends BaseApiSpec {
                        member: Member,
                        committeeMember: Option[CommitteeMember] = None
                      ): Future[Option[(Member, Option[CommitteeMember])]] = {
-    Future.successful(Some(member, committeeMember))
+    Future.successful(Some((member, committeeMember)))
   }
 
   private def noMember(): Future[Option[(Member, Option[CommitteeMember])]] = {

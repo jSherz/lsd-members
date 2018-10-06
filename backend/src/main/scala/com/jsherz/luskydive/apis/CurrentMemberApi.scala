@@ -27,12 +27,10 @@ package com.jsherz.luskydive.apis
 import akka.http.scaladsl.server.Directives.{complete, get, path}
 import akka.http.scaladsl.server.{Directive1, Route}
 import com.jsherz.luskydive.core.Member
-import com.jsherz.luskydive.dao.MemberDao
 import com.jsherz.luskydive.json.CoursesJsonSupport._
 import com.jsherz.luskydive.json.StrippedMember
 
-class CurrentMemberApi(authDirective: Directive1[Member],
-                       memberDao: MemberDao) {
+class CurrentMemberApi(authDirective: Directive1[Member]) {
 
   val basicInfoRoute: Route = path("me") {
     (get & authDirective) { member =>

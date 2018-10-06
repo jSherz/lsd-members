@@ -30,7 +30,7 @@ import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.server.Route
 import com.jsherz.luskydive.dao.StubCourseDao
 import com.jsherz.luskydive.json.CoursesJsonSupport._
-import com.jsherz.luskydive.json.{CoursesJsonSupport, CoursesListRequest}
+import com.jsherz.luskydive.json.CoursesListRequest
 import com.jsherz.luskydive.util.{AuthenticationDirectives, DateUtil}
 import org.mockito.Matchers.any
 import org.mockito.Mockito
