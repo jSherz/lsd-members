@@ -1,5 +1,5 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {Observable} from 'rxjs/Observable';
+import { Observable, of, throwError } from 'rxjs';
 import {Response} from '@angular/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
@@ -46,7 +46,7 @@ describe('PackingListComponent', () => {
 
   it('should display the packing list components when loaded', async(() => {
     const exampleItems = new PackingListItems(false, true, false, true, true);
-    getResult = Observable.of(exampleItems);
+    getResult = of(exampleItems);
 
     createComponent();
 
@@ -64,7 +64,7 @@ describe('PackingListComponent', () => {
   }));
 
   it('should show an error when loading the packing list items fails', async(() => {
-    getResult = Observable.throw('Some loading error 40404');
+    getResult = throwError(new Error('Some loading error 40404'));
 
     createComponent();
 
@@ -74,14 +74,14 @@ describe('PackingListComponent', () => {
   }));
 
   it('updates the packing list items when checked', async(() => {
-    getResult = Observable.of({
+    getResult = of({
       warmClothes: false,
       sleepingBag: false,
       sturdyShoes: false,
       cash: false,
       toiletries: false
     });
-    putResult = Observable.of(null);
+    putResult = of(null);
 
     createComponent();
     const putSpy = spyOn(service, 'putPackingList').and.callThrough();

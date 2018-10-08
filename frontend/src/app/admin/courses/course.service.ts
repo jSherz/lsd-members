@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
+import {Observable} from 'rxjs';
+
 import * as moment from 'moment';
 
 import {BaseService} from '../utils/base.service';
@@ -14,6 +14,7 @@ import {
   CourseSpaceWithMember
 } from './model';
 import {environment} from '../../../environments/environment';
+import { catchError, map } from 'rxjs/operators';
 
 
 /**
@@ -65,8 +66,10 @@ export class CourseServiceImpl extends CourseService {
     };
 
     return this.post(this.coursesFindUrl, body)
-      .map(r => this.extractJson<CourseWithNumSpaces[]>(r))
-      .catch(this.handleError());
+      .pipe(
+        map(r => this.extractJson<CourseWithNumSpaces[]>(r)),
+        catchError(this.handleError())
+      );
   }
 
   /**
@@ -77,8 +80,10 @@ export class CourseServiceImpl extends CourseService {
    */
   getByUuid(uuid: string): Observable<CourseWithOrganisers> {
     return this.get(this.coursesGetUrl.replace('{{uuid}}', uuid))
-      .map(r => this.extractJson<CourseWithOrganisers>(r))
-      .catch(this.handleError());
+      .pipe(
+        map(r => this.extractJson<CourseWithOrganisers>(r)),
+        catchError(this.handleError())
+      );
   }
 
   /**
@@ -89,8 +94,10 @@ export class CourseServiceImpl extends CourseService {
    */
   spaces(uuid: string): Observable<CourseSpaceWithMember[]> {
     return this.get(this.courseSpacesUrl.replace('{{uuid}}', uuid))
-      .map(r => this.extractJson<CourseSpaceWithMember[]>(r))
-      .catch(this.handleError());
+      .pipe(
+        map(r => this.extractJson<CourseSpaceWithMember[]>(r)),
+        catchError(this.handleError())
+      );
   }
 
   /**
@@ -101,8 +108,10 @@ export class CourseServiceImpl extends CourseService {
    */
   create(course: CourseCreateRequest): Observable<CourseCreateResponse> {
     return this.post(this.coursesCreateUrl, course)
-      .map(r => this.extractJson<CourseCreateResponse>(r))
-      .catch(this.handleError());
+      .pipe(
+        map(r => this.extractJson<CourseCreateResponse>(r)),
+        catchError(this.handleError())
+      );
   }
 
 }

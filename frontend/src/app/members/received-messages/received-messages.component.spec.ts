@@ -2,7 +2,7 @@ import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 
 import {ReceivedMessagesComponent} from './received-messages.component';
 import {TextMessagesService} from './text-messages.service';
-import {Observable} from 'rxjs/Observable';
+import { of } from 'rxjs';
 import {HeaderComponent} from '../header/header.component';
 import {
   Router, UrlHandlingStrategy, UrlSerializer, ChildrenOutletContexts, ROUTES, Route
@@ -13,7 +13,7 @@ import {Location} from '@angular/common';
 
 const dummyService = {
   getReceivedMessages: () => {
-    return Observable.of([]);
+    return of([]);
   }
 };
 

@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
+import {Observable} from 'rxjs';
+
 import {Http} from '@angular/http';
 
 import {LoginResult} from './login-result';
 import {ApiKeyService, BaseService} from '../utils';
 import {environment} from '../../../environments/environment';
+import { catchError, map } from 'rxjs/operators';
 
 
 export abstract class LoginService extends BaseService {
@@ -34,8 +35,10 @@ export class LoginServiceImpl extends LoginService {
     };
 
     return this.post(this.loginUrl, body)
-      .map(r => this.extractJson<LoginResult>(r))
-      .catch(this.handleError());
+      .pipe(
+        map(r => this.extractJson<LoginResult>(r)),
+        catchError(this.handleError())
+      );
   }
 
 }

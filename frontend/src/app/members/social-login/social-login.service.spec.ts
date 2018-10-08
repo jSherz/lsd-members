@@ -4,8 +4,7 @@ import {TestBed, inject, async} from '@angular/core/testing';
 
 import {SocialLoginService, SocialLoginServiceImpl} from './social-login.service';
 import {Http, Response, ResponseOptions} from '@angular/http';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
+import {of} from 'rxjs';
 import {SocialLoginRequest, SocialLoginResponse} from './model';
 
 describe('SocialLoginService', () => {
@@ -13,7 +12,7 @@ describe('SocialLoginService', () => {
   it('makes a login request and parses the response', () => {
     const http: any = {
       post: () => {
-        return Observable.of(new Response(new ResponseOptions({
+        return of(new Response(new ResponseOptions({
           status: 200,
           body: JSON.stringify(new SocialLoginResponse(true, null, 'jwt.1.2', false)),
           url: 'https://myspace.com'
@@ -40,7 +39,7 @@ describe('SocialLoginService', () => {
     const url = call.args[0];
     const body = call.args[1];
 
-    expect(url).toEqual('https://api.dev.leedsskydivers.com/api/v1/social-login/verify');
+    expect(url).toEqual('http://local-dev.leedsskydivers.com:8080/api/v1/social-login/verify');
     expect(body).toEqual(new SocialLoginRequest('235y8werin285wefsdf23'));
   });
 

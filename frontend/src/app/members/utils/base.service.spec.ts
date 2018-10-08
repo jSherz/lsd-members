@@ -1,13 +1,10 @@
 import {Headers, Http, HttpModule, RequestOptions, Response, ResponseOptions} from '@angular/http';
-import {Observable} from 'rxjs/Observable';
-import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
+import {Observable, throwError as observableThrowError, of} from 'rxjs';
 import {BaseService} from './base.service';
 import {async, inject, TestBed} from '@angular/core/testing';
-import {JwtService} from '../login/jwt.service';
+import {JwtService} from '../login';
 import {StubJwtService} from '../login/jwt.service.stub';
-import Spy = jasmine.Spy;
 import {APP_VERSION} from '../../app.module';
-import 'rxjs/add/observable/of';
 
 /**
  * Create a dummy service using the base service.
@@ -46,7 +43,7 @@ describe('Members: base service', () => {
     const appVersion = Math.random().toString();
 
     const service = new MyService(http, jwtService, appVersion);
-    const dummyResponse = Observable.of(new Response(new ResponseOptions()));
+    const dummyResponse = of(new Response(new ResponseOptions()));
 
     const httpSpy = spyOn(http, 'get').and.returnValue(dummyResponse);
     const jwtSpy = spyOn(jwtService, 'getJwt').and.callThrough();
@@ -71,7 +68,7 @@ describe('Members: base service', () => {
     const appVersion = Math.random().toString();
 
     const service = new MyService(http, jwtService, appVersion);
-    const dummyResponse = Observable.of(new Response(new ResponseOptions()));
+    const dummyResponse = of(new Response(new ResponseOptions()));
 
     const httpSpy = spyOn(http, 'post').and.returnValue(dummyResponse);
     const jwtSpy = spyOn(jwtService, 'getJwt').and.callThrough();
@@ -100,7 +97,7 @@ describe('Members: base service', () => {
     const appVersion = Math.random().toString();
 
     const service = new MyService(http, jwtService, appVersion);
-    const dummyResponse = Observable.of(new Response(new ResponseOptions()));
+    const dummyResponse = of(new Response(new ResponseOptions()));
 
     const httpSpy = spyOn(http, 'put').and.returnValue(dummyResponse);
     const jwtSpy = spyOn(jwtService, 'getJwt').and.callThrough();
@@ -134,7 +131,7 @@ describe('Members: base service', () => {
         body: 'Computer says no',
         url: 'https://computer-says-no.example.com'
       }));
-      const dummyResponse = Observable.throw(unauthResponse);
+      const dummyResponse = observableThrowError(unauthResponse);
 
       const httpSpy = spyOn(http, 'get').and.returnValue(dummyResponse);
       const jwtSpy = spyOn(jwtService, 'setJwt').and.callThrough();
@@ -155,7 +152,7 @@ describe('Members: base service', () => {
         body: 'This is not the response you\'re looking for',
         url: 'https://have-another-mint.example.com'
       }));
-      const dummyResponse = Observable.throw(unauthResponse);
+      const dummyResponse = observableThrowError(unauthResponse);
 
       const httpSpy = spyOn(http, 'post').and.returnValue(dummyResponse);
       const jwtSpy = spyOn(jwtService, 'setJwt').and.callThrough();
@@ -176,7 +173,7 @@ describe('Members: base service', () => {
         body: 'ARE U 4 REAL?',
         url: 'https://no-no-no-no-no-auth.example.com'
       }));
-      const dummyResponse = Observable.throw(unauthResponse);
+      const dummyResponse = observableThrowError(unauthResponse);
 
       const httpSpy = spyOn(http, 'put').and.returnValue(dummyResponse);
       const jwtSpy = spyOn(jwtService, 'setJwt').and.callThrough();

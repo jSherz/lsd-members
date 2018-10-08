@@ -1,4 +1,4 @@
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 
 import {ApprovalResult, MemberApprovalService} from './member-approval.service';
 import {Member} from '../member/model/member';

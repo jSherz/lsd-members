@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
 import {Http, Headers} from '@angular/http';
 import {JwtService} from '../login/jwt.service';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {TextMessage} from './text-message';
 import {environment} from '../../../environments/environment';
+import { map } from 'rxjs/operators';
 
 export abstract class TextMessagesService {
 
@@ -24,7 +25,7 @@ export class TextMessagesServiceImpl extends TextMessagesService {
     const headers = new Headers({'Authorization': 'Bearer ' + this.jwtService.getJwt()});
 
     return this.http.get(this.getReceivedUrl, {headers})
-      .map(r => r.json() as TextMessage[]);
+      .pipe(map(r => r.json() as TextMessage[]));
   }
 
 }

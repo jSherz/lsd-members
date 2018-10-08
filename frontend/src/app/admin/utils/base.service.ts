@@ -1,11 +1,11 @@
+
+import { throwError as observableThrowError, Observable, ObservableInput } from 'rxjs';
 import {
   Response,
   Headers,
   RequestOptions,
   Http
 } from '@angular/http';
-import {Observable} from 'rxjs/Observable';
-import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 
 import {ApiKeyService} from './';
 
@@ -14,8 +14,8 @@ import {ApiKeyService} from './';
  */
 export class BaseService {
 
-  http: Http;
-  apiKeyService: ApiKeyService;
+  private http: Http;
+  private apiKeyService: ApiKeyService;
 
   constructor(http: Http, apiKeyService: ApiKeyService) {
     this.http = http;
@@ -36,11 +36,11 @@ export class BaseService {
   /**
    * Handle a generic error encountered when performing an AJAX request.
    */
-  protected handleError<R, T>() {
+  protected handleError<T>() {
     // We use a closure here to ensure that the reference to this.apiKeyService isn't lost when this error handler is used
     const apiKeyService = this.apiKeyService;
 
-    const innerHandler = <R2, T2>(err: any, caught: Observable<T>): ErrorObservable => {
+    const innerHandler = (err: any, caught: Observable<T>): never => {
       const errMsg = (err.message) ? err.message : err.status ? `${err.status} - ${err.statusText}` : 'Server error';
       console.error(errMsg);
 
@@ -48,7 +48,7 @@ export class BaseService {
         apiKeyService.setKey('');
       }
 
-      return Observable.throw(new Error(errMsg));
+      throw new Error(errMsg);
     };
 
     return innerHandler;

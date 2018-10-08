@@ -1,14 +1,15 @@
 import {Inject, Injectable} from '@angular/core';
 import {Http} from '@angular/http';
 
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
+import {Observable} from 'rxjs';
+
 
 import {SignupResult} from './signup-result';
 import {BaseService} from '../../../members/utils/base.service';
 import {environment} from '../../../../environments/environment';
 import {APP_VERSION} from '../../../app.module';
 import {JwtService} from '../../../members/login/jwt.service';
+import { map } from 'rxjs/operators';
 
 
 export abstract class SignupService extends BaseService {
@@ -53,7 +54,7 @@ export class SignupServiceImpl extends SignupService {
 
   private doSignup(url: string, request: any): Observable<SignupResult> {
     return this.post(url, request)
-      .map(r => r.json() as SignupResult);
+      .pipe(map(r => r.json() as SignupResult));
   }
 
 }

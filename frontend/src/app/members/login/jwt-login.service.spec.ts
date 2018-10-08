@@ -4,7 +4,7 @@ import {By} from '@angular/platform-browser';
 import {DebugElement} from '@angular/core';
 import {async, ComponentFixture, inject, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {Http, Response, ResponseOptions} from '@angular/http';
-import {Observable} from 'rxjs/Observable';
+import { Observable, of } from 'rxjs';
 
 import {JwtLoginService, JwtLoginServiceImpl} from './jwt-login.service';
 import {LoginResult} from './login-result';
@@ -21,11 +21,11 @@ describe('JwtLoginService', () => {
       if (request === '{"signedRequest":"itzalive"}') {
         const body = JSON.stringify(new LoginResult(true, null, 'my.little.jwt', false));
 
-        return Observable.of(new Response(new ResponseOptions({body, status: 200})));
+        return of(new Response(new ResponseOptions({body, status: 200})));
       } else {
         const body = JSON.stringify(new LoginResult(false, 'wrong login something', null, false));
 
-        return Observable.of(new Response(new ResponseOptions({body, status: 401})));
+        return of(new Response(new ResponseOptions({body, status: 401})));
       }
     }
   };

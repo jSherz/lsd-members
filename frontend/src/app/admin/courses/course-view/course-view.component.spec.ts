@@ -6,7 +6,7 @@ import {
   UrlSegment
 } from '@angular/router';
 import {async} from '@angular/core/testing';
-import {Observable, Subject} from 'rxjs/Rx';
+import { Observable, of, Subject } from 'rxjs';
 
 import {CourseViewComponent} from './course-view.component';
 import {StubCourseService} from '../course.service.stub';
@@ -106,8 +106,8 @@ function mockComp(courseUuid: string): TestSetup {
 
   const urls = [new UrlSegment('courses', {'uuid': courseUuid})];
 
-  const observableUrls = Observable.of(urls);
-  const observableParams: Observable<Params> = Observable.of(params);
+  const observableUrls = of(urls);
+  const observableParams: Observable<Params> = of(params);
 
   const activatedRoute = new ActivatedRoute();
   activatedRoute.url = observableUrls;

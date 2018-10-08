@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
+import { Observable, of } from 'rxjs';
+
 
 import {CourseSpaceDepositPaidResponse, CourseSpaceMemberResponse} from './model';
 import {CourseSpaceService} from './course-spaces.service';
@@ -14,15 +14,15 @@ export class StubCourseSpaceService extends CourseSpaceService {
   }
 
   addMember(uuid: string, memberUuid: string): Observable<CourseSpaceMemberResponse> {
-    return Observable.of(new CourseSpaceMemberResponse(true, undefined));
+    return of(new CourseSpaceMemberResponse(true, undefined));
   }
 
   removeMember(uuid: string, memberUuid: string): Observable<CourseSpaceMemberResponse> {
-    return Observable.of(new CourseSpaceMemberResponse(true, undefined));
+    return of(new CourseSpaceMemberResponse(true, undefined));
   }
 
   setDepositPaid(uuid: string, depositPaid: boolean): Observable<CourseSpaceDepositPaidResponse> {
-    return Observable.of(new CourseSpaceDepositPaidResponse(true, undefined));
+    return of(new CourseSpaceDepositPaidResponse(true, undefined));
   }
 
 }

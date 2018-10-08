@@ -1,5 +1,5 @@
-import {Subject} from 'rxjs/Subject';
-import {Observable} from 'rxjs/Observable';
+
+import { throwError as observableThrowError, Subject, Observable, of } from 'rxjs';
 import * as moment from 'moment';
 
 import {CourseService} from './course.service';
@@ -48,12 +48,12 @@ export class StubCourseService extends CourseService {
     if (StubCourseService.getDontCompleteUuid === uuid) {
       return this.getDontCompleteSubject;
     } else if (StubCourseService.getApiErrorUuid === uuid) {
-      return Observable.throw('API error');
+      return observableThrowError('API error');
     } else if (StubCourseService.getOkUuid === uuid || StubCourseService.spacesApiErrorUuid === uuid) {
       // Pass through to this if the spaces method will error - allows testing error handling for get then spaces
-      return Observable.of(StubCourseService.getOkCourse);
+      return of(StubCourseService.getOkCourse);
     } else {
-      return Observable.throw('Unknown uuid used with stub');
+      return observableThrowError('Unknown uuid used with stub');
     }
   }
 
@@ -61,11 +61,11 @@ export class StubCourseService extends CourseService {
     if (StubCourseService.spacesDontCompleteUuid === uuid) {
       return this.spacesDontCompleteSubject;
     } else if (StubCourseService.spacesApiErrorUuid === uuid) {
-      return Observable.throw('API error');
+      return observableThrowError('API error');
     } else if (StubCourseService.spacesOkUuid === uuid) {
-      return Observable.of(stubExampleSpaces);
+      return of(stubExampleSpaces);
     } else {
-      return Observable.throw('Unknown uuid used with stub');
+      return observableThrowError('Unknown uuid used with stub');
     }
   }
 
@@ -79,28 +79,28 @@ export class StubCourseService extends CourseService {
   }
 
   find(startDate: moment.Moment, endDate: moment.Moment): Observable<CourseWithNumSpaces[]> {
-    return Observable.of(this.courses);
+    return of(this.courses);
   }
 
   create(course: CourseCreateRequest): Observable<CourseCreateResponse> {
     if (StubCourseService.createDontCompleteNumSpaces === course.numSpaces) {
       return StubCourseService.createDontCompleteSubject;
     } else if (StubCourseService.createApiErrorNumSpaces === course.numSpaces) {
-      return Observable.throw('API error');
+      return observableThrowError('API error');
     } else if (StubCourseService.createOkNumSpaces === course.numSpaces) {
-      return Observable.of(
+      return of(
         new CourseCreateResponse(true, null, '74e24a9f-5fc1-4241-b7d3-c2ebd2c7f61b')
       );
     } else if (StubCourseService.createInvalidNumSpaces === course.numSpaces) {
-      return Observable.of(
+      return of(
         new CourseCreateResponse(false, 'error.invalidNumSpaces', null)
       );
     } else if (StubCourseService.createInvalidMiscErrorNumSpaces === course.numSpaces) {
-      return Observable.of(
+      return of(
         new CourseCreateResponse(false, 'error.genericValidationError', null)
       );
     } else {
-      return Observable.throw('API error');
+      return observableThrowError('API error');
     }
   }
 

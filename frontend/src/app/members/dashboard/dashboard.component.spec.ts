@@ -1,16 +1,16 @@
 import {TestBed, inject} from '@angular/core/testing';
 import {Http, Response, ResponseOptions} from '@angular/http';
-import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 
 import {DashboardService, DashboardServiceImpl} from './dashboard.service';
 import {APP_VERSION} from '../../app.module';
 import {StubJwtService} from '../login/jwt.service.stub';
 import {JwtService} from '../login/jwt.service';
 import {DashboardComponent} from './dashboard.component';
+import { Observable, of } from 'rxjs';
 
 const failingHttp: any = {
   get() {
-    return ErrorObservable.of(new Response(new ResponseOptions({
+    return of(new Response(new ResponseOptions({
       status: 500,
       body: 'DOES NOT COMPUTE! DOES NOT COMPUTE!',
       url: 'https://aaaahhhhhhhh.example.com'

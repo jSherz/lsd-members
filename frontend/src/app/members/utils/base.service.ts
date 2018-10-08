@@ -1,7 +1,8 @@
 import {Headers, Http, RequestOptions, Response} from '@angular/http';
 
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
+import {Observable} from 'rxjs';
+import {catchError} from 'rxjs/operators';
+
 
 import {JwtService} from '../login/jwt.service';
 
@@ -44,7 +45,7 @@ export class BaseService {
     const body = JSON.stringify(data);
 
     const response = this.http.post(url, body, this.makeRequestOptions());
-    return response.catch(this.handleError);
+    return response.pipe(catchError(this.handleError));
   }
 
   /**
@@ -60,7 +61,7 @@ export class BaseService {
     const body = JSON.stringify(data);
 
     const response = this.http.put(url, body, this.makeRequestOptions());
-    return response.catch(this.handleError);
+    return response.pipe(catchError(this.handleError));
   }
 
   /**
@@ -71,7 +72,7 @@ export class BaseService {
    */
   protected get(url: string) {
     const response = this.http.get(url, this.makeRequestOptions());
-    return response.catch(this.handleError);
+    return response.pipe(catchError(this.handleError));
   }
 
   private makeRequestOptions(): RequestOptions {

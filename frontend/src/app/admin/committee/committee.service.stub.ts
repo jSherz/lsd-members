@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
+import { Observable, of } from 'rxjs';
+
 
 import {StrippedCommitteeMember} from './stripped-committee-member';
 import {CommitteeService} from './committee.service';
@@ -14,7 +14,7 @@ export class StubCommitteeService extends CommitteeService {
   }
 
   active(): Observable<StrippedCommitteeMember[]> {
-    return Observable.of([]);
+    return of([]);
   }
 
 }

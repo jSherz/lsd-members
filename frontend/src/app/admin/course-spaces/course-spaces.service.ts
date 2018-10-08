@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
+import {Observable} from 'rxjs';
+
 
 import {ApiKeyService, BaseService} from '../utils';
 import {CourseSpaceDepositPaidResponse, CourseSpaceMemberResponse} from './model';
 import {environment} from '../../../environments/environment';
+import { catchError, map } from 'rxjs/operators';
 
 
 /**
@@ -71,8 +72,10 @@ export class CourseSpaceServiceImpl extends CourseSpaceService {
     const request = {memberUuid: memberUuid};
 
     return this.post(this.addMemberUrl.replace('{{uuid}}', uuid), request)
-      .map(r => this.extractJson<CourseSpaceMemberResponse>(r))
-      .catch(this.handleError());
+      .pipe(
+        map(r => this.extractJson<CourseSpaceMemberResponse>(r)),
+        catchError(this.handleError())
+      );
   }
 
   /**
@@ -87,8 +90,10 @@ export class CourseSpaceServiceImpl extends CourseSpaceService {
     const request = {memberUuid: memberUuid};
 
     return this.post(this.removeMemberUrl.replace('{{uuid}}', uuid), request)
-      .map(r => this.extractJson<CourseSpaceMemberResponse>(r))
-      .catch(this.handleError());
+      .pipe(
+        map(r => this.extractJson<CourseSpaceMemberResponse>(r)),
+        catchError(this.handleError())
+      );
   }
 
   /**
@@ -101,8 +106,10 @@ export class CourseSpaceServiceImpl extends CourseSpaceService {
     const request = {depositPaid: depositPaid};
 
     return this.put(this.setDepositPaidUrl.replace('{{uuid}}', uuid), request)
-      .map(r => this.extractJson<CourseSpaceDepositPaidResponse>(r))
-      .catch(this.handleError());
+      .pipe(
+        map(r => this.extractJson<CourseSpaceDepositPaidResponse>(r)),
+        catchError(this.handleError())
+      );
   }
 
 }

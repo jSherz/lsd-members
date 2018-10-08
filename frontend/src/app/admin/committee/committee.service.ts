@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
+import {Observable} from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
+
 
 import {ApiKeyService, BaseService} from '../utils';
 import {StrippedCommitteeMember} from './stripped-committee-member';
@@ -34,8 +35,10 @@ export class CommitteeServiceImpl extends CommitteeService {
 
   active(): Observable<StrippedCommitteeMember[]> {
     return this.get(this.committeeLookupUrl)
-      .map(r => this.extractJson<StrippedCommitteeMember[]>(r))
-      .catch(this.handleError());
+      .pipe(
+        map(r => this.extractJson<StrippedCommitteeMember[]>(r)),
+        catchError(this.handleError())
+      );
   }
 
 }

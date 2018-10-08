@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Http, Headers, Response} from '@angular/http';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 
 import {JwtService} from '../login/jwt.service';
 import {PackingListItems} from './model';
 import {environment} from '../../../environments/environment';
+import { map } from 'rxjs/operators';
 
 export abstract class PackingListService {
 
@@ -27,7 +28,7 @@ export class PackingListServiceImpl extends PackingListService {
     const headers = new Headers({'Authorization': 'Bearer ' + this.jwtService.getJwt()});
 
     return this.http.get(PackingListServiceImpl.ApiUrl, {headers})
-      .map(r => r.json() as PackingListItems);
+      .pipe(map(r => r.json() as PackingListItems));
   }
 
   putPackingList(packingListItems: PackingListItems): Observable<Response> {

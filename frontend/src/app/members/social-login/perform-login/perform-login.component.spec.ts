@@ -1,8 +1,6 @@
 import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 
-import {Subject} from 'rxjs/Subject';
-
 import {PerformLoginComponent} from './perform-login.component';
 import {SocialLoginServiceStub} from '../social-login.service.stub';
 import {SocialLoginService} from '../social-login.service';

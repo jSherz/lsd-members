@@ -2,7 +2,7 @@
 
 import {inject, async, TestBed} from '@angular/core/testing';
 import {Http, Response, ResponseOptions} from '@angular/http';
-import {Observable} from 'rxjs/Observable';
+import { Observable, of } from 'rxjs';
 
 import {CommitteeService, CommitteeServiceImpl} from './committee.service';
 import {ApiKeyService} from '../utils/api-key.service';
@@ -17,7 +17,7 @@ describe('Service: Committee', () => {
         {
           provide: Http, useValue: {
           get(url) {
-            return Observable.of(new Response(new ResponseOptions({
+            return of(new Response(new ResponseOptions({
               body: '[{"uuid": "ade89632-2ccd-4b9f-93f1-44f5adf9704c", "name": "Ann Bass"},' +
               '{"uuid": "329ad322-fe4a-4bdc-9c5b-030431766e36", "name": "Anna Morales"},' +
               '{"uuid": "a3fb1c86-af9c-49db-a0ac-3bff22b9352d", "name": "Anthony Smith"}]'

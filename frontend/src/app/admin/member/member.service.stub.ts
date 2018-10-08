@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
+import { Observable, of } from 'rxjs';
+
 
 import {Member, TextMessage, SearchResult, MemberAddResult, MemberEditResult} from './model';
 import {MemberService} from './member.service';
@@ -14,23 +14,23 @@ export class StubMemberService extends MemberService {
   }
 
   getMember(uuid: string): Observable<Member> {
-    return Observable.of(undefined);
+    return of(undefined);
   }
 
   getTextMessages(uuid: string): Observable<TextMessage[]> {
-    return Observable.of(undefined);
+    return of(undefined);
   }
 
   search(term: string): Observable<SearchResult[]> {
-    return Observable.of(undefined);
+    return of(undefined);
   }
 
   addMember(member: Member): Observable<MemberAddResult> {
-    return Observable.of(undefined);
+    return of(undefined);
   }
 
   editMember(member: Member): Observable<MemberEditResult> {
-    return Observable.of(undefined);
+    return of(undefined);
   }
 
 }

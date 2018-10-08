@@ -1,13 +1,14 @@
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+import {Observable} from 'rxjs';
+
+
 import * as moment from 'moment';
 
 import {Member, MemberAddResult, MemberEditResult, SearchResult, TextMessage} from './model';
 import {BaseService, ApiKeyService} from '../utils';
 import {environment} from '../../../environments/environment';
+import { catchError, map } from 'rxjs/operators';
 
 
 export abstract class MemberService extends BaseService {
@@ -43,31 +44,35 @@ export class MemberServiceImpl extends MemberService {
 
   getMember(uuid: string): Observable<Member> {
     return this.get(this.getUrl.replace('{{uuid}}', uuid))
-      .map(r => {
-        const rawMember = this.extractJson<Member>(r);
+      .pipe(
+        map(r => {
+          const rawMember = this.extractJson<Member>(r);
 
-        rawMember.lastJump = rawMember.lastJump == null ? null : moment(rawMember.lastJump);
-        rawMember.createdAt = rawMember.createdAt == null ? null : moment(rawMember.createdAt);
-        rawMember.updatedAt = rawMember.updatedAt == null ? null : moment(rawMember.updatedAt);
+          rawMember.lastJump = rawMember.lastJump == null ? null : moment(rawMember.lastJump);
+          rawMember.createdAt = rawMember.createdAt == null ? null : moment(rawMember.createdAt);
+          rawMember.updatedAt = rawMember.updatedAt == null ? null : moment(rawMember.updatedAt);
 
-        return rawMember;
-      })
-      .catch(this.handleError());
+          return rawMember;
+        }),
+        catchError(this.handleError())
+      );
   }
 
   getTextMessages(uuid: string): Observable<TextMessage[]> {
     return this.get(this.textMessagesUrl.replace('{{uuid}}', uuid))
-      .map(r => {
-        const rawMessages = this.extractJson<TextMessage[]>(r);
+      .pipe(
+        map(r => {
+          const rawMessages = this.extractJson<TextMessage[]>(r);
 
-        return rawMessages.map(message => {
-          message.createdAt = message.createdAt == null ? null : moment(message.createdAt);
-          message.updatedAt = message.updatedAt == null ? null : moment(message.updatedAt);
+          return rawMessages.map(message => {
+            message.createdAt = message.createdAt == null ? null : moment(message.createdAt);
+            message.updatedAt = message.updatedAt == null ? null : moment(message.updatedAt);
 
-          return message;
-        });
-      })
-      .catch(this.handleError());
+            return message;
+          });
+        }),
+        catchError(this.handleError())
+      );
   }
 
   search(term: string): Observable<SearchResult[]> {
@@ -76,18 +81,26 @@ export class MemberServiceImpl extends MemberService {
     };
 
     return this.post(this.memberSearchUrl, body)
-      .map(r => this.extractJson<SearchResult[]>(r))
-      .catch(this.handleError());
+      .pipe(
+        map(r => this.extractJson<SearchResult[]>(r)),
+        catchError(this.handleError())
+      );
   }
 
   addMember(member: Member): Observable<MemberAddResult> {
     return this.post(this.addUrl, member)
-      .catch(this.handleError());
+      .pipe(
+        map(r => this.extractJson<MemberAddResult>(r)),
+        catchError(this.handleError())
+      );
   }
 
   editMember(member: Member): Observable<MemberEditResult> {
     return this.put(this.editUrl.replace('{{uuid}}', member.uuid), member)
-      .catch(this.handleError());
+      .pipe(
+        map(r => this.extractJson<MemberEditResult>(r)),
+        catchError(this.handleError())
+      );
   }
 
 }

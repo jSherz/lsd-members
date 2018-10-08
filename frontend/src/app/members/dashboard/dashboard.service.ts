@@ -1,12 +1,13 @@
 import {Inject, Injectable} from '@angular/core';
 import {Http} from '@angular/http';
-import {Observable} from 'rxjs/Observable';
+import { Observable, of } from 'rxjs';
 
 import {BasicInfo} from './basic-info';
 import {environment} from '../../../environments/environment';
 import {BaseService} from '../utils/base.service';
 import {JwtService} from '../login/jwt.service';
 import {APP_VERSION} from 'app/app.module';
+import { map } from 'rxjs/operators';
 
 export abstract class DashboardService extends BaseService {
 
@@ -30,9 +31,9 @@ export class DashboardServiceImpl extends DashboardService {
   getBasicInfo(): Observable<BasicInfo> {
     if (this.jwtService.isAuthenticated()) {
       return this.get(this.basicInfoUrl)
-        .map(r => r.json() as BasicInfo);
+        .pipe(map(r => r.json() as BasicInfo));
     } else {
-      return Observable.of(null);
+      return of(null);
     }
   }
 

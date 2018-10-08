@@ -8,7 +8,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {TestBed, inject, async} from '@angular/core/testing';
 import {APP_BASE_HREF} from '@angular/common';
 import * as moment from 'moment';
-import {Observable} from 'rxjs/Observable';
+import { Observable, of } from 'rxjs';
 
 import {MonthService} from '../month.service';
 import {TileService} from './tile/tile.service';
@@ -26,8 +26,8 @@ const mockComp = function (urlParts: [string, Params][] = [['courses', {}], ['ca
   return inject([Router], (router: Router) => {
     const urls = urlParts.map(([path, pathParams]) => new UrlSegment(path, pathParams));
 
-    const observableUrls = Observable.of(urls);
-    const observableParams: Observable<Params> = Observable.of(params);
+    const observableUrls = of(urls);
+    const observableParams: Observable<Params> = of(params);
 
     const activatedRoute = new ActivatedRoute();
     activatedRoute.url = observableUrls;
@@ -81,7 +81,7 @@ describe('Component: CourseCalendar', () => {
 
   it('should show the specified year and month if provided', async(() => {
     const app = mockComp(
-      [['courses', {}, 'calendar', {'year': '2017', 'month': '5'}]],
+      [['courses', {}], ['calendar', {'year': '2017', 'month': '5'}]],
       {'year': '2017', 'month': '5'}
     );
 
@@ -117,7 +117,7 @@ describe('Component: CourseCalendar', () => {
     ];
 
     const app = mockComp(
-      [['courses', {}, 'calendar', {'year': '2014', 'month': '8'}]],
+      [['courses', {}], ['calendar', {'year': '2014', 'month': '8'}]],
       {'year': '2014', 'month': '8'},
       courses
     );

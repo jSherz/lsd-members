@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
 
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
+import {Observable} from 'rxjs';
+
 
 import {environment} from '../../../environments/environment';
 import {SocialLoginRequest, SocialLoginResponse} from './model';
+import { map } from 'rxjs/operators';
 
 export abstract class SocialLoginService {
 
@@ -29,7 +30,7 @@ export class SocialLoginServiceImpl implements SocialLoginService {
     const request = new SocialLoginRequest(verificationCode);
 
     return this.http.post(this.loginEndpoint, request)
-      .map(r => r.json() as SocialLoginResponse);
+      .pipe(map(r => r.json() as SocialLoginResponse));
   }
 
 }

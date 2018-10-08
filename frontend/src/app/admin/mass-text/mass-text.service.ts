@@ -1,13 +1,14 @@
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
 import * as moment from 'moment';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
+import {Observable} from 'rxjs';
+
 
 import {MassTextSendResponse} from './mass-text-send-response';
 import {BaseService} from '../utils/base.service';
 import {ApiKeyService} from '../utils/api-key.service';
 import {environment} from '../../../environments/environment';
+import { catchError, map } from 'rxjs/operators';
 
 
 export abstract class MassTextService extends BaseService {
@@ -45,8 +46,10 @@ export class MassTextServiceImpl extends MassTextService {
     };
 
     return this.post(this.sendUrl, body)
-      .map(r => this.extractJson<MassTextSendResponse>(r))
-      .catch(this.handleError());
+      .pipe(
+        map(r => this.extractJson<MassTextSendResponse>(r)),
+        catchError(this.handleError())
+      );
   }
 
 }

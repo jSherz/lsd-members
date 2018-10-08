@@ -1,6 +1,7 @@
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/observable/of';
+
+import { throwError as observableThrowError, Observable, of } from 'rxjs';
+
+
 
 import {SignupResult} from './signup-result';
 import {SignupService} from '../index';
@@ -26,29 +27,29 @@ export class SignupServiceStub extends SignupService {
 
   signup(name: string, phoneNumber?: string): Observable<SignupResult> {
     if (name === SignupServiceStub.validName && phoneNumber === SignupServiceStub.validPhoneNumber) {
-      return Observable.of(new SignupResult(true, {}));
+      return of(new SignupResult(true, {}));
     } else if (name === SignupServiceStub.inUseName && phoneNumber === SignupServiceStub.inUsePhoneNumber) {
-      return Observable.of(new SignupResult(false, [
+      return of(new SignupResult(false, [
         {'phoneNumber': 'The specified phone number is in use'}
       ]));
     } else if (name === SignupServiceStub.apiFailName && phoneNumber === SignupServiceStub.apiFailPhoneNumber) {
-      return Observable.throw('Internal server error');
+      return observableThrowError('Internal server error');
     } else {
-      return Observable.throw('Unknown details used with stub');
+      return observableThrowError('Unknown details used with stub');
     }
   }
 
   signupAlt(name: string, email?: string): Observable<SignupResult> {
     if (name === SignupServiceStub.validName && email === SignupServiceStub.validEmail) {
-      return Observable.of(new SignupResult(true, {}));
+      return of(new SignupResult(true, {}));
     } else if (name === SignupServiceStub.inUseName && email === SignupServiceStub.inUseEmail) {
-      return Observable.of(new SignupResult(false, [
+      return of(new SignupResult(false, [
         {'email': 'The specified e-mail is in use'}
       ]));
     } else if (name === SignupServiceStub.apiFailName && email === SignupServiceStub.apiFailEmail) {
-      return Observable.throw('Internal server error');
+      return observableThrowError('Internal server error');
     } else {
-      return Observable.throw('Unknown details used with stub');
+      return observableThrowError('Unknown details used with stub');
     }
   }
 

@@ -4,7 +4,6 @@ import {Component} from '@angular/core';
 import {inject, async, TestBed, ComponentFixture} from '@angular/core/testing';
 import {NavigationStart, Event, Router} from '@angular/router';
 import {RouterTestingModule} from '@angular/router/testing';
-import {Subject} from 'rxjs/Subject';
 
 import {AppComponent} from '../../app.component';
 import {BaseComponent} from './base.component';

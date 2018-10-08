@@ -1,6 +1,6 @@
 import {TestBed, inject} from '@angular/core/testing';
 import {Http, Response, ResponseOptions} from '@angular/http';
-import {Observable} from 'rxjs/Observable';
+import { Observable, of } from 'rxjs';
 
 import {DashboardService, DashboardServiceImpl} from './dashboard.service';
 import {APP_VERSION} from '../../app.module';
@@ -10,7 +10,7 @@ import {BasicInfo} from './basic-info';
 
 const dummyHttp = {
   get() {
-    return Observable.of(new Response(new ResponseOptions({
+    return of(new Response(new ResponseOptions({
       status: 200,
       body: JSON.stringify(
         new BasicInfo('ff37543a-ba29-4f97-afef-efa9a14e3463', 'Bobby', 'Smith', '2017-07-10 20:29:00')

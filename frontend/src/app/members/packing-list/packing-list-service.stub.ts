@@ -1,4 +1,4 @@
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {Response} from '@angular/http';
 
 import {PackingListService} from './packing-list.service';
