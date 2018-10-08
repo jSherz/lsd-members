@@ -1,21 +1,14 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {HttpModule} from '@angular/http';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { HttpModule } from "@angular/http";
 
-import {
-  LocationStrategy,
-  PathLocationStrategy
-} from '@angular/common';
+import { LocationStrategy, PathLocationStrategy } from "@angular/common";
 
-import {
-  FormsModule,
-  FormBuilder,
-  ReactiveFormsModule
-} from '@angular/forms';
+import { FormsModule, FormBuilder, ReactiveFormsModule } from "@angular/forms";
 
-import { MemberApprovalComponent } from './member-approval/member-approval.component';
+import { MemberApprovalComponent } from "./member-approval/member-approval.component";
 
-import {adminRouting} from './admin.routing';
+import { adminRouting } from "./admin.routing";
 
 import {
   NavComponent,
@@ -46,8 +39,11 @@ import {
   CommitteeServiceImpl,
   MemberEditComponent,
   MemberAddComponent
-} from './';
-import {MemberApprovalService, MemberApprovalServiceImpl} from './member-approval/member-approval.service';
+} from "./";
+import {
+  MemberApprovalService,
+  MemberApprovalServiceImpl
+} from "./member-approval/member-approval.service";
 
 @NgModule({
   imports: [
@@ -76,17 +72,16 @@ import {MemberApprovalService, MemberApprovalServiceImpl} from './member-approva
   bootstrap: [],
   providers: [
     FormBuilder,
-    {provide: ApiKeyService, useClass: ApiKeyServiceImpl},
-    {provide: LocationStrategy, useClass: PathLocationStrategy},
-    {provide: CourseService, useClass: CourseServiceImpl},
-    {provide: CourseSpaceService, useClass: CourseSpaceServiceImpl},
-    {provide: CommitteeService, useClass: CommitteeServiceImpl},
-    {provide: LoginService, useClass: LoginServiceImpl},
-    {provide: MassTextService, useClass: MassTextServiceImpl},
-    {provide: MemberService, useClass: MemberServiceImpl},
-    {provide: MemberApprovalService, useClass: MemberApprovalServiceImpl},
+    { provide: ApiKeyService, useClass: ApiKeyServiceImpl },
+    { provide: LocationStrategy, useClass: PathLocationStrategy },
+    { provide: CourseService, useClass: CourseServiceImpl },
+    { provide: CourseSpaceService, useClass: CourseSpaceServiceImpl },
+    { provide: CommitteeService, useClass: CommitteeServiceImpl },
+    { provide: LoginService, useClass: LoginServiceImpl },
+    { provide: MassTextService, useClass: MassTextServiceImpl },
+    { provide: MemberService, useClass: MemberServiceImpl },
+    { provide: MemberApprovalService, useClass: MemberApprovalServiceImpl },
     CanActivateAdmin
   ]
 })
-export class AdminModule {
-}
+export class AdminModule {}

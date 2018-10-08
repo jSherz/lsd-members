@@ -1,24 +1,20 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {HttpModule} from '@angular/http';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { HttpModule } from "@angular/http";
 
-import {
-  FormsModule,
-  FormBuilder,
-  ReactiveFormsModule
-} from '@angular/forms';
+import { FormsModule, FormBuilder, ReactiveFormsModule } from "@angular/forms";
 
-import {committeeRouting} from './committee.routing';
+import { committeeRouting } from "./committee.routing";
 
 import {
   DashboardComponent,
   DashboardStatsComponent,
   DashboardStatsService,
   DashboardStatsServiceImpl
-} from './dashboard';
+} from "./dashboard";
 
-import {HeaderComponent} from './header';
-import {CanActivateCommittee} from './utils';
+import { HeaderComponent } from "./header";
+import { CanActivateCommittee } from "./utils";
 
 import {
   SignupBaseComponent,
@@ -27,7 +23,7 @@ import {
   ThankYouComponent,
   SignupService,
   SignupServiceImpl
-} from './signup';
+} from "./signup";
 
 @NgModule({
   imports: [
@@ -49,9 +45,8 @@ import {
   providers: [
     FormBuilder,
     CanActivateCommittee,
-    {provide: DashboardStatsService, useClass: DashboardStatsServiceImpl},
-    {provide: SignupService, useClass: SignupServiceImpl}
+    { provide: DashboardStatsService, useClass: DashboardStatsServiceImpl },
+    { provide: SignupService, useClass: SignupServiceImpl }
   ]
 })
-export class CommitteeModule {
-}
+export class CommitteeModule {}

@@ -2,13 +2,13 @@ export {
   StrippedCommitteeMember,
   CommitteeService,
   CommitteeServiceImpl
-} from './committee';
+} from "./committee";
 
 export {
   CourseSpaceMemberResponse,
   CourseSpaceService,
   CourseSpaceServiceImpl
-} from './course-spaces';
+} from "./course-spaces";
 
 export {
   CourseAddComponent,
@@ -20,19 +20,15 @@ export {
   CourseService,
   CourseServiceImpl,
   MonthService
-} from './courses';
+} from "./courses";
 
-export {
-  LoginService,
-  LoginServiceImpl,
-  LoginComponent
-} from './login';
+export { LoginService, LoginServiceImpl, LoginComponent } from "./login";
 
 export {
   MassTextService,
   MassTextServiceImpl,
   MassTextComponent
-} from './mass-text';
+} from "./mass-text";
 
 export {
   MemberService,
@@ -42,17 +38,15 @@ export {
   MemberSearchComponent,
   MemberLookupComponent,
   MemberViewComponent
-} from './member';
+} from "./member";
 
-export {
-  AdminBaseComponent
-} from './admin-base.component';
+export { AdminBaseComponent } from "./admin-base.component";
 
 export {
   MemberApprovalComponent,
   MemberApprovalService,
   MemberApprovalServiceImpl
-} from './member-approval';
+} from "./member-approval";
 
 export {
   ApiKeyService,
@@ -60,4 +54,4 @@ export {
   BaseService,
   CanActivateAdmin,
   NavComponent
-} from './utils';
+} from "./utils";

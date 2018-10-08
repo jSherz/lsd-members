@@ -1,28 +1,32 @@
-import {ModuleWithProviders} from '@angular/core';
-import {Routes, RouterModule} from '@angular/router';
+import { ModuleWithProviders } from "@angular/core";
+import { Routes, RouterModule } from "@angular/router";
 
-import {DashboardComponent} from './dashboard';
-import {CanActivateCommittee} from './utils';
+import { DashboardComponent } from "./dashboard";
+import { CanActivateCommittee } from "./utils";
 import {
   SignupBaseComponent,
   SignupComponent,
   SignupAltComponent,
   ThankYouComponent
-} from './signup';
+} from "./signup";
 
 export const committeeRoutes: Routes = [
   {
-    path: '',
+    path: "",
     children: [
-      {path: '', redirectTo: 'dashboard'},
-      {path: 'dashboard', component: DashboardComponent, canActivate: [CanActivateCommittee]},
+      { path: "", redirectTo: "dashboard" },
       {
-        path: 'sign-up',
+        path: "dashboard",
+        component: DashboardComponent,
+        canActivate: [CanActivateCommittee]
+      },
+      {
+        path: "sign-up",
         component: SignupBaseComponent,
         children: [
-          {path: '', component: SignupComponent},
-          {path: 'alt', component: SignupAltComponent},
-          {path: 'thank-you', component: ThankYouComponent}
+          { path: "", component: SignupComponent },
+          { path: "alt", component: SignupAltComponent },
+          { path: "thank-you", component: ThankYouComponent }
         ],
         canActivate: [CanActivateCommittee]
       }
@@ -30,4 +34,6 @@ export const committeeRoutes: Routes = [
   }
 ];
 
-export const committeeRouting: ModuleWithProviders = RouterModule.forChild(committeeRoutes);
+export const committeeRouting: ModuleWithProviders = RouterModule.forChild(
+  committeeRoutes
+);
