@@ -1,18 +1,15 @@
 language: node_js
-dist: trusty
+dist: bionic
 node_js:
-  - "8"
+  - "10"
 cache:
   directories:
     - "node_modules"
 addons:
   chrome: stable
 install:
-  - wget -O yarn.tar.gz https://yarnpkg.com/latest.tar.gz
-  - tar zvxf yarn.tar.gz
-  - export PATH=`pwd`/dist/bin:$PATH
   - cd frontend
-  - yarn install
+  - npm install
 script:
-  - yarn run test -- --progress=false --watch=false --browsers=ChromeHeadlessNoSandbox
-  - yarn run build-prod
+  - npm run test -- --progress=false --watch=false --browsers=ChromeHeadlessNoSandbox
+  - npm run build-prod

@@ -25,7 +25,7 @@ export const APP_VERSION: InjectionToken<string> = new InjectionToken<string>('A
   imports: [
     BrowserModule,
     routing,
-    Angulartics2Module.forRoot([Angulartics2GoogleAnalytics])
+    Angulartics2Module.forRoot()
   ],
   declarations: [
     AppComponent,
