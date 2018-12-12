@@ -74,9 +74,12 @@ describe('Component: CourseCalendar', () => {
     const app = mockComp();
     const today = moment();
 
-    expect(app.previousMonth).toBeSameAs(moment([today.year(), today.month() - 1, 1]));
+    const oneMonthAgo = today.clone().subtract(1, 'month');
+    const oneMonthInFuture = today.clone().add(1, 'month');
+
+    expect(app.previousMonth).toBeSameAs(moment([oneMonthAgo.year(), oneMonthAgo.month(), 1]));
     expect(app.currentMonth).toBeSameAs(moment([today.year(), today.month(), 1]));
-    expect(app.nextMonth).toBeSameAs(moment([today.year(), today.month() + 1, 1]));
+    expect(app.nextMonth).toBeSameAs(moment([oneMonthInFuture.year(), oneMonthInFuture.month(), 1]));
   }));
 
   it('should show the specified year and month if provided', async(() => {
