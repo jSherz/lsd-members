@@ -39,7 +39,7 @@ describe('SocialLoginService', () => {
     const url = call.args[0];
     const body = call.args[1];
 
-    expect(url).toEqual('http://local-dev.leedsskydivers.com:8080/api/v1/social-login/verify');
+    expect(url).toEqual('https://local-dev.leedsskydivers.com:8443/api/v1/social-login/verify');
     expect(body).toEqual(new SocialLoginRequest('235y8werin285wefsdf23'));
   });
 
