@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host local-dev.leedsskydivers.com",
+    "start": "ng serve --host 0.0.0.0",
     "build": "ng build",
     "build-dev": "ng build --prod --configuration=dev --progress=false --aot --output-hashing=all --vendor-chunk=false",
     "build-prod": "ng build --prod --configuration=production --progress=false --aot --output-hashing=all --vendor-chunk=false --build-optimizer",

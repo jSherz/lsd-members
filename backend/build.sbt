@@ -28,7 +28,6 @@ import wartremover.WartRemover.autoImport._
 val scalaV = "2.12.6"
 val akkaV = "2.5.16"
 val akkaHttpV = "10.1.4"
-val scaldiV = "0.5.8"
 
 lazy val commonSettings = Seq(
   organization := "com.jsherz",

@@ -109,8 +109,7 @@ class Cors {
 
   private val settings = CorsSettings.defaultSettings
     .withAllowedOrigins(HttpOriginRange(
-      HttpOrigin("http://localhost:4200"),
-      HttpOrigin("http://local-dev.leedsskydivers.com:4200"),
+      HttpOrigin("https://local-dev.leedsskydivers.com"),
       HttpOrigin("https://dev.leedsskydivers.com"),
       HttpOrigin("https://www.leedsskydivers.com"),
       HttpOrigin("https://leedsskydivers.com")
