@@ -1,4 +1,3 @@
-
 export class CommitteeMember {
   name: string;
   uuid: string;

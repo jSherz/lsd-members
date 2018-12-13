@@ -1,7 +1,7 @@
-export {DashboardComponent} from './dashboard.component';
+export { DashboardComponent } from "./dashboard.component";
 
-export {DashboardService, DashboardServiceImpl} from './dashboard.service';
+export { DashboardService, DashboardServiceImpl } from "./dashboard.service";
 
-export {ProfileComponent} from './profile';
+export { ProfileComponent } from "./profile";
 
-export {TheWeatherComponent} from './the-weather';
+export { TheWeatherComponent } from "./the-weather";

@@ -25,7 +25,7 @@
 package com.jsherz.luskydive.dao
 
 import com.jsherz.luskydive.core.CommitteeMember
-import com.jsherz.luskydive.itest.util.Util
+import com.jsherz.luskydive.util.Util
 import com.jsherz.luskydive.json.CommitteeMembersJsonSupport.CommitteeMemberFormat
 import scalaz.{-\/, \/, \/-}
 

@@ -1,9 +1,8 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import {KeyInfoComponent} from './key-info.component';
+import { KeyInfoComponent } from "./key-info.component";
 
-describe('KeyInfoComponent', () => {
-
+describe("KeyInfoComponent", () => {
   let component: KeyInfoComponent;
   let fixture: ComponentFixture<KeyInfoComponent>;
 
@@ -19,8 +18,7 @@ describe('KeyInfoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should be created', () => {
+  it("should be created", () => {
     expect(component).toBeTruthy();
   });
-
 });

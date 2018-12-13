@@ -1,1 +1,1 @@
-export { MemberLookupComponent } from './member-lookup.component';
+export { MemberLookupComponent } from "./member-lookup.component";

@@ -1,4 +1,3 @@
-
 export class CourseSpaceMemberResponse {
   success: boolean;
   error: string;

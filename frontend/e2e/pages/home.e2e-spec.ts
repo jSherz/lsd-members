@@ -1,7 +1,6 @@
-import {HomePage} from './home.po';
+import { HomePage } from "./home.po";
 
-describe('Pages: Home', function () {
-
+describe("Pages: Home", function() {
   let page: HomePage;
   let baseUrl: string;
 
@@ -10,14 +9,16 @@ describe('Pages: Home', function () {
     baseUrl = page.baseUrl();
   });
 
-  it('should display the correct banner', () => {
+  it("should display the correct banner", () => {
     page.navigateTo();
-    expect(page.getIntroSnippet()).toContain('Join us now and start skydiving for just £175!');
+    expect(page.getIntroSnippet()).toContain(
+      "Join us now and start skydiving for just £175!"
+    );
   });
 
-  it('should highlight only the home button', () => {
+  it("should highlight only the home button", () => {
     page.navigateTo();
-    expect(page.getHomeLink().getAttribute('class')).toContain('active');
+    expect(page.getHomeLink().getAttribute("class")).toContain("active");
 
     [
       page.getAboutLink(),
@@ -26,54 +27,57 @@ describe('Pages: Home', function () {
       page.getFaqLink(),
       page.getJoinLink(),
       page.getContactLink()
-    ].forEach(pageLink => expect(pageLink.getAttribute('class')).not.toContain('active'));
+    ].forEach(pageLink =>
+      expect(pageLink.getAttribute("class")).not.toContain("active")
+    );
   });
 
-  it('should not navigate anywhere when home is clicked', () => {
+  it("should not navigate anywhere when home is clicked", () => {
     page.navigateTo();
     page.getHomeLink().click();
 
     expect(page.getCurrentUrl()).toEqual(baseUrl);
   });
 
-  it('should navigate to the correct page when about is clicked', () => {
+  it("should navigate to the correct page when about is clicked", () => {
     page.navigateTo();
     page.getAboutLink().click();
 
-    expect(page.getCurrentUrl()).toEqual(baseUrl + 'about-the-club');
+    expect(page.getCurrentUrl()).toEqual(baseUrl + "about-the-club");
   });
 
-  it('should navigate to the correct page when committee is clicked', () => {
+  it("should navigate to the correct page when committee is clicked", () => {
     page.navigateTo();
     page.getCommitteeLink().click();
 
-    expect(page.getCurrentUrl()).toEqual(baseUrl + 'committee');
+    expect(page.getCurrentUrl()).toEqual(baseUrl + "committee");
   });
 
-  it('should navigate to the correct page when prices is clicked', () => {
+  it("should navigate to the correct page when prices is clicked", () => {
     page.navigateTo();
     page.getPricesLink().click();
 
-    expect(page.getCurrentUrl()).toEqual(baseUrl + 'prices');
+    expect(page.getCurrentUrl()).toEqual(baseUrl + "prices");
   });
 
-  it('should navigate to the correct page when FAQ is clicked', () => {
+  it("should navigate to the correct page when FAQ is clicked", () => {
     page.navigateTo();
     page.getFaqLink().click();
 
-    expect(page.getCurrentUrl()).toEqual(baseUrl + 'faq');
+    expect(page.getCurrentUrl()).toEqual(baseUrl + "faq");
   });
 
-  it('should have the correct link for joining', () => {
+  it("should have the correct link for joining", () => {
     page.navigateTo();
-    expect(page.getJoinLink().getAttribute('href')).toEqual('https://www.luu.org.uk/groups/skydiving/');
+    expect(page.getJoinLink().getAttribute("href")).toEqual(
+      "https://www.luu.org.uk/groups/skydiving/"
+    );
   });
 
-  it('should navigate to the correct page when contact is clicked', () => {
+  it("should navigate to the correct page when contact is clicked", () => {
     page.navigateTo();
     page.getContactLink().click();
 
-    expect(page.getCurrentUrl()).toEqual(baseUrl + 'contact');
+    expect(page.getCurrentUrl()).toEqual(baseUrl + "contact");
   });
-
 });

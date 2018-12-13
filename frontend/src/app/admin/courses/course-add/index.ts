@@ -1,1 +1,1 @@
-export { CourseAddComponent } from './course-add.component';
+export { CourseAddComponent } from "./course-add.component";

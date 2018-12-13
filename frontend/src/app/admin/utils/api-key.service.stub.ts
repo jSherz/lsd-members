@@ -1,7 +1,7 @@
-import {Inject, Injectable, InjectionToken} from '@angular/core';
-import {ApiKeyService} from './api-key.service';
+import { Inject, Injectable, InjectionToken } from "@angular/core";
+import { ApiKeyService } from "./api-key.service";
 
-export let API_KEY = new InjectionToken<string>('stub.api.key');
+export let API_KEY = new InjectionToken<string>("stub.api.key");
 
 /**
  * Used to access the stored API key from anywhere in the application.
@@ -10,7 +10,6 @@ export let API_KEY = new InjectionToken<string>('stub.api.key');
  */
 @Injectable()
 export class StubApiKeyService extends ApiKeyService {
-
   private key: string;
 
   constructor(@Inject(API_KEY) key: string) {
@@ -29,5 +28,4 @@ export class StubApiKeyService extends ApiKeyService {
   isAuthenticated(): boolean {
     return this.key != null && this.key.length >= 1;
   }
-
 }

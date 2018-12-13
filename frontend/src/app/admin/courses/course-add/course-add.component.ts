@@ -1,27 +1,26 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {Router} from '@angular/router';
-import {Subscription} from 'rxjs';
-import * as moment from 'moment';
+import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Router } from "@angular/router";
+import { Subscription } from "rxjs";
+import * as moment from "moment";
 
 import {
   FormControl,
   FormBuilder,
   FormGroup,
   Validators
-} from '@angular/forms';
+} from "@angular/forms";
 
-import {StrippedCommitteeMember, CommitteeService} from '../../committee';
+import { StrippedCommitteeMember, CommitteeService } from "../../committee";
 
-import {CourseService} from '../course.service';
-import {CourseCreateRequest} from '../model';
+import { CourseService } from "../course.service";
+import { CourseCreateRequest } from "../model";
 
 @Component({
-  selector: 'lsd-course-add-component',
-  templateUrl: 'course-add.component.html',
-  styleUrls: ['course-add.component.sass']
+  selector: "lsd-course-add-component",
+  templateUrl: "course-add.component.html",
+  styleUrls: ["course-add.component.sass"]
 })
 export class CourseAddComponent implements OnInit, OnDestroy {
-
   courseForm: FormGroup;
 
   ctrlDate: FormControl;
@@ -47,8 +46,8 @@ export class CourseAddComponent implements OnInit, OnDestroy {
    * Any errors returned by the API.
    */
   errors: {
-    numSpaces: string,
-    general: string
+    numSpaces: string;
+    general: string;
   };
 
   /**
@@ -75,12 +74,19 @@ export class CourseAddComponent implements OnInit, OnDestroy {
    * @param committeeService
    * @param router
    */
-  constructor(private builder: FormBuilder, private service: CourseService, private committeeService: CommitteeService,
-              private router: Router) {
-    this.ctrlDate = new FormControl(moment().format('YYYY-MM-DD'), Validators.required);
-    this.ctrlOrganiser = new FormControl('', Validators.required);
-    this.ctrlSecondaryOrganiser = new FormControl('');
-    this.ctrlNumSpaces = new FormControl('8', Validators.required);
+  constructor(
+    private builder: FormBuilder,
+    private service: CourseService,
+    private committeeService: CommitteeService,
+    private router: Router
+  ) {
+    this.ctrlDate = new FormControl(
+      moment().format("YYYY-MM-DD"),
+      Validators.required
+    );
+    this.ctrlOrganiser = new FormControl("", Validators.required);
+    this.ctrlSecondaryOrganiser = new FormControl("");
+    this.ctrlNumSpaces = new FormControl("8", Validators.required);
 
     this.courseForm = builder.group({
       date: this.ctrlDate,
@@ -92,10 +98,10 @@ export class CourseAddComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.committeeMembersSub = this.committeeService.active().subscribe(
-      committee => this.committeeMembers = committee,
+      committee => (this.committeeMembers = committee),
       error => {
         this.apiRequestFailed = true;
-        console.log('Failed to get committee members: ' + error);
+        console.log("Failed to get committee members: " + error);
       }
     );
   }
@@ -105,13 +111,15 @@ export class CourseAddComponent implements OnInit, OnDestroy {
   }
 
   createCourse(formData: any) {
-    console.log('Showing throbber...');
+    console.log("Showing throbber...");
     this.showThrobber = true;
 
     const request = new CourseCreateRequest(
       moment(formData.date),
       formData.organiser,
-      formData.secondaryOrganiser === null || formData.secondaryOrganiser === '' ? null : formData.secondaryOrganiser,
+      formData.secondaryOrganiser === null || formData.secondaryOrganiser === ""
+        ? null
+        : formData.secondaryOrganiser,
       parseInt(formData.numSpaces, 10)
     );
 
@@ -120,10 +128,10 @@ export class CourseAddComponent implements OnInit, OnDestroy {
         this.showThrobber = false;
 
         if (result.success) {
-          this.router.navigate(['/admin', 'courses', result.uuid]);
-        } else if (result.error === 'error.invalidNumSpaces') {
+          this.router.navigate(["/admin", "courses", result.uuid]);
+        } else if (result.error === "error.invalidNumSpaces") {
           this.errors = {
-            numSpaces: 'error.invalidNumSpaces',
+            numSpaces: "error.invalidNumSpaces",
             general: null
           };
         } else {
@@ -136,17 +144,16 @@ export class CourseAddComponent implements OnInit, OnDestroy {
       error => {
         this.showThrobber = false;
         this.apiRequestFailed = true;
-        console.log('Failed to create course: ' + error);
+        console.log("Failed to create course: " + error);
       }
     );
   }
 
   translate(key: string): string {
-    if ('error.invalidNumSpaces' === key) {
-      return 'Invalid number of spaces - a course must have at least one space and at most 50.';
+    if ("error.invalidNumSpaces" === key) {
+      return "Invalid number of spaces - a course must have at least one space and at most 50.";
     } else {
       return key;
     }
   }
-
 }

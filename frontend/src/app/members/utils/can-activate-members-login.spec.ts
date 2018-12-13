@@ -1,9 +1,8 @@
-import {CanActivateMembersLogin} from './can-activate-members-login';
-import {async} from '@angular/core/testing';
+import { CanActivateMembersLogin } from "./can-activate-members-login";
+import { async } from "@angular/core/testing";
 
-describe('CanActivateMembersLogin', () => {
-
-  it('redirects to the dashboard when the member is logged in', async(() => {
+describe("CanActivateMembersLogin", () => {
+  it("redirects to the dashboard when the member is logged in", async(() => {
     const jwtService: any = {
       isAuthenticated: () => null
     };
@@ -13,14 +12,14 @@ describe('CanActivateMembersLogin', () => {
 
     const canActivate = new CanActivateMembersLogin(jwtService, router);
 
-    spyOn(jwtService, 'isAuthenticated').and.returnValue(true);
-    spyOn(router, 'navigate');
+    spyOn(jwtService, "isAuthenticated").and.returnValue(true);
+    spyOn(router, "navigate");
 
     expect(canActivate.canActivate(null, null)).toBeFalsy();
-    expect(router.navigate).toHaveBeenCalledWith(['/members', 'dashboard']);
+    expect(router.navigate).toHaveBeenCalledWith(["/members", "dashboard"]);
   }));
 
-  it('returns an Observable.of(true) when the member is not logged in', async(() => {
+  it("returns an Observable.of(true) when the member is not logged in", async(() => {
     const jwtService: any = {
       isAuthenticated: () => null
     };
@@ -30,9 +29,8 @@ describe('CanActivateMembersLogin', () => {
 
     const canActivate = new CanActivateMembersLogin(jwtService, router);
 
-    spyOn(jwtService, 'isAuthenticated').and.returnValue(false);
+    spyOn(jwtService, "isAuthenticated").and.returnValue(false);
 
     expect(canActivate.canActivate(null, null)).toBeTruthy();
   }));
-
 });

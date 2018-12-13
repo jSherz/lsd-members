@@ -1,10 +1,12 @@
-import {Observable} from 'rxjs';
+import { Observable } from "rxjs";
 
-import {ApprovalResult, MemberApprovalService} from './member-approval.service';
-import {Member} from '../member/model/member';
+import {
+  ApprovalResult,
+  MemberApprovalService
+} from "./member-approval.service";
+import { Member } from "../member/model/member";
 
 export class MemberApprovalServiceStub extends MemberApprovalService {
-
   constructor() {
     super(null, null);
   }
@@ -28,5 +30,4 @@ export class MemberApprovalServiceStub extends MemberApprovalService {
   deleteRejection(member: Member): Observable<ApprovalResult> {
     return null;
   }
-
 }

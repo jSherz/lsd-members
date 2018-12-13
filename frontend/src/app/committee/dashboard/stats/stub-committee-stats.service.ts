@@ -1,9 +1,8 @@
-import {Observable, Subject} from 'rxjs';
+import { Observable, Subject } from "rxjs";
 
-import {DashboardStatsService} from './';
+import { DashboardStatsService } from "./";
 
 export class StubDashboardStatsService extends DashboardStatsService {
-
   numReceived: Subject<number> = new Subject<number>();
 
   constructor() {
@@ -13,5 +12,4 @@ export class StubDashboardStatsService extends DashboardStatsService {
   getNumReceivedMessages(): Observable<number> {
     return this.numReceived;
   }
-
 }

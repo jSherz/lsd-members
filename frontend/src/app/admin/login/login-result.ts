@@ -1,4 +1,3 @@
-
 export class LoginResult {
   success: boolean;
   errors: any;

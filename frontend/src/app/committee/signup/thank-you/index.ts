@@ -1,1 +1,1 @@
-export {ThankYouComponent} from './thank-you.component';
+export { ThankYouComponent } from "./thank-you.component";

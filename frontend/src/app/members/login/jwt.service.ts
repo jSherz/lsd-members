@@ -1,7 +1,6 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from "@angular/core";
 
 export abstract class JwtService {
-
   abstract getJwt(): string;
 
   abstract setJwt(jwt: string, committeeMember: boolean);
@@ -9,7 +8,6 @@ export abstract class JwtService {
   abstract isAuthenticated(): boolean;
 
   abstract isCommitteeMember(): boolean;
-
 }
 
 /**
@@ -19,9 +17,8 @@ export abstract class JwtService {
  */
 @Injectable()
 export class JwtServiceImpl extends JwtService {
-
-  private localStorageKey = 'JWT';
-  private committeeLocalStorageKey = 'IS_COMMITTEE';
+  private localStorageKey = "JWT";
+  private committeeLocalStorageKey = "IS_COMMITTEE";
 
   getJwt(): string {
     return localStorage.getItem(this.localStorageKey);
@@ -29,7 +26,10 @@ export class JwtServiceImpl extends JwtService {
 
   setJwt(jwt: string, committeeMember: boolean) {
     localStorage.setItem(this.localStorageKey, jwt);
-    localStorage.setItem(this.committeeLocalStorageKey, committeeMember ? 'true' : 'false');
+    localStorage.setItem(
+      this.committeeLocalStorageKey,
+      committeeMember ? "true" : "false"
+    );
   }
 
   isAuthenticated(): boolean {
@@ -37,7 +37,6 @@ export class JwtServiceImpl extends JwtService {
   }
 
   isCommitteeMember(): boolean {
-    return localStorage.getItem(this.committeeLocalStorageKey) === 'true';
+    return localStorage.getItem(this.committeeLocalStorageKey) === "true";
   }
-
 }

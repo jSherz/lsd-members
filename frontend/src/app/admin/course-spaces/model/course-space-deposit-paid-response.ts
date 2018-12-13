@@ -1,4 +1,3 @@
-
 export class CourseSpaceDepositPaidResponse {
   success: boolean;
   error: string;

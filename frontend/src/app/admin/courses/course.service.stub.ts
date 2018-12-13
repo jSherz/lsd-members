@@ -1,8 +1,12 @@
+import {
+  throwError as observableThrowError,
+  Subject,
+  Observable,
+  of
+} from "rxjs";
+import * as moment from "moment";
 
-import { throwError as observableThrowError, Subject, Observable, of } from 'rxjs';
-import * as moment from 'moment';
-
-import {CourseService} from './course.service';
+import { CourseService } from "./course.service";
 import {
   CourseWithOrganisers,
   CourseSpaceWithMember,
@@ -11,27 +15,31 @@ import {
   CourseCreateRequest,
   Course,
   CommitteeMember
-} from './model';
-import {stubExampleSpaces} from './model/stub-example-spaces';
-
+} from "./model";
+import { stubExampleSpaces } from "./model/stub-example-spaces";
 
 /**
  * A fake course service, used for testing.
  */
 export class StubCourseService extends CourseService {
-
-  static getDontCompleteUuid = '692d2968-5600-4e88-9111-1c439e002edf';
-  static getApiErrorUuid = '5cb2b7b7-8edb-4e0c-aaa0-a46bf0bc6a81';
-  static getOkUuid = '04cf71d9-d709-4f09-af2c-2390cec2b728';
+  static getDontCompleteUuid = "692d2968-5600-4e88-9111-1c439e002edf";
+  static getApiErrorUuid = "5cb2b7b7-8edb-4e0c-aaa0-a46bf0bc6a81";
+  static getOkUuid = "04cf71d9-d709-4f09-af2c-2390cec2b728";
   static getOkCourse = new CourseWithOrganisers(
-    new Course('04cf71d9-d709-4f09-af2c-2390cec2b728', moment('2014-12-18'), '91a35643-3fd0-403b-b90f-c612092cc97b', null, 1),
-    new CommitteeMember('91a35643-3fd0-403b-b90f-c612092cc97b', 'Taylor Moore'),
+    new Course(
+      "04cf71d9-d709-4f09-af2c-2390cec2b728",
+      moment("2014-12-18"),
+      "91a35643-3fd0-403b-b90f-c612092cc97b",
+      null,
+      1
+    ),
+    new CommitteeMember("91a35643-3fd0-403b-b90f-c612092cc97b", "Taylor Moore"),
     null
   );
 
   static spacesDontCompleteUuid = StubCourseService.getDontCompleteUuid;
-  static spacesApiErrorUuid = '7f03b5bb-ee2c-4879-a3aa-02be3721015f';
-  static spacesOkUuid = '04cf71d9-d709-4f09-af2c-2390cec2b728';
+  static spacesApiErrorUuid = "7f03b5bb-ee2c-4879-a3aa-02be3721015f";
+  static spacesOkUuid = "04cf71d9-d709-4f09-af2c-2390cec2b728";
 
   static createDontCompleteSubject = new Subject<CourseCreateResponse>();
   static createDontCompleteNumSpaces = 14;
@@ -48,12 +56,15 @@ export class StubCourseService extends CourseService {
     if (StubCourseService.getDontCompleteUuid === uuid) {
       return this.getDontCompleteSubject;
     } else if (StubCourseService.getApiErrorUuid === uuid) {
-      return observableThrowError('API error');
-    } else if (StubCourseService.getOkUuid === uuid || StubCourseService.spacesApiErrorUuid === uuid) {
+      return observableThrowError("API error");
+    } else if (
+      StubCourseService.getOkUuid === uuid ||
+      StubCourseService.spacesApiErrorUuid === uuid
+    ) {
       // Pass through to this if the spaces method will error - allows testing error handling for get then spaces
       return of(StubCourseService.getOkCourse);
     } else {
-      return observableThrowError('Unknown uuid used with stub');
+      return observableThrowError("Unknown uuid used with stub");
     }
   }
 
@@ -61,11 +72,11 @@ export class StubCourseService extends CourseService {
     if (StubCourseService.spacesDontCompleteUuid === uuid) {
       return this.spacesDontCompleteSubject;
     } else if (StubCourseService.spacesApiErrorUuid === uuid) {
-      return observableThrowError('API error');
+      return observableThrowError("API error");
     } else if (StubCourseService.spacesOkUuid === uuid) {
       return of(stubExampleSpaces);
     } else {
-      return observableThrowError('Unknown uuid used with stub');
+      return observableThrowError("Unknown uuid used with stub");
     }
   }
 
@@ -78,7 +89,10 @@ export class StubCourseService extends CourseService {
     super(null, null);
   }
 
-  find(startDate: moment.Moment, endDate: moment.Moment): Observable<CourseWithNumSpaces[]> {
+  find(
+    startDate: moment.Moment,
+    endDate: moment.Moment
+  ): Observable<CourseWithNumSpaces[]> {
     return of(this.courses);
   }
 
@@ -86,22 +100,27 @@ export class StubCourseService extends CourseService {
     if (StubCourseService.createDontCompleteNumSpaces === course.numSpaces) {
       return StubCourseService.createDontCompleteSubject;
     } else if (StubCourseService.createApiErrorNumSpaces === course.numSpaces) {
-      return observableThrowError('API error');
+      return observableThrowError("API error");
     } else if (StubCourseService.createOkNumSpaces === course.numSpaces) {
       return of(
-        new CourseCreateResponse(true, null, '74e24a9f-5fc1-4241-b7d3-c2ebd2c7f61b')
+        new CourseCreateResponse(
+          true,
+          null,
+          "74e24a9f-5fc1-4241-b7d3-c2ebd2c7f61b"
+        )
       );
     } else if (StubCourseService.createInvalidNumSpaces === course.numSpaces) {
       return of(
-        new CourseCreateResponse(false, 'error.invalidNumSpaces', null)
+        new CourseCreateResponse(false, "error.invalidNumSpaces", null)
       );
-    } else if (StubCourseService.createInvalidMiscErrorNumSpaces === course.numSpaces) {
+    } else if (
+      StubCourseService.createInvalidMiscErrorNumSpaces === course.numSpaces
+    ) {
       return of(
-        new CourseCreateResponse(false, 'error.genericValidationError', null)
+        new CourseCreateResponse(false, "error.genericValidationError", null)
       );
     } else {
-      return observableThrowError('API error');
+      return observableThrowError("API error");
     }
   }
-
 }

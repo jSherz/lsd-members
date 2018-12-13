@@ -1,15 +1,14 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import {DashboardStatsComponent} from './dashboard-stats.component';
-import {DashboardStatsService} from './dashboard-stats.service';
-import {StubJwtService} from '../../../members/login/jwt.service.stub';
-import {JwtService} from '../../../members/login/jwt.service';
-import {HttpModule} from '@angular/http';
-import {StubDashboardStatsService} from './stub-committee-stats.service';
-import {RouterTestingModule} from '@angular/router/testing';
+import { DashboardStatsComponent } from "./dashboard-stats.component";
+import { DashboardStatsService } from "./dashboard-stats.service";
+import { StubJwtService } from "../../../members/login/jwt.service.stub";
+import { JwtService } from "../../../members/login/jwt.service";
+import { HttpModule } from "@angular/http";
+import { StubDashboardStatsService } from "./stub-committee-stats.service";
+import { RouterTestingModule } from "@angular/router/testing";
 
-describe('DashboardStatsComponent', () => {
-
+describe("DashboardStatsComponent", () => {
   let component: DashboardStatsComponent;
   let fixture: ComponentFixture<DashboardStatsComponent>;
   let service: StubDashboardStatsService;
@@ -21,14 +20,11 @@ describe('DashboardStatsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpModule,
-        RouterTestingModule
-      ],
+      imports: [HttpModule, RouterTestingModule],
       declarations: [DashboardStatsComponent],
       providers: [
-        {provide: DashboardStatsService, useFactory: serviceFactory},
-        {provide: JwtService, useValue: new StubJwtService('asdf', true)}
+        { provide: DashboardStatsService, useFactory: serviceFactory },
+        { provide: JwtService, useValue: new StubJwtService("asdf", true) }
       ]
     }).compileComponents();
   }));
@@ -39,10 +35,9 @@ describe('DashboardStatsComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should show the returned number of received messages', () => {
+  it("should show the returned number of received messages", () => {
     service.numReceived.next(13781);
 
     expect(component.numReceived).toEqual(13781);
   });
-
 });

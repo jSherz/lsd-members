@@ -1,1 +1,1 @@
-export {MemberAddComponent} from './member-add.component';
+export { MemberAddComponent } from "./member-add.component";

@@ -1,18 +1,16 @@
-import {Injectable} from '@angular/core';
-import {Http} from '@angular/http';
-import {Observable} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import { Injectable } from "@angular/core";
+import { Http } from "@angular/http";
+import { Observable } from "rxjs";
+import { catchError, map } from "rxjs/operators";
 
-
-import {ApiKeyService, BaseService} from '../utils';
-import {StrippedCommitteeMember} from './stripped-committee-member';
-import {environment} from '../../../environments/environment';
+import { ApiKeyService, BaseService } from "../utils";
+import { StrippedCommitteeMember } from "./stripped-committee-member";
+import { environment } from "../../../environments/environment";
 
 /**
  * A service that manages commmittee members
  */
 export abstract class CommitteeService extends BaseService {
-
   constructor(http: Http, apiKeyService: ApiKeyService) {
     super(http, apiKeyService);
   }
@@ -20,25 +18,22 @@ export abstract class CommitteeService extends BaseService {
   /**
    * Get any active committee members.
    */
-  abstract active(): Observable<StrippedCommitteeMember[]>
-
+  abstract active(): Observable<StrippedCommitteeMember[]>;
 }
 
 @Injectable()
 export class CommitteeServiceImpl extends CommitteeService {
-
-  private committeeLookupUrl = environment.apiUrl + '/api/v1/committee-members/active';
+  private committeeLookupUrl =
+    environment.apiUrl + "/api/v1/committee-members/active";
 
   constructor(http: Http, apiKeyService: ApiKeyService) {
     super(http, apiKeyService);
   }
 
   active(): Observable<StrippedCommitteeMember[]> {
-    return this.get(this.committeeLookupUrl)
-      .pipe(
-        map(r => this.extractJson<StrippedCommitteeMember[]>(r)),
-        catchError(this.handleError())
-      );
+    return this.get(this.committeeLookupUrl).pipe(
+      map(r => this.extractJson<StrippedCommitteeMember[]>(r)),
+      catchError(this.handleError())
+    );
   }
-
 }

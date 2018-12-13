@@ -1,18 +1,21 @@
-import {Component} from '@angular/core';
-import {Router} from '@angular/router';
-import {FormBuilder, Validators, FormControl, FormGroup} from '@angular/forms';
+import { Component } from "@angular/core";
+import { Router } from "@angular/router";
+import {
+  FormBuilder,
+  Validators,
+  FormControl,
+  FormGroup
+} from "@angular/forms";
 
-import {MemberService} from '../member.service';
-import {CustomValidators} from '../../../utils/custom-validators';
-
+import { MemberService } from "../member.service";
+import { CustomValidators } from "../../../utils/custom-validators";
 
 @Component({
-  selector: 'lsd-member-add',
-  templateUrl: 'member-add.component.html',
-  styleUrls: ['member-add.component.sass']
+  selector: "lsd-member-add",
+  templateUrl: "member-add.component.html",
+  styleUrls: ["member-add.component.sass"]
 })
 export class MemberAddComponent {
-
   memberForm: FormGroup;
 
   ctrlFirstName: FormControl;
@@ -44,18 +47,20 @@ export class MemberAddComponent {
    */
   error: string;
 
-  constructor(private builder: FormBuilder,
-              private service: MemberService,
-              private router: Router) {
-    this.ctrlFirstName = new FormControl('', Validators.required);
-    this.ctrlLastName = new FormControl('');
-    this.ctrlPhoneNumber = new FormControl('', CustomValidators.phoneNumber);
-    this.ctrlEmail = new FormControl('', CustomValidators.email);
-    this.ctrlLastJump = new FormControl('');
-    this.ctrlWeight = new FormControl('');
-    this.ctrlHeight = new FormControl('');
-    this.ctrlDriver = new FormControl('');
-    this.ctrlOrganiser = new FormControl('');
+  constructor(
+    private builder: FormBuilder,
+    private service: MemberService,
+    private router: Router
+  ) {
+    this.ctrlFirstName = new FormControl("", Validators.required);
+    this.ctrlLastName = new FormControl("");
+    this.ctrlPhoneNumber = new FormControl("", CustomValidators.phoneNumber);
+    this.ctrlEmail = new FormControl("", CustomValidators.email);
+    this.ctrlLastJump = new FormControl("");
+    this.ctrlWeight = new FormControl("");
+    this.ctrlHeight = new FormControl("");
+    this.ctrlDriver = new FormControl("");
+    this.ctrlOrganiser = new FormControl("");
 
     this.memberForm = builder.group({
       firstName: this.ctrlFirstName,
@@ -77,7 +82,7 @@ export class MemberAddComponent {
       result => {
         this.showThrobber = false;
 
-        this.router.navigate(['/admin', 'members', result.uuid]);
+        this.router.navigate(["/admin", "members", result.uuid]);
       },
       error => {
         this.showThrobber = false;
@@ -87,5 +92,4 @@ export class MemberAddComponent {
       }
     );
   }
-
 }

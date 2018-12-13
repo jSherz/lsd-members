@@ -1,31 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 
-import {Member} from '../member/model/member';
+import { Member } from "../member/model/member";
 
 @Component({
-  selector: 'lsd-member-approval',
-  templateUrl: './member-approval.component.html',
-  styleUrls: ['./member-approval.component.sass']
+  selector: "lsd-member-approval",
+  templateUrl: "./member-approval.component.html",
+  styleUrls: ["./member-approval.component.sass"]
 })
 export class MemberApprovalComponent implements OnInit {
+  exampleMembers: any[] = [
+    { id: 1 },
+    { id: 2 },
+    { id: 3 },
+    { id: 4 },
+    { id: 5 }
+  ];
 
-  exampleMembers: any[] = [{id: 1}, {id: 2}, {id: 3}, {id: 4}, {id: 5}];
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   approveMember(member: Member) {
-    alert('Approving ' + JSON.stringify(member));
+    alert("Approving " + JSON.stringify(member));
   }
 
   rejectMember(member: Member) {
-    alert('Rejecting ' + JSON.stringify(member));
+    alert("Rejecting " + JSON.stringify(member));
   }
 
   deleteRejection(member: Member) {
-    alert('Deleting ' + JSON.stringify(member));
+    alert("Deleting " + JSON.stringify(member));
   }
-
 }

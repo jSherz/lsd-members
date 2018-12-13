@@ -1,12 +1,11 @@
-import {browser, element, by, ExpectedConditions} from 'protractor';
+import { browser, element, by, ExpectedConditions } from "protractor";
 
 export class DashboardPage {
-
   navigateTo(jwt: string, committee: boolean) {
     return Promise.all([
-      browser.get('/'),
-      this.setLocalStorage('IS_COMMITTEE', committee),
-      this.setLocalStorage('JWT', jwt),
+      browser.get("/"),
+      this.setLocalStorage("IS_COMMITTEE", committee),
+      this.setLocalStorage("JWT", jwt),
       this.rawNavigateTo()
     ]);
   }
@@ -15,7 +14,7 @@ export class DashboardPage {
    * Navigate without setting up local storage.
    */
   rawNavigateTo() {
-    return browser.get('/members/dashboard');
+    return browser.get("/members/dashboard");
   }
 
   getCurrentUrl() {
@@ -31,13 +30,18 @@ export class DashboardPage {
   }
 
   waitForMemberLogin() {
-    return browser.wait(ExpectedConditions.not(ExpectedConditions.urlContains('members/dashboard')));
+    return browser.wait(
+      ExpectedConditions.not(
+        ExpectedConditions.urlContains("members/dashboard")
+      )
+    );
   }
 
   private setLocalStorage(key: string, value: any) {
-    return value === null ?
-      browser.executeScript(`window.localStorage.removeItem("${key}")`) :
-      browser.executeScript(`window.localStorage.setItem("${key}", ${JSON.stringify(value)})`);
+    return value === null
+      ? browser.executeScript(`window.localStorage.removeItem("${key}")`)
+      : browser.executeScript(
+          `window.localStorage.setItem("${key}", ${JSON.stringify(value)})`
+        );
   }
-
 }

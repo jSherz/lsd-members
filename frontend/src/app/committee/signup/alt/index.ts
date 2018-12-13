@@ -1,1 +1,1 @@
-export {SignupAltComponent} from './signup-alt.component';
+export { SignupAltComponent } from "./signup-alt.component";

@@ -1,4 +1,3 @@
-
 export class SearchResult {
   uuid: string;
   name: string;

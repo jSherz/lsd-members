@@ -1,13 +1,11 @@
 /* tslint:disable:no-unused-variable */
 
-import {TestBed, async, inject} from '@angular/core/testing';
+import { TestBed, async, inject } from "@angular/core/testing";
 
-import {MemberLookupComponent} from './member-lookup.component';
-import {TestModule} from '../../../../test.module';
+import { MemberLookupComponent } from "./member-lookup.component";
+import { TestModule } from "../../../../test.module";
 
-
-describe('Component: MemberLookup', () => {
-
+describe("Component: MemberLookup", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [TestModule],
@@ -15,8 +13,9 @@ describe('Component: MemberLookup', () => {
     });
   });
 
-  it('should create an instance', async(inject([MemberLookupComponent], (component: MemberLookupComponent) => {
-    expect(component).toBeTruthy();
-  })));
-
+  it("should create an instance", async(
+    inject([MemberLookupComponent], (component: MemberLookupComponent) => {
+      expect(component).toBeTruthy();
+    })
+  ));
 });

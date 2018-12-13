@@ -1,16 +1,15 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import { Observable, of, throwError } from 'rxjs';
-import {Response} from '@angular/http';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {CommonModule} from '@angular/common';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { Observable, of, throwError } from "rxjs";
+import { Response } from "@angular/http";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { CommonModule } from "@angular/common";
 
-import {PackingListComponent} from './packing-list.component';
-import {PackingListService} from './packing-list.service';
-import {PackingListItems} from './model';
-import {StubPackingListService} from './packing-list-service.stub';
+import { PackingListComponent } from "./packing-list.component";
+import { PackingListService } from "./packing-list.service";
+import { PackingListItems } from "./model";
+import { StubPackingListService } from "./packing-list-service.stub";
 
-describe('PackingListComponent', () => {
-
+describe("PackingListComponent", () => {
   let component: PackingListComponent;
   let fixture: ComponentFixture<PackingListComponent>;
 
@@ -27,14 +26,8 @@ describe('PackingListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [PackingListComponent],
-      imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-      ],
-      providers: [
-        {provide: PackingListService, useFactory: serviceFactory}
-      ]
+      imports: [CommonModule, FormsModule, ReactiveFormsModule],
+      providers: [{ provide: PackingListService, useFactory: serviceFactory }]
     }).compileComponents();
   }));
 
@@ -44,7 +37,7 @@ describe('PackingListComponent', () => {
     fixture.detectChanges();
   };
 
-  it('should display the packing list components when loaded', async(() => {
+  it("should display the packing list components when loaded", async(() => {
     const exampleItems = new PackingListItems(false, true, false, true, true);
     getResult = of(exampleItems);
 
@@ -63,8 +56,8 @@ describe('PackingListComponent', () => {
     });
   }));
 
-  it('should show an error when loading the packing list items fails', async(() => {
-    getResult = throwError(new Error('Some loading error 40404'));
+  it("should show an error when loading the packing list items fails", async(() => {
+    getResult = throwError(new Error("Some loading error 40404"));
 
     createComponent();
 
@@ -73,7 +66,7 @@ describe('PackingListComponent', () => {
     });
   }));
 
-  it('updates the packing list items when checked', async(() => {
+  it("updates the packing list items when checked", async(() => {
     getResult = of({
       warmClothes: false,
       sleepingBag: false,
@@ -84,7 +77,7 @@ describe('PackingListComponent', () => {
     putResult = of(null);
 
     createComponent();
-    const putSpy = spyOn(service, 'putPackingList').and.callThrough();
+    const putSpy = spyOn(service, "putPackingList").and.callThrough();
 
     fixture.whenStable().then(() => {
       const items = {
@@ -95,10 +88,9 @@ describe('PackingListComponent', () => {
         toiletries: true
       };
 
-      component.packingListForm.setValue(items, {emitEvent: true});
+      component.packingListForm.setValue(items, { emitEvent: true });
 
       expect(putSpy).toHaveBeenCalledWith(items);
     });
   }));
-
 });

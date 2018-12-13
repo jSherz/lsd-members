@@ -1,14 +1,13 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { Router, NavigationStart } from '@angular/router';
+import { Component, ViewEncapsulation } from "@angular/core";
+import { Router, NavigationStart } from "@angular/router";
 
 @Component({
-  selector: 'lsd-base',
-  templateUrl: 'base.component.html',
-  styleUrls: ['base.component.sass'],
+  selector: "lsd-base",
+  templateUrl: "base.component.html",
+  styleUrls: ["base.component.sass"],
   encapsulation: ViewEncapsulation.None
 })
 export class BaseComponent {
-
   menuCollapsed = true;
 
   constructor(private router: Router) {
@@ -23,5 +22,4 @@ export class BaseComponent {
   toggleMenu() {
     this.menuCollapsed = this.menuCollapsed ? false : true;
   }
-
 }

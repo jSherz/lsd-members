@@ -1,5 +1,8 @@
-export {PackingListItems} from './model';
+export { PackingListItems } from "./model";
 
-export {PackingListComponent} from './packing-list.component';
+export { PackingListComponent } from "./packing-list.component";
 
-export {PackingListService, PackingListServiceImpl} from './packing-list.service';
+export {
+  PackingListService,
+  PackingListServiceImpl
+} from "./packing-list.service";

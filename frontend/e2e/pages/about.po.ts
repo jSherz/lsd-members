@@ -1,19 +1,16 @@
-import {browser, element, by} from 'protractor';
-import {PagesPage} from './pages.po';
-
+import { browser, element, by } from "protractor";
+import { PagesPage } from "./pages.po";
 
 export class AboutPage extends PagesPage {
-
   navigateTo() {
-    return browser.get('/about-the-club');
+    return browser.get("/about-the-club");
   }
 
   getJoinButton() {
-    return browser.element(by.css('#join-button'));
+    return browser.element(by.css("#join-button"));
   }
 
   getAffiliateLinks() {
-    return browser.$$('#affiliates li a');
+    return browser.$$("#affiliates li a");
   }
-
 }

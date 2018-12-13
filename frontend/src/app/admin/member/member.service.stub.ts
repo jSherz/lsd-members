@@ -1,14 +1,17 @@
-import {Injectable} from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { Observable, of } from "rxjs";
 
-
-import {Member, TextMessage, SearchResult, MemberAddResult, MemberEditResult} from './model';
-import {MemberService} from './member.service';
-
+import {
+  Member,
+  TextMessage,
+  SearchResult,
+  MemberAddResult,
+  MemberEditResult
+} from "./model";
+import { MemberService } from "./member.service";
 
 @Injectable()
 export class StubMemberService extends MemberService {
-
   constructor() {
     super(null, null);
   }
@@ -32,5 +35,4 @@ export class StubMemberService extends MemberService {
   editMember(member: Member): Observable<MemberEditResult> {
     return of(undefined);
   }
-
 }

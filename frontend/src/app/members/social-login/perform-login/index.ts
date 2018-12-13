@@ -1,1 +1,1 @@
-export {PerformLoginComponent} from './perform-login.component';
+export { PerformLoginComponent } from "./perform-login.component";

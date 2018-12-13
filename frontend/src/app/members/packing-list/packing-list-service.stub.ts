@@ -1,13 +1,14 @@
-import {Observable} from 'rxjs';
-import {Response} from '@angular/http';
+import { Observable } from "rxjs";
+import { Response } from "@angular/http";
 
-import {PackingListService} from './packing-list.service';
-import {PackingListItems} from './model';
+import { PackingListService } from "./packing-list.service";
+import { PackingListItems } from "./model";
 
 export class StubPackingListService extends PackingListService {
-
-  constructor(private item: Observable<PackingListItems>,
-              private putResult: Observable<Response>) {
+  constructor(
+    private item: Observable<PackingListItems>,
+    private putResult: Observable<Response>
+  ) {
     super();
   }
 
@@ -18,5 +19,4 @@ export class StubPackingListService extends PackingListService {
   putPackingList(packingListItems: PackingListItems): Observable<Response> {
     return this.putResult;
   }
-
 }

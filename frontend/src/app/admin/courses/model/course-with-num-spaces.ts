@@ -1,4 +1,4 @@
-import {Course} from './';
+import { Course } from "./";
 
 export class CourseWithNumSpaces {
   course: Course;

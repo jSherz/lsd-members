@@ -1,13 +1,14 @@
-import { Input, Component } from '@angular/core';
+import { Input, Component } from "@angular/core";
 
 @Component({
-  selector: 'lsd-nav-item',
-  templateUrl: './nav.component.html',
-  styleUrls: ['nav.component.sass']
+  selector: "lsd-nav-item",
+  templateUrl: "./nav.component.html",
+  styleUrls: ["nav.component.sass"]
 })
-
 export class NavComponent {
-  @Input() href: String;
+  @Input()
+  href: String;
 
-  @Input() linkText: String;
+  @Input()
+  linkText: String;
 }

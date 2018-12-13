@@ -1,4 +1,3 @@
-
 export class MemberEditResult {
   success: boolean;
   error: string;

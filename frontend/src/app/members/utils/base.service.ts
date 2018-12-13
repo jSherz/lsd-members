@@ -1,16 +1,14 @@
-import {Headers, Http, RequestOptions, Response} from '@angular/http';
+import { Headers, Http, RequestOptions, Response } from "@angular/http";
 
-import {Observable} from 'rxjs';
-import {catchError} from 'rxjs/operators';
+import { Observable } from "rxjs";
+import { catchError } from "rxjs/operators";
 
-
-import {JwtService} from '../login/jwt.service';
+import { JwtService } from "../login/jwt.service";
 
 /**
  * Basic methods shared across services.
  */
 export class BaseService {
-
   http: Http;
   jwtService: JwtService;
   appVersion: string;
@@ -24,9 +22,12 @@ export class BaseService {
   /**
    * Handle a generic error encountered when performing an AJAX request.
    */
-  protected handleError = <T>(error: any, caught: Observable<T>): Observable<T> => {
+  protected handleError = <T>(
+    error: any,
+    caught: Observable<T>
+  ): Observable<T> => {
     if (error && error.status === 401) {
-      this.jwtService.setJwt('', false);
+      this.jwtService.setJwt("", false);
     }
 
     throw caught;
@@ -77,12 +78,11 @@ export class BaseService {
 
   private makeRequestOptions(): RequestOptions {
     const headers = new Headers({
-      'Content-Type': 'application/json',
-      'X-App-Version': this.appVersion,
-      'Authorization': 'Bearer ' + this.jwtService.getJwt()
+      "Content-Type": "application/json",
+      "X-App-Version": this.appVersion,
+      Authorization: "Bearer " + this.jwtService.getJwt()
     });
 
-    return new RequestOptions({headers});
+    return new RequestOptions({ headers });
   }
-
 }

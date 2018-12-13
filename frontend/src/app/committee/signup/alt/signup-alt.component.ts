@@ -1,23 +1,20 @@
-import {Component} from '@angular/core';
-import {Router} from '@angular/router';
+import { Component } from "@angular/core";
+import { Router } from "@angular/router";
 import {
   FormControl,
   FormBuilder,
   FormGroup,
   Validators
-} from '@angular/forms';
+} from "@angular/forms";
 
-import {CustomValidators} from '../../../utils';
-import {
-  SignupService
-} from '../service/signup.service';
+import { CustomValidators } from "../../../utils";
+import { SignupService } from "../service/signup.service";
 
 @Component({
-  selector: 'lsd-signup-alt-component',
-  templateUrl: './signup-alt.component.html'
+  selector: "lsd-signup-alt-component",
+  templateUrl: "./signup-alt.component.html"
 })
 export class SignupAltComponent {
-
   signupForm: FormGroup;
 
   ctrlName: FormControl;
@@ -41,8 +38,8 @@ export class SignupAltComponent {
    * Any errors returned by the API.
    */
   errors: {
-    name: undefined,
-    email: undefined
+    name: undefined;
+    email: undefined;
   };
 
   /**
@@ -52,9 +49,16 @@ export class SignupAltComponent {
    * @param router
    * @param signupService
    */
-  constructor(private builder: FormBuilder, private router: Router, private signupService: SignupService) {
-    this.ctrlName = new FormControl('', Validators.required);
-    this.ctrlEmail = new FormControl('', Validators.compose([Validators.required, CustomValidators.email]));
+  constructor(
+    private builder: FormBuilder,
+    private router: Router,
+    private signupService: SignupService
+  ) {
+    this.ctrlName = new FormControl("", Validators.required);
+    this.ctrlEmail = new FormControl(
+      "",
+      Validators.compose([Validators.required, CustomValidators.email])
+    );
 
     this.signupForm = builder.group({
       name: this.ctrlName,
@@ -81,14 +85,19 @@ export class SignupAltComponent {
         this.showThrobber = false;
 
         if (result.success) {
-          this.router.navigate(['members', 'committee', 'sign-up', 'thank-you']);
+          this.router.navigate([
+            "members",
+            "committee",
+            "sign-up",
+            "thank-you"
+          ]);
         } else {
           this.errors = result.errors;
         }
       },
       error => {
         // API request failed, show generic error
-        console.log('Sign-up alt failed: ' + error);
+        console.log("Sign-up alt failed: " + error);
 
         this.apiRequestFailed = true;
         this.showThrobber = false;
@@ -104,8 +113,7 @@ export class SignupAltComponent {
    */
   translate(key: string) {
     return {
-      'error.inUse': 'This e-mail is in use. Have you already signed up?'
+      "error.inUse": "This e-mail is in use. Have you already signed up?"
     }[key];
   }
-
 }

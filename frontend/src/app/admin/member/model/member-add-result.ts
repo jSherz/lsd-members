@@ -1,4 +1,3 @@
-
 export class MemberAddResult {
   success: boolean;
   uuid: string;

@@ -1,8 +1,7 @@
-import {Component, OnInit, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 
-import {SearchResult} from '../model';
-import {MemberService} from '../member.service';
-
+import { SearchResult } from "../model";
+import { MemberService } from "../member.service";
 
 /**
  * Enables a user to search for a member and then select that member.
@@ -10,12 +9,11 @@ import {MemberService} from '../member.service';
  * Returns that selection to another part of the system.
  */
 @Component({
-  selector: 'lsd-member-search',
-  templateUrl: 'member-search.component.html',
-  styleUrls: ['member-search.component.sass']
+  selector: "lsd-member-search",
+  templateUrl: "member-search.component.html",
+  styleUrls: ["member-search.component.sass"]
 })
 export class MemberSearchComponent implements OnInit {
-
   /**
    * Number of members to show, each time the "more results" button is clicked.
    *
@@ -23,7 +21,7 @@ export class MemberSearchComponent implements OnInit {
    */
   displayPerLoad = 10;
 
-  searchTerm = '';
+  searchTerm = "";
 
   /**
    * Has the user performed a search yet?
@@ -51,13 +49,12 @@ export class MemberSearchComponent implements OnInit {
    *
    * @type {EventEmitter}
    */
-  @Output() memberSelected: EventEmitter<SearchResult> = new EventEmitter<SearchResult>();
+  @Output()
+  memberSelected: EventEmitter<SearchResult> = new EventEmitter<SearchResult>();
 
-  constructor(private service: MemberService) {
-  }
+  constructor(private service: MemberService) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   performSearch() {
     this.hasSearched = true;
@@ -88,7 +85,11 @@ export class MemberSearchComponent implements OnInit {
       const maxIndex = startIndex + this.displayPerLoad;
 
       // Keep displaying more results while we have them
-      for (let i = startIndex; i < maxIndex && i < this.searchResults.length; i++) {
+      for (
+        let i = startIndex;
+        i < maxIndex && i < this.searchResults.length;
+        i++
+      ) {
         this.displayedSearchResults.push(this.searchResults[i]);
       }
     }
@@ -100,5 +101,4 @@ export class MemberSearchComponent implements OnInit {
   allResultsDisplayed(): boolean {
     return this.displayedSearchResults.length >= this.searchResults.length;
   }
-
 }

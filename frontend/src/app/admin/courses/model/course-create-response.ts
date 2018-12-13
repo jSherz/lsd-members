@@ -1,6 +1,4 @@
-
 export class CourseCreateResponse {
-
   success: boolean;
   error: string;
   uuid: string;
@@ -10,5 +8,4 @@ export class CourseCreateResponse {
     this.error = error;
     this.uuid = uuid;
   }
-
 }

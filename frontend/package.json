@@ -10,13 +10,13 @@
     "build-prod": "ng build --prod --configuration=production --progress=false --aot --output-hashing=all --vendor-chunk=false --build-optimizer",
     "coveralls": "cat coverage/lcov.info | coveralls",
     "test": "ng test",
-    "test-ci": "ng test --browsers ChromeHeadlessNoSandbox --watch=false --progress=false --code-coverage=true --log-level=debug",
+    "test-ci": "ng test --browsers ChromeHeadlessNoSandbox --watch=false --progress=false --code-coverage=true",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "e2e-ci": "ng e2e --config protractor-ci.conf.js --serve=false",
     "update-webdriver": "webdriver-manager update",
     "start-webdriver": "webdriver-manager start",
-    "prettify": "prettier --write src/app/**/*.ts"
+    "prettify": "prettier --write 'src/**/*.ts' 'e2e/**/*.ts'"
   },
   "engines": {
     "node": "^10.13",
@@ -32,11 +32,12 @@
     "@angular/platform-browser": "7.1.0",
     "@angular/platform-browser-dynamic": "7.1.0",
     "@angular/router": "7.1.0",
-    "angulartics2": "^7.2.0",
+    "angulartics2": "^7.2.3",
     "core-js": "^2.5.4",
     "google-libphonenumber": "^3.1.2",
     "moment": "^2.22.0",
     "node-sass": "^4.8.3",
+    "puppeteer": "^1.11.0",
     "raven-js": "^3.24.0",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.3.3",
@@ -72,6 +73,7 @@
     "typescript": "3.1.6"
   },
   "prettier": {
-    "tabWidth": 2
+    "tabWidth": 2,
+    "singleQuote": false
   }
 }

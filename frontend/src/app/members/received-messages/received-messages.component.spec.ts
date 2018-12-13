@@ -1,15 +1,28 @@
-import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
-
-import {ReceivedMessagesComponent} from './received-messages.component';
-import {TextMessagesService} from './text-messages.service';
-import { of } from 'rxjs';
-import {HeaderComponent} from '../header/header.component';
 import {
-  Router, UrlHandlingStrategy, UrlSerializer, ChildrenOutletContexts, ROUTES, Route
-} from '@angular/router';
-import {RouterTestingModule, setupTestingRouter} from '@angular/router/testing';
-import {Compiler, Injector, NgModuleFactoryLoader} from '@angular/core';
-import {Location} from '@angular/common';
+  async,
+  ComponentFixture,
+  inject,
+  TestBed
+} from "@angular/core/testing";
+
+import { ReceivedMessagesComponent } from "./received-messages.component";
+import { TextMessagesService } from "./text-messages.service";
+import { of } from "rxjs";
+import { HeaderComponent } from "../header/header.component";
+import {
+  Router,
+  UrlHandlingStrategy,
+  UrlSerializer,
+  ChildrenOutletContexts,
+  ROUTES,
+  Route
+} from "@angular/router";
+import {
+  RouterTestingModule,
+  setupTestingRouter
+} from "@angular/router/testing";
+import { Compiler, Injector, NgModuleFactoryLoader } from "@angular/core";
+import { Location } from "@angular/common";
 
 const dummyService = {
   getReceivedMessages: () => {
@@ -17,7 +30,7 @@ const dummyService = {
   }
 };
 
-describe('ReceivedMessagesComponent', () => {
+describe("ReceivedMessagesComponent", () => {
   let component: ReceivedMessagesComponent;
   let fixture: ComponentFixture<ReceivedMessagesComponent>;
 
@@ -25,16 +38,13 @@ describe('ReceivedMessagesComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule.withRoutes([
-          {path: '', component: ReceivedMessagesComponent}
+          { path: "", component: ReceivedMessagesComponent }
         ])
       ],
-      declarations: [
-        HeaderComponent,
-        ReceivedMessagesComponent
-      ],
+      declarations: [HeaderComponent, ReceivedMessagesComponent],
       providers: [
-        {provide: UrlHandlingStrategy, useValue: {}},
-        {provide: TextMessagesService, useValue: dummyService}
+        { provide: UrlHandlingStrategy, useValue: {} },
+        { provide: TextMessagesService, useValue: dummyService }
       ]
     }).compileComponents();
   }));
@@ -45,8 +55,7 @@ describe('ReceivedMessagesComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should be created', async(() => {
+  it("should be created", async(() => {
     expect(component).toBeTruthy();
   }));
-
 });

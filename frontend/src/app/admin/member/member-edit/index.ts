@@ -1,1 +1,1 @@
-export {MemberEditComponent} from './member-edit.component';
+export { MemberEditComponent } from "./member-edit.component";

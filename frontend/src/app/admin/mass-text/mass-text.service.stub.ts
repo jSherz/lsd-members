@@ -1,21 +1,22 @@
-import {Injectable} from '@angular/core';
-import * as moment from 'moment';
-import { Observable, of } from 'rxjs';
+import { Injectable } from "@angular/core";
+import * as moment from "moment";
+import { Observable, of } from "rxjs";
 
-import {MassTextSendResponse} from './mass-text-send-response';
-import {MassTextService} from './mass-text.service';
-
+import { MassTextSendResponse } from "./mass-text-send-response";
+import { MassTextService } from "./mass-text.service";
 
 @Injectable()
 export class StubMassTextService extends MassTextService {
-
   constructor() {
     super(undefined, undefined);
   }
 
-  send(startDate: moment.Moment, endDate: moment.Moment, template: string,
-       expectedRendered: string): Observable<MassTextSendResponse> {
-    return of(new MassTextSendResponse(true, undefined, '12345'));
+  send(
+    startDate: moment.Moment,
+    endDate: moment.Moment,
+    template: string,
+    expectedRendered: string
+  ): Observable<MassTextSendResponse> {
+    return of(new MassTextSendResponse(true, undefined, "12345"));
   }
-
 }

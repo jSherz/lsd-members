@@ -1,5 +1,4 @@
-import * as moment from 'moment';
-
+import * as moment from "moment";
 
 export class TextMessage {
   uuid: string;
@@ -13,8 +12,18 @@ export class TextMessage {
   createdAt: moment.Moment;
   updatedAt: moment.Moment;
 
-  constructor(uuid: string, memberUuid: string, massTextUuid: string, status: number, toNumber: string, fromNumber: string,
-              message: string, externalId: string, createdAt: moment.Moment, updatedAt: moment.Moment) {
+  constructor(
+    uuid: string,
+    memberUuid: string,
+    massTextUuid: string,
+    status: number,
+    toNumber: string,
+    fromNumber: string,
+    message: string,
+    externalId: string,
+    createdAt: moment.Moment,
+    updatedAt: moment.Moment
+  ) {
     this.uuid = uuid;
     this.memberUuid = memberUuid;
     this.massTextUuid = massTextUuid;

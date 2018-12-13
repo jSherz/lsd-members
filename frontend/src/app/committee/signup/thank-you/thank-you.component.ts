@@ -1,16 +1,14 @@
-import { Component } from '@angular/core';
-import { Location } from '@angular/common';
+import { Component } from "@angular/core";
+import { Location } from "@angular/common";
 
 @Component({
-  selector: 'lsd-thank-you-component',
-  templateUrl: 'thank-you.component.html'
+  selector: "lsd-thank-you-component",
+  templateUrl: "thank-you.component.html"
 })
 export class ThankYouComponent {
-
-  constructor(private location: Location) { }
+  constructor(private location: Location) {}
 
   goBack() {
     this.location.back();
   }
-
 }

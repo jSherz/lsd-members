@@ -1,8 +1,8 @@
-import {Inject, Injectable, InjectionToken} from '@angular/core';
-import {JwtService} from './jwt.service';
+import { Inject, Injectable, InjectionToken } from "@angular/core";
+import { JwtService } from "./jwt.service";
 
-export let JWT = new InjectionToken<string>('stub.jwt');
-export let JWT_COMMITTEE = new InjectionToken<string>('stub.jwt.committee');
+export let JWT = new InjectionToken<string>("stub.jwt");
+export let JWT_COMMITTEE = new InjectionToken<string>("stub.jwt.committee");
 
 /**
  * Used to access the stored API key from anywhere in the application.
@@ -11,11 +11,13 @@ export let JWT_COMMITTEE = new InjectionToken<string>('stub.jwt.committee');
  */
 @Injectable()
 export class StubJwtService extends JwtService {
-
   private jwt: string;
   private committeeMember: boolean;
 
-  constructor(@Inject(JWT) jwt: string, @Inject(JWT_COMMITTEE) committeeMember: boolean) {
+  constructor(
+    @Inject(JWT) jwt: string,
+    @Inject(JWT_COMMITTEE) committeeMember: boolean
+  ) {
     super();
     this.jwt = jwt;
     this.committeeMember = committeeMember;
@@ -36,5 +38,4 @@ export class StubJwtService extends JwtService {
   isCommitteeMember(): boolean {
     return this.committeeMember;
   }
-
 }

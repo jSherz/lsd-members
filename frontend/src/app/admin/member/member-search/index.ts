@@ -1,2 +1,2 @@
-export {MemberSearchComponent} from './member-search.component';
-export {MemberLookupComponent} from './member-lookup';
+export { MemberSearchComponent } from "./member-search.component";
+export { MemberLookupComponent } from "./member-lookup";

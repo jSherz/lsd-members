@@ -1,1 +1,1 @@
-export {NotApprovedComponent} from './not-approved.component';
+export { NotApprovedComponent } from "./not-approved.component";

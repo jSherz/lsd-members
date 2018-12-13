@@ -1,10 +1,9 @@
-import {async} from '@angular/core/testing';
+import { async } from "@angular/core/testing";
 
-import {CanActivateCommittee} from './';
+import { CanActivateCommittee } from "./";
 
-describe('CanActivateCommittee', () => {
-
-  it('redirects to the login page when the member is not logged in', async(() => {
+describe("CanActivateCommittee", () => {
+  it("redirects to the login page when the member is not logged in", async(() => {
     const jwtService: any = {
       isAuthenticated: () => false,
       isCommitteeMember: () => false
@@ -15,13 +14,13 @@ describe('CanActivateCommittee', () => {
 
     const canActivate = new CanActivateCommittee(jwtService, router);
 
-    spyOn(router, 'navigate');
+    spyOn(router, "navigate");
 
     expect(canActivate.canActivate(null, null)).toBeFalsy();
-    expect(router.navigate).toHaveBeenCalledWith(['/members']);
+    expect(router.navigate).toHaveBeenCalledWith(["/members"]);
   }));
 
-  it('redirects to the login page when the member is logged in but not a committee member', async(() => {
+  it("redirects to the login page when the member is logged in but not a committee member", async(() => {
     const jwtService: any = {
       isAuthenticated: () => true,
       isCommitteeMember: () => false
@@ -32,13 +31,13 @@ describe('CanActivateCommittee', () => {
 
     const canActivate = new CanActivateCommittee(jwtService, router);
 
-    spyOn(router, 'navigate');
+    spyOn(router, "navigate");
 
     expect(canActivate.canActivate(null, null)).toBeFalsy();
-    expect(router.navigate).toHaveBeenCalledWith(['/members']);
+    expect(router.navigate).toHaveBeenCalledWith(["/members"]);
   }));
 
-  it('returns true when the member is logged in', async(() => {
+  it("returns true when the member is logged in", async(() => {
     const jwtService: any = {
       isAuthenticated: () => true,
       isCommitteeMember: () => true
@@ -51,5 +50,4 @@ describe('CanActivateCommittee', () => {
 
     expect(canActivate.canActivate(null, null)).toBeTruthy();
   }));
-
 });

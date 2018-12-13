@@ -1,9 +1,9 @@
 export {
   CourseSpaceDepositPaidResponse,
   CourseSpaceMemberResponse
-} from './model';
+} from "./model";
 
 export {
   CourseSpaceService,
   CourseSpaceServiceImpl
-} from './course-spaces.service';
+} from "./course-spaces.service";

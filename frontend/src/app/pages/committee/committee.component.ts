@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 
 export class CommitteeMember {
   imageUrl: string;
@@ -13,25 +13,22 @@ export class CommitteeMember {
 }
 
 @Component({
-  selector: 'lsd-committee',
-  templateUrl: 'committee.component.html',
-  styleUrls: ['committee.component.sass']
+  selector: "lsd-committee",
+  templateUrl: "committee.component.html",
+  styleUrls: ["committee.component.sass"]
 })
 export class CommitteeComponent implements OnInit {
-
   committeeMembers = [
-    new CommitteeMember('amber.jpg', 'Padders', 'President'),
-    new CommitteeMember('ruby.jpg', 'Ruby', 'Vice-President'),
-    new CommitteeMember('will.jpg', 'Will', 'RAPS Secretary'),
-    new CommitteeMember('sean.jpg', 'Sean', 'Treasurer'),
-    new CommitteeMember('tom.jpg', 'Tom', 'Social Secretary'),
-    new CommitteeMember('tom2.jpg', 'Tom', 'Social Secretary'),
-    new CommitteeMember('emma.jpg', 'Emma', 'Kit Secretary'),
+    new CommitteeMember("amber.jpg", "Padders", "President"),
+    new CommitteeMember("ruby.jpg", "Ruby", "Vice-President"),
+    new CommitteeMember("will.jpg", "Will", "RAPS Secretary"),
+    new CommitteeMember("sean.jpg", "Sean", "Treasurer"),
+    new CommitteeMember("tom.jpg", "Tom", "Social Secretary"),
+    new CommitteeMember("tom2.jpg", "Tom", "Social Secretary"),
+    new CommitteeMember("emma.jpg", "Emma", "Kit Secretary")
   ];
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

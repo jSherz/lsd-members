@@ -1,4 +1,3 @@
-
 export class SignupResult {
   success: boolean;
   errors: any;

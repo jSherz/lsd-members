@@ -1,0 +1,19 @@
+stages:
+  - build
+
+build-backend:
+  image: jsherz/lsd-members-backend
+  stage: build
+  script:
+    - cd backend
+    - sbt clean compile test
+
+build-frontend:
+  image: jsherz/lsd-members-frontend
+  stage: build
+  script:
+    - cd frontend
+    - npm install
+    - npm run lint
+    - npm run build-prod
+    - npm run test-ci

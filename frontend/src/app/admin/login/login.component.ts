@@ -1,21 +1,20 @@
-import {Component} from '@angular/core';
-import {Router} from '@angular/router';
+import { Component } from "@angular/core";
+import { Router } from "@angular/router";
 import {
   FormControl,
   FormBuilder,
   FormGroup,
   Validators
-} from '@angular/forms';
-import {LoginService} from './login.service';
-import {ApiKeyService} from '../utils';
+} from "@angular/forms";
+import { LoginService } from "./login.service";
+import { ApiKeyService } from "../utils";
 
 @Component({
-  selector: 'lsd-login-component',
-  templateUrl: 'login.component.html',
-  styleUrls: ['login.component.sass']
+  selector: "lsd-login-component",
+  templateUrl: "login.component.html",
+  styleUrls: ["login.component.sass"]
 })
 export class LoginComponent {
-
   loginForm: FormGroup;
 
   ctrlEmail: FormControl;
@@ -39,8 +38,8 @@ export class LoginComponent {
    * Any errors returned by the API.
    */
   errors: {
-    email: undefined,
-    password: undefined
+    email: undefined;
+    password: undefined;
   };
 
   /**
@@ -51,12 +50,14 @@ export class LoginComponent {
    * @param loginService
    * @param apiKeyService
    */
-  constructor(private builder: FormBuilder,
-              private router: Router,
-              private loginService: LoginService,
-              private apiKeyService: ApiKeyService) {
-    this.ctrlEmail = new FormControl('', Validators.required);
-    this.ctrlPassword = new FormControl('', Validators.required);
+  constructor(
+    private builder: FormBuilder,
+    private router: Router,
+    private loginService: LoginService,
+    private apiKeyService: ApiKeyService
+  ) {
+    this.ctrlEmail = new FormControl("", Validators.required);
+    this.ctrlPassword = new FormControl("", Validators.required);
 
     this.loginForm = builder.group({
       email: this.ctrlEmail,
@@ -85,14 +86,14 @@ export class LoginComponent {
         if (result.success) {
           this.apiKeyService.setKey(result.apiKey);
 
-          this.router.navigate(['admin', 'courses', 'calendar']);
+          this.router.navigate(["admin", "courses", "calendar"]);
         } else {
           this.errors = result.errors;
         }
       },
       error => {
         // API request failed, show generic error
-        console.log('Login failed: ' + error);
+        console.log("Login failed: " + error);
 
         this.apiRequestFailed = true;
         this.showThrobber = false;
@@ -108,9 +109,10 @@ export class LoginComponent {
    */
   translate(key: string) {
     return {
-      'error.invalidEmailPass': 'The e-mail or password you entered is invalid. Please try again.',
-      'error.accountLocked': 'Your account has been disabled. Please contact an administrator.'
+      "error.invalidEmailPass":
+        "The e-mail or password you entered is invalid. Please try again.",
+      "error.accountLocked":
+        "Your account has been disabled. Please contact an administrator."
     }[key];
   }
-
 }

@@ -1,6 +1,2 @@
-export {
-  Tile,
-  TileService,
-  TileComponent
-} from './tile';
-export { CourseCalendarComponent } from './course-calendar.component';
+export { Tile, TileService, TileComponent } from "./tile";
+export { CourseCalendarComponent } from "./course-calendar.component";

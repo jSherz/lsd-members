@@ -1,5 +1,4 @@
-import * as moment from 'moment';
-
+import * as moment from "moment";
 
 export class Member {
   uuid: string;
@@ -15,9 +14,20 @@ export class Member {
   createdAt: moment.Moment;
   updatedAt: moment.Moment;
 
-  constructor(uuid: string, firstName: string, lastName: string, phoneNumber: string, email: string, lastJump: moment.Moment,
-              weight: number, height: number, driver: boolean, organiser: boolean, createdAt: moment.Moment,
-              updatedAt: moment.Moment) {
+  constructor(
+    uuid: string,
+    firstName: string,
+    lastName: string,
+    phoneNumber: string,
+    email: string,
+    lastJump: moment.Moment,
+    weight: number,
+    height: number,
+    driver: boolean,
+    organiser: boolean,
+    createdAt: moment.Moment,
+    updatedAt: moment.Moment
+  ) {
     this.uuid = uuid;
     this.firstName = firstName;
     this.lastName = lastName;

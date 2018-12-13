@@ -1,8 +1,8 @@
-export {DashboardStatsComponent} from './dashboard-stats.component';
+export { DashboardStatsComponent } from "./dashboard-stats.component";
 
 export {
   DashboardStatsService,
   DashboardStatsServiceImpl
-} from './dashboard-stats.service';
+} from "./dashboard-stats.service";
 
-export {NumReceivedMessages} from './num-received-messages';
+export { NumReceivedMessages } from "./num-received-messages";

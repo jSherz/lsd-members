@@ -1,4 +1,3 @@
-
 export class MassTextSendResponse {
   success: boolean;
   error: string;

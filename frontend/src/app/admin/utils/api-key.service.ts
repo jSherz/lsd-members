@@ -1,13 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 
 export abstract class ApiKeyService {
-
   abstract getKey(): string;
 
   abstract setKey(apiKey: string);
 
   abstract isAuthenticated(): boolean;
-
 }
 
 /**
@@ -17,8 +15,7 @@ export abstract class ApiKeyService {
  */
 @Injectable()
 export class ApiKeyServiceImpl extends ApiKeyService {
-
-  private localStorageKey = 'API_KEY';
+  private localStorageKey = "API_KEY";
 
   getKey(): string {
     return localStorage.getItem(this.localStorageKey);
@@ -31,5 +28,4 @@ export class ApiKeyServiceImpl extends ApiKeyService {
   isAuthenticated(): boolean {
     return this.getKey() != null && this.getKey().length >= 1;
   }
-
 }

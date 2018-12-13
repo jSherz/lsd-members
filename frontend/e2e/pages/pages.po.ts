@@ -1,13 +1,12 @@
-import {browser, element, by} from 'protractor';
+import { browser, element, by } from "protractor";
 
 export class PagesPage {
-
   getCurrentUrl() {
     return browser.getCurrentUrl();
   }
 
   getLinks() {
-    return element.all(by.css('lsd-page-nav-item a'));
+    return element.all(by.css("lsd-page-nav-item a"));
   }
 
   getHomeLink() {
@@ -31,11 +30,10 @@ export class PagesPage {
   }
 
   getJoinLink() {
-    return element(by.css('#join-lsd-btn a'));
+    return element(by.css("#join-lsd-btn a"));
   }
 
   getContactLink() {
     return this.getLinks().get(5);
   }
-
 }

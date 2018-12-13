@@ -1,1 +1,1 @@
-export {CanActivateCommittee} from './can-activate-committee';
+export { CanActivateCommittee } from "./can-activate-committee";

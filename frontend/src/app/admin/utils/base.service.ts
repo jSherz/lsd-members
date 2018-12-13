@@ -1,19 +1,16 @@
-
-import { throwError as observableThrowError, Observable, ObservableInput } from 'rxjs';
 import {
-  Response,
-  Headers,
-  RequestOptions,
-  Http
-} from '@angular/http';
+  throwError as observableThrowError,
+  Observable,
+  ObservableInput
+} from "rxjs";
+import { Response, Headers, RequestOptions, Http } from "@angular/http";
 
-import {ApiKeyService} from './';
+import { ApiKeyService } from "./";
 
 /**
  * Basic methods shared across services.
  */
 export class BaseService {
-
   private http: Http;
   private apiKeyService: ApiKeyService;
 
@@ -41,11 +38,15 @@ export class BaseService {
     const apiKeyService = this.apiKeyService;
 
     const innerHandler = (err: any, caught: Observable<T>): never => {
-      const errMsg = (err.message) ? err.message : err.status ? `${err.status} - ${err.statusText}` : 'Server error';
+      const errMsg = err.message
+        ? err.message
+        : err.status
+          ? `${err.status} - ${err.statusText}`
+          : "Server error";
       console.error(errMsg);
 
       if (err.status && err.status === 401) {
-        apiKeyService.setKey('');
+        apiKeyService.setKey("");
       }
 
       throw new Error(errMsg);
@@ -65,8 +66,11 @@ export class BaseService {
    */
   protected post(url: string, data: any) {
     const body = JSON.stringify(data);
-    const headers = new Headers({'Content-Type': 'application/json', 'Api-Key': this.apiKeyService.getKey()});
-    const options = new RequestOptions({headers: headers});
+    const headers = new Headers({
+      "Content-Type": "application/json",
+      "Api-Key": this.apiKeyService.getKey()
+    });
+    const options = new RequestOptions({ headers: headers });
 
     return this.http.post(url, body, options);
   }
@@ -82,8 +86,11 @@ export class BaseService {
    */
   protected put(url: string, data: any) {
     const body = JSON.stringify(data);
-    const headers = new Headers({'Content-Type': 'application/json', 'Api-Key': this.apiKeyService.getKey()});
-    const options = new RequestOptions({headers: headers});
+    const headers = new Headers({
+      "Content-Type": "application/json",
+      "Api-Key": this.apiKeyService.getKey()
+    });
+    const options = new RequestOptions({ headers: headers });
 
     return this.http.put(url, body, options);
   }
@@ -95,10 +102,9 @@ export class BaseService {
    * @returns {Observable<Response>}
    */
   protected get(url: string) {
-    const headers = new Headers({'Api-Key': this.apiKeyService.getKey()});
-    const options = new RequestOptions({headers: headers});
+    const headers = new Headers({ "Api-Key": this.apiKeyService.getKey() });
+    const options = new RequestOptions({ headers: headers });
 
     return this.http.get(url, options);
   }
-
 }

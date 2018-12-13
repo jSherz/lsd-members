@@ -1,26 +1,24 @@
-import {Subscription} from 'rxjs';
-import {ActivatedRoute} from '@angular/router';
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import * as moment from 'moment';
+import { Subscription } from "rxjs";
+import { ActivatedRoute } from "@angular/router";
+import { Component, OnInit, OnDestroy } from "@angular/core";
+import * as moment from "moment";
 
-import {CourseService} from '../course.service';
+import { CourseService } from "../course.service";
 
 import {
   StrippedMember,
   CourseSpaceWithMember,
   CourseWithOrganisers
-} from '../model';
+} from "../model";
 
-import {CourseSpaceService} from '../../course-spaces/course-spaces.service';
-
+import { CourseSpaceService } from "../../course-spaces/course-spaces.service";
 
 @Component({
-  selector: 'lsd-course-view',
-  templateUrl: 'course-view.component.html',
-  styleUrls: ['course-view.component.sass']
+  selector: "lsd-course-view",
+  templateUrl: "course-view.component.html",
+  styleUrls: ["course-view.component.sass"]
 })
 export class CourseViewComponent implements OnInit, OnDestroy {
-
   /**
    * Subscribes to the current activated route and displays different courses as it changes.
    */
@@ -57,10 +55,11 @@ export class CourseViewComponent implements OnInit, OnDestroy {
    */
   currentCourseUuid: string = null;
 
-  constructor(private route: ActivatedRoute,
-              private service: CourseService,
-              private spaceService: CourseSpaceService) {
-  }
+  constructor(
+    private route: ActivatedRoute,
+    private service: CourseService,
+    private spaceService: CourseSpaceService
+  ) {}
 
   /**
    * Called when the component has been created.
@@ -68,14 +67,13 @@ export class CourseViewComponent implements OnInit, OnDestroy {
    * Subscribes to URL parameters to pick out the course UUID.
    */
   ngOnInit() {
-    this.displayCourseSub = this.route.params
-      .subscribe(params => {
-        console.log('Loading course ' + params['uuid']);
-        const uuid: string = params['uuid'];
+    this.displayCourseSub = this.route.params.subscribe(params => {
+      console.log("Loading course " + params["uuid"]);
+      const uuid: string = params["uuid"];
 
-        this.updateCourse(uuid);
-        this.updateSpaces(uuid);
-      });
+      this.updateCourse(uuid);
+      this.updateSpaces(uuid);
+    });
   }
 
   /**
@@ -106,7 +104,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
         this.apiRequestFailed = true;
         this.showThrobber = false;
 
-        console.error('Failed to get course info:');
+        console.error("Failed to get course info:");
         console.error(error);
       }
     );
@@ -142,7 +140,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
         this.apiRequestFailed = true;
         this.showThrobber = false;
 
-        console.error('Failed to get course spaces:');
+        console.error("Failed to get course spaces:");
         console.error(error);
       }
     );
@@ -171,12 +169,14 @@ export class CourseViewComponent implements OnInit, OnDestroy {
           this.apiRequestFailed = true;
           this.showThrobber = false;
 
-          console.error('Failed to add member to course:');
+          console.error("Failed to add member to course:");
           console.error(error);
         }
       );
     } else {
-      console.error('Unable to add member to this course - no spaces available.');
+      console.error(
+        "Unable to add member to this course - no spaces available."
+      );
     }
   }
 
@@ -196,7 +196,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
       },
       error => {
         this.apiRequestFailed = true;
-        console.error('Failed to remove member from course:');
+        console.error("Failed to remove member from course:");
         console.error(error);
       }
     );
@@ -215,7 +215,9 @@ export class CourseViewComponent implements OnInit, OnDestroy {
       },
       error => {
         this.apiRequestFailed = true;
-        console.error('Failed to set deposit paid on course space ' + spaceUuid);
+        console.error(
+          "Failed to set deposit paid on course space " + spaceUuid
+        );
         console.error(error);
       }
     );
@@ -229,11 +231,11 @@ export class CourseViewComponent implements OnInit, OnDestroy {
   translateStatus(status: number): string {
     switch (status) {
       case 0:
-        return 'Pending';
+        return "Pending";
       case 1:
-        return 'Booked';
+        return "Booked";
       default:
-        return 'Unknown';
+        return "Unknown";
     }
   }
 
@@ -245,9 +247,9 @@ export class CourseViewComponent implements OnInit, OnDestroy {
    */
   formatDate(input: moment.Moment) {
     if (input && input.format) {
-      return input.format('dddd, MMMM Do YYYY');
+      return input.format("dddd, MMMM Do YYYY");
     } else {
-      return 'Unknown';
+      return "Unknown";
     }
   }
 
@@ -258,13 +260,12 @@ export class CourseViewComponent implements OnInit, OnDestroy {
    */
   private translateError(key: string): string {
     switch (key) {
-      case 'error.alreadyOnCourse':
-        return 'The selected member is already on this course.';
-      case 'error.spaceNotEmpty':
-        return 'A member is already on that course.';
+      case "error.alreadyOnCourse":
+        return "The selected member is already on this course.";
+      case "error.spaceNotEmpty":
+        return "A member is already on that course.";
       default:
-        return 'An unknown error occurred.';
+        return "An unknown error occurred.";
     }
   }
-
 }

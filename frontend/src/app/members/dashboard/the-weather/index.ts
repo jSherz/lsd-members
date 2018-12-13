@@ -1,1 +1,1 @@
-export {TheWeatherComponent} from './the-weather.component';
+export { TheWeatherComponent } from "./the-weather.component";

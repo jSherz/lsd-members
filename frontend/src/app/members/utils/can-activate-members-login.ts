@@ -1,7 +1,12 @@
-import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
+import { Injectable } from "@angular/core";
+import {
+  ActivatedRouteSnapshot,
+  CanActivate,
+  Router,
+  RouterStateSnapshot
+} from "@angular/router";
 
-import {JwtService} from '../login/jwt.service';
+import { JwtService } from "../login/jwt.service";
 
 /**
  * Checks to see if a member is logged in before the route to the login page is activated.
@@ -10,18 +15,18 @@ import {JwtService} from '../login/jwt.service';
  */
 @Injectable()
 export class CanActivateMembersLogin implements CanActivate {
+  constructor(private jwtService: JwtService, private router: Router) {}
 
-  constructor(private jwtService: JwtService, private router: Router) {
-  }
-
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): boolean {
     if (this.jwtService.isAuthenticated()) {
-      this.router.navigate(['/members', 'dashboard']);
+      this.router.navigate(["/members", "dashboard"]);
 
       return false;
     } else {
       return true;
     }
   }
-
 }

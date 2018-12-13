@@ -1,14 +1,11 @@
-import {Injectable} from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { Observable, of } from "rxjs";
 
-
-import {StrippedCommitteeMember} from './stripped-committee-member';
-import {CommitteeService} from './committee.service';
-
+import { StrippedCommitteeMember } from "./stripped-committee-member";
+import { CommitteeService } from "./committee.service";
 
 @Injectable()
 export class StubCommitteeService extends CommitteeService {
-
   constructor() {
     super(null, null);
   }
@@ -16,5 +13,4 @@ export class StubCommitteeService extends CommitteeService {
   active(): Observable<StrippedCommitteeMember[]> {
     return of([]);
   }
-
 }

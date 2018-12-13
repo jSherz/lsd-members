@@ -1,6 +1,3 @@
-export {StrippedCommitteeMember} from './stripped-committee-member';
+export { StrippedCommitteeMember } from "./stripped-committee-member";
 
-export {
-  CommitteeService,
-  CommitteeServiceImpl
-} from './committee.service'
+export { CommitteeService, CommitteeServiceImpl } from "./committee.service";

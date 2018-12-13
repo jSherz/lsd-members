@@ -1,7 +1,15 @@
-import {Compiler, Injector, NgModuleFactoryLoader} from '@angular/core';
-import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
-import {RouterTestingModule, setupTestingRouter} from '@angular/router/testing';
-import {Location} from '@angular/common';
+import { Compiler, Injector, NgModuleFactoryLoader } from "@angular/core";
+import {
+  async,
+  ComponentFixture,
+  inject,
+  TestBed
+} from "@angular/core/testing";
+import {
+  RouterTestingModule,
+  setupTestingRouter
+} from "@angular/router/testing";
+import { Location } from "@angular/common";
 
 import {
   Router,
@@ -10,29 +18,34 @@ import {
   ROUTES,
   UrlSerializer,
   ChildrenOutletContexts
-} from '@angular/router';
+} from "@angular/router";
 
-import {HeaderComponent} from './header.component';
+import { HeaderComponent } from "./header.component";
 
-
-describe('HeaderComponent', () => {
-
+describe("HeaderComponent", () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule
-      ],
+      imports: [RouterTestingModule],
       declarations: [HeaderComponent],
       providers: [
-        {provide: UrlHandlingStrategy, useValue: {}},
+        { provide: UrlHandlingStrategy, useValue: {} },
         {
           provide: Router,
           useFactory: setupTestingRouter,
-          deps: [UrlSerializer, ChildrenOutletContexts, Location, NgModuleFactoryLoader, Compiler, Injector, ROUTES, UrlHandlingStrategy]
-        },
+          deps: [
+            UrlSerializer,
+            ChildrenOutletContexts,
+            Location,
+            NgModuleFactoryLoader,
+            Compiler,
+            Injector,
+            ROUTES,
+            UrlHandlingStrategy
+          ]
+        }
       ]
     }).compileComponents();
   }));
@@ -43,8 +56,7 @@ describe('HeaderComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should be created', () => {
+  it("should be created", () => {
     expect(component).toBeTruthy();
   });
-
 });
