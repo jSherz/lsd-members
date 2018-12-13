@@ -1,0 +1,18 @@
+stages:
+  - build-backend
+  - build-frontend
+
+build-backend:
+  image: openjdk:11-jdk-slim
+  stage: build-backend
+  script:
+    - cd backend
+    - sbt install
+
+build-frontend:
+  image: node:dubnium-slim
+  stage: build-frontend
+  script:
+    - cd frontend
+    - npm install
+    - npm build-prod
