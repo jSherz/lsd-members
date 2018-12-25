@@ -5,7 +5,6 @@ build-backend:
   image: jsherz/lsd-members-backend
   stage: build
   script:
-    - mkdir ~/.sbt
     - |
       echo <<EOF
       [repositories]
