@@ -5,11 +5,14 @@ build-backend:
   image: jsherz/lsd-members-backend
   stage: build
   script:
+    - mkdir ~/.sbt
     - |
+      echo <<EOF
       [repositories]
       local
       my-ivy-proxy-releases: http://vms:8081/artifactory/sbt-release/, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]
       my-maven-proxy-releases: http://vms:8081/artifactory/sbt-release/
+      EOF > ~/.sbt/repositories
     - cd backend
     - sbt -Dsbt.override.build.repos=true clean compile test
 
