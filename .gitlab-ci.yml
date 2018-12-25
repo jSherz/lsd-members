@@ -5,8 +5,13 @@ build-backend:
   image: jsherz/lsd-members-backend
   stage: build
   script:
+    - |
+      [repositories]
+      local
+      my-ivy-proxy-releases: http://vms:8081/artifactory/sbt-release/, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]
+      my-maven-proxy-releases: http://vms:8081/artifactory/sbt-release/
     - cd backend
-    - sbt clean compile test
+    - sbt -Dsbt.override.build.repos=true clean compile test
 
 build-frontend:
   image: jsherz/lsd-members-frontend
