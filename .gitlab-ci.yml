@@ -20,6 +20,7 @@ build-frontend:
   stage: build
   script:
     - cd frontend
+    - npm config set registry http://vms:8082/repository/npm/
     - npm install
     - npm run lint
     - npm run build-prod
