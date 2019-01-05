@@ -10,7 +10,7 @@ describe("Pages: About", function() {
   it("should have the correct link to join", () => {
     page.navigateTo();
     expect(page.getJoinButton().getAttribute("href")).toEqual(
-      "http://www.leedsuniversityunion.org.uk/groups/skydiving/"
+      "http://www.luu.org.uk/skydiving/"
     );
   });
 

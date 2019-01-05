@@ -70,7 +70,7 @@ describe("Pages: Home", function() {
   it("should have the correct link for joining", () => {
     page.navigateTo();
     expect(page.getJoinLink().getAttribute("href")).toEqual(
-      "https://www.luu.org.uk/groups/skydiving/"
+      "https://www.luu.org.uk/skydiving/"
     );
   });
 

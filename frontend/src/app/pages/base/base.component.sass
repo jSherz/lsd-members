@@ -19,13 +19,27 @@
 
 // Header
 #header
-  margin-bottom: 1.5rem
+  margin-bottom: 0.5rem
+
+  @media(min-width: 40rem)
+    margin-bottom: 1.5rem
 
 #header-logo
-  @include grid-column(4)
+  @include grid-column(2)
+
+  img
+    width: auto
+
+  @media(max-width: 40rem)
+    @include grid-column(12)
+    margin-left: 0
+    padding-left: 0.5rem
+
+    img
+      width: 6rem
 
 #header-title
-  @include grid-column(8)
+  @include grid-column(10)
 
   padding-top: 0.7em
 
@@ -34,7 +48,6 @@
     line-height: 0.8em
     font-family: 'Leckerli One', cursive
     font-weight: 300
-    text-align: center
     margin: 0 -1em 0 0
 
     @media(max-width: 76em)
@@ -45,24 +58,22 @@
 
   @media(max-width: 40rem)
     @include grid-column(12)
+    margin-left: 0
+    padding-left: 0.5rem
 
 #social-icons
-  position: absolute
-  right: 1em
-  top: 1em
+  margin-top: 0.5rem
 
   @media(min-width: 40rem)
-    position: relative
-    right: auto
-    top: auto
+    margin-top: 0
 
-#facebook-icon, #twitter-icon
-  z-index: 100
+#facebook-icon, #twitter-icon, #instagram-icon
+  display: inline-block
   font-size: 3rem
-  display: inline
-  float: right
 
 #facebook-icon
+  margin-left: 0.2em
+
   a
     color: $facebook-blue
 
@@ -70,13 +81,20 @@
       color: lighten($facebook-blue, 10%)
 
 #twitter-icon
-  margin-left: 0.2em
-
   a
     color: $twitter-blue
 
     &:hover
       color: lighten($twitter-blue, 10%)
+
+#instagram-icon
+  margin-left: 0.2em
+
+  a
+    color: $instagram-maroon
+
+    &:hover
+      color: lighten($instagram-maroon, 10%)
 
 // Navigation
 #navbar
@@ -88,7 +106,6 @@
   ul
     padding: 0 0 0 0
     display: table
-    margin: 0 auto
 
   li
     display: inline-block
@@ -101,6 +118,7 @@
 
     i
       color: $lsd_yellow
+      padding-left: 0.5rem
 
     a
       letter-spacing: 0.05em
@@ -155,13 +173,15 @@
 // Style for general use of #main div (inside #content)
 #content
   background-color: #fff
-  padding: 1rem
+  padding: 0.2rem
   border: solid 1px lighten($lsd_yellow, 30%)
+
+  @media(min-width: 40rem)
+    padding: 1rem
 
 // Footer
 #footer
   padding: 0.5rem
-  text-align: center
   color: #555
   margin-top: 1rem
 

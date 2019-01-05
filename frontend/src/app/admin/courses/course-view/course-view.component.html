@@ -49,32 +49,32 @@
         {{ space.member?.createdAt?.format('YYYY-MM-DD') || '' }}
       </td>
       <td class="sl-course-students-info-complete" *ngIf="space.member">
-        <i class="fa fa-check" aria-hidden="true" style="color: green;" *ngIf="space.member.infoComplete()"></i>
-        <i class="fa fa-times" aria-hidden="true" style="color: red;" *ngIf="!space.member.infoComplete()"></i>
+        <i class="far fa-check" aria-hidden="true" style="color: green;" *ngIf="space.member.infoComplete()"></i>
+        <i class="far fa-times" aria-hidden="true" style="color: red;" *ngIf="!space.member.infoComplete()"></i>
       </td>
       <td class="sl-course-students-deposit-paid" *ngIf="space.member">
-        <i class="fa fa-question" aria-hidden="true" style="color: orange;"></i>
+        <i class="far fa-question" aria-hidden="true" style="color: orange;"></i>
       </td>
       <td class="sl-course-students-options" *ngIf="space.member">
         <a [routerLink]="['/admin', 'members', space.member.uuid]" title="View member information"
            class="sl-course-students-view-member button">
-          <i class="fa fa-info" aria-hidden="true"></i>
+          <i class="far fa-info" aria-hidden="true"></i>
         </a>
         <a title="Set deposit as paid" class="sl-course-students-set-deposit-paid button"
            (click)="setDepositPaid(space.uuid, true)" *ngIf="!space.depositPaid">
-          <i class="fa fa-money" aria-hidden="true"></i>
+          <i class="far fa-money" aria-hidden="true"></i>
         </a>
         <a title="Set deposit as NOT paid" class="sl-course-students-set-deposit-not-paid button"
            (click)="setDepositPaid(space.uuid, false)" *ngIf="space.depositPaid">
-          <i class="fa fa-money" aria-hidden="true"></i>
+          <i class="far fa-money" aria-hidden="true"></i>
         </a>
         <a [routerLink]="['/admin', 'members', space.member.uuid, 'edit']" title="Edit member information"
            class="sl-course-students-edit-member button">
-          <i class="fa fa-pencil" aria-hidden="true"></i>
+          <i class="far fa-pencil" aria-hidden="true"></i>
         </a>
         <button type="button" class="btn-warning sl-course-students-remove" title="Remove from course"
                 (click)="removeMemberFromCourse(space)">
-          <i class="fa fa-trash-o"></i>
+          <i class="far fa-trash-alt"></i>
         </button>
       </td>
     </tr>

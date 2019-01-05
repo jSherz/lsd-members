@@ -12,13 +12,19 @@
     <div id="social-icons">
       <div id="twitter-icon">
         <a href="https://twitter.com/LeedsSkyDivers" title="Leeds Skydivers on Twitter">
-          <i class="fa fa-twitter-square" aria-hidden="true"></i>
+          <i class="fab fa-twitter" aria-hidden="true"></i>
         </a>
       </div>
 
       <div id="facebook-icon">
         <a href="https://www.facebook.com/leedsuniskydivers" title="Leeds Skydivers on Facebook">
-          <i class="fa fa-facebook-square" aria-hidden="true"></i>
+          <i class="fab fa-facebook" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <div id="instagram-icon">
+        <a href="https://www.instagram.com/leedsskydivers/" title="Leeds Skydivers on Instagram">
+          <i class="fab fa-instagram" aria-hidden="true"></i>
         </a>
       </div>
     </div>
@@ -29,24 +35,20 @@
   <ul>
     <li class="controls">
       <a (click)="toggleMenu()">
-        <i class="fa fa-bars"></i>
+        <i class="fas fa-bars"></i>
         <span *ngIf="menuCollapsed">Show menu</span>
         <span *ngIf="!menuCollapsed">Hide menu</span>
       </a>
     </li>
 
-    <lsd-page-nav-item href="/" linkText="Home" [collapsed]="menuCollapsed"></lsd-page-nav-item>
+    <lsd-page-nav-item href="/" linkText="Home" [collapsed]="menuCollapsed" [preSeparator]="false"></lsd-page-nav-item>
     <lsd-page-nav-item href="/about-the-club" linkText="About the club" [collapsed]="menuCollapsed"></lsd-page-nav-item>
     <lsd-page-nav-item href="/committee" linkText="Committee" [collapsed]="menuCollapsed"></lsd-page-nav-item>
     <lsd-page-nav-item href="/prices" linkText="Prices" [collapsed]="menuCollapsed"></lsd-page-nav-item>
-    <lsd-page-nav-item href="/faq" linkText="FAQ" [collapsed]="menuCollapsed"></lsd-page-nav-item>
-
-    <li>
-      <i class="separator fa fa-ellipsis-v"></i>
-    </li>
+    <lsd-page-nav-item href="/faq" linkText="FAQ" [collapsed]="menuCollapsed" [postSeparator]="true"></lsd-page-nav-item>
 
     <li id="join-lsd-btn" [ngClass]="{ visible: !menuCollapsed }">
-      <a href="https://www.luu.org.uk/groups/skydiving/" linkText="Join Leeds Skydivers" class="join-lsd-btn">
+      <a href="https://www.luu.org.uk/skydiving/" linkText="Join Leeds Skydivers" class="join-lsd-btn">
         Join LSD
       </a>
     </li>
@@ -54,7 +56,7 @@
     <lsd-page-nav-item href="/contact" linkText="Contact" [collapsed]="menuCollapsed"></lsd-page-nav-item>
 
     <li>
-      <i class="separator fa fa-ellipsis-v"></i>
+      <i class="separator fas fa-ellipsis-v"></i>
     </li>
   </ul>
 </div>
@@ -69,9 +71,9 @@
   <div>
     <p>
       &copy;
-      2016
-      Leeds University Skydivers. Website sloppily hacked together by
-      <a href="http://jsherz.com">jSherz.</a> Powered by carrots.
+      2018
+      Leeds University Skydivers. <a href="/members">Members area</a>.
+      Powered by caffeine, carrots and <a href="http://jsherz.com">jSherz</a>.
     </p>
   </div>
 </div>

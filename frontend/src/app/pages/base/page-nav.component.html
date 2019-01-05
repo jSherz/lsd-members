@@ -1,7 +1,11 @@
-<li>
-  <i class="separator fa fa-ellipsis-v"></i>
+<li *ngIf="preSeparator">
+  <i class="separator fas fa-ellipsis-v"></i>
 </li>
 
 <li [ngClass]="{ visible: !collapsed }">
   <a [routerLink]="href" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">{{ linkText }}</a>
+</li>
+
+<li *ngIf="postSeparator">
+  <i class="separator fas fa-ellipsis-v"></i>
 </li>

@@ -6,6 +6,12 @@ import { Component, Input } from "@angular/core";
 })
 export class PageNavComponent {
   @Input()
+  preSeparator: Boolean = true;
+
+  @Input()
+  postSeparator: Boolean = false;
+
+  @Input()
   href: string;
 
   @Input()

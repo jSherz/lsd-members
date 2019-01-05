@@ -4,21 +4,31 @@
 @import '../../../assets/css/variables'
 @import '../../../assets/css/flash'
 
+#frontpage-top
+  @include grid-container()
+
+  @media(min-width: 40rem)
+    font-size: 1.5em
+
+  p
+    margin: 0
+
 // Intro snippet
 #intro-snippet
-  @include flash($notice-colour)
   padding: 0.5em
-  text-align: center
-  font-size: 2rem
-  font-style: italic
-  margin-bottom: 1rem
-  line-height: 1em
+  line-height: 1.3em
+  @include grid-column(12)
+  margin-left: 0
+
+  @media(min-width: 40rem)
+    @include grid-column(6)
+    margin-left: 0
 
   a
     text-decoration: underline
 
   p
-    margin: 0
+    font-weight: normal
 
 // Responsive video
 #frontpage-video
@@ -42,37 +52,31 @@
     width: 100%
 
 #xdream
-  padding: 0
-  max-width: 50%
-  margin: 0 auto 1rem auto
-  display: flex
-  align-items: center
+  padding: 0.5em
+  @include grid-column(6)
+  margin-left: 0
+
+  #xdream-introduction
+    flex-grow: 1
+    margin-left: 1rem
+
+  #xdream-logo
+    width: auto
+    height: auto
 
   @media(max-width: 40rem)
-    max-width: 100%
-    display: block
-    background-color: #222
-    color: #fff
+    @include grid-column(12)
+    margin-left: 0
 
-    #xdream-logo
-      text-align: center
-      width: auto
-      height: auto
+#xdream-inner
+  display: flex
 
 #xdream-logo
-  width: 40rem
-  height: 9.5rem
-
   img
     background: #222
     padding: 1rem
+    width: 4rem
 
   @media(min-width: 40rem)
     display: flex
     align-items: center
-
-#xdream-introductionayy
-  padding: 1rem
-
-  p
-    margin: 0
