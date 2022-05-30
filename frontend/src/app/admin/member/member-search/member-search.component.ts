@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from "@angular/core";
+import { Component, Output, EventEmitter } from "@angular/core";
 
 import { SearchResult } from "../model";
 import { MemberService } from "../member.service";
@@ -13,7 +13,7 @@ import { MemberService } from "../member.service";
   templateUrl: "member-search.component.html",
   styleUrls: ["member-search.component.sass"]
 })
-export class MemberSearchComponent implements OnInit {
+export class MemberSearchComponent {
   /**
    * Number of members to show, each time the "more results" button is clicked.
    *
@@ -53,8 +53,6 @@ export class MemberSearchComponent implements OnInit {
   memberSelected: EventEmitter<SearchResult> = new EventEmitter<SearchResult>();
 
   constructor(private service: MemberService) {}
-
-  ngOnInit() {}
 
   performSearch() {
     this.hasSearched = true;

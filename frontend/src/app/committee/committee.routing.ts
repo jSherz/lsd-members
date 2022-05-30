@@ -34,6 +34,6 @@ export const committeeRoutes: Routes = [
   }
 ];
 
-export const committeeRouting: ModuleWithProviders = RouterModule.forChild(
+export const committeeRouting: ModuleWithProviders<unknown> = RouterModule.forChild(
   committeeRoutes
 );

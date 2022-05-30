@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 
 import { Member } from "../member/model/member";
 
@@ -7,7 +7,7 @@ import { Member } from "../member/model/member";
   templateUrl: "./member-approval.component.html",
   styleUrls: ["./member-approval.component.sass"]
 })
-export class MemberApprovalComponent implements OnInit {
+export class MemberApprovalComponent {
   exampleMembers: any[] = [
     { id: 1 },
     { id: 2 },
@@ -15,10 +15,6 @@ export class MemberApprovalComponent implements OnInit {
     { id: 4 },
     { id: 5 }
   ];
-
-  constructor() {}
-
-  ngOnInit() {}
 
   approveMember(member: Member) {
     alert("Approving " + JSON.stringify(member));

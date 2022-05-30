@@ -36,7 +36,7 @@ exports.config = {
     }));
 
     require('ts-node').register({
-      project: 'e2e/tsconfig.e2e.json'
+      project: 'e2e/tsconfig.json'
     });
   }
 };

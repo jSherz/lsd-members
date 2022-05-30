@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 
 export class CommitteeMember {
   imageUrl: string;
@@ -17,7 +17,7 @@ export class CommitteeMember {
   templateUrl: "committee.component.html",
   styleUrls: ["committee.component.sass"]
 })
-export class CommitteeComponent implements OnInit {
+export class CommitteeComponent {
   committeeMembers = [
     new CommitteeMember("amber.jpg", "Padders", "President"),
     new CommitteeMember("ruby.jpg", "Ruby", "Vice-President"),
@@ -27,8 +27,4 @@ export class CommitteeComponent implements OnInit {
     new CommitteeMember("tom2.jpg", "Tom", "Social Secretary"),
     new CommitteeMember("emma.jpg", "Emma", "Kit Secretary")
   ];
-
-  constructor() {}
-
-  ngOnInit() {}
 }

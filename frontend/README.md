@@ -1,7 +1,5 @@
 # Leeds University Skydivers - Management system
 
-[![Coverage Status](https://coveralls.io/repos/github/jSherz/lsd-members/badge.svg?branch=master)](https://coveralls.io/github/jSherz/lsd-members?branch=master)
-
 ## Frontend
 
 This is an [Angular 2](https://angular.io) project and is managed with [angular-cli](https://github.com/angular/angular-cli).

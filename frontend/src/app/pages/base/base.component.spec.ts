@@ -1,11 +1,12 @@
-/* tslint:disable:no-unused-variable */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { Component } from "@angular/core";
 import {
   inject,
   async,
   TestBed,
-  ComponentFixture
+  ComponentFixture,
+  waitForAsync
 } from "@angular/core/testing";
 import { NavigationStart, Event, Router } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
@@ -29,8 +30,9 @@ describe("Component: Base", () => {
     fixture.detectChanges();
   });
 
-  it("should collapse the menu when the route changes", async(
-    inject([Router], (router: Router) => {
+  it("should collapse the menu when the route changes", inject(
+    [Router],
+    (router: Router) => {
       component.menuCollapsed = false;
 
       expect(component.menuCollapsed).toBeFalsy();
@@ -38,6 +40,6 @@ describe("Component: Base", () => {
       (<any>router).events.next(new NavigationStart(123, "test-page"));
 
       expect(component.menuCollapsed).toBeTruthy();
-    })
+    }
   ));
 });

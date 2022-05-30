@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
-import { Http } from "@angular/http";
+import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { catchError, map } from "rxjs/operators";
+import { catchError } from "rxjs/operators";
 
 import { ApiKeyService, BaseService } from "../utils";
 import { StrippedCommitteeMember } from "./stripped-committee-member";
@@ -11,7 +11,7 @@ import { environment } from "../../../environments/environment";
  * A service that manages commmittee members
  */
 export abstract class CommitteeService extends BaseService {
-  constructor(http: Http, apiKeyService: ApiKeyService) {
+  constructor(http: HttpClient, apiKeyService: ApiKeyService) {
     super(http, apiKeyService);
   }
 
@@ -26,13 +26,12 @@ export class CommitteeServiceImpl extends CommitteeService {
   private committeeLookupUrl =
     environment.apiUrl + "/api/v1/committee-members/active";
 
-  constructor(http: Http, apiKeyService: ApiKeyService) {
+  constructor(http: HttpClient, apiKeyService: ApiKeyService) {
     super(http, apiKeyService);
   }
 
   active(): Observable<StrippedCommitteeMember[]> {
-    return this.get(this.committeeLookupUrl).pipe(
-      map(r => this.extractJson<StrippedCommitteeMember[]>(r)),
+    return this.get<StrippedCommitteeMember[]>(this.committeeLookupUrl).pipe(
       catchError(this.handleError())
     );
   }

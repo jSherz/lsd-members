@@ -5,7 +5,7 @@
   <span class="sl-course-calendar-tile-day">{{tile.date.date()}}</span>
 
   <div class="sl-course-calendar-tile-course" *ngFor="let course of tile.courses">
-    <div class="sl-course-calendar-tile-info course-full" title="Course full with {{course.totalSpaces}} taken" *ngIf="course.spacesFree == 0">
+    <div class="sl-course-calendar-tile-info course-full" title="Course full with {{course.totalSpaces}} taken" *ngIf="course.spacesFree === 0">
       <span class="course-word-spaces">Full</span> ({{course.totalSpaces}})
     </div>
     <div class="sl-course-calendar-tile-info course-spaces" title="{{course.spacesFree}} Spaces left on this course" *ngIf="course.spacesFree >= 1">

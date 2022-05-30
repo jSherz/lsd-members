@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Http, Headers } from "@angular/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { JwtService } from "../login/jwt.service";
 import { Observable } from "rxjs";
 import { TextMessage } from "./text-message";
@@ -15,17 +15,17 @@ export class TextMessagesServiceImpl extends TextMessagesService {
   private getReceivedUrl: string =
     environment.apiUrl + "/api/v1/text-messages/received";
 
-  constructor(private http: Http, private jwtService: JwtService) {
+  constructor(private http: HttpClient, private jwtService: JwtService) {
     super();
   }
 
   getReceivedMessages(): Observable<TextMessage[]> {
-    const headers = new Headers({
+    const headers = new HttpHeaders({
       Authorization: "Bearer " + this.jwtService.getJwt()
     });
 
     return this.http
       .get(this.getReceivedUrl, { headers })
-      .pipe(map(r => r.json() as TextMessage[]));
+      .pipe(map(r => (r as unknown) as TextMessage[]));
   }
 }

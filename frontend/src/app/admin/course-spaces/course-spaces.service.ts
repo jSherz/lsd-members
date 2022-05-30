@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Http } from "@angular/http";
+import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 import { ApiKeyService, BaseService } from "../utils";
@@ -8,13 +8,13 @@ import {
   CourseSpaceMemberResponse
 } from "./model";
 import { environment } from "../../../environments/environment";
-import { catchError, map } from "rxjs/operators";
+import { catchError } from "rxjs/operators";
 
 /**
  * A service for manipulating the spaces on a course.
  */
 export abstract class CourseSpaceService extends BaseService {
-  constructor(http: Http, apiKeyService: ApiKeyService) {
+  constructor(http: HttpClient, apiKeyService: ApiKeyService) {
     super(http, apiKeyService);
   }
 
@@ -63,7 +63,7 @@ export class CourseSpaceServiceImpl extends CourseSpaceService {
   private removeMemberUrl = this.baseUrl + "{{uuid}}/remove-member";
   private setDepositPaidUrl = this.baseUrl + "{{uuid}}/deposit-paid";
 
-  constructor(http: Http, apiKeyService: ApiKeyService) {
+  constructor(http: HttpClient, apiKeyService: ApiKeyService) {
     super(http, apiKeyService);
   }
 
@@ -81,10 +81,10 @@ export class CourseSpaceServiceImpl extends CourseSpaceService {
   ): Observable<CourseSpaceMemberResponse> {
     const request = { memberUuid: memberUuid };
 
-    return this.post(this.addMemberUrl.replace("{{uuid}}", uuid), request).pipe(
-      map(r => this.extractJson<CourseSpaceMemberResponse>(r)),
-      catchError(this.handleError())
-    );
+    return this.post<CourseSpaceMemberResponse>(
+      this.addMemberUrl.replace("{{uuid}}", uuid),
+      request
+    ).pipe(catchError(this.handleError()));
   }
 
   /**
@@ -101,13 +101,10 @@ export class CourseSpaceServiceImpl extends CourseSpaceService {
   ): Observable<CourseSpaceMemberResponse> {
     const request = { memberUuid: memberUuid };
 
-    return this.post(
+    return this.post<CourseSpaceMemberResponse>(
       this.removeMemberUrl.replace("{{uuid}}", uuid),
       request
-    ).pipe(
-      map(r => this.extractJson<CourseSpaceMemberResponse>(r)),
-      catchError(this.handleError())
-    );
+    ).pipe(catchError(this.handleError()));
   }
 
   /**
@@ -122,12 +119,9 @@ export class CourseSpaceServiceImpl extends CourseSpaceService {
   ): Observable<CourseSpaceDepositPaidResponse> {
     const request = { depositPaid: depositPaid };
 
-    return this.put(
+    return this.put<CourseSpaceDepositPaidResponse>(
       this.setDepositPaidUrl.replace("{{uuid}}", uuid),
       request
-    ).pipe(
-      map(r => this.extractJson<CourseSpaceDepositPaidResponse>(r)),
-      catchError(this.handleError())
-    );
+    ).pipe(catchError(this.handleError()));
   }
 }

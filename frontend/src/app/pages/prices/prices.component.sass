@@ -5,7 +5,7 @@
 @import '../../../assets/css/flash'
 
 // Packages
-$packages-breakpoint: (max-width: 38em)
+$packages-breakpoint: 38em
 
 #packages li
   border: solid 0.1em #eee
@@ -31,11 +31,11 @@ $packages-breakpoint: (max-width: 38em)
     margin: 1em 1.5em 1em 0
     padding: 0.5em
 
-    @media #{$packages-breakpoint}
+    @media (max-width: $packages-breakpoint)
       margin: 0.5em
 
 
-  @media #{$packages-breakpoint}
+  @media (max-width: $packages-breakpoint)
     .package-info, .package-price
       display: block !important
       width: 100%

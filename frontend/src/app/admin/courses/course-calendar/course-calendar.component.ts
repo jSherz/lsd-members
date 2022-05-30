@@ -108,6 +108,6 @@ export class CourseCalendarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.displayMonthSub.unsubscribe();
+    this.displayMonthSub?.unsubscribe();
   }
 }

@@ -106,8 +106,8 @@ export class CourseAddComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnDestroy(): any {
-    this.committeeMembersSub.unsubscribe();
+  ngOnDestroy() {
+    this.committeeMembersSub?.unsubscribe();
   }
 
   createCourse(formData: any) {

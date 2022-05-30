@@ -15,10 +15,12 @@
 ///
 /// @access private
 
+@use "sass:math";
+
 @function _neat-column-ratio($grid, $columns) {
   @if length($columns) > 1 {
-    @return nth($columns, 1) / _neat-parse-columns($columns);
+    @return math.div(nth($columns, 1), _neat-parse-columns($columns));
   } @else if $columns {
-    @return $columns / _retrieve-neat-setting($grid, columns);
+    @return math.div($columns, _retrieve-neat-setting($grid, columns));
   }
 }

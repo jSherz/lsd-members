@@ -1,4 +1,4 @@
-/* tslint:disable:no-unused-variable */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { TestBed, inject, async } from "@angular/core/testing";
 
@@ -6,7 +6,7 @@ import {
   SocialLoginService,
   SocialLoginServiceImpl
 } from "./social-login.service";
-import { Http, Response, ResponseOptions } from "@angular/http";
+import { HttpClient, HttpResponse } from "@angular/common/http";
 import { of } from "rxjs";
 import { SocialLoginRequest, SocialLoginResponse } from "./model";
 
@@ -14,17 +14,7 @@ describe("SocialLoginService", () => {
   it("makes a login request and parses the response", () => {
     const http: any = {
       post: () => {
-        return of(
-          new Response(
-            new ResponseOptions({
-              status: 200,
-              body: JSON.stringify(
-                new SocialLoginResponse(true, null, "jwt.1.2", false)
-              ),
-              url: "https://myspace.com"
-            })
-          )
-        );
+        return of(new SocialLoginResponse(true, null, "jwt.1.2", false));
       }
     };
     const postSpy = spyOn(http, "post").and.callThrough();

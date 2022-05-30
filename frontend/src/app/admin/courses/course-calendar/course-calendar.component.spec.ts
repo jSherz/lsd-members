@@ -1,4 +1,4 @@
-/* tslint:disable:no-unused-variable */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { ActivatedRoute, Params, UrlSegment, Router } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";

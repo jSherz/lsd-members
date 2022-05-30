@@ -4,14 +4,14 @@ import {
   TextMessagesService,
   TextMessagesServiceImpl
 } from "./text-messages.service";
-import { HttpModule } from "@angular/http";
+import { HttpClientModule } from "@angular/common/http";
 import { JwtService } from "../login/jwt.service";
 import { StubJwtService } from "../login/jwt.service.stub";
 
 describe("TextMessagesService", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpModule],
+      imports: [HttpClientModule],
       providers: [
         { provide: TextMessagesService, useClass: TextMessagesServiceImpl },
         { provide: JwtService, useValue: new StubJwtService("asdf", true) }

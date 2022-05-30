@@ -1,23 +1,26 @@
 import { TestBed, inject } from "@angular/core/testing";
-import { Http, Response, ResponseOptions } from "@angular/http";
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpResponse
+} from "@angular/common/http";
 
 import { DashboardService, DashboardServiceImpl } from "./dashboard.service";
 import { APP_VERSION } from "../../app.module";
 import { StubJwtService } from "../login/jwt.service.stub";
 import { JwtService } from "../login/jwt.service";
 import { DashboardComponent } from "./dashboard.component";
-import { Observable, of } from "rxjs";
+import { of, throwError } from "rxjs";
 
 const failingHttp: any = {
   get() {
-    return of(
-      new Response(
-        new ResponseOptions({
+    return throwError(
+      () =>
+        new HttpErrorResponse({
           status: 500,
-          body: "DOES NOT COMPUTE! DOES NOT COMPUTE!",
+          // body: "DOES NOT COMPUTE! DOES NOT COMPUTE!",
           url: "https://aaaahhhhhhhh.example.com"
         })
-      )
     );
   }
 };
@@ -31,7 +34,7 @@ describe("DashboardComponent", () => {
           useValue: new StubJwtService("341234.12412312.1213", true)
         },
         { provide: APP_VERSION, useValue: "version.8888" },
-        { provide: Http, useValue: failingHttp },
+        { provide: HttpClient, useValue: failingHttp },
         { provide: DashboardService, useClass: DashboardServiceImpl }
       ]
     });

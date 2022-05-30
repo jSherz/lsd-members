@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Http } from "@angular/http";
+import { HttpClient } from "@angular/common/http";
 
 import { Observable } from "rxjs";
 
@@ -13,12 +13,12 @@ export abstract class SocialLoginService {
 
 @Injectable()
 export class SocialLoginServiceImpl implements SocialLoginService {
-  private http: Http;
+  private http: HttpClient;
 
   private baseEndpoint: string = environment.apiUrl + "/api/v1/social-login";
   private loginEndpoint: string = this.baseEndpoint + "/verify";
 
-  constructor(http: Http) {
+  constructor(http: HttpClient) {
     this.http = http;
   }
 
@@ -27,6 +27,6 @@ export class SocialLoginServiceImpl implements SocialLoginService {
 
     return this.http
       .post(this.loginEndpoint, request)
-      .pipe(map(r => r.json() as SocialLoginResponse));
+      .pipe(map(r => r as SocialLoginResponse));
   }
 }

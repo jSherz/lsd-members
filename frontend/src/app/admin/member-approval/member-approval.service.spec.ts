@@ -4,14 +4,14 @@ import {
   MemberApprovalService,
   MemberApprovalServiceImpl
 } from "./member-approval.service";
-import { HttpModule } from "@angular/http";
+import { HttpClientModule } from "@angular/common/http";
 import { ApiKeyService } from "../utils/api-key.service";
 import { API_KEY, StubApiKeyService } from "../utils/api-key.service.stub";
 
 describe("MemberApprovalService", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpModule],
+      imports: [HttpClientModule],
       providers: [
         { provide: API_KEY, useValue: "foobarred" },
         { provide: ApiKeyService, useClass: StubApiKeyService },

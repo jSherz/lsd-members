@@ -36,7 +36,7 @@ export class MemberViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.displayMemberSub.unsubscribe();
+    this.displayMemberSub?.unsubscribe();
   }
 
   parseStatus(statusId: number) {

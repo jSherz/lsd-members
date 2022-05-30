@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Http } from "@angular/http";
+import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 import { BaseService } from "../utils/base.service";
@@ -17,7 +17,7 @@ export class ApprovalResult {
 }
 
 export abstract class MemberApprovalService extends BaseService {
-  constructor(http: Http, apiKeyService: ApiKeyService) {
+  constructor(http: HttpClient, apiKeyService: ApiKeyService) {
     super(http, apiKeyService);
   }
 
@@ -34,7 +34,7 @@ export abstract class MemberApprovalService extends BaseService {
 
 @Injectable()
 export class MemberApprovalServiceImpl extends MemberApprovalService {
-  constructor(http: Http, apiKeyService: ApiKeyService) {
+  constructor(http: HttpClient, apiKeyService: ApiKeyService) {
     super(http, apiKeyService);
   }
 

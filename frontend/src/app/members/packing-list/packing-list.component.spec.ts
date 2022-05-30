@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { Observable, of, throwError } from "rxjs";
-import { Response } from "@angular/http";
+import { HttpResponse } from "@angular/common/http";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 
@@ -14,7 +14,7 @@ describe("PackingListComponent", () => {
   let fixture: ComponentFixture<PackingListComponent>;
 
   let getResult: Observable<PackingListItems>;
-  let putResult: Observable<Response>;
+  let putResult: Observable<HttpResponse<unknown>>;
 
   let service: PackingListService;
 

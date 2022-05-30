@@ -1,4 +1,4 @@
-import { Http } from "@angular/http";
+import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
@@ -10,7 +10,7 @@ import { APP_VERSION } from "../../app.module";
 import { map } from "rxjs/operators";
 
 export abstract class JwtLoginService extends BaseService {
-  constructor(http: Http, jwtService: JwtService, appVersion: string) {
+  constructor(http: HttpClient, jwtService: JwtService, appVersion: string) {
     super(http, jwtService, appVersion);
   }
 
@@ -22,7 +22,7 @@ export class JwtLoginServiceImpl extends JwtLoginService {
   loginUrl = environment.apiUrl + "/api/v1/social-login";
 
   constructor(
-    http: Http,
+    http: HttpClient,
     jwtService: JwtService,
     @Inject(APP_VERSION) appVersion: string
   ) {
@@ -30,9 +30,12 @@ export class JwtLoginServiceImpl extends JwtLoginService {
   }
 
   login(signedRequest: String): Observable<LoginResult> {
-    return this.post(this.loginUrl, { signedRequest }).pipe(
-      map(r => r.json() as LoginResult),
-      map((result: LoginResult) => {
+    return this.post<HttpResponse<LoginResult>>(this.loginUrl, {
+      signedRequest
+    }).pipe(
+      map((response: HttpResponse<LoginResult>) => {
+        const result = response.body;
+
         if (result.success) {
           this.jwtService.setJwt(result.jwt, result.committeeMember);
         } else {

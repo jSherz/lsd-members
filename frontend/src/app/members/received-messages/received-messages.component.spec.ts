@@ -1,28 +1,11 @@
-import {
-  async,
-  ComponentFixture,
-  inject,
-  TestBed
-} from "@angular/core/testing";
+import { waitForAsync, ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { ReceivedMessagesComponent } from "./received-messages.component";
 import { TextMessagesService } from "./text-messages.service";
 import { of } from "rxjs";
 import { HeaderComponent } from "../header/header.component";
-import {
-  Router,
-  UrlHandlingStrategy,
-  UrlSerializer,
-  ChildrenOutletContexts,
-  ROUTES,
-  Route
-} from "@angular/router";
-import {
-  RouterTestingModule,
-  setupTestingRouter
-} from "@angular/router/testing";
-import { Compiler, Injector, NgModuleFactoryLoader } from "@angular/core";
-import { Location } from "@angular/common";
+import { UrlHandlingStrategy } from "@angular/router";
+import { RouterTestingModule } from "@angular/router/testing";
 
 const dummyService = {
   getReceivedMessages: () => {
@@ -34,20 +17,22 @@ describe("ReceivedMessagesComponent", () => {
   let component: ReceivedMessagesComponent;
   let fixture: ComponentFixture<ReceivedMessagesComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule.withRoutes([
-          { path: "", component: ReceivedMessagesComponent }
-        ])
-      ],
-      declarations: [HeaderComponent, ReceivedMessagesComponent],
-      providers: [
-        { provide: UrlHandlingStrategy, useValue: {} },
-        { provide: TextMessagesService, useValue: dummyService }
-      ]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          RouterTestingModule.withRoutes([
+            { path: "", component: ReceivedMessagesComponent }
+          ])
+        ],
+        declarations: [HeaderComponent, ReceivedMessagesComponent],
+        providers: [
+          { provide: UrlHandlingStrategy, useValue: {} },
+          { provide: TextMessagesService, useValue: dummyService }
+        ]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ReceivedMessagesComponent);
@@ -55,7 +40,7 @@ describe("ReceivedMessagesComponent", () => {
     fixture.detectChanges();
   });
 
-  it("should be created", async(() => {
+  it("should be created", () => {
     expect(component).toBeTruthy();
-  }));
+  });
 });

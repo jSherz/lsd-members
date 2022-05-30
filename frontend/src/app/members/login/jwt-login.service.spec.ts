@@ -1,17 +1,8 @@
-/* tslint:disable:no-unused-variable */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { By } from "@angular/platform-browser";
-import { DebugElement } from "@angular/core";
-import {
-  async,
-  ComponentFixture,
-  inject,
-  TestBed,
-  fakeAsync,
-  tick
-} from "@angular/core/testing";
-import { Http, Response, ResponseOptions } from "@angular/http";
-import { Observable, of } from "rxjs";
+import { async, inject, TestBed } from "@angular/core/testing";
+import { HttpClient, HttpResponse } from "@angular/common/http";
+import { of } from "rxjs";
 
 import { JwtLoginService, JwtLoginServiceImpl } from "./jwt-login.service";
 import { LoginResult } from "./login-result";
@@ -25,17 +16,18 @@ describe("JwtLoginService", () => {
       console.log("JwtLoginService requested " + url);
 
       if (request === '{"signedRequest":"itzalive"}') {
-        const body = JSON.stringify(
-          new LoginResult(true, null, "my.little.jwt", false)
-        );
+        const body = new LoginResult(true, null, "my.little.jwt", false);
 
-        return of(new Response(new ResponseOptions({ body, status: 200 })));
+        return of(new HttpResponse({ body, status: 200 }));
       } else {
-        const body = JSON.stringify(
-          new LoginResult(false, "wrong login something", null, false)
+        const body = new LoginResult(
+          false,
+          "wrong login something",
+          null,
+          false
         );
 
-        return of(new Response(new ResponseOptions({ body, status: 401 })));
+        return of(new HttpResponse({ body, status: 401 }));
       }
     }
   };
@@ -44,12 +36,12 @@ describe("JwtLoginService", () => {
     TestBed.configureTestingModule({
       declarations: [],
       imports: [],
-      providers: [{ provide: Http, useValue: dummyHttp }]
+      providers: [{ provide: HttpClient, useValue: dummyHttp }]
     }).compileComponents();
   });
 
   it("stores the returned token in the JwtService", async(
-    inject([Http], (http: Http) => {
+    inject([HttpClient], (http: HttpClient) => {
       const jwtService = new StubJwtService("original-jwt-value", false);
       const service = new JwtLoginServiceImpl(http, jwtService, appVersion);
 
@@ -66,7 +58,7 @@ describe("JwtLoginService", () => {
   ));
 
   it("clears the JWT if the login fails", async(
-    inject([Http], (http: Http) => {
+    inject([HttpClient], (http: HttpClient) => {
       const jwtService = new StubJwtService("original-jwt-value", false);
       const service = new JwtLoginServiceImpl(http, jwtService, appVersion);
 

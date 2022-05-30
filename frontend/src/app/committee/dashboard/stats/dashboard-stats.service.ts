@@ -1,6 +1,6 @@
 import { Observable } from "rxjs";
 import { environment } from "../../../../environments/environment";
-import { Http } from "@angular/http";
+import { HttpClient } from "@angular/common/http";
 import { JwtService } from "../../../members/login/jwt.service";
 import { NumReceivedMessages } from "./num-received-messages";
 import { Inject, Injectable } from "@angular/core";
@@ -9,7 +9,7 @@ import { APP_VERSION } from "../../../app.module";
 import { map } from "rxjs/operators";
 
 export abstract class DashboardStatsService extends BaseService {
-  constructor(http: Http, jwtService: JwtService, appVersion: string) {
+  constructor(http: HttpClient, jwtService: JwtService, appVersion: string) {
     super(http, jwtService, appVersion);
   }
 
@@ -22,7 +22,7 @@ export class DashboardStatsServiceImpl extends DashboardStatsService {
     environment.apiUrl + "/api/v1/text-messages/num-received";
 
   constructor(
-    http: Http,
+    http: HttpClient,
     jwtService: JwtService,
     @Inject(APP_VERSION) appVersion: string
   ) {
@@ -30,8 +30,7 @@ export class DashboardStatsServiceImpl extends DashboardStatsService {
   }
 
   getNumReceivedMessages(): Observable<number> {
-    return this.get(this.numReceivedUrl).pipe(
-      map(r => r.json() as NumReceivedMessages),
+    return this.get<NumReceivedMessages>(this.numReceivedUrl).pipe(
       map(r => r.numReceived)
     );
   }
