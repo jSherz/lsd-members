@@ -1,6 +1,6 @@
 import { SignupAltForm } from "./signup-alt.po";
 
-describe("Alternative sign-up form", function() {
+describe("Alternative sign-up form", function () {
   let page: SignupAltForm;
   let baseUrl: string;
 
@@ -9,94 +9,96 @@ describe("Alternative sign-up form", function() {
     baseUrl = page.baseUrl();
   });
 
-  it("has a disabled sign-up button when no fields are filled in", () => {
-    page.navigateTo();
+  it("has a disabled sign-up button when no fields are filled in", async () => {
+    await page.navigateTo();
 
-    expect(page.submitButton().isEnabled()).toBeFalsy();
+    expect(await page.submitButton().isEnabled()).toBeFalsy();
   });
 
-  it("not show validation failed messages when the user has not touched the fields", () => {
-    page.navigateTo();
+  it("not show validation failed messages when the user has not touched the fields", async () => {
+    await page.navigateTo();
 
-    expect(page.nameFieldError().isDisplayed()).toBeFalsy();
-    expect(page.emailFieldError().isDisplayed()).toBeFalsy();
+    expect(await page.nameFieldError().isDisplayed()).toBeFalsy();
+    expect(await page.emailFieldError().isDisplayed()).toBeFalsy();
   });
 
-  it("should show a validation error if no name is entered", () => {
-    page.navigateTo();
+  it("should show a validation error if no name is entered", async () => {
+    await page.navigateTo();
 
-    page.nameField().click();
-    page.emailField().click();
+    await page.nameField().click();
+    await page.emailField().click();
 
-    expect(page.submitButton().isEnabled()).toBeFalsy();
-    expect(page.nameFieldError().isDisplayed()).toBeTruthy();
-    expect(page.nameFieldError().getText()).toEqual("Please enter a name");
+    expect(await page.submitButton().isEnabled()).toBeFalsy();
+    expect(await page.nameFieldError().isDisplayed()).toBeTruthy();
+    expect(await page.nameFieldError().getText()).toEqual(
+      "Please enter a name"
+    );
   });
 
-  it("should show a validation error if no e-mail is entered", () => {
-    page.navigateTo();
+  it("should show a validation error if no e-mail is entered", async () => {
+    await page.navigateTo();
 
-    page.emailField().click();
-    page.nameField().click();
+    await page.emailField().click();
+    await page.nameField().click();
 
-    expect(page.submitButton().isEnabled()).toBeFalsy();
-    expect(page.emailFieldError().isDisplayed()).toBeTruthy();
-    expect(page.emailFieldError().getText()).toEqual(
+    expect(await page.submitButton().isEnabled()).toBeFalsy();
+    expect(await page.emailFieldError().isDisplayed()).toBeTruthy();
+    expect(await page.emailFieldError().getText()).toEqual(
       "Please enter a valid e-mail address"
     );
   });
 
-  it("should show a validation error if an invalid e-mail is entered", () => {
-    page.navigateTo();
+  it("should show a validation error if an invalid e-mail is entered", async () => {
+    await page.navigateTo();
 
-    page.emailField().click();
-    page.emailField().sendKeys("bob.ntlworld.com");
-    page.nameField().click();
-    page.nameField().sendKeys("Bob");
+    await page.emailField().click();
+    await page.emailField().sendKeys("bob.ntlworld.com");
+    await page.nameField().click();
+    await page.nameField().sendKeys("Bob");
 
-    expect(page.submitButton().isEnabled()).toBeFalsy();
-    expect(page.emailFieldError().isDisplayed()).toBeTruthy();
-    expect(page.emailFieldError().getText()).toEqual(
+    expect(await page.submitButton().isEnabled()).toBeFalsy();
+    expect(await page.emailFieldError().isDisplayed()).toBeTruthy();
+    expect(await page.emailFieldError().getText()).toEqual(
       "Please enter a valid e-mail address"
     );
   });
 
-  it("should enable the submit button if a valid name and e-mail are entered", () => {
-    page.navigateTo();
+  it("should enable the submit button if a valid name and e-mail are entered", async () => {
+    await page.navigateTo();
 
-    page.nameField().click();
-    page.nameField().sendKeys("Jennifer Carey");
-    page.emailField().click();
-    page.emailField().sendKeys("JenniferCarey@dayrep.com");
+    await page.nameField().click();
+    await page.nameField().sendKeys("Jennifer Carey");
+    await page.emailField().click();
+    await page.emailField().sendKeys("JenniferCarey@dayrep.com");
 
-    expect(page.submitButton().isEnabled()).toBeTruthy();
-    expect(page.nameFieldError().isDisplayed()).toBeFalsy();
-    expect(page.emailFieldError().isDisplayed()).toBeFalsy();
+    expect(await page.submitButton().isEnabled()).toBeTruthy();
+    expect(await page.nameFieldError().isDisplayed()).toBeFalsy();
+    expect(await page.emailFieldError().isDisplayed()).toBeFalsy();
   });
 
-  it("clears validation errors (name) after resolving the issue", () => {
-    page.navigateTo();
+  it("clears validation errors (name) after resolving the issue", async () => {
+    await page.navigateTo();
 
-    page.nameField().click();
-    page.emailField().click();
-    expect(page.nameFieldError().isDisplayed()).toBeTruthy();
+    await page.nameField().click();
+    await page.emailField().click();
+    expect(await page.nameFieldError().isDisplayed()).toBeTruthy();
 
-    page.nameField().sendKeys("Sofia O'Connor");
-    expect(page.nameFieldError().isDisplayed()).toBeFalsy();
+    await page.nameField().sendKeys("Sofia O'Connor");
+    expect(await page.nameFieldError().isDisplayed()).toBeFalsy();
   });
 
-  it("clears validation errors (e-mail) after resolving the issue", () => {
-    page.navigateTo();
+  it("clears validation errors (e-mail) after resolving the issue", async () => {
+    await page.navigateTo();
 
-    page.emailField().click();
-    page.nameField().click();
-    expect(page.emailFieldError().isDisplayed()).toBeTruthy();
+    await page.emailField().click();
+    await page.nameField().click();
+    expect(await page.emailFieldError().isDisplayed()).toBeTruthy();
 
-    page.emailField().sendKeys("SofiaOConnor@teleworm.us");
-    expect(page.emailFieldError().isDisplayed()).toBeFalsy();
+    await page.emailField().sendKeys("SofiaOConnor@teleworm.us");
+    expect(await page.emailFieldError().isDisplayed()).toBeFalsy();
   });
 
-  it("actually signs the user up", () => {
+  it("actually signs the user up", async () => {
     const now = new Date();
     const emailSuffix =
       now.getUTCFullYear() + "-" + now.getUTCMonth() + "-" + now.getUTCDate();
@@ -106,25 +108,25 @@ describe("Alternative sign-up form", function() {
       .substring(0, 6);
     const email = `e2e-auto-${emailSuffix}${emailSuffix2}@mctesting.org.uk`;
 
-    page.navigateTo();
+    await page.navigateTo();
 
-    page.nameField().sendKeys("Testy McTesting");
-    page.emailField().sendKeys(email);
-    page.nameField().click(); // Ensure button is enabled after form fill
-    page.submitButton().click();
+    await page.nameField().sendKeys("Testy McTesting");
+    await page.emailField().sendKeys(email);
+    await page.nameField().click(); // Ensure button is enabled after form fill
+    await page.submitButton().click();
 
-    expect(page.getCurrentUrl()).toEqual(
+    expect(await page.getCurrentUrl()).toEqual(
       baseUrl + "members/committee/sign-up/thank-you"
     );
 
-    page.navigateTo();
+    await page.navigateTo();
 
-    page.nameField().sendKeys("Testy McTesting");
-    page.emailField().sendKeys(email);
-    page.nameField().click(); // Ensure button is enabled after form fill
-    page.submitButton().click();
+    await page.nameField().sendKeys("Testy McTesting");
+    await page.emailField().sendKeys(email);
+    await page.nameField().click(); // Ensure button is enabled after form fill
+    await page.submitButton().click();
 
-    expect(page.serverEmailErrors().getText()).toEqual(
+    expect(await page.serverEmailErrors().getText()).toEqual(
       "This e-mail is in use. Have you already signed up?"
     );
   });
