@@ -1,4 +1,4 @@
-import { Compiler, Injector, NgModuleFactoryLoader } from "@angular/core";
+import { Compiler, Injector } from "@angular/core";
 import {
   async,
   ComponentFixture,
@@ -39,7 +39,6 @@ describe("HeaderComponent", () => {
             UrlSerializer,
             ChildrenOutletContexts,
             Location,
-            NgModuleFactoryLoader,
             Compiler,
             Injector,
             ROUTES,

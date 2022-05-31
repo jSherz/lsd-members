@@ -1,7 +1,11 @@
-/* tslint:disable:no-unused-variable */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { inject, async, TestBed } from "@angular/core/testing";
-import { Http, Response, ResponseOptions } from "@angular/http";
+import {
+  HttpClient,
+  HttpClientModule,
+  HttpResponse
+} from "@angular/common/http";
 import { Observable, of } from "rxjs";
 
 import { CommitteeService, CommitteeServiceImpl } from "./committee.service";
@@ -13,19 +17,23 @@ describe("Service: Committee", () => {
     TestBed.configureTestingModule({
       providers: [
         {
-          provide: Http,
+          provide: HttpClient,
           useValue: {
             get(url) {
-              return of(
-                new Response(
-                  new ResponseOptions({
-                    body:
-                      '[{"uuid": "ade89632-2ccd-4b9f-93f1-44f5adf9704c", "name": "Ann Bass"},' +
-                      '{"uuid": "329ad322-fe4a-4bdc-9c5b-030431766e36", "name": "Anna Morales"},' +
-                      '{"uuid": "a3fb1c86-af9c-49db-a0ac-3bff22b9352d", "name": "Anthony Smith"}]'
-                  })
-                )
-              );
+              return of([
+                {
+                  uuid: "ade89632-2ccd-4b9f-93f1-44f5adf9704c",
+                  name: "Ann Bass"
+                },
+                {
+                  uuid: "329ad322-fe4a-4bdc-9c5b-030431766e36",
+                  name: "Anna Morales"
+                },
+                {
+                  uuid: "a3fb1c86-af9c-49db-a0ac-3bff22b9352d",
+                  name: "Anthony Smith"
+                }
+              ]);
             }
           }
         },

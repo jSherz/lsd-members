@@ -111,7 +111,7 @@ lazy val root = (project in file("."))
         "org.scala-lang" % "scala-reflect" % scalaV,
         "org.scala-lang" % "scala-compiler" % scalaV,
         "org.scala-lang" % "scala-library" % scalaV,
-        "org.scala-lang.modules" %% "scala-xml" % "1.0.4"
+        "org.scala-lang.modules" %% "scala-xml" % "1.0.5"
       )
     }
   )

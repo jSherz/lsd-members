@@ -1,11 +1,11 @@
 <div class="member-search">
   <input type="text" id="member-search-term" [(ngModel)]="searchTerm">
-  <button id="member-search-button" [disabled]="searchTerm.length == 0" (click)="performSearch()">
+  <button id="member-search-button" [disabled]="searchTerm.length === 0" (click)="performSearch()">
     <i class="far fa-search" aria-hidden="true" title="Search"></i>
   </button>
 
   <ul id="member-search-results" *ngIf="hasSearched">
-    <li *ngIf="displayedSearchResults.length == 0">
+    <li *ngIf="displayedSearchResults.length === 0">
       No results found matching the given term.
     </li>
     <li *ngFor="let result of displayedSearchResults">

@@ -3,18 +3,16 @@ import { browser, element, by } from "protractor";
 import { createJwt } from "./util";
 
 export class SignupForm {
-  navigateTo() {
+  async navigateTo() {
+    await browser.get("/");
     // Navigate to homepage to allow setting of local storage data, then go to sign-up page
-    return Promise.all([
-      browser.get("/"),
-      browser.executeScript(
-        'window.localStorage.setItem("IS_COMMITTEE", "true")'
-      ),
-      browser.executeScript(
-        'window.localStorage.setItem("JWT", "' + createJwt() + '")'
-      ),
-      browser.get("/members/committee/sign-up")
-    ]);
+    await browser.executeScript(
+      'window.localStorage.setItem("IS_COMMITTEE", "true")'
+    );
+    await browser.executeScript(
+      'window.localStorage.setItem("JWT", "' + createJwt() + '")'
+    );
+    await browser.get("/members/committee/sign-up");
   }
 
   getCurrentUrl() {

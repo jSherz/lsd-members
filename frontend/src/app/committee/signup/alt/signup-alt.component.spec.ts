@@ -1,4 +1,4 @@
-/* tslint:disable:no-unused-variable */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { async } from "@angular/core/testing";
 import { FormBuilder } from "@angular/forms";
@@ -25,12 +25,7 @@ class TestSetup {
 }
 
 function mockComp(): TestSetup {
-  const keys = [];
-  for (const key in Router.prototype) {
-    if (Router.prototype.hasOwnProperty(key)) {
-      keys.push(key);
-    }
-  }
+  const keys = ["navigate"];
 
   const builder = new FormBuilder();
   const router = jasmine.createSpyObj("MockRouter", keys);

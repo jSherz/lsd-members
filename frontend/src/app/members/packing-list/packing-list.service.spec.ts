@@ -1,5 +1,5 @@
 import { TestBed, inject, async } from "@angular/core/testing";
-import { HttpModule } from "@angular/http";
+import { HttpClientModule } from "@angular/common/http";
 
 import {
   PackingListService,
@@ -11,7 +11,7 @@ import { StubJwtService } from "../login/jwt.service.stub";
 describe("PackingListService", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpModule],
+      imports: [HttpClientModule],
       providers: [
         { provide: PackingListService, useClass: PackingListServiceImpl },
         { provide: JwtService, useValue: new StubJwtService("asdf", false) }

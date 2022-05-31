@@ -1,15 +1,15 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { Http } from "@angular/http";
+import { HttpClient } from "@angular/common/http";
 
 import { LoginResult } from "./login-result";
 import { ApiKeyService, BaseService } from "../utils";
 import { environment } from "../../../environments/environment";
-import { catchError, map } from "rxjs/operators";
+import { catchError } from "rxjs/operators";
 
 export abstract class LoginService extends BaseService {
-  constructor(http: Http, apiKeyService: ApiKeyService) {
+  constructor(http: HttpClient, apiKeyService: ApiKeyService) {
     super(http, apiKeyService);
   }
 
@@ -20,7 +20,7 @@ export abstract class LoginService extends BaseService {
 export class LoginServiceImpl extends LoginService {
   loginUrl = environment.apiUrl + "/api/v1/login";
 
-  constructor(http: Http, apiKeyService: ApiKeyService) {
+  constructor(http: HttpClient, apiKeyService: ApiKeyService) {
     super(http, apiKeyService);
   }
 
@@ -30,8 +30,7 @@ export class LoginServiceImpl extends LoginService {
       password: password
     };
 
-    return this.post(this.loginUrl, body).pipe(
-      map(r => this.extractJson<LoginResult>(r)),
+    return this.post<LoginResult>(this.loginUrl, body).pipe(
       catchError(this.handleError())
     );
   }

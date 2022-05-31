@@ -33,12 +33,12 @@ export const membersRoutes: Routes = [
       },
       {
         path: "committee",
-        loadChildren: "app/committee/committee.module#CommitteeModule"
+        loadChildren: () => import('../committee/committee.module').then(mod => mod.CommitteeModule),
       }
     ]
   }
 ];
 
-export const membersRouting: ModuleWithProviders = RouterModule.forChild(
+export const membersRouting: ModuleWithProviders<unknown> = RouterModule.forChild(
   membersRoutes
 );

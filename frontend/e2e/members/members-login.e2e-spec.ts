@@ -1,6 +1,6 @@
 import { MembersLoginPage } from "./members-login-page.po";
 
-describe("Members login", function() {
+describe("Members login", function () {
   let page: MembersLoginPage;
   let baseUrl: string;
 
@@ -10,44 +10,36 @@ describe("Members login", function() {
   });
 
   afterEach(() => {
-    page.syncOn();
+    return page.syncOn();
   });
 
-  it("will allow a new user to login with Facebook", done => {
-    page.navigateTo();
+  it("will allow a new user to login with Facebook", async () => {
+    await page.navigateTo();
 
-    expect(page.loginIntroText().getText()).toEqual(
+    expect(await page.loginIntroText().getText()).toEqual(
       "Login to view your course booking and membership information."
     );
 
-    page.syncOff();
-    page.loginButton().click();
+    await page.syncOff();
+    await page.loginButton().click();
 
-    page.waitForFacebookLoginPage();
-    expect(page.getCurrentUrl()).toMatch(
+    await page.waitForFacebookLoginPage();
+    expect(await page.getCurrentUrl()).toMatch(
       /https:\/\/www.facebook.com\/login.php\?.*/
     );
 
-    expect(page.fbUsernameBox().isPresent()).toBeTruthy();
-    page.fbUsernameBox().sendKeys("miwnvzsxjg_1500406593@tfbnw.net");
-    page.fbPasswordBox().sendKeys(process.env["FB_TEST_USER_PASS"]);
-    page.fbLoginButton().click();
+    expect(await page.fbUsernameBox().isPresent()).toBeTruthy();
+    await page.fbUsernameBox().sendKeys("miwnvzsxjg_1500406593@tfbnw.net");
+    await page.fbPasswordBox().sendKeys(process.env["FB_TEST_USER_PASS"]);
+    await page.fbLoginButton().click();
 
-    page
-      .waitForAppPage()
-      .then(() => {
-        page.syncOn();
+    await page.waitForAppPage();
 
-        page
-          .waitForDashboard()
-          .then(() => {
-            expect(page.getCurrentUrl()).toMatch(/.*members\/dashboard$/);
-            expect(page.profile().getText()).toEqual("Hello, Richard!");
+    await page.syncOn();
 
-            done();
-          })
-          .catch(done);
-      })
-      .catch(done);
+    await page.waitForDashboard();
+
+    expect(await page.getCurrentUrl()).toMatch(/.*members\/dashboard$/);
+    expect(await page.profile().getText()).toEqual("Hello, Richard!");
   });
 });

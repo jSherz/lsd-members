@@ -80,7 +80,7 @@ export class CourseViewComponent implements OnInit, OnDestroy {
    * Clear the activated route subscription.
    */
   ngOnDestroy() {
-    this.displayCourseSub.unsubscribe();
+    this.displayCourseSub?.unsubscribe();
   }
 
   /**

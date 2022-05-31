@@ -3,31 +3,48 @@ import {
   Observable,
   ObservableInput
 } from "rxjs";
-import { Response, Headers, RequestOptions, Http } from "@angular/http";
+import {
+  HttpResponse,
+  HttpHeaders,
+  HttpClient,
+  HttpContext,
+  HttpParams
+} from "@angular/common/http";
 
 import { ApiKeyService } from "./";
+
+interface RequestOptions {
+  headers?:
+    | HttpHeaders
+    | {
+        [header: string]: string | string[];
+      };
+  context?: HttpContext;
+  observe?: "body";
+  params?:
+    | HttpParams
+    | {
+        [param: string]:
+          | string
+          | number
+          | boolean
+          | ReadonlyArray<string | number | boolean>;
+      };
+  reportProgress?: boolean;
+  responseType?: "json";
+  withCredentials?: boolean;
+}
 
 /**
  * Basic methods shared across services.
  */
 export class BaseService {
-  private http: Http;
+  private http: HttpClient;
   private apiKeyService: ApiKeyService;
 
-  constructor(http: Http, apiKeyService: ApiKeyService) {
+  constructor(http: HttpClient, apiKeyService: ApiKeyService) {
     this.http = http;
     this.apiKeyService = apiKeyService;
-  }
-
-  /**
-   * Extract the JSON body of a response.
-   *
-   * @param res
-   * @returns
-   */
-  protected extractJson<T>(res: Response): T {
-    const body = res.json();
-    return body || [];
   }
 
   /**
@@ -41,8 +58,8 @@ export class BaseService {
       const errMsg = err.message
         ? err.message
         : err.status
-          ? `${err.status} - ${err.statusText}`
-          : "Server error";
+        ? `${err.status} - ${err.statusText}`
+        : "Server error";
       console.error(errMsg);
 
       if (err.status && err.status === 401) {
@@ -64,15 +81,14 @@ export class BaseService {
    * @param data
    * @returns {Observable<Response>}
    */
-  protected post(url: string, data: any) {
+  protected post<T>(url: string, data: any): Observable<T> {
     const body = JSON.stringify(data);
-    const headers = new Headers({
+    const headers = new HttpHeaders({
       "Content-Type": "application/json",
       "Api-Key": this.apiKeyService.getKey()
     });
-    const options = new RequestOptions({ headers: headers });
 
-    return this.http.post(url, body, options);
+    return this.http.post<T>(url, body, { headers });
   }
 
   /**
@@ -84,15 +100,14 @@ export class BaseService {
    * @param data
    * @returns {Observable<Response>}
    */
-  protected put(url: string, data: any) {
+  protected put<T>(url: string, data: any): Observable<T> {
     const body = JSON.stringify(data);
-    const headers = new Headers({
+    const headers = new HttpHeaders({
       "Content-Type": "application/json",
       "Api-Key": this.apiKeyService.getKey()
     });
-    const options = new RequestOptions({ headers: headers });
 
-    return this.http.put(url, body, options);
+    return this.http.put<T>(url, body, { headers });
   }
 
   /**
@@ -101,10 +116,9 @@ export class BaseService {
    * @param url
    * @returns {Observable<Response>}
    */
-  protected get(url: string) {
-    const headers = new Headers({ "Api-Key": this.apiKeyService.getKey() });
-    const options = new RequestOptions({ headers: headers });
+  protected get<T>(url: string): Observable<T> {
+    const headers = new HttpHeaders({ "Api-Key": this.apiKeyService.getKey() });
 
-    return this.http.get(url, options);
+    return this.http.get<T>(url, { headers });
   }
 }

@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@angular/core";
-import { Http } from "@angular/http";
+import { HttpClient } from "@angular/common/http";
 
 import { Observable } from "rxjs";
 
@@ -8,10 +8,9 @@ import { BaseService } from "../../../members/utils/base.service";
 import { environment } from "../../../../environments/environment";
 import { APP_VERSION } from "../../../app.module";
 import { JwtService } from "../../../members/login/jwt.service";
-import { map } from "rxjs/operators";
 
 export abstract class SignupService extends BaseService {
-  constructor(http: Http, jwtService: JwtService, appVersion: string) {
+  constructor(http: HttpClient, jwtService: JwtService, appVersion: string) {
     super(http, jwtService, appVersion);
   }
 
@@ -26,7 +25,7 @@ export class SignupServiceImpl extends SignupService {
   private signupAltUrl = environment.apiUrl + "/api/v1/members/sign-up/alt";
 
   constructor(
-    http: Http,
+    http: HttpClient,
     jwtService: JwtService,
     @Inject(APP_VERSION) appVersion: string
   ) {
@@ -52,6 +51,6 @@ export class SignupServiceImpl extends SignupService {
   }
 
   private doSignup(url: string, request: any): Observable<SignupResult> {
-    return this.post(url, request).pipe(map(r => r.json() as SignupResult));
+    return this.post<SignupResult>(url, request);
   }
 }

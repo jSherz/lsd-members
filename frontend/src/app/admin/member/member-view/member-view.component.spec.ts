@@ -1,4 +1,4 @@
-/* tslint:disable:no-unused-variable */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { ActivatedRoute } from "@angular/router";
 import { TestBed, async, inject } from "@angular/core/testing";

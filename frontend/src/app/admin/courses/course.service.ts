@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Http } from "@angular/http";
+import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 import * as moment from "moment";
@@ -20,7 +20,7 @@ import { catchError, map } from "rxjs/operators";
  * Describes a service capable of retrieving course information.
  */
 export abstract class CourseService extends BaseService {
-  constructor(http: Http, apiKeyService: ApiKeyService) {
+  constructor(http: HttpClient, apiKeyService: ApiKeyService) {
     super(http, apiKeyService);
   }
 
@@ -49,7 +49,7 @@ export class CourseServiceImpl extends CourseService {
   private courseSpacesUrl = this.baseUrl + "/{{uuid}}/spaces";
   private coursesCreateUrl = this.baseUrl + "/create";
 
-  constructor(http: Http, apiKeyService: ApiKeyService) {
+  constructor(http: HttpClient, apiKeyService: ApiKeyService) {
     super(http, apiKeyService);
   }
 
@@ -69,8 +69,7 @@ export class CourseServiceImpl extends CourseService {
       endDate: endDate.format("YYYY-MM-DD")
     };
 
-    return this.post(this.coursesFindUrl, body).pipe(
-      map(r => this.extractJson<CourseWithNumSpaces[]>(r)),
+    return this.post<CourseWithNumSpaces[]>(this.coursesFindUrl, body).pipe(
       catchError(this.handleError())
     );
   }
@@ -82,10 +81,9 @@ export class CourseServiceImpl extends CourseService {
    * @returns {undefined}
    */
   getByUuid(uuid: string): Observable<CourseWithOrganisers> {
-    return this.get(this.coursesGetUrl.replace("{{uuid}}", uuid)).pipe(
-      map(r => this.extractJson<CourseWithOrganisers>(r)),
-      catchError(this.handleError())
-    );
+    return this.get<CourseWithOrganisers>(
+      this.coursesGetUrl.replace("{{uuid}}", uuid)
+    ).pipe(catchError(this.handleError()));
   }
 
   /**
@@ -95,10 +93,9 @@ export class CourseServiceImpl extends CourseService {
    * @returns {undefined}
    */
   spaces(uuid: string): Observable<CourseSpaceWithMember[]> {
-    return this.get(this.courseSpacesUrl.replace("{{uuid}}", uuid)).pipe(
-      map(r => this.extractJson<CourseSpaceWithMember[]>(r)),
-      catchError(this.handleError())
-    );
+    return this.get<CourseSpaceWithMember[]>(
+      this.courseSpacesUrl.replace("{{uuid}}", uuid)
+    ).pipe(catchError(this.handleError()));
   }
 
   /**
@@ -108,8 +105,7 @@ export class CourseServiceImpl extends CourseService {
    * @returns {undefined} course UUID
    */
   create(course: CourseCreateRequest): Observable<CourseCreateResponse> {
-    return this.post(this.coursesCreateUrl, course).pipe(
-      map(r => this.extractJson<CourseCreateResponse>(r)),
+    return this.post<CourseCreateResponse>(this.coursesCreateUrl, course).pipe(
       catchError(this.handleError())
     );
   }

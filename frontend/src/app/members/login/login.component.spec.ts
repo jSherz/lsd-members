@@ -1,4 +1,4 @@
-/* tslint:disable:no-unused-variable */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { async, TestBed } from "@angular/core/testing";
 import { LoginComponent } from "./";

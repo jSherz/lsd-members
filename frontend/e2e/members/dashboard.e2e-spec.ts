@@ -1,6 +1,6 @@
 import { DashboardPage } from "./dashboard-page.po";
 
-describe("Members Dashboard", function() {
+describe("Members Dashboard", function () {
   let page: DashboardPage;
   let baseUrl: string;
 
@@ -14,21 +14,21 @@ describe("Members Dashboard", function() {
     }
   });
 
-  it("will navigate a user that's not logged in to the login page", () => {
-    page.navigateTo(null, null);
+  it("will navigate a user that's not logged in to the login page", async () => {
+    await page.navigateTo(null, null);
 
-    page.waitForMemberLogin();
-    expect(page.getCurrentUrl()).toEqual(baseUrl + "members");
+    await page.waitForMemberLogin();
+    expect(await page.getCurrentUrl()).toEqual(baseUrl + "members");
   });
 
-  it("will clear the JWT of a user if it is no longer valid", () => {
-    page.navigateTo("this-is-an-invalid-jwt", false);
+  it("will clear the JWT of a user if it is no longer valid", async () => {
+    await page.navigateTo("this-is-an-invalid-jwt", false);
 
-    expect(page.getCurrentUrl()).toEqual(baseUrl + "members/dashboard");
+    expect(await page.getCurrentUrl()).toEqual(baseUrl + "members/dashboard");
 
-    page.rawNavigateTo();
+    await page.rawNavigateTo();
 
-    page.waitForMemberLogin();
-    expect(page.getCurrentUrl()).toEqual(baseUrl + "members");
+    await page.waitForMemberLogin();
+    expect(await page.getCurrentUrl()).toEqual(baseUrl + "members");
   });
 });

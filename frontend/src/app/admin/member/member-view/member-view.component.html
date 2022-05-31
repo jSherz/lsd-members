@@ -26,7 +26,7 @@
 
     <dt title="The last (known) date this member jumped.">Last jump</dt>
     <dd *ngIf="member.lastJump">{{ member.lastJump.format('YYYY-MM-DD') }}</dd>
-    <dd *ngIf="member.lastJump == undefined">Unknown</dd>
+    <dd *ngIf="member.lastJump === undefined">Unknown</dd>
 
     <dt title="Weight in kilograms.">Weight (kg)</dt>
     <dd>{{ member.weight || 'Unknown' }}</dd>
@@ -69,9 +69,9 @@
     </li>
   </ul>
 
-  <p *ngIf="member && (textMessages == undefined || textMessages.length == 0)">
+  <p *ngIf="member && (textMessages === undefined || textMessages.length === 0)">
     No text messages have been sent or received to / from this member.
   </p>
 
-  <p *ngIf="member == undefined">Loading...</p>
+  <p *ngIf="member === undefined">Loading...</p>
 </div>

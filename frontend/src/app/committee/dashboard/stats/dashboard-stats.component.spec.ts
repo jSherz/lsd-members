@@ -4,7 +4,7 @@ import { DashboardStatsComponent } from "./dashboard-stats.component";
 import { DashboardStatsService } from "./dashboard-stats.service";
 import { StubJwtService } from "../../../members/login/jwt.service.stub";
 import { JwtService } from "../../../members/login/jwt.service";
-import { HttpModule } from "@angular/http";
+import { HttpClientModule } from "@angular/common/http";
 import { StubDashboardStatsService } from "./stub-committee-stats.service";
 import { RouterTestingModule } from "@angular/router/testing";
 
@@ -20,7 +20,7 @@ describe("DashboardStatsComponent", () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [HttpModule, RouterTestingModule],
+      imports: [HttpClientModule, RouterTestingModule],
       declarations: [DashboardStatsComponent],
       providers: [
         { provide: DashboardStatsService, useFactory: serviceFactory },

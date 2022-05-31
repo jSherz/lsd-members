@@ -1,5 +1,5 @@
 import { TestBed, inject } from "@angular/core/testing";
-import { Http, Response, ResponseOptions } from "@angular/http";
+import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Observable, of } from "rxjs";
 
 import { DashboardService, DashboardServiceImpl } from "./dashboard.service";
@@ -11,18 +11,11 @@ import { BasicInfo } from "./basic-info";
 const dummyHttp = {
   get() {
     return of(
-      new Response(
-        new ResponseOptions({
-          status: 200,
-          body: JSON.stringify(
-            new BasicInfo(
-              "ff37543a-ba29-4f97-afef-efa9a14e3463",
-              "Bobby",
-              "Smith",
-              "2017-07-10 20:29:00"
-            )
-          )
-        })
+      new BasicInfo(
+        "ff37543a-ba29-4f97-afef-efa9a14e3463",
+        "Bobby",
+        "Smith",
+        "2017-07-10 20:29:00"
       )
     );
   }
@@ -37,7 +30,7 @@ describe("DashboardService", () => {
           useValue: new StubJwtService("341234.12412312.1213", true)
         },
         { provide: APP_VERSION, useValue: "version.8888" },
-        { provide: Http, useValue: dummyHttp },
+        { provide: HttpClient, useValue: dummyHttp },
         { provide: DashboardService, useClass: DashboardServiceImpl }
       ]
     });
@@ -56,8 +49,8 @@ describe("DashboardService", () => {
   ));
 
   it("returns null when the user is not authenticated", inject(
-    [Http],
-    (http: Http) => {
+    [HttpClient],
+    (http: HttpClient) => {
       const jwtService = new StubJwtService(null, false);
       const service = new DashboardServiceImpl(
         http,

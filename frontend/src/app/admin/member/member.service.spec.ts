@@ -1,7 +1,7 @@
-/* tslint:disable:no-unused-variable */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { async, TestBed, inject } from "@angular/core/testing";
-import { Http, HttpModule } from "@angular/http";
+import { HttpClient, HttpClientModule } from "@angular/common/http";
 
 import { MemberServiceImpl } from "./member.service";
 import { ApiKeyService } from "../utils/api-key.service";
@@ -10,7 +10,7 @@ import { StubApiKeyService, API_KEY } from "../utils/api-key.service.stub";
 describe("Service: Member", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpModule],
+      imports: [HttpClientModule],
       providers: [
         { provide: API_KEY, useValue: "12345" },
         { provide: ApiKeyService, useClass: StubApiKeyService }
@@ -19,7 +19,7 @@ describe("Service: Member", () => {
   });
 
   it("should ...", async(
-    inject([Http, ApiKeyService], (http, apiKeyService) => {
+    inject([HttpClient, ApiKeyService], (http, apiKeyService) => {
       const service = new MemberServiceImpl(http, apiKeyService);
       expect(service).toBeTruthy();
     })

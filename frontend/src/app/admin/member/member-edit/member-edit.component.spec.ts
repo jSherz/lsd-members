@@ -1,7 +1,7 @@
-/* tslint:disable:no-unused-variable */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { ActivatedRoute, Router } from "@angular/router";
-import { TestBed, async, inject } from "@angular/core/testing";
+import { TestBed, inject, waitForAsync } from "@angular/core/testing";
 import { MemberEditComponent } from "./member-edit.component";
 
 import { TestModule } from "../../../test.module";
@@ -18,9 +18,12 @@ describe("Component: MemberEdit", () => {
     });
   });
 
-  it("should create an instance", async(
-    inject([MemberEditComponent], (component: MemberEditComponent) => {
-      expect(component).toBeTruthy();
-    })
-  ));
+  it(
+    "should create an instance",
+    waitForAsync(
+      inject([MemberEditComponent], (component: MemberEditComponent) => {
+        expect(component).toBeTruthy();
+      })
+    )
+  );
 });

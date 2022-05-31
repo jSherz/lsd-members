@@ -1,7 +1,7 @@
-/* tslint:disable:no-unused-variable */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { inject, TestBed, async } from "@angular/core/testing";
-import { Http } from "@angular/http";
+import { HttpClient } from "@angular/common/http";
 
 import { SignupService, SignupServiceImpl } from "./signup.service";
 
@@ -24,7 +24,7 @@ describe("Service: Signup", () => {
           useValue: new StubJwtService("341234.12412312.1213", true)
         },
         { provide: APP_VERSION, useValue: "version.8888" },
-        { provide: Http, useValue: dummyHttp },
+        { provide: HttpClient, useValue: dummyHttp },
         { provide: SignupService, useClass: SignupServiceImpl }
       ]
     });

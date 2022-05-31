@@ -134,6 +134,6 @@ export class MemberEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.displayMemberSub.unsubscribe();
+    this.displayMemberSub?.unsubscribe();
   }
 }

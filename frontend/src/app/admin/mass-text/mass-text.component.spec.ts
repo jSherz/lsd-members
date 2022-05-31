@@ -1,4 +1,4 @@
-/* tslint:disable:no-unused-variable */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { TestBed, async } from "@angular/core/testing";
 import { FormBuilder } from "@angular/forms";
@@ -9,12 +9,7 @@ import { StubMassTextService } from "./mass-text.service.stub";
 
 describe("Component: MassText", () => {
   function mockComp(): MassTextComponent {
-    const keys = [];
-    for (const key in Router.prototype) {
-      if (Router.prototype.hasOwnProperty(key)) {
-        keys.push(key);
-      }
-    }
+    const keys = ["navigate"];
 
     const builder = new FormBuilder();
     const router = jasmine.createSpyObj("MockRouter", keys);

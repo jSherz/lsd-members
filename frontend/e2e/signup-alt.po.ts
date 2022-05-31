@@ -7,18 +7,16 @@ export class SignupAltForm {
     return browser.getCurrentUrl();
   }
 
-  navigateTo() {
+  async navigateTo() {
     // Navigate to homepage to allow setting of local storage data, then go to sign-up page
-    return Promise.all([
-      browser.get("/"),
-      browser.executeScript(
-        'window.localStorage.setItem("IS_COMMITTEE", "true")'
-      ),
-      browser.executeScript(
-        'window.localStorage.setItem("JWT", "' + createJwt() + '")'
-      ),
-      browser.get("/members/committee/sign-up/alt")
-    ]);
+    await browser.get("/");
+    await browser.executeScript(
+      'window.localStorage.setItem("IS_COMMITTEE", "true")'
+    );
+    await browser.executeScript(
+      'window.localStorage.setItem("JWT", "' + createJwt() + '")'
+    );
+    await browser.get("/members/committee/sign-up/alt");
   }
 
   nameField() {
