@@ -1,1 +1,9 @@
+.bsp/
+.idea/
+deploy/
 docker/
+logs/
+project/project/
+target/
+.gitignore
+README.md

@@ -1,13 +1,20 @@
-FROM openjdk:11-jdk-slim
-
-RUN mkdir /usr/app
-
-WORKDIR /usr/app
+FROM openjdk:11-jdk-slim-bullseye AS build-env
 
 RUN apt-get update && \
-    apt-get install gpg dirmngr gpg-agent --yes && \
-    echo "deb https://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list && \
-    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823 && \
+    apt-get install gnupg2 curl --yes && \
+    echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" > /etc/apt/sources.list.d/sbt.list && \
+    echo "deb https://repo.scala-sbt.org/scalasbt/debian /" > /etc/apt/sources.list.d/sbt_old.list && \
+    curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | gpg --dearmor > /etc/apt/trusted.gpg.d/sbt.gpg && \
     apt-get update && \
-    apt-get install sbt=1.2.1 --yes && \
-    sbt sbtVersion
+    apt-get install sbt=1.5.8 --yes
+
+COPY . /app
+WORKDIR /app
+
+RUN sbt assembly
+
+FROM gcr.io/distroless/java11-debian11:nonroot
+
+COPY --from=build-env /app /app
+WORKDIR /app
+CMD ["/app/target/scala-2.12/luskydive-assembly-0.0.0.1.jar"]
