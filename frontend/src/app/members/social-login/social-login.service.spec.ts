@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { TestBed, inject, async } from "@angular/core/testing";
-
+import { environment } from "../../../environments/environment";
 import {
   SocialLoginService,
   SocialLoginServiceImpl
 } from "./social-login.service";
-import { HttpClient, HttpResponse } from "@angular/common/http";
 import { of } from "rxjs";
 import { SocialLoginRequest, SocialLoginResponse } from "./model";
 
@@ -38,7 +36,7 @@ describe("SocialLoginService", () => {
     const body = call.args[1];
 
     expect(url).toEqual(
-      "https://local-dev.leedsskydivers.com:8443/api/v1/social-login/verify"
+      `${environment.apiUrl}/api/v1/social-login/verify`
     );
     expect(body).toEqual(new SocialLoginRequest("235y8werin285wefsdf23"));
   });
