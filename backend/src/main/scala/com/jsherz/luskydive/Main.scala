@@ -25,7 +25,6 @@
 package com.jsherz.luskydive
 
 import java.time.{Duration, Instant}
-
 import akka.actor.ActorSystem
 import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.Http
@@ -36,6 +35,7 @@ import com.jsherz.luskydive.util.{Config, FbClientFactoryImpl}
 import com.restfb.Version
 import org.slf4j.bridge.SLF4JBridgeHandler
 
+import java.lang.management.ManagementFactory
 import scala.concurrent.ExecutionContextExecutor
 
 /**
@@ -43,7 +43,7 @@ import scala.concurrent.ExecutionContextExecutor
   */
 object Main extends App with Config {
 
-  val bootStarted = Instant.now()
+  val bootStarted = Instant.ofEpochMilli(ManagementFactory.getRuntimeMXBean.getStartTime)
 
   SLF4JBridgeHandler.install()
 
