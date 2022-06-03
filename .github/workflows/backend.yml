@@ -1,0 +1,152 @@
+name: 'backend'
+
+on:
+  push:
+  pull_request:
+
+defaults:
+  run:
+    shell: bash
+    working-directory: backend
+
+jobs:
+  install:
+    name: install
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: '11'
+          cache: 'sbt'
+
+      - name: Prepare dependencies
+        run: sbt update
+
+  lint:
+    name: lint
+    runs-on: ubuntu-20.04
+
+    needs:
+      - install
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: '11'
+          cache: 'sbt'
+
+      - name: Scalastyle
+        run: sbt scalastyle
+
+  test:
+    name: test
+    runs-on: ubuntu-20.04
+
+    needs:
+      - install
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: '11'
+          cache: 'sbt'
+
+      - name: Test
+        run: sbt test
+
+  compile:
+    name: compile
+    runs-on: ubuntu-20.04
+
+    needs:
+      - install
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: '11'
+          cache: 'sbt'
+
+      - name: Test
+        run: sbt test
+
+  integration-test:
+    name: integration-test
+    runs-on: ubuntu-20.04
+
+    needs:
+      - install
+
+    env:
+      FB_APP_ID: test123
+      FB_SECRET: blahblahblah
+      LSD_TEXT_MESSAGE_API_KEY: test-key-123
+      LSD_DB_PASSWORD: example
+      LSD_TWILIO_ACCOUNT_SID: 123
+      JWT_SECRET: apples
+      LOGIN_RETURN_URL: http://local-dev.leedsskydivers.com/members/do-login
+      LSD_DB_URL: jdbc:postgresql://127.0.0.1/luskydive
+      LSD_TWILIO_MESSAGING_SERVICE_SID: 123
+      LSD_PORT: 8080
+      LSD_DB_USERNAME: postgres
+      LSD_TWILIO_AUTH_TOKEN: 123
+
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_PASSWORD: example
+        # Set health checks to wait until postgres has started
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: '11'
+          cache: 'sbt'
+
+      - name: Create database
+        run: PGPASSWORD=example psql --host=localhost --username=postgres --command='CREATE DATABASE luskydive'
+
+      - name: Install Flyway
+        run: cd /tmp && wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/8.5.10/flyway-commandline-8.5.10-linux-x64.tar.gz | tar xvz && sudo ln -s `pwd`/flyway-8.5.10/flyway /usr/local/bin && cd $GITHUB_WORKSPACE
+
+      - name: Run migrations
+        run: |
+          echo -e "flyway.url=jdbc:postgresql://localhost/luskydive\nflyway.user=${LSD_DB_USERNAME}\nflyway.password=${LSD_DB_PASSWORD}\nflyway.connectRetries=2\nflyway.locations=filesystem:./src/main/resources/db/migration" > flyway.conf
+          flyway -configFiles=flyway.conf migrate
+
+      - name: Run integration tests
+        run: sbt it:test

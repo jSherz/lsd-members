@@ -1,0 +1,119 @@
+name: 'frontend'
+
+on:
+  push:
+  pull_request:
+
+defaults:
+  run:
+    shell: bash
+    working-directory: frontend
+
+jobs:
+  install:
+    name: install
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Update NPM
+        run: npm install --location=global npm@~8.11
+
+      - name: Install dependencies
+        run: NODE_ENV=development npm ci
+
+  lint:
+    name: lint
+    runs-on: ubuntu-20.04
+
+    needs:
+      - install
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: '11'
+          cache: 'sbt'
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Update NPM
+        run: npm install --location=global npm@~8.11
+
+      - name: Install dependencies
+        run: NODE_ENV=development npm ci
+
+      - name: Lint
+        run: npm run lint
+
+  test:
+    name: test
+    runs-on: ubuntu-20.04
+
+    needs:
+      - install
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Update NPM
+        run: npm install --location=global npm@~8.11
+
+      - name: Install dependencies
+        run: NODE_ENV=development npm ci
+
+      - name: Test
+        run: npm run test-ci
+
+  build:
+    name: build
+    runs-on: ubuntu-20.04
+
+    needs:
+      - install
+
+    env:
+      NODE_ENV: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Update NPM
+        run: npm install --location=global npm@~8.11
+
+      - name: Install dependencies
+        run: NODE_ENV=development npm ci
+
+      - name: Build
+        run: npm run build
