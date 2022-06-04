@@ -21,7 +21,6 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   * SOFTWARE.
   */
-
 package com.jsherz.luskydive.apis
 
 import akka.http.scaladsl.server.Directives._
@@ -34,8 +33,8 @@ class MigrateApi(authDirective: Directive1[(Member, CommitteeMember)]) {
 
   val route: Route = {
     (post & path("migrate") & authDirective) { _ =>
-      val flyway = new Flyway()
-      flyway.setDataSource(dbUrl, dbUsername, dbPassword)
+      val flyway =
+        Flyway.configure().dataSource(dbUrl, dbUsername, dbPassword).load()
       val numMigrations = flyway.migrate()
 
       complete(s"Ran $numMigrations migrations.")

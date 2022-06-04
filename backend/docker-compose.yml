@@ -1,0 +1,18 @@
+version: '3.7'
+
+services:
+  postgres:
+    build: docker/postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./docker/pg-data:/var/lib/postgresql/data:Z
+    environment:
+      POSTGRES_USER: luskydive
+      POSTGRES_DB: luskydive
+      POSTGRES_PASSWORD: luskydive
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.development

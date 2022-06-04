@@ -21,7 +21,6 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   * SOFTWARE.
   */
-
 package com.jsherz.luskydive
 
 import com.jsherz.luskydive.util.Config
@@ -38,8 +37,8 @@ object MigrateMain extends App with Config {
 
   private val log: Logger = LoggerFactory.getLogger(getClass)
 
-  val flyway = new Flyway()
-  flyway.setDataSource(dbUrl, dbUsername, dbPassword)
+  val flyway =
+    Flyway.configure().dataSource(dbUrl, dbUsername, dbPassword).load()
   val numMigrations = flyway.migrate()
 
   log.info(s"Ran $numMigrations migrations.")

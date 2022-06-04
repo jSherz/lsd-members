@@ -21,7 +21,6 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   * SOFTWARE.
   */
-
 package com.jsherz.luskydive.itest.util
 
 import java.nio.file.Paths
@@ -50,19 +49,18 @@ object Util {
   def setupGoldTestDb(): TestDatabase = {
     implicit val codec = Codec.UTF8
 
-    val goldenSql = Source.fromURL(getClass.getResource("/test-data.sql")).mkString
+    val goldenSql =
+      Source.fromURL(getClass.getResource("/test-data.sql")).mkString
 
     // Ensure the driver loads and registers itself with the DriverManager (resolves "No suitable driver" error)
     Class.forName("org.postgresql.Driver")
 
     val masterService = new DatabaseService(dbUrl, dbUsername, dbPassword)
 
-    val schema = s"luskydive_test_${Generators.randomBasedGenerator().generate().toString.split("-")(0)}"
+    val schema =
+      s"luskydive_test_${Generators.randomBasedGenerator().generate().toString.split("-")(0)}"
 
-    masterService
-      .db
-      .createSession
-      .conn
+    masterService.db.createSession.conn
       .prepareCall(s"CREATE DATABASE ${schema} WITH OWNER ${dbUsername};")
       .execute()
 
@@ -71,8 +69,8 @@ object Util {
       urlParts.slice(0, urlParts.length - 1).mkString("/") + s"/$schema"
     }
 
-    val flyway = new Flyway()
-    flyway.setDataSource(newDbUrl, dbUsername, dbPassword)
+    val flyway =
+      Flyway.configure().dataSource(newDbUrl, dbUsername, dbPassword).load()
     flyway.migrate()
 
     val service = new DatabaseService(newDbUrl, dbUsername, dbPassword, Some(5))
@@ -84,16 +82,15 @@ object Util {
     //      .prepareStatement(cleanupSql)
     //      .execute()
 
-    service
-      .db
-      .createSession
-      .conn
+    service.db.createSession.conn
       .prepareStatement(goldenSql)
       .execute()
 
     TestDatabase(service, () => {
       service.db.close()
-      masterService.db.createSession.conn.prepareCall(s"DROP DATABASE ${schema};").execute()
+      masterService.db.createSession.conn
+        .prepareCall(s"DROP DATABASE ${schema};")
+        .execute()
       masterService.db.close()
     })
   }
@@ -113,8 +110,12 @@ object Util {
     * @tparam T
     * @return
     */
-  def fixture[T: JsonReader](path: String)(implicit jsonFormat: JsonFormat[T], t: reflect.Manifest[T]): T = {
-    val fullPath = Paths.get("/fixtures", t.toString.split("\\.").last.replace("]", ""), path).toString
+  def fixture[T: JsonReader](
+      path: String
+  )(implicit jsonFormat: JsonFormat[T], t: reflect.Manifest[T]): T = {
+    val fullPath = Paths
+      .get("/fixtures", t.toString.split("\\.").last.replace("]", ""), path)
+      .toString
     val resourceUrl = getClass.getResource(fullPath)
     val raw = Source.fromURL(resourceUrl).mkString
 

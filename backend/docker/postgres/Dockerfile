@@ -1,3 +1,3 @@
-FROM postgres:10.5
+FROM postgres:14.3-bullseye
 RUN localedef -i en_GB -c -f UTF-8 -A /usr/share/locale/locale.alias en_GB.UTF-8
 ENV LANG en_GB.utf8

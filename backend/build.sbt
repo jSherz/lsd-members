@@ -81,7 +81,7 @@ lazy val root = (project in file("."))
         "net.logstash.logback" % "logstash-logback-encoder" % "5.2",
         // DB
         "org.postgresql" % "postgresql" % "42.2.5",
-        "org.flywaydb" % "flyway-core" % "5.1.4",
+        "org.flywaydb" % "flyway-core" % "8.5.12",
         "com.typesafe.slick" %% "slick" % "3.2.3",
         "com.zaxxer" % "HikariCP" % "2.7.8",
         // Phone number parsing
