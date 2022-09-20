@@ -120,13 +120,16 @@ jobs:
           npm run build
           cd dist
           tar -cf ../dist.tar.gz .
+          ls
           cd ..
+          ls
 
       - name: Archive built website
         uses: actions/upload-artifact@v3
         with:
           name: built-website
           path: dist.tar.gz
+          if-no-files-found: error
 
   deploy:
     name: 'deploy'
