@@ -136,6 +136,8 @@ jobs:
 
     needs:
       - build
+      - lint
+      - test
 
     defaults:
       run:
