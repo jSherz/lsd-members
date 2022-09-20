@@ -156,9 +156,6 @@ jobs:
 
       - name: Extract built website
         run: |
-          ls
-          echo dotdot
-          ls ..
           mkdir dist
           cd dist
           tar -xf ../dist.tar.gz
