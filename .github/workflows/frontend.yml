@@ -116,4 +116,63 @@ jobs:
         run: NODE_ENV=development npm ci
 
       - name: Build
-        run: npm run build
+        run: |
+          npm run build
+          cd dist
+          tar -cf ../dist.tar.gz
+          cd ..
+
+      - name: Archive built website
+        uses: actions/upload-artifact@v3
+        with:
+          name: built-website
+          path: dist.tar.gz
+
+  deploy:
+    name: 'deploy'
+    runs-on: ubuntu-20.04
+
+    if: success() && github.ref == 'refs/heads/master'
+
+    needs:
+      - build
+
+    defaults:
+      run:
+        shell: bash
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: built-website
+
+      - name: Extract built website
+        run: |
+          mkdir dist
+          cd dist
+          tar -xf ../dist.tar.gz
+
+      - name: Authenticate with AWS
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::262312054792:role/lsd-com-github-actions
+          aws-region: eu-west-1
+
+      - name: Sync files to S3
+        run: |
+          aws s3 sync \
+            --metadata-directive REPLACE \
+            --cache-control "max-age=86400" \
+            dist/ s3://lsd-prod-lsd-com-website/
+
+      - name: Clear cache
+        run: |
+          DISTRIBUTION_ID=$(aws cloudfront list-distributions | jq --raw-output '.DistributionList.Items | map(select((.Aliases.Quantity >= 1) and (.Aliases.Items | contains(["leedsskydivers.com"])))) | .[0].Id')
+
+          export PAGER=""
+          aws cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --path '/*'
