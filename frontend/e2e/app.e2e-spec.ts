@@ -10,7 +10,7 @@ describe("LSD App", function () {
   it("should display the main form by default", async () => {
     await page.navigateTo();
     expect(await page.getParagraphText()).toContain(
-      "Join us now and start skydiving for just £175!"
+      "Join us now and start skydiving for just £195!"
     );
   });
 

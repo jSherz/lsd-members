@@ -12,7 +12,7 @@ describe("Pages: Home", function () {
   it("should display the correct banner", async () => {
     await page.navigateTo();
     expect(await page.getIntroSnippet()).toContain(
-      "Join us now and start skydiving for just £175!"
+      "Join us now and start skydiving for just £195!"
     );
   });
 

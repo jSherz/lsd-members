@@ -19,12 +19,10 @@ export class CommitteeMember {
 })
 export class CommitteeComponent {
   committeeMembers = [
-    new CommitteeMember("amber.jpg", "Padders", "President"),
-    new CommitteeMember("ruby.jpg", "Ruby", "Vice-President"),
-    new CommitteeMember("will.jpg", "Will", "RAPS Secretary"),
-    new CommitteeMember("sean.jpg", "Sean", "Treasurer"),
-    new CommitteeMember("tom.jpg", "Tom", "Social Secretary"),
-    new CommitteeMember("tom2.jpg", "Tom", "Social Secretary"),
-    new CommitteeMember("emma.jpg", "Emma", "Kit Secretary")
+    new CommitteeMember("daisy.jpg", "Daisy-May", "President"),
+    new CommitteeMember("zuzanna.jpg", "Zuzanna", "Secretary"),
+    new CommitteeMember("ben.jpg", "Ben", "Treasurer"),
+    new CommitteeMember("maurice.jpg", "Maurice", "Kit & Social Sec."),
+    new CommitteeMember("sivan.jpg", "Sivan", "Social Media Sec."),
   ];
 }

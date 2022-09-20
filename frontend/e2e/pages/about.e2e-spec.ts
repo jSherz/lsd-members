@@ -21,10 +21,10 @@ describe("Pages: About", function () {
       "http://www.flyaerodyne.com/"
     );
     expect(await page.getAffiliateLinks().get(1).getAttribute("href")).toEqual(
-      "http://www.bpa.org.uk/"
+      "https://britishskydiving.org/"
     );
     expect(await page.getAffiliateLinks().get(2).getAttribute("href")).toEqual(
-      "https://www.bcpa.org.uk/"
+      "https://buskydiving.org"
     );
   });
 
