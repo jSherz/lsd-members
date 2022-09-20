@@ -119,7 +119,7 @@ jobs:
         run: |
           npm run build
           cd dist
-          tar -cf ../dist.tar.gz
+          tar -cf ../dist.tar.gz .
           cd ..
 
       - name: Archive built website
