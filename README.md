@@ -7,11 +7,14 @@ course weekend. This project was initially created as a public, static, website
 for the club but has evolved into a system that will eventually help them book
 courses and mange their members.
 
+The backend portion of the site is no longer hosted, it's now just the static
+frontend.
+
 The website: https://www.leedsskydivers.com
 
 ## Frontend
 
-An [Angular 2](https://angular.io) project and is managed with [angular-cli](https://github.com/angular/angular-cli).
+An [Angular](https://angular.io) project and is managed with [angular-cli](https://github.com/angular/angular-cli).
 
 ## Backend
 
